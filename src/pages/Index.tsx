@@ -998,53 +998,113 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Quick Inquiry Form - Lead Capture */}
-      <section className="py-16 bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600 text-white relative overflow-hidden" dir="rtl">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at 25% 50%, white 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-        </div>
+      {/* Quick Inquiry Form - Lead Capture بصورة فريق حقيقية */}
+      <section className="py-16 sm:py-20 relative overflow-hidden text-white" dir="rtl">
+        {/* خلفية صورة فريق حقيقي مع Parallax */}
+        <motion.div
+          className="absolute inset-0"
+          initial={{ scale: 1.15 }}
+          whileInView={{ scale: 1 }}
+          transition={{ duration: 1.4, ease: "easeOut" }}
+          viewport={{ once: true }}
+        >
+          <img
+            src={inquiryTeamImg}
+            alt=""
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-gradient-to-l from-indigo-950/95 via-blue-900/85 to-cyan-900/80" />
+        </motion.div>
+
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center max-w-6xl mx-auto">
+            {/* النص الترويجي */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
+              className="text-right"
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.7 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-3xl sm:text-4xl font-bold mb-3">احصل على استشارة مجانية</h2>
-              <p className="text-lg text-white/90 mb-8">أخبرنا عن مشروعك وسنتواصل معك خلال ساعة واحدة</p>
-            </motion.div>
-            <motion.div
-              className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              viewport={{ once: true }}
-            >
-              <input
-                type="text"
-                placeholder="الاسم"
-                className="px-4 py-3 rounded-xl bg-white/20 backdrop-blur border border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50"
-              />
-              <input
-                type="tel"
-                placeholder="رقم الجوال"
-                className="px-4 py-3 rounded-xl bg-white/20 backdrop-blur border border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50"
-                dir="ltr"
-              />
-              <Button 
-                size="lg"
-                className="bg-white text-blue-600 hover:bg-white/90 font-bold shadow-xl"
-                onClick={() => navigate('/contact-us')}
+              <motion.div
+                className="inline-flex items-center gap-2 px-4 py-2 bg-amber-400/20 backdrop-blur-md border border-amber-300/40 rounded-full text-amber-200 text-sm font-semibold mb-5"
+                initial={{ opacity: 0, scale: 0.85 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
               >
-                أرسل طلبك
-                <ArrowRight className="h-4 w-4 mr-2" />
-              </Button>
+                <Zap className="h-4 w-4" />
+                استشارة مجانية خلال ساعة
+              </motion.div>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black mb-4 leading-tight">
+                فريقنا الأكاديمي{" "}
+                <span className="bg-gradient-to-r from-amber-300 to-pink-300 bg-clip-text text-transparent">
+                  بانتظارك
+                </span>
+              </h2>
+              <p className="text-base sm:text-lg text-white/85 mb-6 leading-relaxed">
+                أخبرنا عن مشروعك وسيتواصل معك خبير متخصص لتقديم الحل المناسب — بدون أي التزام
+              </p>
+              <div className="flex flex-wrap gap-4 text-sm text-white/80">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-emerald-400" />
+                  <span>ردّ خلال 60 دقيقة</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Shield className="h-4 w-4 text-emerald-400" />
+                  <span>سرية تامة</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Heart className="h-4 w-4 text-pink-400" />
+                  <span>بدون التزام</span>
+                </div>
+              </div>
             </motion.div>
-            <p className="text-xs text-white/60 mt-4">
-              <Shield className="h-3 w-3 inline ml-1" />
-              معلوماتك محمية بالكامل ولن يتم مشاركتها
-            </p>
+
+            {/* بطاقة النموذج */}
+            <motion.div
+              className="relative"
+              initial={{ opacity: 0, x: 30, y: 20 }}
+              whileInView={{ opacity: 1, x: 0, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-6 sm:p-8 shadow-2xl">
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-white/90 mb-2">الاسم الكامل</label>
+                    <input
+                      type="text"
+                      placeholder="اكتب اسمك"
+                      className="w-full px-4 py-3 rounded-xl bg-white/20 backdrop-blur border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-300 transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-white/90 mb-2">رقم الجوال</label>
+                    <input
+                      type="tel"
+                      placeholder="05xxxxxxxx"
+                      className="w-full px-4 py-3 rounded-xl bg-white/20 backdrop-blur border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-300 transition-all"
+                      dir="ltr"
+                    />
+                  </div>
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <Button
+                      size="lg"
+                      className="w-full bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-slate-900 font-bold shadow-xl text-base py-6"
+                      onClick={() => navigate('/contact-us')}
+                    >
+                      احجز استشارتك المجانية الآن
+                      <ArrowRight className="h-5 w-5 mr-2" />
+                    </Button>
+                  </motion.div>
+                  <p className="text-xs text-white/60 text-center">
+                    <Shield className="h-3 w-3 inline ml-1" />
+                    معلوماتك محمية بالكامل ولن يتم مشاركتها
+                  </p>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
