@@ -26,6 +26,7 @@ import { Link } from 'react-router-dom';
 import {
   FINANCING_STATUS_LABELS_AR,
   FINANCING_DOC_LABELS_AR,
+  validateFinancingStatusTransition,
 } from '@/lib/financing';
 
 type Application = {
