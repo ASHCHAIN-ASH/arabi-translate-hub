@@ -238,6 +238,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <ScrollToTop />
+        <RouteIndexingGuard />
         <SimpleAuthProvider>
           <ReferralTracker />
           <LoginWelcomeOverlay />
