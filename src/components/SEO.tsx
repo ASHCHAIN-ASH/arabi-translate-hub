@@ -65,12 +65,18 @@ const SEO = ({
       <meta name="keywords" content={keywords} />
       <meta name="author" content={author} />
       <link rel="canonical" href={url} />
-      
+
+      {/* hreflang for Arabic/English/default */}
+      <link rel="alternate" hrefLang="ar-SA" href={url} />
+      <link rel="alternate" hrefLang="ar" href={url} />
+      <link rel="alternate" hrefLang="x-default" href={url} />
+
       {/* Viewport & Mobile */}
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
       <meta name="theme-color" content="#3b82f6" />
-      
-      {/* Language */}
+      <meta name="format-detection" content="telephone=yes" />
+
+      {/* Language & RTL */}
       <meta httpEquiv="content-language" content="ar-SA" />
       <html lang="ar" dir="rtl" />
       
