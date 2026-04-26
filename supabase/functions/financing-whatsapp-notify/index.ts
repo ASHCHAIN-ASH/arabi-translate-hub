@@ -30,6 +30,7 @@ function signatureFor(event: string): string {
     case "cancelled":
       return credit;
     case "waiting_down_payment":
+    case "down_payment_received":
     case "active":
     case "installment_reminder":
     case "installment_overdue":
