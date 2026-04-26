@@ -24,12 +24,22 @@ import academicResearchImg from "@/assets/academic-service-research.jpg";
 import academicEditingImg from "@/assets/academic-service-editing.jpg";
 import academicPublishingImg from "@/assets/academic-service-publishing.jpg";
 
+// Real photography for hero & testimonials
+import heroResearcherImg from "@/assets/home-hero-researcher-female.jpg";
+import heroCampusImg from "@/assets/home-saudi-campus.jpg";
+import heroCollabImg from "@/assets/home-students-collaboration.jpg";
+import testimonialProfessorImg from "@/assets/home-testimonial-professor.jpg";
+import testimonialStudentFemaleImg from "@/assets/home-testimonial-student-female.jpg";
+import testimonialResearcherMaleImg from "@/assets/home-testimonial-researcher-male.jpg";
+import partnershipHandshakeImg from "@/assets/home-partnership-handshake.jpg";
+
 // Lazy loading للمكونات الثقيلة لتحسين الأداء
 const ServicesShowcase = lazy(() => import("@/components/ServicesShowcase"));
 const MasterMembershipBanner = lazy(() => import("@/components/MasterMembershipBanner"));
 const ServiceSteps = lazy(() => import("@/components/ServiceSteps"));
 const ModernStatsSection = lazy(() => import("@/components/ModernStatsSection"));
 const HomeFinancingSection = lazy(() => import("@/components/home/HomeFinancingSection"));
+const SuccessStoriesCarousel = lazy(() => import("@/components/home/SuccessStoriesCarousel"));
 
 
 // مكون Loading محسّن
