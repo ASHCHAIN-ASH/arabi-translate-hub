@@ -4,6 +4,7 @@ import { useAuth } from '@/components/SimpleAuthProvider';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import NotificationCenter from '@/components/NotificationCenter';
+import NotificationBell from '@/components/NotificationBell';
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import {
@@ -213,6 +214,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
                 </div>
 
                 <div className="flex items-center gap-2 sm:gap-3">
+                  <NotificationBell />
                   <NotificationCenter />
                   <div className="hidden sm:flex items-center gap-2 ps-2 pe-3 border-s border-border">
                     <div className="text-end">

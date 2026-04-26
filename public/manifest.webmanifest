@@ -1,0 +1,42 @@
+{
+  "name": "ماستر إيدو باث | المساعدة الأكاديمية والتمويل",
+  "short_name": "ماستر إيدو باث",
+  "description": "منصة مهنية متخصصة في المساعدة الأكاديمية، الإرشاد العلمي، والتمويل التعليمي وفق معايير النزاهة الأكاديمية.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "lang": "ar",
+  "dir": "rtl",
+  "categories": ["education", "finance", "productivity"],
+  "icons": [
+    {
+      "src": "/favicon.png?v=2",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.png?v=2",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "طلب تمويل جديد",
+      "short_name": "تمويل",
+      "url": "/financing/new",
+      "icons": [{ "src": "/favicon.png?v=2", "sizes": "192x192" }]
+    },
+    {
+      "name": "لوحة العميل",
+      "short_name": "لوحتي",
+      "url": "/dashboard",
+      "icons": [{ "src": "/favicon.png?v=2", "sizes": "192x192" }]
+    }
+  ]
+}

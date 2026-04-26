@@ -86,6 +86,9 @@ import AdminReferrals from "./pages/admin/AdminReferrals";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import FinancingAdmin from "./pages/admin/FinancingAdmin";
 import FinancingAdminDetails from "./pages/admin/FinancingAdminDetails";
+import FinancingAuditTrail from "./pages/admin/FinancingAuditTrail";
+import VerifyContract from "./pages/VerifyContract";
+import InstallPwaPrompt from "./components/InstallPwaPrompt";
 import AdminServices from "./pages/admin/AdminServices";
 import AdminOrders from "./pages/admin/AdminOrders";
 import AdminInvoices from "./pages/admin/AdminInvoices";
@@ -238,10 +241,12 @@ const App = () => (
           <ReferralTracker />
           <LoginWelcomeOverlay />
           <BonusDropBanner />
+          <InstallPwaPrompt />
           <PageThemeProvider>
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Index />} />
+            <Route path="/verify/contract/:token" element={<VerifyContract />} />
             <Route path="/theme-preview" element={<ThemePreview />} />
             
             <Route path="/order-now" element={<OrderNow />} />
@@ -415,6 +420,11 @@ const App = () => (
             <Route path="/adminmaster/financing" element={
               <SimpleProtectedRoute adminOnly>
                 <FinancingAdmin />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/financing/audit" element={
+              <SimpleProtectedRoute adminOnly>
+                <FinancingAuditTrail />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminmaster/financing/:id" element={

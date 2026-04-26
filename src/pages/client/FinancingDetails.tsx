@@ -28,6 +28,7 @@ import FinancingDetailsHero from '@/components/financing/FinancingDetailsHero';
 import FinancingJourneyShowcase from '@/components/financing/FinancingJourneyShowcase';
 import FinancialDashboard from '@/components/financing/FinancialDashboard';
 import InstallmentsPaymentPanel from '@/components/financing/InstallmentsPaymentPanel';
+import FinancingTimeline from '@/components/financing/FinancingTimeline';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -602,6 +603,9 @@ const FinancingDetails: React.FC = () => {
           paidInstallments={_paidCount}
           totalInstallments={installments.length}
         />
+
+        {/* Interactive timeline of the financing journey */}
+        <FinancingTimeline currentStatus={app.status} />
 
         {/* Financial dashboard — progress, next due, wallet, AI score */}
         <FinancialDashboard
