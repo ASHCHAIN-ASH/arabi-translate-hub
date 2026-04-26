@@ -138,6 +138,7 @@ const FinancingDetails: React.FC = () => {
   const [receipts, setReceipts] = useState<PaymentReceipt[]>([]);
   const [wallet, setWallet] = useState<WalletRow | null>(null);
   const [installments, setInstallments] = useState<InstallmentRow[]>([]);
+  const [statusLogs, setStatusLogs] = useState<Array<{ id: string; old_status: string | null; new_status: string; note: string | null; created_at: string }>>([]);
   const [loading, setLoading] = useState(true);
   const [contract, setContract] = useState<{ id: string; status: string | null; contract_number: string } | null>(null);
   const [creatingContract, setCreatingContract] = useState(false);
@@ -161,7 +162,7 @@ const FinancingDetails: React.FC = () => {
   const load = useCallback(async () => {
     if (!id || !user) return;
     setLoading(true);
-    const [appRes, docsRes, receiptsRes, walletRes, contractRes, instRes] = await Promise.all([
+    const [appRes, docsRes, receiptsRes, walletRes, contractRes, instRes, logsRes] = await Promise.all([
       supabase.from('financing_applications').select('*').eq('id', id).maybeSingle(),
       supabase.from('financing_documents').select('id,document_type,status,file_url,review_note').eq('application_id', id),
       supabase.from('financing_payment_receipts').select('*').eq('application_id', id).order('created_at', { ascending: false }),
@@ -179,12 +180,18 @@ const FinancingDetails: React.FC = () => {
         .select('id,month_number,amount,due_date,status,paid_at,paid_amount')
         .eq('application_id', id)
         .order('month_number', { ascending: true }),
+      supabase
+        .from('financing_status_logs')
+        .select('id,old_status,new_status,note,created_at')
+        .eq('application_id', id)
+        .order('created_at', { ascending: true }),
     ]);
     if (appRes.data) setApp(appRes.data as FinancingApp);
     if (docsRes.data) setDocs(docsRes.data as DocumentRow[]);
     if (receiptsRes.data) setReceipts(receiptsRes.data as PaymentReceipt[]);
     if (walletRes.data) setWallet(walletRes.data as WalletRow);
     if (instRes.data) setInstallments(instRes.data as InstallmentRow[]);
+    if (logsRes.data) setStatusLogs(logsRes.data as any);
     if (contractRes.data) {
       setContract({
         id: contractRes.data.id,
@@ -211,6 +218,7 @@ const FinancingDetails: React.FC = () => {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'financing_payment_receipts', filter: `application_id=eq.${id}` }, () => load())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'financing_documents', filter: `application_id=eq.${id}` }, () => load())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'financing_installments', filter: `application_id=eq.${id}` }, () => load())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'financing_status_logs', filter: `application_id=eq.${id}` }, () => load())
       .subscribe();
     return () => {
       supabase.removeChannel(channel);
@@ -1130,6 +1138,77 @@ const FinancingDetails: React.FC = () => {
             </Card>
           );
         })()}
+
+        {/* Status change log — السجل الزمني للتغييرات */}
+        {statusLogs.length > 0 && (
+          <Card className="p-5 bg-gradient-to-br from-card to-muted/20">
+            <h3 className="font-bold mb-4 flex items-center gap-2">
+              <ScrollText className="h-4 w-4 text-primary" />
+              السجل الزمني للتغييرات
+              <span className="text-xs font-normal text-muted-foreground">
+                ({statusLogs.length} حدث — من استلام الطلب حتى الآن)
+              </span>
+            </h3>
+            <ol className="relative border-r-2 border-primary/20 pr-5 space-y-4">
+              {statusLogs.map((log, idx) => {
+                const isLatest = idx === statusLogs.length - 1;
+                const fromLabel = log.old_status ? FINANCING_STATUS_LABELS_AR[log.old_status] || log.old_status : null;
+                const toLabel = FINANCING_STATUS_LABELS_AR[log.new_status] || log.new_status;
+                const isException = ['rejected', 'cancelled', 'overdue'].includes(log.new_status);
+                const isFinal = ['active', 'completed'].includes(log.new_status);
+                return (
+                  <li key={log.id} className="relative">
+                    <span
+                      className={`absolute -right-[26px] top-1 h-3 w-3 rounded-full ring-4 ring-background ${
+                        isException
+                          ? 'bg-destructive'
+                          : isFinal
+                            ? 'bg-emerald-500'
+                            : isLatest
+                              ? 'bg-primary animate-pulse'
+                              : 'bg-primary/60'
+                      }`}
+                    />
+                    <div className="flex flex-wrap items-center gap-2 mb-1">
+                      <Badge
+                        variant={isException ? 'destructive' : isFinal ? 'default' : 'secondary'}
+                        className="text-[11px]"
+                      >
+                        {toLabel}
+                      </Badge>
+                      {fromLabel && (
+                        <span className="text-[11px] text-muted-foreground">
+                          (من: {fromLabel})
+                        </span>
+                      )}
+                      {isLatest && (
+                        <span className="text-[10px] text-primary font-bold">• الحالة الحالية</span>
+                      )}
+                    </div>
+                    <div className="text-xs text-muted-foreground flex items-center gap-1.5">
+                      <Calendar className="h-3 w-3" />
+                      <span className="tabular-nums">
+                        {new Date(log.created_at).toLocaleString('en-GB', {
+                          day: '2-digit',
+                          month: '2-digit',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
+                      </span>
+                    </div>
+                    {log.note && (
+                      <div className="text-xs text-foreground/80 mt-1.5 p-2 rounded-md bg-muted/40 border border-border/40">
+                        <span className="font-semibold text-muted-foreground">السبب: </span>
+                        {log.note}
+                      </div>
+                    )}
+                  </li>
+                );
+              })}
+            </ol>
+          </Card>
+        )}
 
         {/* Receipts history */}
         {receipts.length > 0 && (
