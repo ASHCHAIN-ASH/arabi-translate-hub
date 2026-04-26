@@ -239,11 +239,18 @@ const PaymentMethodSection: React.FC<Props> = ({
   );
   const cardDigits = value.cardNumber.replace(/\s/g, '');
 
-  // ===== Bank receipt preview =====
+  // ===== Bank receipt preview (image OR pdf) =====
   const [receiptPreview, setReceiptPreview] = useState<string | null>(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
   useEffect(() => {
     const f = value.bankReceiptFile;
-    if (!f || !f.type.startsWith('image/')) {
+    if (!f) {
+      setReceiptPreview(null);
+      return;
+    }
+    const isImg = f.type.startsWith('image/');
+    const isPdf = f.type === 'application/pdf';
+    if (!isImg && !isPdf) {
       setReceiptPreview(null);
       return;
     }
@@ -251,6 +258,10 @@ const PaymentMethodSection: React.FC<Props> = ({
     setReceiptPreview(url);
     return () => URL.revokeObjectURL(url);
   }, [value.bankReceiptFile]);
+
+  const receiptIsPdf = value.bankReceiptFile?.type === 'application/pdf';
+  const receiptIsImage = !!value.bankReceiptFile?.type.startsWith('image/');
+  const receiptSizeKb = value.bankReceiptFile ? (value.bankReceiptFile.size / 1024).toFixed(0) : '0';
 
   const handleReceiptFile = (f?: File | null) => {
     if (!f) return;
