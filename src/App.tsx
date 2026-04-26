@@ -83,6 +83,7 @@ import ReferralsPage from "./pages/client/ReferralsPage";
 
 import StudentDashboardPage from "./pages/client/StudentDashboardPage";
 import AdminMemberships from "./pages/admin/AdminMemberships";
+import AdminBlog from "./pages/admin/AdminBlog";
 import AdminReferrals from "./pages/admin/AdminReferrals";
 
 // Admin Pages
@@ -650,6 +651,11 @@ const App = () => (
             <Route path="/adminmaster/memberships" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminMemberships />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/blog" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminBlog />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminmaster/referrals" element={
