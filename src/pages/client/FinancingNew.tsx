@@ -240,9 +240,27 @@ const FinancingNew: React.FC = () => {
     executionDeed: false,
   });
   const [payment, setPayment] = useState<PaymentDetails>(emptyPaymentDetails);
-  const paymentValid = useMemo(() => validatePaymentDetails(payment).ok, [payment]);
+  const [walletBalance, setWalletBalance] = useState<number>(0);
 
   const preview = useMemo(() => computeFinancingPreview(amount), [amount]);
+
+  const paymentValid = useMemo(
+    () => validatePaymentDetails(payment, {
+      walletBalance,
+      downPayment: preview.downPayment,
+    }).ok,
+    [payment, walletBalance, preview.downPayment],
+  );
+
+  // جلب رصيد المحفظة لاستخدامه في خيار الدفع من المحفظة
+  useEffect(() => {
+    if (!user?.id) return;
+    import('@/utils/walletService').then(({ WalletService }) => {
+      WalletService.getMyWallet(user.id)
+        .then((w) => setWalletBalance(w?.balance ?? 0))
+        .catch(() => setWalletBalance(0));
+    });
+  }, [user?.id]);
 
   // ===== التقييم الائتماني التلقائي =====
   const creditScore = useMemo(() => {
@@ -444,6 +462,49 @@ const FinancingNew: React.FC = () => {
         guarantor_city: form.guarantor_city.trim(),
         guarantor_consent: form.guarantor_consent,
       } : { has_guarantor: false };
+      // ===== رفع إيصال البنك أولاً (إن وُجد) =====
+      let bankReceiptPath: string | null = null;
+      if (payment.method === 'bank_transfer' && payment.bankReceiptFile) {
+        const f = payment.bankReceiptFile;
+        const ext = f.name.split('.').pop() || 'bin';
+        const path = `${user.id}/financing-receipts/${Date.now()}.${ext}`;
+        const { error: upErr } = await supabase.storage
+          .from('financing-documents')
+          .upload(path, f, { upsert: true, contentType: f.type });
+        if (upErr) throw upErr;
+        bankReceiptPath = path;
+      }
+
+      // ===== بناء metadata الدفع (بدون أرقام بطاقة كاملة) =====
+      const cardDigits = payment.cardNumber.replace(/\s/g, '');
+      const paymentMeta: Record<string, unknown> = {
+        method: payment.method,
+        ...(payment.method === 'mada' || payment.method === 'visa'
+          ? {
+              card_brand: payment.method,
+              card_last4: cardDigits.slice(-4),
+              card_holder: payment.cardHolder.trim(),
+              card_expiry: payment.expiry,
+            }
+          : {}),
+        ...(payment.method === 'paypal' ? { paypal_email: payment.paypalEmail.trim() } : {}),
+        ...(payment.method === 'bank_transfer'
+          ? {
+              bank_reference: payment.bankReference.trim(),
+              bank_sender_name: payment.bankSenderName.trim(),
+              bank_receipt_path: bankReceiptPath,
+              bank_receipt_name: payment.bankReceiptName,
+              bank_iban: 'SA5345000000262359391004',
+            }
+          : {}),
+        ...(payment.method === 'wallet'
+          ? {
+              wallet_auto_debit_consent: true,
+              wallet_balance_at_submit: walletBalance,
+            }
+          : {}),
+      };
+
       const { data: app, error: appErr } = await supabase
         .from('financing_applications')
         .insert({
@@ -458,6 +519,27 @@ const FinancingNew: React.FC = () => {
         .select('id')
         .single();
       if (appErr || !app) throw appErr ?? new Error('فشل إنشاء الطلب');
+
+      // حفظ metadata الدفع في حقل ai_risk_analysis (JSONB) كحاوية مؤقتة لمعلومات الدفع
+      // (إن أردنا لاحقاً عمود مخصص first_payment_meta نقوم بـ migration)
+      try {
+        await supabase
+          .from('financing_applications')
+          .update({
+            notes: [
+              form.notes || '',
+              `\n[وسيلة الدفع المختارة: ${payment.method}]`,
+              payment.method === 'bank_transfer'
+                ? `\nمرجع الحوالة: ${payment.bankReference} | المُحوِّل: ${payment.bankSenderName}`
+                : '',
+              payment.method === 'wallet'
+                ? `\nخصم تلقائي من المحفظة عند الموافقة (الرصيد عند الإرسال: ${walletBalance} ر.س)`
+                : '',
+              bankReceiptPath ? `\nإيصال التحويل: ${bankReceiptPath}` : '',
+            ].filter(Boolean).join(''),
+          })
+          .eq('id', app.id);
+      } catch { /* غير حرج */ }
 
       const docRows: Array<{
         application_id: string;
@@ -1438,11 +1520,13 @@ const FinancingNew: React.FC = () => {
                   />
                 </div>
 
-                {/* Payment method (Visa / Mada / PayPal) */}
+                {/* Payment method (Wallet / Mada / Visa / Bank Transfer / PayPal) */}
                 <PaymentMethodSection
                   value={payment}
                   onChange={setPayment}
                   amountLabel={`${fmt(preview.downPayment)} ر.س`}
+                  downPaymentAmount={preview.downPayment}
+                  walletBalance={walletBalance}
                 />
 
                 {/* Final summary */}
