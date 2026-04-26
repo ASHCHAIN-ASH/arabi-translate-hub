@@ -938,6 +938,11 @@ const Index = () => {
         <ServicesShowcase />
       </Suspense>
 
+      {/* كاروسيل قصص النجاح بصور حقيقية */}
+      <Suspense fallback={<LoadingSpinner />}>
+        <SuccessStoriesCarousel />
+      </Suspense>
+
       {/* قسم Master PayLater — تمويل أكاديمي تفاعلي */}
       <Suspense fallback={<LoadingSpinner />}>
         <HomeFinancingSection />
