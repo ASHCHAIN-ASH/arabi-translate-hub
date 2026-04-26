@@ -21,6 +21,7 @@ import {
   Phone, Mail, Building2, Wallet, Calendar, AlertCircle,
   Receipt, TrendingUp, Clock, Sparkles, ShieldCheck, Banknote,
   CalendarClock, AlertTriangle, ExternalLink, Activity, Zap,
+  MessageCircle, Users,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import {
@@ -28,6 +29,9 @@ import {
   FINANCING_DOC_LABELS_AR,
   validateFinancingStatusTransition,
 } from '@/lib/financing';
+import AdminFinancingStepper from '@/components/admin/financing/AdminFinancingStepper';
+import AdminQuickActions from '@/components/admin/financing/AdminQuickActions';
+import AdminWhatsAppLogPanel from '@/components/admin/financing/AdminWhatsAppLogPanel';
 
 type Application = {
   id: string;
