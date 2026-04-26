@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
 import { Link } from "react-router-dom";
 import { 
   Check, 
@@ -311,8 +312,93 @@ const Pricing = () => {
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
+      <SEO
+        title="الأسعار والباقات - MasterEduPath | خدمات الترجمة والبحث العلمي"
+        description="تصفّح أسعار خدمات الترجمة الأكاديمية والقانونية والطبية وخدمات البحث العلمي والنشر في Scopus بأسعار تنافسية. عروض وباقات للطلاب والباحثين."
+        keywords="أسعار الترجمة, أسعار خدمات بحثية, باقات ترجمة, تكلفة النشر العلمي, أسعار SPSS"
+        url="https://masteredupath.com/pricing"
+        schema={[
+          {
+            "@context": "https://schema.org",
+            "@type": "OfferCatalog",
+            "name": "كتالوج خدمات MasterEduPath",
+            "url": "https://masteredupath.com/pricing",
+            "provider": {
+              "@type": "Organization",
+              "name": "MasterEduPath",
+              "url": "https://masteredupath.com"
+            },
+            "itemListElement": [
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "ترجمة أكاديمية احترافية",
+                  "serviceType": "Academic Translation",
+                  "provider": { "@type": "Organization", "name": "MasterEduPath" }
+                },
+                "priceCurrency": "SAR",
+                "priceSpecification": { "@type": "PriceSpecification", "priceCurrency": "SAR" },
+                "availability": "https://schema.org/InStock",
+                "url": "https://masteredupath.com/academic-translation"
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "ترجمة قانونية معتمدة",
+                  "serviceType": "Legal Translation"
+                },
+                "priceCurrency": "SAR",
+                "availability": "https://schema.org/InStock",
+                "url": "https://masteredupath.com/legal-translation"
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "ترجمة طبية متخصصة",
+                  "serviceType": "Medical Translation"
+                },
+                "priceCurrency": "SAR",
+                "availability": "https://schema.org/InStock",
+                "url": "https://masteredupath.com/medical-translation"
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "النشر في مجلات Scopus وISI",
+                  "serviceType": "Research Publication"
+                },
+                "priceCurrency": "SAR",
+                "availability": "https://schema.org/InStock",
+                "url": "https://masteredupath.com/research/journal-publication"
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "التحليل الإحصائي SPSS",
+                  "serviceType": "Statistical Analysis"
+                },
+                "priceCurrency": "SAR",
+                "availability": "https://schema.org/InStock",
+                "url": "https://masteredupath.com/research/statistical-spss-service"
+              }
+            ]
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "https://masteredupath.com/" },
+              { "@type": "ListItem", "position": 2, "name": "الأسعار", "item": "https://masteredupath.com/pricing" }
+            ]
+          }
+        ]}
+      />
       <Header />
-      
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-secondary/10" />

@@ -189,19 +189,59 @@ const AboutUs = () => {
         description="تعرف على MasterEduPath - وكالة رائدة في تقديم الخدمات الأكاديمية والبحثية للطلاب والباحثين في السعودية والوطن العربي. خبرة أكثر من 10 سنوات في خدمة 50,000+ طالب وباحث"
         keywords="من نحن MasterEduPath, وكالة تعليمية, خدمات أكاديمية, خبرة أكاديمية, شركاء جامعات, خدمات بحثية احترافية"
         url="https://masteredupath.com/about-us"
-        schema={{
-          "@context": "https://schema.org",
-          "@type": "AboutPage",
-          "name": "من نحن - MasterEduPath",
-          "description": "صفحة تعريفية بوكالة MasterEduPath للحلول التعليمية",
-          "mainEntity": {
+        schema={[
+          {
+            "@context": "https://schema.org",
+            "@type": "AboutPage",
+            "name": "من نحن - MasterEduPath",
+            "description": "صفحة تعريفية بوكالة MasterEduPath للحلول التعليمية",
+            "url": "https://masteredupath.com/about-us",
+            "inLanguage": "ar-SA"
+          },
+          {
+            "@context": "https://schema.org",
             "@type": "Organization",
             "name": "MasterEduPath Agency",
+            "alternateName": "وكالة ماستر إيدو باث",
+            "url": "https://masteredupath.com",
+            "logo": "https://masteredupath.com/assets/national-day-logo-original.webp",
             "foundingDate": "2014",
-            "numberOfEmployees": "50+",
-            "slogan": "شريكك الموثوق للحلول التعليمية المتقدمة"
+            "numberOfEmployees": { "@type": "QuantitativeValue", "value": "50+" },
+            "slogan": "شريكك الموثوق للحلول التعليمية المتقدمة",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "جدة",
+              "addressCountry": "SA"
+            },
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "telephone": "+966559600824",
+              "contactType": "customer service",
+              "email": "info@masteredupath.com",
+              "areaServed": "SA",
+              "availableLanguage": ["ar", "en"]
+            },
+            "sameAs": [
+              "https://twitter.com/MasterEduPath",
+              "https://www.linkedin.com/company/masteredupath",
+              "https://www.instagram.com/masteredupath"
+            ],
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": "4.9",
+              "reviewCount": "1500",
+              "bestRating": "5"
+            }
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "https://masteredupath.com/" },
+              { "@type": "ListItem", "position": 2, "name": "من نحن", "item": "https://masteredupath.com/about-us" }
+            ]
           }
-        }}
+        ]}
       />
       <Header />
       

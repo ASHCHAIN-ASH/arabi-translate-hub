@@ -49,6 +49,7 @@ import Header from "@/components/Header";
 import { WorkingHoursBannerRTL } from "@/components/WorkingHoursBannerRTL";
 
 import Footer from '@/components/Footer';
+import SEO from "@/components/SEO";
 const FAQ = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeCategory, setActiveCategory] = useState("الكل");
@@ -605,9 +606,39 @@ const FAQ = () => {
     }
   };
 
+  // Build FAQPage schema from first 12 questions (Google's recommended limit)
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqItems.slice(0, 12).map((q: any) => ({
+      "@type": "Question",
+      "name": q.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": q.answer
+      }
+    }))
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "https://masteredupath.com/" },
+      { "@type": "ListItem", "position": 2, "name": "الأسئلة الشائعة", "item": "https://masteredupath.com/faq" }
+    ]
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5" dir="rtl">
-      
+      <SEO
+        title="الأسئلة الشائعة - MasterEduPath | إجابات على استفساراتك"
+        description="إجابات شاملة لأكثر الأسئلة الشائعة حول خدمات الترجمة، البحث العلمي، النشر في Scopus، التحليل الإحصائي، والاستشارات الأكاديمية."
+        keywords="أسئلة شائعة, FAQ, استفسارات, ترجمة أكاديمية, نشر علمي, SPSS"
+        url="https://masteredupath.com/faq"
+        schema={[faqSchema, breadcrumbSchema]}
+      />
+
       {/* Working Hours Banner */}
       <WorkingHoursBannerRTL />
       
