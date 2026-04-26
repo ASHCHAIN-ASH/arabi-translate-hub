@@ -11,7 +11,7 @@ const corsHeaders = {
 
 const BRAND = "🏦 *Master PayLater*";
 const DIVIDER = "━━━━━━━━━━━━━━━";
-const CONTACT = "+966 920 000 000";
+const CONTACT = "+966559600824";
 
 // توقيع ديناميكي حسب الحالة (فريق المتابعة / الائتمان / التمويل)
 function signatureFor(event: string): string {
