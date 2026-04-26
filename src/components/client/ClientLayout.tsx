@@ -214,6 +214,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
                 </div>
 
                 <div className="flex items-center gap-2 sm:gap-3">
+                  <NotificationBell />
                   <NotificationCenter />
                   <div className="hidden sm:flex items-center gap-2 ps-2 pe-3 border-s border-border">
                     <div className="text-end">
