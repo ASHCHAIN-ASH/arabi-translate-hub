@@ -114,7 +114,7 @@ const stageReached = (currentStatus: string, stageKey: string): 'done' | 'curren
   // Map equivalent statuses
   const aliases: Record<string, string> = {
     documents_pending: 'submitted',
-    approved: 'waiting_down_payment',
+    approved: 'execution_deed',
     completed: 'active',
     overdue: 'active',
   };
