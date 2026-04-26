@@ -26,6 +26,7 @@ import { Link } from 'react-router-dom';
 import {
   FINANCING_STATUS_LABELS_AR,
   FINANCING_DOC_LABELS_AR,
+  validateFinancingStatusTransition,
 } from '@/lib/financing';
 
 type Application = {
@@ -274,6 +275,12 @@ const FinancingAdmin: React.FC = () => {
 
   const updateStatus = async (status: string) => {
     if (!selected) return;
+    // 🛡️ تحقق صارم من تسلسل الحالات — يمنع تفعيل الرصيد قبل السند التنفيذي
+    const check = validateFinancingStatusTransition(selected.status, status);
+    if (!check.ok) {
+      toast.error(check.reason || 'انتقال غير مسموح بين الحالات');
+      return;
+    }
     setWorking(true);
     const { error } = await supabase
       .from('financing_applications')
