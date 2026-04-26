@@ -1,43 +1,113 @@
-# MasterEduPath Robots.txt
+# ============================================
+# MasterEduPath - Robots.txt
+# https://masteredupath.com
+# ============================================
+
+# Default rules for all crawlers
 User-agent: *
 Allow: /
+Crawl-delay: 1
 
-# Disallow admin and private pages
+# Block private/authenticated areas
 Disallow: /admin/
+Disallow: /adminmaster/
 Disallow: /client/
 Disallow: /platform/
+Disallow: /workspace/
+Disallow: /dashboard
 Disallow: /auth/
+Disallow: /login
+Disallow: /register
+Disallow: /unauthorized
+Disallow: /orders/
+Disallow: /invoices
+Disallow: /client-services
+Disallow: /payment/return
+Disallow: /verify/
+Disallow: /contract-management
+Disallow: /theme-preview
+Disallow: /color-showcase
+Disallow: /unsubscribe
 
-# Allow important pages
-Allow: /
-Allow: /about-us
-Allow: /services
-Allow: /translation-services
-Allow: /research-services
-Allow: /contact-us
-Allow: /blog
-Allow: /pricing
-Allow: /universities
-Allow: /journals
+# Block URL parameters that create duplicate content
+Disallow: /*?*utm_*
+Disallow: /*?*ref=*
+Disallow: /*?*fbclid=*
+Disallow: /*?*gclid=*
 
-# Sitemap location
-Sitemap: https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/sitemap.xml
-
-# Crawl delay (polite crawling)
-Crawl-delay: 1
+# ============================================
+# Search Engine Specific Rules
+# ============================================
 
 # Google
 User-agent: Googlebot
 Allow: /
+Disallow: /admin/
+Disallow: /client/
+Disallow: /auth/
+
+User-agent: Googlebot-Image
+Allow: /assets/
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.png$
+Allow: /*.webp$
+Allow: /*.svg$
 
 # Bing
 User-agent: Bingbot
 Allow: /
+Disallow: /admin/
+Disallow: /client/
 
-# Twitter
+# Yandex
+User-agent: Yandex
+Allow: /
+Disallow: /admin/
+Disallow: /client/
+
+# DuckDuckGo
+User-agent: DuckDuckBot
+Allow: /
+
+# Social Media Crawlers (allow full access for rich previews)
 User-agent: Twitterbot
 Allow: /
 
-# Facebook
 User-agent: facebookexternalhit
 Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+User-agent: Slackbot
+Allow: /
+
+# ============================================
+# Block AI Scrapers (optional - protects content)
+# ============================================
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+# ============================================
+# Sitemap
+# ============================================
+Sitemap: https://masteredupath.com/sitemap.xml
+
+# Host (preferred domain)
+Host: https://masteredupath.com
