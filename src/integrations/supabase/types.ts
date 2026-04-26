@@ -1829,6 +1829,9 @@ export type Database = {
           approved_by: string | null
           auto_debit_enabled: boolean
           city: string | null
+          client_signature_data: string | null
+          client_signed_at: string | null
+          client_signed_ip: string | null
           contract_id: string | null
           contract_pdf_url: string | null
           created_at: string
@@ -1875,6 +1878,9 @@ export type Database = {
           approved_by?: string | null
           auto_debit_enabled?: boolean
           city?: string | null
+          client_signature_data?: string | null
+          client_signed_at?: string | null
+          client_signed_ip?: string | null
           contract_id?: string | null
           contract_pdf_url?: string | null
           created_at?: string
@@ -1921,6 +1927,9 @@ export type Database = {
           approved_by?: string | null
           auto_debit_enabled?: boolean
           city?: string | null
+          client_signature_data?: string | null
+          client_signed_at?: string | null
+          client_signed_ip?: string | null
           contract_id?: string | null
           contract_pdf_url?: string | null
           created_at?: string
@@ -5898,6 +5907,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_inbox_notifications: {
+        Row: {
+          created_at: string
+          id: string
+          is_read: boolean
+          link: string | null
+          message: string
+          metadata: Json | null
+          read_at: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          link?: string | null
+          message: string
+          metadata?: Json | null
+          read_at?: string | null
+          title: string
+          type?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          link?: string | null
+          message?: string
+          metadata?: Json | null
+          read_at?: string | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       user_memberships: {
         Row: {
