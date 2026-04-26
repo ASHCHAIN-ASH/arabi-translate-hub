@@ -1818,12 +1818,16 @@ export type Database = {
       financing_applications: {
         Row: {
           activated_at: string | null
+          ai_risk_analysis: Json | null
+          ai_risk_score: number | null
+          ai_scored_at: string | null
           applicant_email: string | null
           applicant_full_name: string | null
           applicant_id_number: string | null
           applicant_phone: string | null
           approved_at: string | null
           approved_by: string | null
+          auto_debit_enabled: boolean
           city: string | null
           contract_id: string | null
           contract_pdf_url: string | null
@@ -1860,12 +1864,16 @@ export type Database = {
         }
         Insert: {
           activated_at?: string | null
+          ai_risk_analysis?: Json | null
+          ai_risk_score?: number | null
+          ai_scored_at?: string | null
           applicant_email?: string | null
           applicant_full_name?: string | null
           applicant_id_number?: string | null
           applicant_phone?: string | null
           approved_at?: string | null
           approved_by?: string | null
+          auto_debit_enabled?: boolean
           city?: string | null
           contract_id?: string | null
           contract_pdf_url?: string | null
@@ -1902,12 +1910,16 @@ export type Database = {
         }
         Update: {
           activated_at?: string | null
+          ai_risk_analysis?: Json | null
+          ai_risk_score?: number | null
+          ai_scored_at?: string | null
           applicant_email?: string | null
           applicant_full_name?: string | null
           applicant_id_number?: string | null
           applicant_phone?: string | null
           approved_at?: string | null
           approved_by?: string | null
+          auto_debit_enabled?: boolean
           city?: string | null
           contract_id?: string | null
           contract_pdf_url?: string | null
@@ -2018,6 +2030,8 @@ export type Database = {
       }
       financing_documents: {
         Row: {
+          ai_extracted_at: string | null
+          ai_extracted_data: Json | null
           application_id: string
           created_at: string
           document_type: Database["public"]["Enums"]["financing_doc_type"]
@@ -2031,6 +2045,8 @@ export type Database = {
           status: Database["public"]["Enums"]["financing_doc_status"]
         }
         Insert: {
+          ai_extracted_at?: string | null
+          ai_extracted_data?: Json | null
           application_id: string
           created_at?: string
           document_type: Database["public"]["Enums"]["financing_doc_type"]
@@ -2044,6 +2060,8 @@ export type Database = {
           status?: Database["public"]["Enums"]["financing_doc_status"]
         }
         Update: {
+          ai_extracted_at?: string | null
+          ai_extracted_data?: Json | null
           application_id?: string
           created_at?: string
           document_type?: Database["public"]["Enums"]["financing_doc_type"]
@@ -7589,6 +7607,11 @@ export type Database = {
         Args: { _group_order_id: string }
         Returns: Json
       }
+      pay_installment_from_wallet: {
+        Args: { p_installment_id: string; p_user_id: string }
+        Returns: Json
+      }
+      process_auto_debit_installments: { Args: never; Returns: Json }
       purchase_cv: {
         Args: { _cv_id: string; _template_key: string }
         Returns: Json

@@ -26,6 +26,8 @@ import {
 import ClientLayout from '@/components/client/ClientLayout';
 import FinancingDetailsHero from '@/components/financing/FinancingDetailsHero';
 import FinancingJourneyShowcase from '@/components/financing/FinancingJourneyShowcase';
+import FinancialDashboard from '@/components/financing/FinancialDashboard';
+import InstallmentsPaymentPanel from '@/components/financing/InstallmentsPaymentPanel';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -52,6 +54,8 @@ interface FinancingApp {
   created_at: string;
   updated_at: string;
   notes: string | null;
+  auto_debit_enabled?: boolean;
+  ai_risk_score?: number | null;
 }
 
 interface PaymentReceipt {
@@ -598,6 +602,29 @@ const FinancingDetails: React.FC = () => {
           paidInstallments={_paidCount}
           totalInstallments={installments.length}
         />
+
+        {/* Financial dashboard — progress, next due, wallet, AI score */}
+        <FinancialDashboard
+          totalAmount={Number(app.total_amount)}
+          remainingAmount={Number(app.remaining_amount)}
+          monthlyInstallment={Number(app.monthly_installment)}
+          installments={installments as any}
+          walletBalance={walletBalance}
+          aiRiskScore={app.ai_risk_score ?? null}
+        />
+
+        {/* Pay installments from wallet + auto-debit toggle (only when active) */}
+        {app.status === 'active' && user && installments.length > 0 && (
+          <InstallmentsPaymentPanel
+            applicationId={app.id}
+            userId={user.id}
+            installments={installments as any}
+            walletBalance={walletBalance}
+            autoDebitEnabled={app.auto_debit_enabled ?? true}
+            onPaid={() => load()}
+            onAutoDebitToggle={(v) => setApp((prev) => prev ? { ...prev, auto_debit_enabled: v } : prev)}
+          />
+        )}
 
         {/* Stages timeline (kept as banking journey strip) */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
