@@ -28,6 +28,8 @@ import PrivacySecurity from "./pages/academic/PrivacySecurity";
 import TimelineCommitment from "./pages/academic/TimelineCommitment";
 import OrderNow from "./pages/OrderNow";
 import Index from "./pages/Index";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 import PaymentReturn from "./pages/PaymentReturn";
 import ContractSignByToken from "./pages/ContractSignByToken";
 
@@ -81,6 +83,7 @@ import ReferralsPage from "./pages/client/ReferralsPage";
 
 import StudentDashboardPage from "./pages/client/StudentDashboardPage";
 import AdminMemberships from "./pages/admin/AdminMemberships";
+import AdminBlog from "./pages/admin/AdminBlog";
 import AdminReferrals from "./pages/admin/AdminReferrals";
 
 // Admin Pages
@@ -249,6 +252,8 @@ const App = () => (
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Index />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/verify/contract/:token" element={<VerifyContract />} />
             <Route path="/theme-preview" element={<ThemePreview />} />
             
@@ -646,6 +651,11 @@ const App = () => (
             <Route path="/adminmaster/memberships" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminMemberships />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/blog" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminBlog />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminmaster/referrals" element={

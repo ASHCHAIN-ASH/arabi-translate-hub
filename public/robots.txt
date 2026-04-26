@@ -105,9 +105,12 @@ User-agent: Claude-Web
 Disallow: /
 
 # ============================================
-# Sitemap
+# Sitemap & RSS
 # ============================================
 Sitemap: https://masteredupath.com/sitemap.xml
+
+# RSS Feed (auto-discoverable)
+# https://kziujhdqogqeehtxgpax.supabase.co/functions/v1/rss-feed
 
 # Host (preferred domain)
 Host: https://masteredupath.com
