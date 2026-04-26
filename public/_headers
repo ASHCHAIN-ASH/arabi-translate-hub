@@ -8,6 +8,76 @@
   Permissions-Policy: geolocation=(), microphone=(), camera=()
   Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com https://*.supabase.co; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; font-src 'self' data:; connect-src 'self' https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com https://*.supabase.co wss://*.supabase.co; frame-ancestors 'self'; base-uri 'self'; form-action 'self';
 
+# ============================================
+# X-Robots-Tag — block indexing for protected/private routes
+# (server-level enforcement in addition to in-app <meta name="robots">)
+# ============================================
+/admin/*
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
+
+/adminmaster/*
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
+
+/client/*
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
+
+/platform/*
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
+
+/workspace/*
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
+
+/dashboard
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
+
+/dashboard/*
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
+
+/auth/*
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
+
+/login
+  X-Robots-Tag: noindex, nofollow
+
+/register
+  X-Robots-Tag: noindex, nofollow
+
+/unauthorized
+  X-Robots-Tag: noindex, nofollow
+
+/orders/*
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
+
+/invoices
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
+
+/invoices/*
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
+
+/client-services
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
+
+/client-services/*
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
+
+/payment/return
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
+
+/verify/*
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
+
+/contract-management
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
+
+/theme-preview
+  X-Robots-Tag: noindex, nofollow
+
+/color-showcase
+  X-Robots-Tag: noindex, nofollow
+
+/unsubscribe
+  X-Robots-Tag: noindex, nofollow
+
 # Cache Control
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
