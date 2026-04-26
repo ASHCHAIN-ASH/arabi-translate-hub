@@ -306,57 +306,105 @@ const Index = () => {
               </motion.div>
             </motion.div>
 
-            {/* الجانب البصري */}
+            {/* الجانب البصري — صور حقيقية بإطار مشرّف */}
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
+              transition={{ duration: 0.7, delay: 0.3 }}
               className="relative flex justify-center mt-8 lg:mt-0"
             >
-              <div className="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-100 via-indigo-50 to-purple-100 dark:from-blue-900/20 dark:via-indigo-900/20 dark:to-purple-900/20 rounded-full blur-3xl" />
-                
-                {/* الشعار المركزي */}
+              <div className="relative w-full max-w-[320px] sm:max-w-[420px] lg:max-w-[520px] aspect-[4/5]">
+                {/* وهج خلفي */}
+                <div className="absolute -inset-6 bg-gradient-to-br from-blue-400/30 via-indigo-400/20 to-purple-400/30 dark:from-blue-500/20 dark:via-indigo-500/15 dark:to-purple-500/20 rounded-[2rem] blur-3xl" />
+
+                {/* الصورة الرئيسية — باحثة */}
                 <motion.div
-                  className="relative w-48 h-48 sm:w-64 sm:h-64 lg:w-72 lg:h-72 mx-auto bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-full shadow-2xl flex items-center justify-center"
-                  animate={{ 
-                    boxShadow: [
-                      "0 20px 40px -10px rgba(59, 130, 246, 0.4)",
-                      "0 20px 40px -10px rgba(99, 102, 241, 0.4)",
-                      "0 20px 40px -10px rgba(139, 92, 246, 0.4)",
-                      "0 20px 40px -10px rgba(59, 130, 246, 0.4)"
-                    ]
-                  }}
-                  transition={{ duration: 4, repeat: Infinity }}
+                  className="absolute inset-0 rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white dark:border-slate-800 z-10"
+                  whileHover={{ scale: 1.02, rotate: -1 }}
+                  transition={{ type: "spring", stiffness: 200, damping: 20 }}
                 >
-                  <div className="text-center text-white p-4 sm:p-6">
-                    <GraduationCap className="h-12 w-12 sm:h-16 sm:w-16 mx-auto mb-3 sm:mb-4" />
-                    <div className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">ماستر إيدو باث</div>
-                    <div className="text-sm sm:text-lg opacity-90">للتميز الأكاديمي</div>
-                  </div>
+                  <motion.img
+                    src={heroResearcherImg}
+                    alt="باحثة سعودية في مكتبة جامعية تستخدم لابتوب"
+                    className="w-full h-full object-cover"
+                    initial={{ scale: 1.15 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 1.2, ease: "easeOut" }}
+                    width={1024}
+                    height={1280}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-blue-900/40 via-transparent to-transparent" />
+
+                  {/* شارة عائمة سفلية */}
+                  <motion.div
+                    className="absolute bottom-4 right-4 left-4 sm:bottom-6 sm:right-6 sm:left-6 px-4 py-3 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl shadow-xl flex items-center gap-3"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1.2, duration: 0.6 }}
+                  >
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shrink-0">
+                      <CheckCircle className="h-5 w-5 text-white" />
+                    </div>
+                    <div className="text-right flex-1 min-w-0">
+                      <p className="text-xs sm:text-sm font-bold text-slate-800 dark:text-white">
+                        أكثر من 15,000 باحث وثق بنا
+                      </p>
+                      <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 truncate">
+                        منذ 2018 — في 25+ دولة
+                      </p>
+                    </div>
+                  </motion.div>
                 </motion.div>
 
-                {/* عناصر متحركة */}
-                {[
-                  { icon: BookOpen, position: 'top-2 right-2 sm:top-4 sm:right-4', delay: 0.5, color: 'from-blue-500 to-indigo-500' },
-                  { icon: Users, position: 'bottom-2 right-2 sm:bottom-4 sm:right-4', delay: 1, color: 'from-emerald-500 to-teal-500' },
-                  { icon: Award, position: 'bottom-2 left-2 sm:bottom-4 sm:left-4', delay: 1.5, color: 'from-amber-500 to-orange-500' },
-                  { icon: Building2, position: 'top-2 left-2 sm:top-4 sm:left-4', delay: 2, color: 'from-purple-500 to-pink-500' }
-                ].map((item, index) => {
-                  const IconComponent = item.icon;
-                  return (
-                    <motion.div
-                      key={index}
-                      className={`absolute ${item.position} w-10 h-10 sm:w-14 sm:h-14 bg-gradient-to-br ${item.color} rounded-xl shadow-lg flex items-center justify-center`}
-                      initial={{ opacity: 0, scale: 0 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.4, delay: item.delay }}
-                      whileHover={{ scale: 1.15, rotate: 5 }}
-                    >
-                      <IconComponent className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
-                    </motion.div>
-                  );
-                })}
+                {/* بطاقة عائمة علوية يمين — تقييم */}
+                <motion.div
+                  className="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 z-20 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl p-3 sm:p-4 border border-slate-200 dark:border-slate-700"
+                  initial={{ opacity: 0, scale: 0, rotate: -15 }}
+                  animate={{ opacity: 1, scale: 1, rotate: -6 }}
+                  transition={{ delay: 0.9, type: "spring", stiffness: 200 }}
+                  whileHover={{ rotate: 0, scale: 1.05 }}
+                >
+                  <div className="flex items-center gap-2">
+                    <div className="flex">
+                      {[1,2,3,4,5].map(i => (
+                        <Star key={i} className="h-3 w-3 sm:h-4 sm:w-4 fill-amber-400 text-amber-400" />
+                      ))}
+                    </div>
+                    <span className="text-xs sm:text-sm font-bold text-slate-800 dark:text-white">4.9</span>
+                  </div>
+                  <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">تقييم 12,800+ عميل</p>
+                </motion.div>
+
+                {/* بطاقة عائمة سفلية يسار — مدة الإنجاز */}
+                <motion.div
+                  className="absolute -bottom-4 -left-4 sm:-bottom-6 sm:-left-6 z-20 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl shadow-2xl p-3 sm:p-4 text-white"
+                  initial={{ opacity: 0, scale: 0, rotate: 15 }}
+                  animate={{ opacity: 1, scale: 1, rotate: 6 }}
+                  transition={{ delay: 1.1, type: "spring", stiffness: 200 }}
+                  whileHover={{ rotate: 0, scale: 1.05 }}
+                >
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-4 w-4 sm:h-5 sm:w-5" />
+                    <span className="text-base sm:text-lg font-bold">24 ساعة</span>
+                  </div>
+                  <p className="text-[10px] sm:text-xs opacity-90 mt-0.5">أسرع تسليم في السوق</p>
+                </motion.div>
+
+                {/* صورة ثانوية صغيرة — حرم جامعي */}
+                <motion.div
+                  className="absolute -bottom-2 right-1/2 translate-x-1/2 sm:-bottom-8 sm:right-auto sm:left-1/3 z-10 w-24 h-24 sm:w-32 sm:h-32 rounded-2xl overflow-hidden shadow-2xl border-4 border-white dark:border-slate-800 hidden sm:block"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.4, duration: 0.6 }}
+                  whileHover={{ scale: 1.1, rotate: 3 }}
+                >
+                  <img
+                    src={heroCampusImg}
+                    alt="حرم جامعي سعودي"
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                </motion.div>
               </div>
             </motion.div>
           </div>
