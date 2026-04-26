@@ -1576,7 +1576,7 @@ const FinancingNew: React.FC = () => {
                   }
                   rightButton={
                     <Button
-                      onClick={handleSubmit}
+                      onClick={handleSubmitClick}
                       disabled={submitting || !paymentValid}
                       size="lg"
                       className="bg-gradient-to-l from-emerald-600 to-teal-600 shadow-lg hover:shadow-xl text-white"
@@ -1612,6 +1612,77 @@ const FinancingNew: React.FC = () => {
           </aside>
         </div>
       </div>
+      {/* ===== Wallet payment second confirmation ===== */}
+      <AlertDialog open={walletConfirmOpen} onOpenChange={setWalletConfirmOpen}>
+        <AlertDialogContent className="max-w-md">
+          <AlertDialogHeader>
+            <div className="mx-auto mb-2 h-12 w-12 rounded-full bg-violet-500/10 ring-1 ring-violet-500/30 flex items-center justify-center">
+              <Wallet className="h-6 w-6 text-violet-600" />
+            </div>
+            <AlertDialogTitle className="text-center">
+              تأكيد الخصم من المحفظة
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-center">
+              ستقوم بدفع الدفعة الأولى مباشرةً من رصيد محفظتك. يرجى مراجعة التفاصيل أدناه قبل المتابعة.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <div className="space-y-2 rounded-xl bg-muted/40 ring-1 ring-border p-4 text-sm">
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">الرصيد الحالي</span>
+              <span className="font-bold">{walletBalance.toLocaleString('en-US', { maximumFractionDigits: 2 })} ر.س</span>
+            </div>
+            <div className="flex justify-between text-rose-600">
+              <span>المبلغ المخصوم</span>
+              <span className="font-bold">- {preview.downPayment.toLocaleString('en-US', { maximumFractionDigits: 2 })} ر.س</span>
+            </div>
+            <div className="border-t border-border my-2" />
+            <div className="flex justify-between items-center">
+              <span className="text-muted-foreground">الرصيد بعد الخصم</span>
+              <span
+                className={`font-extrabold text-lg ${
+                  walletBalance - preview.downPayment < 0 ? 'text-rose-600' : 'text-emerald-600'
+                }`}
+              >
+                {(walletBalance - preview.downPayment).toLocaleString('en-US', { maximumFractionDigits: 2 })} ر.س
+              </span>
+            </div>
+            {walletBalance - preview.downPayment < 0 && (
+              <div className="flex items-start gap-2 rounded-lg bg-rose-500/10 ring-1 ring-rose-500/30 p-2 text-xs text-rose-700 dark:text-rose-400 mt-2">
+                <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />
+                <span>الرصيد غير كافٍ. يرجى شحن المحفظة أو اختيار وسيلة دفع أخرى.</span>
+              </div>
+            )}
+          </div>
+
+          <p className="text-[11px] text-muted-foreground text-center px-2">
+            بالضغط على "تأكيد الخصم" فإنك توافق على خصم المبلغ بشكل نهائي من محفظتك ولا يمكن التراجع بعد إرسال الطلب.
+          </p>
+
+          <AlertDialogFooter className="gap-2">
+            <AlertDialogCancel disabled={submitting}>إلغاء</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={submitting || walletBalance - preview.downPayment < 0}
+              onClick={(e) => {
+                e.preventDefault();
+                setWalletConfirmOpen(false);
+                handleSubmit();
+              }}
+              className="bg-gradient-to-l from-violet-600 to-fuchsia-600 hover:opacity-90 text-white"
+            >
+              {submitting ? (
+                <>
+                  <Loader2 className="ml-2 h-4 w-4 animate-spin" /> جاري الخصم…
+                </>
+              ) : (
+                <>
+                  <Wallet className="ml-2 h-4 w-4" /> تأكيد الخصم
+                </>
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </ClientLayout>
   );
 };
