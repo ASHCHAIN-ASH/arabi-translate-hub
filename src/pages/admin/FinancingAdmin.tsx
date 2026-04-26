@@ -93,21 +93,23 @@ type Installment = {
 };
 
 // التسلسل الرسمي لمراحل التمويل (من الاستلام إلى الإغلاق)
-// 1) submitted → 2) documents_pending → 3) under_review → 4) waiting_down_payment
-// → 5) contract_pending_signature → 6) approved → 7) active → 8) completed
-// مسارات استثنائية: rejected | cancelled | overdue | execution_deed
+// 1) submitted → 2) documents_pending → 3) under_review → 4) contract_pending_signature
+// → 5) waiting_down_payment → 6) approved → 7) execution_deed → 8) active → 9) completed
+// مسارات استثنائية: rejected | cancelled | overdue
 const STATUS_FILTERS: Array<{ key: string; label: string }> = [
   { key: 'all', label: 'الكل' },
   // — مرحلة الاستقبال —
-  { key: 'submitted', label: '1. جديدة' },
-  { key: 'documents_pending', label: '2. مستندات' },
-  { key: 'under_review', label: '3. قيد التقييم' },
+  { key: 'submitted', label: '1. استلام الطلب' },
+  { key: 'documents_pending', label: '2. توثيق المستندات' },
+  { key: 'under_review', label: '3. التقييم الائتماني' },
+  // — مرحلة التعاقد والدفع —
+  { key: 'contract_pending_signature', label: '4. توقيع العقد' },
+  { key: 'waiting_down_payment', label: '5. الدفعة الأولى' },
+  { key: 'approved', label: '6. الموافقة النهائية' },
   // — مرحلة التفعيل —
-  { key: 'waiting_down_payment', label: '4. بانتظار الدفعة' },
-  { key: 'contract_pending_signature', label: '5. بانتظار التوقيع' },
-  { key: 'approved', label: '6. موافقة' },
-  { key: 'active', label: '7. نشطة' },
-  { key: 'completed', label: '8. مُسدَّدة' },
+  { key: 'execution_deed', label: '7. السند التنفيذي' },
+  { key: 'active', label: '8. تفعيل الرصيد' },
+  { key: 'completed', label: '9. مُسدَّدة بالكامل' },
   // — مسارات استثنائية —
   { key: 'overdue', label: 'متعثّرة' },
   { key: 'rejected', label: 'مرفوضة' },
@@ -121,8 +123,12 @@ const STATUS_GROUPS: Array<{ label: string; statuses: string[] }> = [
     statuses: ['submitted', 'documents_pending', 'under_review'],
   },
   {
+    label: '— مرحلة التعاقد والدفع —',
+    statuses: ['contract_pending_signature', 'waiting_down_payment', 'approved'],
+  },
+  {
     label: '— مرحلة التفعيل —',
-    statuses: ['waiting_down_payment', 'contract_pending_signature', 'approved', 'active'],
+    statuses: ['execution_deed', 'active'],
   },
   {
     label: '— مرحلة الإغلاق —',
@@ -130,7 +136,7 @@ const STATUS_GROUPS: Array<{ label: string; statuses: string[] }> = [
   },
   {
     label: '— مسارات استثنائية —',
-    statuses: ['overdue', 'execution_deed', 'rejected', 'cancelled'],
+    statuses: ['overdue', 'rejected', 'cancelled'],
   },
 ];
 
