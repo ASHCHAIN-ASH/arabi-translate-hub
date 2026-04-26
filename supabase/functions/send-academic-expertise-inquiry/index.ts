@@ -720,7 +720,7 @@ const generateCustomerEmailTemplate = (consultationData: ConsultationRequest, se
               <div class="contact-card">
                 <span class="icon">📱</span>
                 <div class="label">الهاتف والواتساب</div>
-                <div class="value">+966 50 077 6343</div>
+                <div class="value">+966559600824</div>
               </div>
               
               <div class="contact-card">

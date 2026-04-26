@@ -15,7 +15,7 @@ const PLATFORM = {
   domain: "masteredupath.com",
   website: "https://masteredupath.com",
   email: "info@masteredupath.com",
-  whatsapp1: "0500776343",
+  whatsapp1: "0559600824",
   whatsapp2: "0559600824",
   address: "المملكة العربية السعودية — الرياض",
   cr: "—", // السجل التجاري (يمكن إضافته لاحقاً)
