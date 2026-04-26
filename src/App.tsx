@@ -144,6 +144,7 @@ import MasterPayLater from "./pages/MasterPayLater";
 import FinancingNew from "./pages/client/FinancingNew";
 import FinancingDetails from "./pages/client/FinancingDetails";
 import FinancingAcknowledgments from "./pages/client/FinancingAcknowledgments";
+import DownPaymentStatus from "./pages/client/DownPaymentStatus";
 
 import ThesisTitles from "./pages/research/ThesisTitles";
 import AnnotatedPublishing from './pages/research/AnnotatedPublishing';
@@ -474,6 +475,11 @@ const App = () => (
             <Route path="/financing/acknowledgments" element={
               <SimpleProtectedRoute requiredRole="client">
                 <FinancingAcknowledgments />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/financing/down-payments" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <DownPaymentStatus />
               </SimpleProtectedRoute>
             } />
             <Route path="/contracts/:id" element={
