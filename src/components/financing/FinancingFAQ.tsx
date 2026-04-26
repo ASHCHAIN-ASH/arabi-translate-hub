@@ -118,7 +118,7 @@ const FinancingFAQ: React.FC = () => {
                 rel="noopener noreferrer"
                 className="font-bold tabular-nums underline-offset-2 hover:underline"
               >
-                +966 55 960 0824
+                +966559600824
               </a>
             </p>
           </div>
