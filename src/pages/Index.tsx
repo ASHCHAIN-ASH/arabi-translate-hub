@@ -819,9 +819,9 @@ const Index = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {[
-              { name: "د. أحمد المنصور", role: "باحث دكتوراه - جامعة الملك سعود", text: "خدمة التحليل الإحصائي كانت ممتازة. الفريق تعامل مع بياناتي بدقة عالية وسلموني النتائج قبل الموعد المحدد.", rating: 5 },
-              { name: "سارة العتيبي", role: "طالبة ماجستير - جامعة الملك عبدالعزيز", text: "ترجمة بحثي تمت بجودة أكاديمية رائعة. المترجم كان متخصصاً في مجالي وفهم المصطلحات العلمية بشكل دقيق.", rating: 5 },
-              { name: "م. خالد الحربي", role: "باحث - مركز الأبحاث الوطني", text: "نشرت بحثي في مجلة Scopus بفضل مساعدتهم في التدقيق والتنسيق. خدمة احترافية من البداية للنهاية.", rating: 5 }
+              { name: "د. أحمد المنصور", role: "باحث دكتوراه - جامعة الملك سعود", text: "خدمة التحليل الإحصائي كانت ممتازة. الفريق تعامل مع بياناتي بدقة عالية وسلموني النتائج قبل الموعد المحدد.", rating: 5, image: testimonialProfessorImg, accent: "from-blue-500 to-indigo-600" },
+              { name: "سارة العتيبي", role: "طالبة ماجستير - جامعة الملك عبدالعزيز", text: "ترجمة بحثي تمت بجودة أكاديمية رائعة. المترجم كان متخصصاً في مجالي وفهم المصطلحات العلمية بشكل دقيق.", rating: 5, image: testimonialStudentFemaleImg, accent: "from-rose-500 to-pink-600" },
+              { name: "م. خالد الحربي", role: "باحث - مركز الأبحاث الوطني", text: "نشرت بحثي في مجلة Scopus بفضل مساعدتهم في التدقيق والتنسيق. خدمة احترافية من البداية للنهاية.", rating: 5, image: testimonialResearcherMaleImg, accent: "from-emerald-500 to-teal-600" }
             ].map((testimonial, index) => (
               <motion.div
                 key={index}
@@ -829,22 +829,42 @@ const Index = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                whileHover={{ y: -5 }}
+                whileHover={{ y: -8 }}
+                className="group"
               >
-                <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all bg-white dark:bg-slate-800">
-                  <CardContent className="p-6">
-                    <div className="flex gap-1 mb-3">
+                <Card className="h-full border-0 shadow-lg hover:shadow-2xl transition-all duration-500 bg-white dark:bg-slate-800 overflow-hidden">
+                  {/* صورة العميل - بانر علوي */}
+                  <div className="relative h-48 overflow-hidden">
+                    <motion.img
+                      src={testimonial.image}
+                      alt={testimonial.name}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                      whileHover={{ scale: 1.08 }}
+                      transition={{ duration: 0.6 }}
+                    />
+                    <div className={`absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent`} />
+                    {/* النجوم على الصورة */}
+                    <div className="absolute top-3 right-3 flex gap-0.5 px-2 py-1 bg-white/95 backdrop-blur-sm rounded-full shadow-lg">
                       {Array.from({ length: testimonial.rating }).map((_, i) => (
-                        <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        <Star key={i} className="h-3 w-3 fill-amber-400 text-amber-400" />
                       ))}
                     </div>
-                    <Quote className="h-6 w-6 text-blue-200 mb-2" />
-                    <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-4">
-                      {testimonial.text}
+                    {/* الاسم على الصورة */}
+                    <div className="absolute bottom-3 right-3 left-3 text-white">
+                      <p className="font-bold text-base drop-shadow-lg">{testimonial.name}</p>
+                      <p className="text-xs opacity-90 drop-shadow">{testimonial.role}</p>
+                    </div>
+                  </div>
+
+                  <CardContent className="p-5 relative">
+                    <Quote className={`absolute top-2 left-2 h-8 w-8 text-transparent bg-gradient-to-br ${testimonial.accent} bg-clip-text opacity-30`} />
+                    <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed pt-2">
+                      "{testimonial.text}"
                     </p>
-                    <div className="border-t pt-3">
-                      <p className="font-bold text-sm text-slate-800 dark:text-white">{testimonial.name}</p>
-                      <p className="text-xs text-muted-foreground">{testimonial.role}</p>
+                    <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700 flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-emerald-500" />
+                      <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">عميل موثّق</span>
                     </div>
                   </CardContent>
                 </Card>
