@@ -63,10 +63,16 @@ const STEPS = [
 
 const HomeFinancingSection: React.FC = () => {
   const navigate = useNavigate();
-  const [amount, setAmount] = useState<number>(3000);
-  const [months, setMonths] = useState<number>(6);
+  const [amount, setAmount] = useState<number>(5000);
 
-  const monthly = useMemo(() => amount / months, [amount, months]);
+  // نموذج تسعير واقعي: شرائح المدة + دفعة مقدّمة 25% + APR 0%
+  const preview = useMemo(() => computeFinancingPreview(amount), [amount]);
+  const monthly = preview.monthly;
+  const months = preview.duration;
+  const downPayment = preview.downPayment;
+  const remaining = preview.remaining;
+  const eligible = amount >= FINANCING_MIN_AMOUNT;
+  const downPct = Math.round(FINANCING_DEFAULT_DOWN_PAYMENT_PCT * 100);
 
   return (
     <section
