@@ -778,17 +778,49 @@ const Index = () => {
             })}
           </div>
 
-          {/* إحصائية الشراكات */}
+          {/* بانر صورة شراكة حقيقية */}
           <motion.div
-            className="mt-12 text-center"
-            initial={{ opacity: 0, y: 20 }}
+            className="mt-12 max-w-5xl mx-auto"
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
             viewport={{ once: true }}
           >
-            <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-600 to-orange-600 rounded-full text-white shadow-lg">
-              <Building2 className="h-5 w-5" />
-              <span className="font-bold text-lg">200+ جامعة ومؤسسة شريكة حول العالم</span>
+            <div className="relative rounded-3xl overflow-hidden shadow-2xl group">
+              <div className="aspect-[16/7] sm:aspect-[16/6] relative">
+                <motion.img
+                  src={partnershipHandshakeImg}
+                  alt="شراكة بين ماستر إيدو باث ومؤسسات أكاديمية - مصافحة نجاح"
+                  className="absolute inset-0 w-full h-full object-cover"
+                  loading="lazy"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.8 }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-slate-900/85 via-slate-900/50 to-transparent" />
+                <div className="absolute inset-0 flex items-center">
+                  <div className="px-6 sm:px-10 lg:px-14 max-w-xl">
+                    <motion.div
+                      className="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-400/20 backdrop-blur-md border border-amber-300/40 rounded-full text-amber-200 text-xs sm:text-sm font-medium mb-3"
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                    >
+                      <Building2 className="h-3.5 w-3.5" />
+                      شراكات استراتيجية
+                    </motion.div>
+                    <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-2 sm:mb-3 leading-tight">
+                      200+ جامعة ومؤسسة <span className="text-amber-300">يثقون بنا</span>
+                    </h3>
+                    <p className="text-sm sm:text-base text-blue-100/90 mb-4">
+                      نعمل يداً بيد مع كبرى المؤسسات الأكاديمية لتقديم أفضل الحلول
+                    </p>
+                    <div className="flex items-center gap-2 text-xs sm:text-sm text-white/80">
+                      <CheckCircle className="h-4 w-4 text-emerald-400" />
+                      <span>اعتماد دولي • شفافية كاملة • التزام بالمواعيد</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </motion.div>
         </div>
