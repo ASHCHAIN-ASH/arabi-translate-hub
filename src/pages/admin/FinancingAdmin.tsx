@@ -92,26 +92,46 @@ type Installment = {
   paid_amount: number | null;
 };
 
+// التسلسل الرسمي لمراحل التمويل (من الاستلام إلى الإغلاق)
+// 1) submitted → 2) documents_pending → 3) under_review → 4) waiting_down_payment
+// → 5) contract_pending_signature → 6) approved → 7) active → 8) completed
+// مسارات استثنائية: rejected | cancelled | overdue | execution_deed
 const STATUS_FILTERS: Array<{ key: string; label: string }> = [
   { key: 'all', label: 'الكل' },
-  { key: 'submitted', label: 'جديدة' },
-  { key: 'documents_pending', label: 'مستندات' },
-  { key: 'under_review', label: 'قيد المراجعة' },
-  { key: 'waiting_down_payment', label: 'بانتظار الدفعة' },
-  { key: 'contract_pending_signature', label: 'بانتظار التوقيع' },
-  { key: 'approved', label: 'موافقة' },
-  { key: 'active', label: 'نشطة' },
+  // — مرحلة الاستقبال —
+  { key: 'submitted', label: '1. جديدة' },
+  { key: 'documents_pending', label: '2. مستندات' },
+  { key: 'under_review', label: '3. قيد التقييم' },
+  // — مرحلة التفعيل —
+  { key: 'waiting_down_payment', label: '4. بانتظار الدفعة' },
+  { key: 'contract_pending_signature', label: '5. بانتظار التوقيع' },
+  { key: 'approved', label: '6. موافقة' },
+  { key: 'active', label: '7. نشطة' },
+  { key: 'completed', label: '8. مُسدَّدة' },
+  // — مسارات استثنائية —
+  { key: 'overdue', label: 'متعثّرة' },
   { key: 'rejected', label: 'مرفوضة' },
+  { key: 'cancelled', label: 'ملغاة' },
 ];
 
-const ACTION_STATUSES = [
-  'documents_pending',
-  'under_review',
-  'waiting_down_payment',
-  'contract_pending_signature',
-  'approved',
-  'rejected',
-  'cancelled',
+// مجموعات الحالات للقائمة المنسدلة "حالة أخرى" — مرتبة بالتسلسل المنطقي للرحلة
+const STATUS_GROUPS: Array<{ label: string; statuses: string[] }> = [
+  {
+    label: '— مرحلة الاستقبال والتقييم —',
+    statuses: ['submitted', 'documents_pending', 'under_review'],
+  },
+  {
+    label: '— مرحلة التفعيل —',
+    statuses: ['waiting_down_payment', 'contract_pending_signature', 'approved', 'active'],
+  },
+  {
+    label: '— مرحلة الإغلاق —',
+    statuses: ['completed'],
+  },
+  {
+    label: '— مسارات استثنائية —',
+    statuses: ['overdue', 'execution_deed', 'rejected', 'cancelled'],
+  },
 ];
 
 const statusVariant = (s: string) => {
