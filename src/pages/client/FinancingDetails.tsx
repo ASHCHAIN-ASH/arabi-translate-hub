@@ -1207,10 +1207,38 @@ const FinancingDetails: React.FC = () => {
         <Card className="p-4 bg-muted/30">
           <div className="flex items-start gap-3">
             <ShieldCheck className="h-5 w-5 text-primary mt-0.5" />
-            <div className="text-xs leading-relaxed text-muted-foreground">
-              لأي استفسار حول طلبك، تواصل مع <span className="font-semibold text-foreground">{FINANCING_TEAMS.unified}</span>{' '}
-              على الرقم <span className="font-mono font-semibold text-foreground">{FINANCING_TEAMS.contact}</span>.
-              ستصلك جميع تحديثات الطلب على واتساب لحظيًا.
+            <div className="text-xs leading-relaxed text-muted-foreground space-y-2">
+              <p>
+                لأي استفسار حول طلبك، تواصل مع{' '}
+                <span className="font-semibold text-foreground">{FINANCING_TEAMS.unified}</span>{' '}
+                مباشرةً عبر واتساب — ستصلك جميع تحديثات الطلب لحظيًا.
+              </p>
+              <div className="flex flex-wrap gap-2 pt-1">
+                <a
+                  href={`https://wa.me/${FINANCING_TEAMS.whatsappPrimary}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-500/30 px-3 py-1.5 font-mono font-semibold tabular-nums transition-colors"
+                >
+                  <span>واتساب</span>
+                  <span dir="ltr">{FINANCING_TEAMS.contact}</span>
+                </a>
+                <a
+                  href={`https://wa.me/${FINANCING_TEAMS.whatsappSecondary}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/5 hover:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-500/20 px-3 py-1.5 font-mono font-semibold tabular-nums transition-colors"
+                >
+                  <span>بديل</span>
+                  <span dir="ltr">{FINANCING_TEAMS.contactSecondary}</span>
+                </a>
+                <a
+                  href={`mailto:${FINANCING_TEAMS.email}`}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary ring-1 ring-primary/30 px-3 py-1.5 font-semibold transition-colors"
+                >
+                  {FINANCING_TEAMS.email}
+                </a>
+              </div>
             </div>
           </div>
         </Card>
