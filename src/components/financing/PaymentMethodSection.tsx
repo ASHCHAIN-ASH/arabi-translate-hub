@@ -3,11 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   CreditCard, ShieldCheck, Lock, Calendar, Hash, User, Mail, Check,
   AlertCircle, Building2, Wallet as WalletIcon, Copy, Upload, FileImage,
-  X, Banknote, Receipt, Info,
+  X, Banknote, Receipt, Info, FileText, Eye, Maximize2, RefreshCw,
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
@@ -238,11 +239,18 @@ const PaymentMethodSection: React.FC<Props> = ({
   );
   const cardDigits = value.cardNumber.replace(/\s/g, '');
 
-  // ===== Bank receipt preview =====
+  // ===== Bank receipt preview (image OR pdf) =====
   const [receiptPreview, setReceiptPreview] = useState<string | null>(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
   useEffect(() => {
     const f = value.bankReceiptFile;
-    if (!f || !f.type.startsWith('image/')) {
+    if (!f) {
+      setReceiptPreview(null);
+      return;
+    }
+    const isImg = f.type.startsWith('image/');
+    const isPdf = f.type === 'application/pdf';
+    if (!isImg && !isPdf) {
       setReceiptPreview(null);
       return;
     }
@@ -250,6 +258,10 @@ const PaymentMethodSection: React.FC<Props> = ({
     setReceiptPreview(url);
     return () => URL.revokeObjectURL(url);
   }, [value.bankReceiptFile]);
+
+  const receiptIsPdf = value.bankReceiptFile?.type === 'application/pdf';
+  const receiptIsImage = !!value.bankReceiptFile?.type.startsWith('image/');
+  const receiptSizeKb = value.bankReceiptFile ? (value.bankReceiptFile.size / 1024).toFixed(0) : '0';
 
   const handleReceiptFile = (f?: File | null) => {
     if (!f) return;
@@ -571,31 +583,129 @@ const PaymentMethodSection: React.FC<Props> = ({
                   />
                 </label>
               ) : (
-                <div className="rounded-xl ring-1 ring-emerald-500/30 bg-emerald-500/5 p-3 flex items-center gap-3">
-                  {receiptPreview ? (
-                    <img src={receiptPreview} alt="إيصال" className="h-14 w-14 rounded-lg object-cover ring-1 ring-border" />
-                  ) : (
-                    <div className="h-14 w-14 rounded-lg bg-background ring-1 ring-border flex items-center justify-center">
-                      <FileImage className="h-6 w-6 text-muted-foreground" />
-                    </div>
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <div className="text-xs font-bold truncate">{value.bankReceiptName}</div>
-                    <div className="text-[10px] text-emerald-600 flex items-center gap-1 mt-0.5">
-                      <Check className="h-3 w-3" /> تم رفع الإيصال
+                <div className="space-y-2">
+                  {/* Live preview frame */}
+                  <div className="relative rounded-xl overflow-hidden ring-1 ring-emerald-500/30 bg-muted/40">
+                    {receiptIsImage && receiptPreview && (
+                      <button
+                        type="button"
+                        onClick={() => setPreviewOpen(true)}
+                        className="group block w-full"
+                        aria-label="تكبير المعاينة"
+                      >
+                        <img
+                          src={receiptPreview}
+                          alt="معاينة إيصال التحويل"
+                          className="w-full max-h-72 object-contain bg-background"
+                        />
+                        <div className="absolute top-2 left-2 rtl:right-2 rtl:left-auto bg-background/80 backdrop-blur rounded-md p-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Maximize2 className="h-3.5 w-3.5" />
+                        </div>
+                      </button>
+                    )}
+                    {receiptIsPdf && receiptPreview && (
+                      <object
+                        data={`${receiptPreview}#toolbar=0&navpanes=0&view=FitH`}
+                        type="application/pdf"
+                        className="w-full h-72 bg-background"
+                        aria-label="معاينة PDF للإيصال"
+                      >
+                        <div className="flex flex-col items-center justify-center gap-2 p-6 text-center">
+                          <FileText className="h-10 w-10 text-muted-foreground" />
+                          <div className="text-xs text-muted-foreground">
+                            متصفحك لا يدعم معاينة PDF داخل الصفحة
+                          </div>
+                          <a
+                            href={receiptPreview}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs font-bold text-primary underline"
+                          >
+                            فتح الإيصال في تبويب جديد
+                          </a>
+                        </div>
+                      </object>
+                    )}
+                    {!receiptIsImage && !receiptIsPdf && (
+                      <div className="flex items-center justify-center h-32">
+                        <FileImage className="h-10 w-10 text-muted-foreground" />
+                      </div>
+                    )}
+
+                    {/* Floating badge */}
+                    <div className="absolute bottom-2 right-2 rtl:left-2 rtl:right-auto flex items-center gap-1 rounded-full bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 shadow-lg">
+                      <Check className="h-3 w-3" /> جاهز للإرسال
                     </div>
                   </div>
-                  <Button
-                    type="button"
-                    size="sm"
-                    variant="ghost"
-                    className="h-8 w-8 p-0"
-                    onClick={() => onChange({ ...value, bankReceiptFile: null, bankReceiptName: '' })}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
+
+                  {/* Meta + actions */}
+                  <div className="flex items-center gap-2 rounded-lg bg-muted/40 ring-1 ring-border p-2">
+                    <div className="h-9 w-9 rounded-md bg-background ring-1 ring-border flex items-center justify-center shrink-0">
+                      {receiptIsPdf ? (
+                        <FileText className="h-5 w-5 text-rose-600" />
+                      ) : (
+                        <FileImage className="h-5 w-5 text-sky-600" />
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-xs font-bold truncate">{value.bankReceiptName}</div>
+                      <div className="text-[10px] text-muted-foreground">
+                        {receiptIsPdf ? 'PDF' : 'صورة'} · {receiptSizeKb} KB
+                      </div>
+                    </div>
+                    {receiptIsImage && (
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="ghost"
+                        className="h-8 px-2 gap-1"
+                        onClick={() => setPreviewOpen(true)}
+                      >
+                        <Eye className="h-3.5 w-3.5" />
+                        <span className="text-[10px]">عرض</span>
+                      </Button>
+                    )}
+                    <label
+                      htmlFor="bank-receipt-replace"
+                      className="inline-flex items-center gap-1 h-8 px-2 rounded-md text-[10px] font-bold cursor-pointer hover:bg-background"
+                    >
+                      <RefreshCw className="h-3.5 w-3.5" />
+                      استبدال
+                      <input
+                        id="bank-receipt-replace"
+                        type="file"
+                        accept="image/*,application/pdf"
+                        className="hidden"
+                        onChange={(e) => handleReceiptFile(e.target.files?.[0])}
+                      />
+                    </label>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="ghost"
+                      className="h-8 w-8 p-0 text-rose-600 hover:text-rose-700 hover:bg-rose-500/10"
+                      onClick={() => onChange({ ...value, bankReceiptFile: null, bankReceiptName: '' })}
+                      aria-label="حذف الإيصال"
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               )}
+
+              {/* Lightbox dialog for image */}
+              <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
+                <DialogContent className="max-w-3xl p-2 sm:p-4">
+                  <DialogTitle className="text-sm">معاينة إيصال التحويل</DialogTitle>
+                  {receiptPreview && receiptIsImage && (
+                    <img
+                      src={receiptPreview}
+                      alt="معاينة كاملة"
+                      className="w-full max-h-[80vh] object-contain rounded-lg"
+                    />
+                  )}
+                </DialogContent>
+              </Dialog>
             </div>
           </motion.div>
         )}
