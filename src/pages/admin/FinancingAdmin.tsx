@@ -367,57 +367,64 @@ const FinancingAdmin: React.FC = () => {
   return (
     <AdminLayout>
       <div className="p-4 md:p-6 space-y-6 animate-fade-in" dir="rtl">
-        {/* Hero — Banking-style */}
+        {/* Hero — Dashboard banking مكثّف */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative overflow-hidden rounded-3xl border border-border/40 bg-gradient-to-br from-primary/15 via-background to-accent/10 p-6 md:p-8 backdrop-blur-2xl shadow-xl"
+          className="relative overflow-hidden rounded-3xl border border-border/40 bg-gradient-to-br from-primary/15 via-background to-accent/10 p-5 md:p-6 backdrop-blur-2xl shadow-xl"
         >
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_15%,hsl(var(--primary)/0.25),transparent_55%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_85%,hsl(var(--accent)/0.2),transparent_55%)]" />
-          <div className="relative flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary via-primary to-primary/70 flex items-center justify-center shadow-2xl shadow-primary/40 ring-4 ring-primary/10">
-                <Banknote className="w-8 h-8 text-primary-foreground" />
+          <div className="relative flex items-start justify-between flex-wrap gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary via-primary to-primary/70 flex items-center justify-center shadow-2xl shadow-primary/40 ring-4 ring-primary/10">
+                <Banknote className="w-7 h-7 text-primary-foreground" />
               </div>
               <div>
-                <h1 className="text-2xl md:text-3xl font-extrabold flex items-center gap-2 tracking-tight">
-                  Master PayLater
-                  <Sparkles className="w-5 h-5 text-primary animate-pulse" />
+                <h1 className="text-xl md:text-2xl font-extrabold flex items-center gap-2 tracking-tight">
+                  لوحة التمويل والائتمان
+                  <Sparkles className="w-4 h-4 text-primary animate-pulse" />
                 </h1>
-                <p className="text-sm text-muted-foreground mt-1">
-                  لوحة التمويل والائتمان والمتابعة • مزامنة لحظية مع لوحة العميل
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  إدارة طلبات Master PayLater • مزامنة لحظية مع لوحة العميل والواتساب
                 </p>
-                <div className="flex items-center gap-2 mt-2">
-                  <span className="inline-flex items-center gap-1.5 text-xs px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                  <span className="inline-flex items-center gap-1.5 text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    Realtime مفعّل
+                    مباشر
                   </span>
-                  <span className="text-xs text-muted-foreground">آخر تحديث: {format(new Date(), 'HH:mm:ss')}</span>
+                  <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-background/60 border border-border/40 text-muted-foreground">
+                    <Users className="w-3 h-3" />
+                    {apps.length} طلب
+                  </span>
+                  <span className="text-[10px] text-muted-foreground tabular-nums" dir="ltr">
+                    {format(new Date(), 'HH:mm:ss')}
+                  </span>
                 </div>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Button asChild variant="outline" size="sm" className="gap-2">
+              <Button asChild variant="outline" size="sm" className="gap-1.5 h-8">
                 <Link to="/adminmaster/financing/audit">
-                  <Activity className="w-4 h-4" /> سجل التدقيق
+                  <Activity className="w-3.5 h-3.5" /> سجل التدقيق
                 </Link>
               </Button>
-              <Button variant="default" onClick={fetchApps} disabled={loading} className="gap-2 shadow-lg shadow-primary/20">
-                <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+              <Button variant="default" size="sm" onClick={fetchApps} disabled={loading} className="gap-1.5 h-8 shadow-lg shadow-primary/20">
+                <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
                 تحديث
               </Button>
             </div>
           </div>
         </motion.div>
 
-        {/* KPI cards — banking grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+        {/* KPI cards — صف مكثّف 6 أعمدة */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5">
           <KpiCard icon={<TrendingUp className="w-4 h-4" />} label="نشطة" value={String(stats.active)} accent="from-emerald-500/20 to-emerald-500/5" tone="text-emerald-600" />
           <KpiCard icon={<Clock className="w-4 h-4" />} label="قيد المعالجة" value={String(stats.pending)} accent="from-amber-500/20 to-amber-500/5" tone="text-amber-600" />
           <KpiCard icon={<Receipt className="w-4 h-4" />} label="بانتظار الدفعة" value={String(stats.pendingReceipts)} accent="from-sky-500/20 to-sky-500/5" tone="text-sky-600" />
           <KpiCard icon={<AlertTriangle className="w-4 h-4" />} label="أقساط متأخرة" value={String(stats.overdueCount)} accent="from-rose-500/20 to-rose-500/5" tone="text-rose-600" sub={stats.overdueAmount ? `${fmt(stats.overdueAmount)} ر.س` : undefined} />
-          <KpiCard icon={<Wallet className="w-4 h-4" />} label="إجمالي المُموَّل" value={`${fmt(stats.totalFunded)} ر.س`} accent="from-primary/20 to-primary/5" tone="text-primary" />
+          <KpiCard icon={<Wallet className="w-4 h-4" />} label="إجمالي المُموَّل" value={`${fmt(stats.totalFunded)}`} accent="from-primary/20 to-primary/5" tone="text-primary" sub="ريال سعودي" />
+          <KpiCard icon={<Users className="w-4 h-4" />} label="إجمالي الطلبات" value={String(apps.length)} accent="from-violet-500/20 to-violet-500/5" tone="text-violet-600" />
         </div>
 
         <Tabs value={filter} onValueChange={setFilter}>
