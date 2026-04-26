@@ -240,9 +240,27 @@ const FinancingNew: React.FC = () => {
     executionDeed: false,
   });
   const [payment, setPayment] = useState<PaymentDetails>(emptyPaymentDetails);
-  const paymentValid = useMemo(() => validatePaymentDetails(payment).ok, [payment]);
+  const [walletBalance, setWalletBalance] = useState<number>(0);
 
   const preview = useMemo(() => computeFinancingPreview(amount), [amount]);
+
+  const paymentValid = useMemo(
+    () => validatePaymentDetails(payment, {
+      walletBalance,
+      downPayment: preview.downPayment,
+    }).ok,
+    [payment, walletBalance, preview.downPayment],
+  );
+
+  // جلب رصيد المحفظة لاستخدامه في خيار الدفع من المحفظة
+  useEffect(() => {
+    if (!user?.id) return;
+    import('@/utils/walletService').then(({ WalletService }) => {
+      WalletService.getMyWallet(user.id)
+        .then((w) => setWalletBalance(w?.balance ?? 0))
+        .catch(() => setWalletBalance(0));
+    });
+  }, [user?.id]);
 
   // ===== التقييم الائتماني التلقائي =====
   const creditScore = useMemo(() => {
