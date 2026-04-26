@@ -218,6 +218,7 @@ const FinancingDetails: React.FC = () => {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'financing_payment_receipts', filter: `application_id=eq.${id}` }, () => load())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'financing_documents', filter: `application_id=eq.${id}` }, () => load())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'financing_installments', filter: `application_id=eq.${id}` }, () => load())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'financing_status_logs', filter: `application_id=eq.${id}` }, () => load())
       .subscribe();
     return () => {
       supabase.removeChannel(channel);
