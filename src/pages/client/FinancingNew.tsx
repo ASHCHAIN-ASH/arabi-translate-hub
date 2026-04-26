@@ -251,6 +251,7 @@ const FinancingNew: React.FC = () => {
   });
   const [payment, setPayment] = useState<PaymentDetails>(emptyPaymentDetails);
   const [walletBalance, setWalletBalance] = useState<number>(0);
+  const [walletConfirmOpen, setWalletConfirmOpen] = useState(false);
 
   const preview = useMemo(() => computeFinancingPreview(amount), [amount]);
 
