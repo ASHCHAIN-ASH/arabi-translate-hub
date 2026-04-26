@@ -127,22 +127,154 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
-      <SEO 
-        title="MasterEduPath - خدمات بحثية وأكاديمية متقدمة | ترجمة ونشر علمي"
-        description="وكالة MasterEduPath للحلول التعليمية المتقدمة - خدمات ترجمة أكاديمية، نشر علمي، تحليل إحصائي SPSS، تدقيق لغوي، وخدمات بحثية شاملة للطلاب والباحثين"
-        keywords="MasterEduPath, خدمات بحثية, ترجمة أكاديمية, نشر علمي, تدقيق لغوي, تحليل إحصائي SPSS, خدمات أكاديمية, جامعات سعودية, بحث علمي, رسائل ماجستير, رسائل دكتوراه"
+      <SEO
+        title="MasterEduPath | خدمات بحثية وأكاديمية متقدمة — ترجمة، نشر علمي، تحليل SPSS"
+        description="وكالة MasterEduPath الأكاديمية: ترجمة بحثية احترافية، نشر علمي في مجلات Scopus وISI، تحليل إحصائي SPSS، تدقيق لغوي، ودعم رسائل الماجستير والدكتوراه. أكثر من 15,000 باحث في 25+ دولة. استشارة مجانية خلال ساعة."
+        keywords="MasterEduPath, ماستر إيدو باث, خدمات بحثية, ترجمة أكاديمية, نشر علمي, Scopus, ISI, تدقيق لغوي, تحليل إحصائي, SPSS, AMOS, جامعات سعودية, بحث علمي, رسائل ماجستير, رسائل دكتوراه, خدمات أكاديمية السعودية"
         url="https://masteredupath.com/"
-        schema={{
-          "@context": "https://schema.org",
-          "@type": "EducationalOrganization",
-          "name": "MasterEduPath Agency",
-          "description": "وكالة متخصصة في تقديم الخدمات الأكاديمية والبحثية للطلاب والباحثين",
-          "url": "https://masteredupath.com",
-          "logo": "https://masteredupath.com/assets/national-day-logo-original.webp",
-          "serviceType": ["Academic Translation", "Research Services", "Statistical Analysis", "Publication Support"],
-          "areaServed": "Saudi Arabia",
-          "availableLanguage": ["Arabic", "English"]
-        }}
+        image="https://masteredupath.com/assets/national-day-logo-original.webp"
+        schema={[
+          {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "MasterEduPath",
+            "alternateName": "ماستر إيدو باث",
+            "url": "https://masteredupath.com/",
+            "inLanguage": "ar-SA",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://masteredupath.com/search?q={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "EducationalOrganization",
+            "name": "MasterEduPath Agency",
+            "alternateName": "وكالة ماستر إيدو باث",
+            "description": "وكالة متخصصة في تقديم الخدمات الأكاديمية والبحثية للطلاب والباحثين",
+            "url": "https://masteredupath.com/",
+            "logo": "https://masteredupath.com/assets/national-day-logo-original.webp",
+            "image": "https://masteredupath.com/assets/national-day-logo-original.webp",
+            "telephone": "+966559600824",
+            "email": "info@masteredupath.com",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "جدة",
+              "addressRegion": "مكة المكرمة",
+              "addressCountry": "SA"
+            },
+            "areaServed": ["SA", "AE", "KW", "QA", "BH", "OM", "EG", "JO"],
+            "availableLanguage": ["Arabic", "English"],
+            "serviceType": [
+              "Academic Translation",
+              "Research Services",
+              "Statistical Analysis",
+              "Publication Support",
+              "Proofreading",
+              "Thesis Support"
+            ],
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": "4.9",
+              "reviewCount": "12800",
+              "bestRating": "5",
+              "worstRating": "1"
+            }
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "name": "خدمات MasterEduPath الأكاديمية",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "الترجمة الأكاديمية",
+                "url": "https://masteredupath.com/translation-services"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "خدمات البحث العلمي",
+                "url": "https://masteredupath.com/research-services"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "المراجعة والتدقيق اللغوي",
+                "url": "https://masteredupath.com/services/editing-services"
+              },
+              {
+                "@type": "ListItem",
+                "position": 4,
+                "name": "النشر الأكاديمي",
+                "url": "https://masteredupath.com/research/journal-publication"
+              }
+            ]
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "الرئيسية",
+                "item": "https://masteredupath.com/"
+              }
+            ]
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "ما هي الخدمات التي تقدمها وكالة MasterEduPath؟",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "نقدم ترجمة أكاديمية احترافية، نشر علمي في مجلات Scopus وISI، تحليل إحصائي SPSS وAMOS، تدقيق لغوي، وخدمات شاملة لرسائل الماجستير والدكتوراه."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "كم تستغرق الخدمات لدى MasterEduPath؟",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "نلتزم بأسرع تسليم في السوق — ابتداءً من 24 ساعة لمعظم الخدمات حسب حجم العمل ومتطلباته."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "هل خدماتكم سرية وآمنة؟",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "نعم، نلتزم بسرية تامة وحماية كاملة لجميع أبحاثك ومعلوماتك الشخصية وفق معايير دولية معتمدة."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "هل يوجد ضمان جودة على الخدمات؟",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "نعم، جميع خدماتنا تخضع لمعايير أكاديمية عالمية ISO 9001:2015 مع ضمان مراجعات مجانية حتى الرضا التام."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "كيف أحصل على استشارة مجانية؟",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "تواصل معنا عبر الواتساب على +966559600824 أو املأ نموذج الاستشارة في الموقع وسيرد عليك أحد خبرائنا خلال 60 دقيقة."
+                }
+              }
+            ]
+          }
+        ]}
       />
       <WorkingHoursBannerRTL />
       

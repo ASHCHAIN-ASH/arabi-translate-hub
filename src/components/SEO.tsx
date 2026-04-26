@@ -9,7 +9,8 @@ interface SEOProps {
   type?: string;
   author?: string;
   publishedTime?: string;
-  schema?: object;
+  schema?: object | object[];
+  noIndex?: boolean;
 }
 
 const SEO = ({
@@ -21,7 +22,8 @@ const SEO = ({
   type = "website",
   author = "MasterEduPath Agency",
   publishedTime,
-  schema
+  schema,
+  noIndex = false
 }: SEOProps) => {
   const siteName = "MasterEduPath - وكالة الحلول التعليمية المتقدمة";
   const twitterHandle = "@MasterEduPath";
@@ -63,12 +65,18 @@ const SEO = ({
       <meta name="keywords" content={keywords} />
       <meta name="author" content={author} />
       <link rel="canonical" href={url} />
-      
+
+      {/* hreflang for Arabic/English/default */}
+      <link rel="alternate" hrefLang="ar-SA" href={url} />
+      <link rel="alternate" hrefLang="ar" href={url} />
+      <link rel="alternate" hrefLang="x-default" href={url} />
+
       {/* Viewport & Mobile */}
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
       <meta name="theme-color" content="#3b82f6" />
-      
-      {/* Language */}
+      <meta name="format-detection" content="telephone=yes" />
+
+      {/* Language & RTL */}
       <meta httpEquiv="content-language" content="ar-SA" />
       <html lang="ar" dir="rtl" />
       
@@ -95,21 +103,27 @@ const SEO = ({
       <meta name="twitter:creator" content={twitterHandle} />
       
       {/* Additional SEO Meta Tags */}
-      <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-      <meta name="googlebot" content="index, follow" />
-      <meta name="bingbot" content="index, follow" />
-      
-      {/* Schema.org structured data */}
+      <meta
+        name="robots"
+        content={noIndex ? "noindex, nofollow" : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"}
+      />
+      <meta name="googlebot" content={noIndex ? "noindex, nofollow" : "index, follow"} />
+      <meta name="bingbot" content={noIndex ? "noindex, nofollow" : "index, follow"} />
+      <meta name="rating" content="general" />
+      <meta name="distribution" content="global" />
+      <meta name="revisit-after" content="7 days" />
+
+      {/* Schema.org structured data - Organization */}
       <script type="application/ld+json">
         {JSON.stringify(organizationSchema)}
       </script>
-      
-      {/* Custom Schema if provided */}
-      {schema && (
-        <script type="application/ld+json">
-          {JSON.stringify(schema)}
+
+      {/* Custom Schema(s) if provided — supports single object or array */}
+      {schema && (Array.isArray(schema) ? schema : [schema]).map((s, i) => (
+        <script key={i} type="application/ld+json">
+          {JSON.stringify(s)}
         </script>
-      )}
+      ))}
       
       {/* Preconnect for performance */}
       <link rel="preconnect" href="https://fonts.googleapis.com" />
