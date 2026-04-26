@@ -4,11 +4,20 @@ import { useNavigate } from 'react-router-dom';
 import {
   Wallet, Sparkles, ShieldCheck, Clock, ArrowLeft,
   CheckCircle2, FileSignature, Smartphone, Calculator,
+  Info, Coins, CalendarClock, Percent,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
+import {
+  computeFinancingPreview,
+  FINANCING_MIN_AMOUNT,
+  FINANCING_TIERS,
+  FINANCING_DEFAULT_DOWN_PAYMENT_PCT,
+  FINANCING_LEGAL_FEES_SAR,
+  FINANCING_GRACE_PERIOD_HOURS,
+} from '@/lib/financing';
 
 import paylaterCard from '@/assets/master-paylater-card.jpg';
 import happyFamily from '@/assets/financing-happy-family.jpg';
