@@ -26,20 +26,24 @@ interface FinancingTimelineProps {
 }
 
 const STAGES = [
-  { key: 'submitted', label: 'تقديم الطلب', icon: FileText, color: 'blue' },
-  { key: 'under_review', label: 'قيد المراجعة', icon: ShieldCheck, color: 'amber' },
-  { key: 'approved', label: 'الموافقة', icon: CheckCircle2, color: 'emerald' },
+  { key: 'submitted', label: 'استلام الطلب', icon: FileText, color: 'blue' },
+  { key: 'under_review', label: 'التقييم الائتماني', icon: ShieldCheck, color: 'amber' },
   { key: 'down_payment_paid', label: 'سداد الدفعة الأولى', icon: CreditCard, color: 'violet' },
-  { key: 'active', label: 'تمويل نشط', icon: Sparkles, color: 'primary' },
+  { key: 'approved', label: 'الموافقة النهائية', icon: CheckCircle2, color: 'emerald' },
+  { key: 'active', label: 'تفعيل الرصيد', icon: Sparkles, color: 'primary' },
 ] as const;
 
 const STATUS_ORDER: Record<string, number> = {
   submitted: 0,
   under_review: 1,
+  documents_pending: 1,
   documents_required: 1,
-  approved: 2,
+  contract_pending_signature: 1,
+  waiting_down_payment: 2,
   down_payment_pending: 2,
-  down_payment_paid: 3,
+  down_payment_paid: 2,
+  approved: 3,
+  execution_deed: 3,
   active: 4,
   completed: 4,
 };
