@@ -554,6 +554,22 @@ const FinancingAdmin: React.FC = () => {
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-5 pt-5">
+                  {/* 🎯 Stepper التفاعلي + Quick Actions في الأعلى */}
+                  <div className="space-y-3">
+                    <AdminFinancingStepper
+                      currentStatus={selected.status}
+                      onChange={(s) => updateStatus(s)}
+                      disabled={working}
+                    />
+                    <AdminQuickActions
+                      currentStatus={selected.status}
+                      onAction={(s) => updateStatus(s)}
+                      disabled={working}
+                    />
+                  </div>
+
+                  <Separator />
+
                   {/* Applicant info */}
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
                     <InfoRow icon={<Phone className="w-3.5 h-3.5" />} label="الجوال" value={selected.applicant_phone} ltr />
@@ -561,7 +577,7 @@ const FinancingAdmin: React.FC = () => {
                     <InfoRow icon={<User className="w-3.5 h-3.5" />} label="الهوية" value={selected.applicant_id_number} ltr />
                     <InfoRow icon={<Building2 className="w-3.5 h-3.5" />} label="جهة العمل" value={selected.employer_name || '—'} />
                     <InfoRow label="الدخل الشهري" value={selected.monthly_income ? `${fmt(selected.monthly_income)} ر.س` : '—'} />
-                    <InfoRow label="الالتزامات" value={selected.monthly_commitments ? `${fmt(selected.monthly_commitments)} ر.س` : '—'} />
+                    <InfoRow label="الالتزامات الشهرية" value={selected.monthly_commitments ? `${fmt(selected.monthly_commitments)} ر.س` : '—'} />
                     <InfoRow label="المدينة" value={selected.city || '—'} />
                     <InfoRow icon={<Calendar className="w-3.5 h-3.5" />} label="تاريخ الطلب" value={format(new Date(selected.created_at), 'yyyy-MM-dd HH:mm')} />
                     <InfoRow label="درجة المخاطر" value={selected.risk_level || '—'} />
@@ -571,11 +587,17 @@ const FinancingAdmin: React.FC = () => {
 
                   {/* Financial summary */}
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    <Stat label="إجمالي" value={`${fmt(selected.total_amount)} ر.س`} />
+                    <Stat label="إجمالي التمويل" value={`${fmt(selected.total_amount)} ر.س`} />
                     <Stat label="الدفعة الأولى" value={`${fmt(selected.down_payment)} ر.س`} />
-                    <Stat label="المتبقي" value={`${fmt(selected.remaining_amount)} ر.س`} />
-                    <Stat label={`القسط × ${selected.duration_months}`} value={`${fmt(selected.monthly_installment)} ر.س`} />
+                    <Stat label="المبلغ المتبقي" value={`${fmt(selected.remaining_amount)} ر.س`} />
+                    <Stat label={`القسط الشهري × ${selected.duration_months}`} value={`${fmt(selected.monthly_installment)} ر.س`} />
                   </div>
+
+                  {/* 📲 سجل إشعارات الواتساب */}
+                  <AdminWhatsAppLogPanel
+                    applicationId={selected.id}
+                    applicantName={selected.applicant_full_name}
+                  />
 
                   {/* Installments tracker */}
                   {installments.length > 0 && (
