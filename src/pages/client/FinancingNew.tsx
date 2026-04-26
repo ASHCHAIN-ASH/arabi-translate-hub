@@ -455,6 +455,17 @@ const FinancingNew: React.FC = () => {
     return true;
   };
 
+  // Intercept submit for wallet payments to require explicit confirmation
+  const handleSubmitClick = () => {
+    if (!user) return;
+    if (!validateStep1() || !validateStep2() || !validateStep3()) return;
+    if (payment.method === 'wallet') {
+      setWalletConfirmOpen(true);
+      return;
+    }
+    handleSubmit();
+  };
+
   const handleSubmit = async () => {
     if (!user) return;
     if (!validateStep1() || !validateStep2() || !validateStep3()) return;
