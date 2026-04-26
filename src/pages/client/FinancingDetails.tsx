@@ -102,8 +102,8 @@ const TIMELINE_STAGES = [
   { key: 'under_review', label: 'التقييم الائتماني', icon: ShieldCheck },
   { key: 'contract_pending_signature', label: 'توقيع العقد', icon: FileText },
   { key: 'waiting_down_payment', label: 'الدفعة الأولى', icon: CreditCard },
-  { key: 'active', label: 'تفعيل الرصيد', icon: Sparkles },
   { key: 'execution_deed', label: 'السند التنفيذي', icon: Gavel },
+  { key: 'active', label: 'تفعيل الرصيد', icon: Sparkles },
 ];
 
 const REJECTED_LIKE = ['rejected', 'cancelled'];
