@@ -103,21 +103,27 @@ const SEO = ({
       <meta name="twitter:creator" content={twitterHandle} />
       
       {/* Additional SEO Meta Tags */}
-      <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-      <meta name="googlebot" content="index, follow" />
-      <meta name="bingbot" content="index, follow" />
-      
-      {/* Schema.org structured data */}
+      <meta
+        name="robots"
+        content={noIndex ? "noindex, nofollow" : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"}
+      />
+      <meta name="googlebot" content={noIndex ? "noindex, nofollow" : "index, follow"} />
+      <meta name="bingbot" content={noIndex ? "noindex, nofollow" : "index, follow"} />
+      <meta name="rating" content="general" />
+      <meta name="distribution" content="global" />
+      <meta name="revisit-after" content="7 days" />
+
+      {/* Schema.org structured data - Organization */}
       <script type="application/ld+json">
         {JSON.stringify(organizationSchema)}
       </script>
-      
-      {/* Custom Schema if provided */}
-      {schema && (
-        <script type="application/ld+json">
-          {JSON.stringify(schema)}
+
+      {/* Custom Schema(s) if provided — supports single object or array */}
+      {schema && (Array.isArray(schema) ? schema : [schema]).map((s, i) => (
+        <script key={i} type="application/ld+json">
+          {JSON.stringify(s)}
         </script>
-      )}
+      ))}
       
       {/* Preconnect for performance */}
       <link rel="preconnect" href="https://fonts.googleapis.com" />
