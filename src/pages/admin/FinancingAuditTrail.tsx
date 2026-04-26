@@ -86,8 +86,12 @@ const FinancingAuditTrail = () => {
           : Promise.resolve({ data: [] }),
       ]);
 
-      const appMap = new Map(apps?.map((a: any) => [a.id, a.applicant_full_name]) || []);
-      const userMap = new Map(profiles?.map((p: any) => [p.id, p.full_name]) || []);
+      const appMap = new Map<string, string>(
+        (apps || []).map((a: any) => [a.id as string, a.applicant_full_name as string])
+      );
+      const userMap = new Map<string, string>(
+        (profiles || []).map((p: any) => [p.id as string, p.full_name as string])
+      );
 
       setRows(
         logs.map((l: any) => ({
