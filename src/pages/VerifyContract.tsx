@@ -15,7 +15,6 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
-import { Helmet } from 'react-helmet-async';
 
 interface VerifiedContract {
   contract_number: string;
@@ -40,6 +39,7 @@ const VerifyContract = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    document.title = 'التحقق من صحة العقد | ماستر إيدو باث';
     const verify = async () => {
       if (!token) {
         setError('رابط غير صالح');
@@ -66,10 +66,6 @@ const VerifyContract = () => {
 
   return (
     <>
-      <Helmet>
-        <title>التحقق من صحة العقد | ماستر إيدو باث</title>
-        <meta name="robots" content="noindex, nofollow" />
-      </Helmet>
       <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-primary/5 flex items-center justify-center p-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
