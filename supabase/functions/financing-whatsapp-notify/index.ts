@@ -30,6 +30,7 @@ function signatureFor(event: string): string {
     case "cancelled":
       return credit;
     case "waiting_down_payment":
+    case "down_payment_received":
     case "active":
     case "installment_reminder":
     case "installment_overdue":
@@ -210,13 +211,23 @@ function buildMessage(event: string, app: AppRow, extra: Record<string, any> = {
         footer
       );
 
+    case "down_payment_received":
+      return (
+        `${BRAND}\n${DIVIDER}\n` +
+        `💰 *تم استلام الدفعة الأولى*\n\n` +
+        `${name}، استلمنا دفعتك بمبلغ *${fmt(extra.receipt_amount || app.down_payment)} ر.س* ✅\n\n` +
+        `🚀 سيتم تفعيل التمويل وإضافة الرصيد إلى محفظتك خلال دقائق.\n` +
+        `🔖 رقم الطلب: *${ref}*` +
+        footer
+      );
+
     case "installment_reminder":
       return (
         `${BRAND}\n${DIVIDER}\n` +
         `⏰ *تذكير بقسط مستحق*\n\n` +
-        `${name}، يستحق قسطك القادم خلال أيام:\n\n` +
-        `💰 المبلغ: *${fmt(extra.amount)} ر.س*\n` +
-        `📅 تاريخ الاستحقاق: *${ltr(extra.due_date)}*\n` +
+        `${name}، يستحق قسطك رقم *${ltr(extra.installment_number || "")}* خلال أيام:\n\n` +
+        `💰 المبلغ: *${fmt(extra.installment_amount || extra.amount)} ر.س*\n` +
+        `📅 تاريخ الاستحقاق: *${ltr(extra.installment_due_date || extra.due_date)}*\n` +
         `🔖 رقم الطلب: *${ref}*` +
         footer
       );
@@ -225,9 +236,10 @@ function buildMessage(event: string, app: AppRow, extra: Record<string, any> = {
       return (
         `${BRAND}\n${DIVIDER}\n` +
         `🚨 *تنبيه: قسط متأخر*\n\n` +
-        `${name}، لديك قسط متأخر على خطة التمويل *${ref}*.\n\n` +
-        `💰 المبلغ المتأخر: *${fmt(extra.amount)} ر.س*\n` +
-        `📅 كان مستحقاً في: *${ltr(extra.due_date)}*\n\n` +
+        `${name}، لديك قسط رقم *${ltr(extra.installment_number || "")}* متأخر على خطة التمويل *${ref}*.\n\n` +
+        `💰 المبلغ المتأخر: *${fmt(extra.installment_amount || extra.amount)} ر.س*\n` +
+        `📅 كان مستحقاً في: *${ltr(extra.installment_due_date || extra.due_date)}*\n` +
+        `⏳ أيام التأخير: *${ltr(extra.days_overdue || 0)}*\n\n` +
         `يرجى السداد في أقرب وقت لتجنب تعليق الخدمات.` +
         footer
       );

@@ -7628,6 +7628,7 @@ export type Database = {
         Args: { _id: string; _note?: string }
         Returns: Json
       }
+      send_due_installment_reminders: { Args: never; Returns: number }
       sign_contract_with_otp: {
         Args: {
           _accepted_terms?: Json
