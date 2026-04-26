@@ -162,7 +162,7 @@ const FinancingDetails: React.FC = () => {
   const load = useCallback(async () => {
     if (!id || !user) return;
     setLoading(true);
-    const [appRes, docsRes, receiptsRes, walletRes, contractRes, instRes] = await Promise.all([
+    const [appRes, docsRes, receiptsRes, walletRes, contractRes, instRes, logsRes] = await Promise.all([
       supabase.from('financing_applications').select('*').eq('id', id).maybeSingle(),
       supabase.from('financing_documents').select('id,document_type,status,file_url,review_note').eq('application_id', id),
       supabase.from('financing_payment_receipts').select('*').eq('application_id', id).order('created_at', { ascending: false }),
@@ -180,12 +180,18 @@ const FinancingDetails: React.FC = () => {
         .select('id,month_number,amount,due_date,status,paid_at,paid_amount')
         .eq('application_id', id)
         .order('month_number', { ascending: true }),
+      supabase
+        .from('financing_status_logs')
+        .select('id,old_status,new_status,note,created_at')
+        .eq('application_id', id)
+        .order('created_at', { ascending: true }),
     ]);
     if (appRes.data) setApp(appRes.data as FinancingApp);
     if (docsRes.data) setDocs(docsRes.data as DocumentRow[]);
     if (receiptsRes.data) setReceipts(receiptsRes.data as PaymentReceipt[]);
     if (walletRes.data) setWallet(walletRes.data as WalletRow);
     if (instRes.data) setInstallments(instRes.data as InstallmentRow[]);
+    if (logsRes.data) setStatusLogs(logsRes.data as any);
     if (contractRes.data) {
       setContract({
         id: contractRes.data.id,
