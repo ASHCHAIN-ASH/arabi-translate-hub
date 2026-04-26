@@ -112,7 +112,25 @@ const FinancingFAQ: React.FC = () => {
             <p className="text-sm sm:text-base font-semibold mb-1">عندك سؤال آخر؟</p>
             <p className="text-[12px] sm:text-sm text-white/80">
               تواصل مع فريق التمويل والائتمان والمتابعة عبر الواتساب —{' '}
-              <span className="font-bold tabular-nums">+966 920 000 000</span>
+              <a
+                href="https://wa.me/966500776343"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-bold tabular-nums underline-offset-2 hover:underline"
+              >
+                +966 50 077 6343
+              </a>
+            </p>
+            <p className="text-[11px] sm:text-xs text-white/70 mt-1">
+              أو على الرقم البديل{' '}
+              <a
+                href="https://wa.me/966559600824"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-bold tabular-nums underline-offset-2 hover:underline"
+              >
+                +966 55 960 0824
+              </a>
             </p>
           </div>
         </Card>
