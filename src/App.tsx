@@ -8,6 +8,7 @@ import PageThemeProvider from "./components/PageThemeProvider";
 import { SimpleAuthProvider } from "@/components/SimpleAuthProvider";
 import SimpleProtectedRoute from "@/components/SimpleProtectedRoute";
 import ScrollToTop from "@/components/ScrollToTop";
+import RouteIndexingGuard from "@/components/RouteIndexingGuard";
 import ContentProtection from "@/components/ContentProtection";
 import LoginWelcomeOverlay from "@/components/LoginWelcomeOverlay";
 import ReferralTracker from "@/components/marketing/ReferralTracker";
