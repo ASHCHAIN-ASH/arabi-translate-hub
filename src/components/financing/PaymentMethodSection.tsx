@@ -3,11 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   CreditCard, ShieldCheck, Lock, Calendar, Hash, User, Mail, Check,
   AlertCircle, Building2, Wallet as WalletIcon, Copy, Upload, FileImage,
-  X, Banknote, Receipt, Info,
+  X, Banknote, Receipt, Info, FileText, Eye, Maximize2, RefreshCw,
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
