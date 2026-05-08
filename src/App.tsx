@@ -736,6 +736,13 @@ const App = () => (
         {/* Redirects: الأدوات القديمة → Workspace الموحد */}
         <Route path="/research/smart-editor" element={<Navigate to="/workspace" replace />} />
         <Route path="/student-hub" element={<Navigate to="/workspace" replace />} />
+        {/* Legacy: قسم الطالب القديم (محذوف) — إعادة توجيه ذكية مع إشعار */}
+        <Route path="/student" element={<LegacyStudentRedirect />} />
+        <Route path="/student/*" element={<LegacyStudentRedirect />} />
+        <Route path="/adminmaster/student-activity" element={<LegacyStudentRedirect />} />
+        <Route path="/adminmaster/student-wallets" element={<LegacyStudentRedirect />} />
+        <Route path="/adminmaster/reward-redemptions" element={<LegacyStudentRedirect />} />
+        <Route path="/adminmaster/reward-rules" element={<LegacyStudentRedirect />} />
         {/* النسخة القديمة للمحرر الذكي (احتياطي) */}
         <Route path="/research/smart-editor-legacy" element={<SmartEditor />} />
         <Route path="/research/annotated-publishing" element={<AnnotatedPublishing />} />
