@@ -23,7 +23,7 @@ import {
   Trophy,
   Users,
   Gift,
-  GraduationCap as StudentIcon,
+  
   BookOpen,
   Megaphone,
   Receipt,
