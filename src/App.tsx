@@ -81,7 +81,7 @@ import GroupOrderJoin from "./pages/client/GroupOrderJoin";
 import MembershipPage from "./pages/client/MembershipPage";
 import ReferralsPage from "./pages/client/ReferralsPage";
 
-import StudentDashboardPage from "./pages/client/StudentDashboardPage";
+
 import AdminMemberships from "./pages/admin/AdminMemberships";
 import AdminBlog from "./pages/admin/AdminBlog";
 import AdminReferrals from "./pages/admin/AdminReferrals";
