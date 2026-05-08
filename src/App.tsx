@@ -126,6 +126,7 @@ import AdminAssessments from "./pages/admin/AdminAssessments";
 
 
 import AssessmentsList from "./pages/academic/AssessmentsList";
+import LegacyStudentRedirect from "./pages/LegacyStudentRedirect";
 import AssessmentStart from "./pages/academic/AssessmentStart";
 import AssessmentResult from "./pages/academic/AssessmentResult";
 import ContractsSystem from "./pages/admin/ContractsSystem";
