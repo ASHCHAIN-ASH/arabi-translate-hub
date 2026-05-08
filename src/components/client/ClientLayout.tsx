@@ -23,7 +23,7 @@ import {
   Trophy,
   Users,
   Gift,
-  GraduationCap as StudentIcon,
+  
   BookOpen,
   Megaphone,
   Receipt,
@@ -43,7 +43,7 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { name: 'لوحة التحكم', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'قسم الطالب', href: '/student', icon: StudentIcon },
+  
   { name: 'خدماتنا', href: '/client-services', icon: Sparkles },
   { name: 'نشر الأبحاث', href: '/client/research', icon: BookOpen },
   { name: 'سجل الطلبات', href: '/orders', icon: ShoppingCart },

@@ -81,7 +81,7 @@ import GroupOrderJoin from "./pages/client/GroupOrderJoin";
 import MembershipPage from "./pages/client/MembershipPage";
 import ReferralsPage from "./pages/client/ReferralsPage";
 
-import StudentDashboardPage from "./pages/client/StudentDashboardPage";
+
 import AdminMemberships from "./pages/admin/AdminMemberships";
 import AdminBlog from "./pages/admin/AdminBlog";
 import AdminReferrals from "./pages/admin/AdminReferrals";
@@ -123,7 +123,7 @@ import AdminGrowthAutomationRules from "./pages/admin/AdminGrowthAutomationRules
 import AdminExperiments from "./pages/admin/AdminExperiments";
 import AdminExperimentDetail from "./pages/admin/AdminExperimentDetail";
 import AdminAssessments from "./pages/admin/AdminAssessments";
-import StudentActivityPage from "./pages/admin/StudentActivityPage";
+
 import AdminStudentWalletsPage from "./pages/admin/AdminStudentWalletsPage";
 import AssessmentsList from "./pages/academic/AssessmentsList";
 import AssessmentStart from "./pages/academic/AssessmentStart";
@@ -638,11 +638,6 @@ const App = () => (
                 <AdminPayments />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/student-activity" element={
-              <SimpleProtectedRoute adminOnly>
-                <StudentActivityPage />
-              </SimpleProtectedRoute>
-            } />
             <Route path="/adminmaster/student-wallets" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminStudentWalletsPage />
@@ -715,12 +710,6 @@ const App = () => (
               <SimpleProtectedRoute>
                 <ReferralsPage />
               </SimpleProtectedRoute>
-            } />
-            <Route path="/student" element={
-              <SimpleProtectedRoute requiredRole="client"><StudentDashboardPage /></SimpleProtectedRoute>
-            } />
-            <Route path="/student/dashboard" element={
-              <SimpleProtectedRoute requiredRole="client"><StudentDashboardPage /></SimpleProtectedRoute>
             } />
             
             {/* Academic Pages */}
