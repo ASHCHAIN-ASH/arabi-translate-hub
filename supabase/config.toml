@@ -1,8 +1,6 @@
 project_id = "kziujhdqogqeehtxgpax"
 
 [functions]
-  [functions.student-whatsapp-notifier]
-    verify_jwt = false
   [functions.library-download]
     verify_jwt = false
   [functions.auth-email-hook]
