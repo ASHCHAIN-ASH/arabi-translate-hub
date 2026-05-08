@@ -44,11 +44,6 @@ const items = [
     icon: BookOpen,
   },
   {
-    title: 'نشاط الطلاب',
-    url: '/adminmaster/student-activity',
-    icon: Activity,
-  },
-  {
     title: 'محافظ الطلاب',
     url: '/adminmaster/student-wallets',
     icon: Wallet,
