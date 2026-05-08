@@ -124,7 +124,7 @@ import AdminExperiments from "./pages/admin/AdminExperiments";
 import AdminExperimentDetail from "./pages/admin/AdminExperimentDetail";
 import AdminAssessments from "./pages/admin/AdminAssessments";
 
-import AdminStudentWalletsPage from "./pages/admin/AdminStudentWalletsPage";
+
 import AssessmentsList from "./pages/academic/AssessmentsList";
 import AssessmentStart from "./pages/academic/AssessmentStart";
 import AssessmentResult from "./pages/academic/AssessmentResult";
