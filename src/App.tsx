@@ -638,11 +638,6 @@ const App = () => (
                 <AdminPayments />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/student-activity" element={
-              <SimpleProtectedRoute adminOnly>
-                <StudentActivityPage />
-              </SimpleProtectedRoute>
-            } />
             <Route path="/adminmaster/student-wallets" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminStudentWalletsPage />
