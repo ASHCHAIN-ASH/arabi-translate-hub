@@ -44,21 +44,6 @@ const items = [
     icon: BookOpen,
   },
   {
-    title: 'محافظ الطلاب',
-    url: '/adminmaster/student-wallets',
-    icon: Wallet,
-  },
-  {
-    title: 'طلبات الاستبدال',
-    url: '/adminmaster/reward-redemptions',
-    icon: Gift,
-  },
-  {
-    title: 'قواعد المكافآت',
-    url: '/adminmaster/reward-rules',
-    icon: Settings2,
-  },
-  {
     title: 'واتساب',
     url: '/adminmaster/whatsapp',
     icon: MessageCircle,
