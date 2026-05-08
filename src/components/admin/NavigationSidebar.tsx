@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FileText, CreditCard, FileSignature, MessageCircle, Receipt, Users, Settings, BarChart3, TrendingUp, Inbox, BookOpen, Activity, Wallet, Gift, Settings2 } from 'lucide-react';
+import { FileText, CreditCard, FileSignature, MessageCircle, Receipt, Users, Settings, BarChart3, TrendingUp, Inbox, BookOpen, Wallet, Gift, Settings2 } from 'lucide-react';
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarTrigger } from '@/components/ui/sidebar';
 
 const items = [
