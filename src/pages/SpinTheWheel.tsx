@@ -104,7 +104,9 @@ const SpinTheWheel = () => {
     return () => clearInterval(t);
   }, [nextEligibleAt]);
 
+  /** المعرّف = حساب المستخدم المسجَّل (شرط أساسي)، مع معرّف جهاز احتياطي */
   const getUserIdentifier = () => {
+    if (user?.id) return user.id;
     let id = localStorage.getItem("spin_user_id");
     if (!id) {
       id = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -116,7 +118,7 @@ const SpinTheWheel = () => {
   const checkEligibility = async () => {
     try {
       const { data, error } = await supabase.functions.invoke("send-spin-winner", {
-        body: { action: "check", userIdentifier: getUserIdentifier() },
+        body: { action: "check", userIdentifier: getUserIdentifier(), email: user?.email ?? undefined },
       });
       if (error) throw error;
       if (data && data.eligible === false && data.nextEligibleAt) {
@@ -127,6 +129,7 @@ const SpinTheWheel = () => {
     } catch (e) { console.error(e); }
     finally { setIsChecking(false); }
   };
+
 
   const nextDateLabel = nextEligibleAt
     ? new Date(nextEligibleAt).toLocaleDateString("ar", {
