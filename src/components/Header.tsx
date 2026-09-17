@@ -51,9 +51,9 @@ const Header = () => {
               />
             </div>
             <div className="text-right">
-              <h1 className="text-sm lg:text-base font-bold text-foreground leading-tight tracking-tight">
+              <div className="text-sm lg:text-base font-bold text-foreground leading-tight tracking-tight">
                 FekrahEdu
-              </h1>
+              </div>
               <p className="text-[10px] lg:text-xs text-muted-foreground font-medium hidden sm:block">
                 Shaping Your Academic and Career Success
               </p>
