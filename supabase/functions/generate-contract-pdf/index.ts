@@ -1,4 +1,4 @@
-// Master U Path — Contract PDF generator (Phase 2)
+// FekrahEdu — Contract PDF generator (Phase 2)
 // Real PDF via Browserless. Versioned, immutable storage. Evidence snapshot.
 // Body: { contract_id, mode?: 'preview'|'signed_final', force?: boolean }
 //   - 'signed_final' is idempotent: returns existing version if already generated

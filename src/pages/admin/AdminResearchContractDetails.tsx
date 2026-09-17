@@ -357,7 +357,7 @@ export default function AdminResearchContractDetails() {
                 </div>
                 <div className="min-w-0">
                   <div className="text-[10px] tracking-[0.3em] uppercase mb-1" style={{ color: '#c9a961' }}>
-                    Master U Path · Academic Contract
+                    FekrahEdu · Academic Contract
                   </div>
                   <h1 className="text-xl md:text-2xl font-black text-white truncate">
                     {pub?.title || contract.title}
