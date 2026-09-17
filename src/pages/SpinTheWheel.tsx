@@ -249,6 +249,14 @@ const SpinTheWheel = () => {
 
   const spinWheel = () => {
     if (isSpinning) return;
+    if (!isAuthed) {
+      toast({
+        title: "التسجيل شرط أساسي",
+        description: "سجّل دخولك أو أنشئ حسابًا في الموقع للحصول على الجائزة",
+        variant: "destructive",
+      });
+      return;
+    }
     if (isLocked) {
       toast({
         title: "محاولتك الشهرية مُستخدمة",
@@ -257,6 +265,7 @@ const SpinTheWheel = () => {
       });
       return;
     }
+
 
     setIsSpinning(true);
     const spinRotations = Math.random() * 5 + 10;
