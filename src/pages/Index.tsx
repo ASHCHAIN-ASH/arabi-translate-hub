@@ -26,7 +26,6 @@ import academicEditingImg from "@/assets/academic-service-editing.jpg";
 import academicPublishingImg from "@/assets/academic-service-publishing.jpg";
 
 // Real photography for supporting sections and testimonials
-import heroCampusImg from "@/assets/home-saudi-campus.jpg";
 import heroCollabImg from "@/assets/home-students-collaboration.jpg";
 import testimonialProfessorImg from "@/assets/home-testimonial-professor.jpg";
 import testimonialStudentFemaleImg from "@/assets/home-testimonial-student-female.jpg";
@@ -455,55 +454,6 @@ const Index = () => {
 
                 <InteractiveAcademicSystems />
 
-                {/* بطاقة عائمة علوية يمين — تقييم */}
-                <motion.div
-                    className="absolute -top-3 right-1 sm:-top-6 sm:-right-6 z-20 bg-background rounded-xl sm:rounded-2xl shadow-2xl p-2.5 sm:p-4 border border-border"
-                  initial={{ opacity: 0, scale: 0, rotate: -15 }}
-                  animate={{ opacity: 1, scale: 1, rotate: -6 }}
-                  transition={{ delay: 0.9, type: "spring", stiffness: 200 }}
-                  whileHover={{ rotate: 0, scale: 1.05 }}
-                >
-                  <div className="flex items-center gap-2">
-                    <div className="flex">
-                      {[1,2,3,4,5].map(i => (
-                        <Star key={i} className="h-3 w-3 sm:h-4 sm:w-4 fill-amber-400 text-amber-400" />
-                      ))}
-                    </div>
-                    <span className="text-xs sm:text-sm font-bold text-slate-800 dark:text-white">4.9</span>
-                  </div>
-                  <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">تقييم 12,800+ عميل</p>
-                </motion.div>
-
-                {/* بطاقة عائمة سفلية يسار — مدة الإنجاز */}
-                <motion.div
-                  className="absolute -bottom-3 left-1 sm:-bottom-6 sm:-left-6 z-20 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl sm:rounded-2xl shadow-2xl p-2.5 sm:p-4 text-primary-foreground"
-                  initial={{ opacity: 0, scale: 0, rotate: 15 }}
-                  animate={{ opacity: 1, scale: 1, rotate: 6 }}
-                  transition={{ delay: 1.1, type: "spring", stiffness: 200 }}
-                  whileHover={{ rotate: 0, scale: 1.05 }}
-                >
-                  <div className="flex items-center gap-2">
-                    <Clock className="h-4 w-4 sm:h-5 sm:w-5" />
-                    <span className="text-base sm:text-lg font-bold">24 ساعة</span>
-                  </div>
-                  <p className="text-[10px] sm:text-xs opacity-90 mt-0.5">أسرع تسليم في السوق</p>
-                </motion.div>
-
-                {/* صورة ثانوية صغيرة — حرم جامعي */}
-                <motion.div
-                  className="absolute -bottom-2 right-1/2 translate-x-1/2 sm:-bottom-8 sm:right-auto sm:left-1/3 z-10 w-24 h-24 sm:w-32 sm:h-32 rounded-2xl overflow-hidden shadow-2xl border-4 border-white dark:border-slate-800 hidden sm:block"
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1.4, duration: 0.6 }}
-                  whileHover={{ scale: 1.1, rotate: 3 }}
-                >
-                  <img
-                    src={heroCampusImg}
-                    alt="حرم جامعي سعودي"
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
-                </motion.div>
               </div>
             </motion.div>
           </div>
