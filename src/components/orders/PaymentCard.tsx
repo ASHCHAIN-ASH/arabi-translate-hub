@@ -10,6 +10,7 @@ import { CreditCard, Wallet, Upload, Loader2, CheckCircle2, ShieldCheck } from '
 import { supabase } from '@/data/legacy/client';
 import { useToast } from '@/hooks/use-toast';
 import { recordInvoicePayment } from '@/utils/invoicePaymentService';
+import MoyasarCardForm from '@/components/payments/MoyasarCardForm';
 
 interface Invoice {
   id: string;
@@ -32,6 +33,7 @@ export const PaymentCard: React.FC<Props> = ({ invoice, userId, onPaid }) => {
   const [loading, setLoading] = useState(false);
   const [reference, setReference] = useState('');
   const [notes, setNotes] = useState('');
+  const [showCardForm, setShowCardForm] = useState(false);
 
   const remaining = Number(invoice.total_amount || 0) - Number(invoice.paid_amount || 0);
   const isPaid = invoice.status === 'paid' || remaining <= 0;
@@ -69,25 +71,6 @@ export const PaymentCard: React.FC<Props> = ({ invoice, userId, onPaid }) => {
     } catch (e: any) {
       toast({ title: 'فشل الدفع', description: e.message, variant: 'destructive' });
     } finally {
-      setLoading(false);
-    }
-  };
-
-  const payByCard = async () => {
-    setLoading(true);
-    try {
-      const { data, error } = await supabase.functions.invoke('create-payment-intent', {
-        body: {
-          purpose: 'invoice_payment',
-          invoice_id: invoice.id,
-          amount: remaining,
-        },
-      });
-      if (error) throw error;
-      if (!data?.checkout_url) throw new Error('تعذّر إنشاء رابط الدفع');
-      window.location.href = data.checkout_url;
-    } catch (e: any) {
-      toast({ title: 'تعذّر بدء الدفع', description: e.message, variant: 'destructive' });
       setLoading(false);
     }
   };
