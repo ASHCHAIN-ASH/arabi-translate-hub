@@ -265,76 +265,51 @@ const WalletTopup: React.FC = () => {
 
         {/* GRID: amount + summary */}
         <div className="grid lg:grid-cols-[1.4fr_1fr] gap-4 sm:gap-5">
-          {/* LEFT — Amount + tiers */}
+          {/* LEFT — Amount + cashback */}
           <div className="space-y-4">
-            {/* Bonus tiers — interactive progress */}
+            {/* Unified cashback by payment method */}
             <Card className="overflow-hidden border-border/60 shadow-sm">
               <CardContent className="p-4 sm:p-5 space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <motion.div
-                      animate={{ rotate: bonus.pct > 0 ? [0, -10, 10, 0] : 0 }}
+                      animate={{ rotate: [0, -10, 10, 0] }}
                       transition={{ duration: 0.6 }}
                       className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-md shadow-amber-500/30"
                     >
                       <Gift className="w-4 h-4 text-white" />
                     </motion.div>
                     <div>
-                      <h2 className="text-sm font-black">برنامج المكافآت</h2>
-                      <p className="text-[10px] sm:text-[11px] text-muted-foreground">كلما زاد المبلغ زاد الكاش باك</p>
+                      <h2 className="text-sm font-black">كاش باك على كل شحن</h2>
+                      <p className="text-[10px] sm:text-[11px] text-muted-foreground">نسبة ثابتة على أي مبلغ حسب طريقة الدفع</p>
                     </div>
                   </div>
-                  <AnimatePresence>
-                    {bonus.pct > 0 && (
-                      <motion.div
-                        initial={{ scale: 0, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        exit={{ scale: 0, opacity: 0 }}
-                      >
-                        <Badge className="bg-emerald-500 hover:bg-emerald-500 text-white gap-1 font-black">
-                          <Sparkles className="w-3 h-3" /> {bonus.label}
-                        </Badge>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                  <Badge className="bg-emerald-500 hover:bg-emerald-500 text-white gap-1 font-black">
+                    <Sparkles className="w-3 h-3" /> {bonus.label}
+                  </Badge>
                 </div>
 
-                {/* Live progress bar */}
-                <div>
-                  <div className="flex justify-between text-[10px] text-muted-foreground mb-1.5">
-                    <span>التقدم نحو الشريحة التالية</span>
-                    <span className="font-bold text-foreground">
-                      {nextTier ? `${amount.toLocaleString('ar-SA')} / ${nextTier.min.toLocaleString('ar-SA')}` : '🏆 أعلى شريحة'}
-                    </span>
-                  </div>
-                  <div className="h-2.5 bg-muted rounded-full overflow-hidden">
-                    <motion.div
-                      animate={{ width: `${progressPct}%` }}
-                      transition={{ duration: 0.5, ease: 'easeOut' }}
-                      className="h-full bg-gradient-to-l from-emerald-500 via-amber-400 to-primary rounded-full"
-                    />
-                  </div>
-                </div>
-
-                {/* Tier chips */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  {BONUS_TIERS.map((t) => {
-                    const reached = amount >= t.min;
+                <div className="grid grid-cols-2 gap-2">
+                  {([
+                    { id: 'instant' as const, title: 'بطاقة فورية', pct: CASHBACK_RATES.instant, color: 'from-primary/15 to-primary/5', accent: 'text-primary' },
+                    { id: 'manual' as const, title: 'تحويل بنكي', pct: CASHBACK_RATES.manual, color: 'from-emerald-500/15 to-emerald-500/5', accent: 'text-emerald-600 dark:text-emerald-400' },
+                  ]).map((r) => {
+                    const active = method === r.id;
                     return (
                       <motion.button
-                        key={t.min}
-                        whileHover={{ scale: 1.04, y: -2 }}
+                        key={r.id}
+                        whileHover={{ scale: 1.03, y: -2 }}
                         whileTap={{ scale: 0.97 }}
-                        onClick={() => setAmount(t.min)}
+                        onClick={() => setMethod(r.id)}
                         className={cn(
-                          'relative rounded-xl p-2.5 border text-center transition-all overflow-hidden bg-gradient-to-br',
-                          t.color,
-                          reached
+                          'relative rounded-xl p-3 border text-center transition-all overflow-hidden bg-gradient-to-br',
+                          r.color,
+                          active
                             ? 'border-primary/40 shadow-md shadow-primary/10 ring-1 ring-primary/20'
                             : 'border-border/60 opacity-80 hover:opacity-100',
                         )}
                       >
-                        {reached && (
+                        {active && (
                           <motion.div
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
@@ -343,8 +318,8 @@ const WalletTopup: React.FC = () => {
                             <Check className="w-3 h-3 text-white" />
                           </motion.div>
                         )}
-                        <div className={cn('text-sm font-black', t.accent)}>{t.label}</div>
-                        <div className="text-[10px] text-muted-foreground mt-0.5 font-bold">{t.pct}% كاش باك</div>
+                        <div className={cn('text-lg font-black', r.accent)}>{r.pct}%</div>
+                        <div className="text-[10px] text-muted-foreground mt-0.5 font-bold">{r.title}</div>
                       </motion.button>
                     );
                   })}
