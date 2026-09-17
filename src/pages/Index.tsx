@@ -468,7 +468,6 @@ const Index = () => {
                     transition={{ duration: 1.25, ease: "easeOut" }}
                     width={1280}
                     height={1536}
-                    fetchPriority="high"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-blue-900/40 via-transparent to-transparent" />
 
