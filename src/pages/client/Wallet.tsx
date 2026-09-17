@@ -28,10 +28,10 @@ const QUICK_AMOUNTS = [100, 250, 500, 1000, 2500, 5000];
 
 // Bonus tiers — encourage larger top-ups
 const getBonus = (amt: number) => {
-  if (amt >= 5000) return { pct: 15, label: 'بونص 15%' };
-  if (amt >= 2500) return { pct: 10, label: 'بونص 10%' };
-  if (amt >= 1000) return { pct: 5, label: 'بونص 5%' };
-  if (amt >= 500) return { pct: 2, label: 'بونص 2%' };
+  if (amt >= 5000) return { pct: 15, label: 'كاش باك 15%' };
+  if (amt >= 2500) return { pct: 10, label: 'كاش باك 10%' };
+  if (amt >= 1000) return { pct: 5, label: 'كاش باك 5%' };
+  if (amt >= 500) return { pct: 2, label: 'كاش باك 2%' };
   return { pct: 0, label: '' };
 };
 
@@ -282,7 +282,7 @@ const ClientWallet: React.FC = () => {
               </div>
               <div>
                 <h3 className="text-sm font-black text-amber-900">شحن سريع</h3>
-                <p className="text-[10px] text-amber-700/80">اختر مبلغًا واحصل على بونص فوري</p>
+                <p className="text-[10px] text-amber-700/80">اختر مبلغًا واحصل على كاش باك فوري</p>
               </div>
             </div>
             {lastTopup && (

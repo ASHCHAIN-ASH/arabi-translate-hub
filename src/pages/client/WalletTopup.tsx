@@ -33,7 +33,7 @@ const BONUS_TIERS = [
 
 const getBonus = (amt: number) => {
   const tier = [...BONUS_TIERS].reverse().find((t) => amt >= t.min);
-  return tier ? { pct: tier.pct, label: `بونص ${tier.pct}%` } : { pct: 0, label: '' };
+  return tier ? { pct: tier.pct, label: `كاش باك ${tier.pct}%` } : { pct: 0, label: '' };
 };
 
 const WalletTopup: React.FC = () => {
@@ -295,7 +295,7 @@ const WalletTopup: React.FC = () => {
                     </motion.div>
                     <div>
                       <h2 className="text-sm font-black">برنامج المكافآت</h2>
-                      <p className="text-[10px] sm:text-[11px] text-muted-foreground">كلما زاد المبلغ زاد البونص</p>
+                      <p className="text-[10px] sm:text-[11px] text-muted-foreground">كلما زاد المبلغ زاد الكاش باك</p>
                     </div>
                   </div>
                   <AnimatePresence>
@@ -358,7 +358,7 @@ const WalletTopup: React.FC = () => {
                           </motion.div>
                         )}
                         <div className={cn('text-sm font-black', t.accent)}>{t.label}</div>
-                        <div className="text-[10px] text-muted-foreground mt-0.5 font-bold">{t.pct}% بونص</div>
+                        <div className="text-[10px] text-muted-foreground mt-0.5 font-bold">{t.pct}% كاش باك</div>
                       </motion.button>
                     );
                   })}
@@ -894,7 +894,7 @@ const WalletTopup: React.FC = () => {
                       <div className="flex items-start gap-2 text-[10px] text-muted-foreground bg-primary/5 border border-primary/15 rounded-xl p-2.5">
                         <Shield className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
                         <span>
-                          إيصالك مرفوع في تخزين خاص ومُشفّر • يصل الأدمن إشعار فوري بالطلب • سيُضاف الرصيد كاملاً مع البونص فور الموافقة.
+                          إيصالك مرفوع في تخزين خاص ومُشفّر • يصل الأدمن إشعار فوري بالطلب • سيُضاف الرصيد كاملاً مع الكاش باك فور الموافقة.
                         </span>
                       </div>
                     </CardContent>
@@ -947,7 +947,7 @@ const WalletTopup: React.FC = () => {
                         >
                           <span className="flex items-center gap-1.5">
                             <Gift className="w-3.5 h-3.5" />
-                            بونص ({bonus.pct}%)
+                            كاش باك ({bonus.pct}%)
                           </span>
                           <span className="font-black tabular-nums">+{WalletService.formatCurrency(bonusAmount)}</span>
                         </motion.div>
@@ -1298,7 +1298,7 @@ const WalletTopup: React.FC = () => {
                     className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-sm font-bold"
                   >
                     <Gift className="w-4 h-4" />
-                    🎁 سيُضاف بونص {bonus.pct}% عند الموافقة
+                    🎁 سيُضاف كاش باك {bonus.pct}% عند الموافقة
                   </motion.div>
                 )}
 
