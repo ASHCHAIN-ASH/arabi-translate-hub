@@ -45,6 +45,13 @@ export default {
 					foreground: 'hsl(var(--secondary-foreground))',
 					light: 'hsl(var(--secondary-light))'
 				},
+				'deep-violet': {
+					DEFAULT: 'hsl(var(--deep-violet))',
+					glow: 'hsl(var(--deep-violet-glow))',
+					dark: 'hsl(var(--deep-violet-dark))',
+					foreground: 'hsl(var(--deep-violet-foreground))'
+				},
+
 				accent: {
 					DEFAULT: 'hsl(var(--accent))',
 					foreground: 'hsl(var(--accent-foreground))',

@@ -39,6 +39,13 @@
     --secondary-foreground: 0 0% 100%;
     --secondary-light: 262 70% 72%;
 
+    /* Deep violet — dark banner surfaces */
+    --deep-violet: 266 59% 28%;
+    --deep-violet-glow: 266 65% 38%;
+    --deep-violet-dark: 254 49% 10%;
+    --deep-violet-foreground: 0 0% 100%;
+
+
     /* Accent — teal */
     --accent: 172 66% 50%;
     --accent-foreground: 0 0% 100%;
