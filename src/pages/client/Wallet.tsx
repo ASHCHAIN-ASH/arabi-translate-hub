@@ -26,14 +26,11 @@ import { TransactionItem } from '@/components/wallet/TransactionItem';
 
 const QUICK_AMOUNTS = [100, 250, 500, 1000, 2500, 5000];
 
-// Bonus tiers — encourage larger top-ups
-const getBonus = (amt: number) => {
-  if (amt >= 5000) return { pct: 10, label: 'كاش باك 10%' };
-  if (amt >= 2500) return { pct: 6, label: 'كاش باك 6%' };
-  if (amt >= 1000) return { pct: 3, label: 'كاش باك 3%' };
-  if (amt >= 500) return { pct: 1, label: 'كاش باك 1%' };
-  return { pct: 0, label: '' };
-};
+// كاش باك موحّد: 2% للدفع بالبطاقة و3% للتحويل البنكي — على أي مبلغ
+export const CARD_CASHBACK_PCT = 2;
+export const BANK_CASHBACK_PCT = 3;
+
+const getBonus = (_amt: number) => ({ pct: CARD_CASHBACK_PCT, label: `كاش باك ${CARD_CASHBACK_PCT}%` });
 
 const PAYMENT_METHODS = [
   { value: 'bank_transfer', label: 'تحويل بنكي', icon: '🏦' },
