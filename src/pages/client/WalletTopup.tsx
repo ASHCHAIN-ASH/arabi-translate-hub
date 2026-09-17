@@ -25,10 +25,10 @@ import MoyasarCardForm from '@/components/payments/MoyasarCardForm';
 const QUICK_AMOUNTS = [100, 250, 500, 1000, 2500, 5000];
 
 const BONUS_TIERS = [
-  { min: 500, pct: 2, label: '+500', color: 'from-sky-500/15 to-sky-500/5', accent: 'text-sky-600 dark:text-sky-400' },
-  { min: 1000, pct: 5, label: '+1,000', color: 'from-violet-500/15 to-violet-500/5', accent: 'text-violet-600 dark:text-violet-400' },
-  { min: 2500, pct: 10, label: '+2,500', color: 'from-amber-500/15 to-amber-500/5', accent: 'text-amber-600 dark:text-amber-400' },
-  { min: 5000, pct: 15, label: '+5,000', color: 'from-emerald-500/20 to-emerald-500/5', accent: 'text-emerald-600 dark:text-emerald-400' },
+  { min: 500, pct: 1, label: '+500', color: 'from-sky-500/15 to-sky-500/5', accent: 'text-sky-600 dark:text-sky-400' },
+  { min: 1000, pct: 3, label: '+1,000', color: 'from-violet-500/15 to-violet-500/5', accent: 'text-violet-600 dark:text-violet-400' },
+  { min: 2500, pct: 6, label: '+2,500', color: 'from-amber-500/15 to-amber-500/5', accent: 'text-amber-600 dark:text-amber-400' },
+  { min: 5000, pct: 10, label: '+5,000', color: 'from-emerald-500/20 to-emerald-500/5', accent: 'text-emerald-600 dark:text-emerald-400' },
 ];
 
 const getBonus = (amt: number) => {
