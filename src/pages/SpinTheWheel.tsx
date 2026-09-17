@@ -437,7 +437,9 @@ const SpinTheWheel = () => {
                 style={{
                   width: size * 0.18,
                   height: size * 0.18,
-                  background: isLocked
+                  background: !isAuthed
+                    ? "linear-gradient(135deg, hsl(220 15% 45%), hsl(220 20% 30%))"
+                    : isLocked
                     ? "linear-gradient(135deg, hsl(220 10% 50%), hsl(220 10% 35%))"
                     : "linear-gradient(135deg, hsl(43 74% 50%), hsl(38 80% 40%))",
                   fontSize: Math.max(11, size * 0.032),
@@ -447,7 +449,7 @@ const SpinTheWheel = () => {
                   <motion.span animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }}>
                     <Sparkles className="w-5 h-5" />
                   </motion.span>
-                ) : isLocked ? `${remaining!.d}ي` : "SPIN"}
+                ) : !isAuthed ? <Lock className="w-5 h-5" /> : isLocked ? `${remaining!.d}ي` : "SPIN"}
               </button>
 
             </motion.div>
