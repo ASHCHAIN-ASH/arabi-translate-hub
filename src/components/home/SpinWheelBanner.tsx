@@ -84,7 +84,7 @@ export const SpinWheelBanner = () => {
               className="inline-flex items-center gap-2 rounded-full bg-amber-400/10 border border-amber-300/30 px-4 py-1.5 text-sm font-bold text-amber-300 mb-5 backdrop-blur"
             >
               <Trophy className="w-4 h-4" />
-              عرض محدود · كل دورة تربح
+              تجربة حظ استثنائية · الفوز مضمون
             </motion.span>
 
             <motion.h2
@@ -92,12 +92,12 @@ export const SpinWheelBanner = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-[1.25] mb-5"
+              className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-[1.3] mb-5"
             >
-              دورة واحدة تفصلك عن
+              أدر العجلة… ودَع الحظ
               <br />
               <span className="relative inline-block text-transparent bg-clip-text bg-gradient-to-l from-amber-200 via-yellow-400 to-orange-500">
-                خصم حقيقي على خدمتك
+                يكافئ طموحك الأكاديمي
                 <motion.span
                   aria-hidden="true"
                   className="absolute inset-0 bg-gradient-to-l from-transparent via-white/50 to-transparent"
@@ -115,8 +115,9 @@ export const SpinWheelBanner = () => {
               transition={{ delay: 0.2 }}
               className="text-base sm:text-lg text-slate-300/90 leading-relaxed mb-7 max-w-xl mx-auto lg:mx-0"
             >
-              جوائز مُفعّلة فورًا على الترجمة والبحث والتدقيق والنشر. أدر العجلة،
-              احصل على قسيمتك في ثوانٍ، واستخدمها مباشرة عند طلب الخدمة.
+              لأن التميّز يستحق مكافأة، جهّزنا لك عجلة لا تعرف الخسارة:
+              خصومات فورية وخدمات مجانية على الترجمة والبحث والتدقيق والنشر —
+              قسيمتك تصلك في لحظات، وتُستخدم مباشرة عند طلبك.
             </motion.p>
 
             {/* شارات ثقة */}
@@ -128,9 +129,9 @@ export const SpinWheelBanner = () => {
               className="flex flex-wrap items-center justify-center lg:justify-start gap-2 mb-8"
             >
               {[
-                { icon: ShieldCheck, text: "جوائز مضمونة ومفعّلة" },
-                { icon: Zap, text: "القسيمة فورية" },
-                { icon: Sparkles, text: "مجانًا وبدون تسجيل" },
+                { icon: ShieldCheck, text: "كل دورة تفوز" },
+                { icon: Zap, text: "قسيمتك في ثوانٍ" },
+                { icon: Sparkles, text: "مجانًا · دون تسجيل" },
               ].map(({ icon: Icon, text }) => (
                 <li
                   key={text}
@@ -167,12 +168,12 @@ export const SpinWheelBanner = () => {
                 >
                   <Link to="/spin-the-wheel">
                     <Gift className="w-5 h-5" />
-                    أدر العجلة واربح الآن
+                    جرّب حظّك الآن
                     <ArrowLeft className="w-5 h-5" />
                   </Link>
                 </Button>
               </motion.div>
-              <span className="text-sm text-slate-400">تستغرق أقل من 10 ثوانٍ</span>
+              <span className="text-sm text-slate-400">دورة واحدة يوميًا… وجائزة مؤكدة</span>
             </motion.div>
           </div>
 
