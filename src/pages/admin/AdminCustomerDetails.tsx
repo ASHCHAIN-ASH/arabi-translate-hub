@@ -402,6 +402,15 @@ const AdminCustomerDetails: React.FC = () => {
             </CardContent>
           </Card>
 
+          {customer.email && (
+            <EmailHistoryPanel
+              recipientEmail={customer.email}
+              title="رسائل البريد المرسلة للعميل"
+              className="lg:col-span-3"
+            />
+          )}
+
+
           {/* Actions */}
           <Card className="lg:col-span-2">
             <CardHeader><CardTitle className="text-base">الإجراءات السريعة</CardTitle></CardHeader>
