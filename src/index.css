@@ -475,6 +475,12 @@
 
   /* Touch targets */
   .touch-target { @apply min-h-[44px] min-w-[44px]; }
+
+  /* يؤجل رسم المحتوى البعيد عن الشاشة مع حجز مساحة مستقرة له */
+  .defer-render {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 900px;
+  }
 }
 
 /* ====================================

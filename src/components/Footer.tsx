@@ -37,7 +37,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white relative overflow-hidden" dir="rtl">
+    <footer className="defer-render bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white relative overflow-hidden" dir="rtl">
       {/* Subtle Background Pattern */}
       <div className="absolute inset-0 opacity-3">
         <div className="absolute top-10 right-10 w-24 h-24 bg-primary/20 rounded-full"></div>

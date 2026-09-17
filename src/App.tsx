@@ -226,7 +226,6 @@ const PaymentMethods = lazy(() => import("./pages/PaymentMethods"));
 const Universities = lazy(() => import("./pages/Universities"));
 const JournalsDirectory = lazy(() => import("./pages/JournalsDirectory"));
 const InstitutionalPartnerships = lazy(() => import("./pages/InstitutionalPartnerships"));
-import Footer from "./components/Footer";
 import BackToTopButton from "./components/BackToTopButton";
 
 const queryClient = new QueryClient();
