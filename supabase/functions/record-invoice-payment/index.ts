@@ -1,4 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
+import { getUserPhone, notifyWhatsApp } from '../_shared/whatsapp-notify.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -157,6 +158,37 @@ Deno.serve(async (req) => {
       }
     } catch (emailError) {
       console.warn('invoice payment email skipped', emailError);
+    }
+
+    // إشعار واتساب بالسداد من المحفظة
+    try {
+      if (body.payment_method === 'wallet') {
+        const { data: w } = await admin
+          .from('wallets')
+          .select('balance')
+          .eq('user_id', user.id)
+          .maybeSingle();
+        const phone = invoice.customer_phone || (await getUserPhone(admin, user.id));
+        if (phone) {
+          await notifyWhatsApp(admin, {
+            to: phone,
+            event_key: 'wallet_payment_made',
+            variables: {
+              name: invoice.customer_name ?? 'عميلنا العزيز',
+              invoice_no: invoice.invoice_number,
+              amount: Number(payment.amount || remaining).toLocaleString('ar-SA'),
+              balance: Number(w?.balance || 0).toLocaleString('ar-SA'),
+              date: body.payment_date || new Date().toISOString().split('T')[0],
+              link: `https://fekrahedu.com/invoices/${body.invoice_id}`,
+            },
+            user_id: user.id,
+            related_entity_type: 'invoice',
+            related_entity_id: body.invoice_id,
+          });
+        }
+      }
+    } catch (waError) {
+      console.warn('wallet payment whatsapp skipped', waError);
     }
 
     return jsonResponse({

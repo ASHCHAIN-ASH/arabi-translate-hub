@@ -214,52 +214,24 @@ const AdminWallets: React.FC = () => {
         newBalance = Number((w as any)?.balance || 0).toLocaleString('ar-SA');
       }
 
-      const message = kind === 'approved'
-        ? [
-            `مرحباً ${name} 👋`,
-            ``,
-            `✅ *تمت الموافقة على طلب شحن محفظتك*`,
-            ``,
-            `━━━━━━━━━━━━━━`,
-            `🧾 *رقم الإيصال:* ${receiptNo}`,
-            `🔖 *رقم الطلب:* #${reqId}`,
-            refNo !== '—' ? `🏷️ *الرقم المرجعي:* ${refNo}` : null,
-            `💳 *طريقة الدفع:* ${method}`,
-            `💰 *المبلغ المُودَع:* ${amount} ر.س`,
-            bonusAmount > 0
-              ? `🎁 *مكافأة بونص ${bonusPct}%:* +${bonusAmount.toLocaleString('ar-SA')} ر.س`
-              : `🎁 *مكافأة بونص:* لا يوجد`,
-            `💎 *إجمالي المُضاف:* ${totalCredited.toLocaleString('ar-SA')} ر.س`,
-            `🏦 *رصيدك الحالي:* ${newBalance} ر.س`,
-            `📅 *التاريخ:* ${dateStr}`,
-            `⏰ *الوقت:* ${timeStr}`,
-            `━━━━━━━━━━━━━━`,
-            ``,
-            `شكراً لثقتك بنا 🌟`,
-            `— FekrahEdu`,
-          ].filter(Boolean).join('\n')
-        : [
-            `مرحباً ${name} 👋`,
-            ``,
-            `❌ *نأسف، تم رفض طلب شحن محفظتك*`,
-            ``,
-            `━━━━━━━━━━━━━━`,
-            `🔖 *رقم الطلب:* #${reqId}`,
-            refNo !== '—' ? `🏷️ *الرقم المرجعي:* ${refNo}` : null,
-            `💳 *طريقة الدفع:* ${method}`,
-            `💰 *المبلغ:* ${amount} ر.س`,
-            `📅 *تاريخ الرفض:* ${dateStr}`,
-            `⏰ *الوقت:* ${timeStr}`,
-            `📝 *السبب:* ${reason || 'لم يُحدد'}`,
-            `━━━━━━━━━━━━━━`,
-            ``,
-            `للاستفسار، تواصل مع خدمة العملاء عبر تذاكر الدعم.`,
-            `— FekrahEdu`,
-          ].filter(Boolean).join('\n');
-
+      // القوالب الرسمية قابلة للتعديل من إعدادات واتساب
       await sendWhatsApp({
         to: phone,
-        message,
+        event_key: kind === 'approved' ? 'wallet_topup_approved' : 'wallet_topup_rejected',
+        variables: {
+          name,
+          request_no: reqId,
+          receipt_no: receiptNo,
+          amount,
+          bonus: bonusAmount > 0 ? bonusAmount.toLocaleString('ar-SA') : '0',
+          total: totalCredited.toLocaleString('ar-SA'),
+          balance: newBalance,
+          method,
+          reference: refNo,
+          reason: reason || 'لم يُحدد',
+          date: `${dateStr} - ${timeStr}`,
+          link: 'https://fekrahedu.com/wallet',
+        },
         related_entity_type: 'wallet_topup',
         related_entity_id: r.id,
         user_id: r.user_id,

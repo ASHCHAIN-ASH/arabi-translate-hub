@@ -1,5 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@4.0.0";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
+import { notifyWhatsApp } from "../_shared/whatsapp-notify.ts";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
@@ -118,6 +120,30 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     console.log("Topup notification sent:", result);
+
+    // إشعار واتساب للعميل باستلام طلب الشحن
+    try {
+      if (client_phone) {
+        const admin = createClient(
+          Deno.env.get("SUPABASE_URL")!,
+          Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+        );
+        await notifyWhatsApp(admin, {
+          to: client_phone,
+          event_key: "wallet_topup_requested",
+          variables: {
+            name: client_name || "عميلنا العزيز",
+            request_no: shortId,
+            amount: Number(amount).toLocaleString("ar-SA"),
+            method: paymentMethodAr(payment_method),
+          },
+          related_entity_type: "wallet_topup",
+          related_entity_id: request_id,
+        });
+      }
+    } catch (waError) {
+      console.warn("topup whatsapp skipped", waError);
+    }
 
     return new Response(JSON.stringify({ success: true, id: shortId }), {
       status: 200,
