@@ -1,5 +1,43 @@
-import { sendLovableEmail } from 'npm:@lovable.dev/email-js'
 import { createClient } from 'npm:@supabase/supabase-js@2'
+
+// Send a single email through the Resend API (domain verified in Resend).
+// Throws an Error carrying `status` so the 429/403 handlers below keep working.
+async function sendViaResend(payload: Record<string, any>): Promise<void> {
+  const resendApiKey = Deno.env.get('RESEND_API_KEY')
+  if (!resendApiKey) {
+    const err = new Error('RESEND_API_KEY is not configured') as Error & { status?: number }
+    err.status = 403
+    throw err
+  }
+
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${resendApiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: payload.from,
+      to: [payload.to],
+      ...(Array.isArray(payload.cc) && payload.cc.length ? { cc: payload.cc } : {}),
+      subject: payload.subject,
+      html: payload.html,
+      text: payload.text,
+      headers: {
+        ...(payload.unsubscribe_token
+          ? { 'List-Unsubscribe': `<https://fekrahedu.com/unsubscribe?token=${payload.unsubscribe_token}>` }
+          : {}),
+      },
+    }),
+  })
+
+  if (!res.ok) {
+    const body = await res.text()
+    const err = new Error(`Resend API error ${res.status}: ${body}`) as Error & { status?: number }
+    err.status = res.status
+    throw err
+  }
+}
 
 const MAX_RETRIES = 5
 const DEFAULT_BATCH_SIZE = 10
