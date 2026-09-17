@@ -21,7 +21,7 @@ type CertifiedTranslationComingSoonProps = {
 };
 
 const CERTIFIED_FEATURES = [
-  { icon: BadgeCheck, label: 'مترجمون محلّفون معتمدون' },
+  { icon: BadgeCheck, label: 'مترجمون محَلَّفون بختم رسمي' },
   { icon: Landmark, label: 'تصديق وزارة الخارجية والسفارات' },
   { icon: Scale, label: 'مقبول لدى المحاكم والجهات الرسمية' },
   { icon: GraduationCap, label: 'معادلة الشهادات والوثائق الدراسية' },
