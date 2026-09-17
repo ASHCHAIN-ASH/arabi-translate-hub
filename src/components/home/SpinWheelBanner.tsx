@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Sparkles, Gift, ArrowLeft, Trophy, ShieldCheck, Zap } from "lucide-react";
+import { Sparkles, Gift, ArrowLeft, ShieldCheck, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 /**
@@ -77,15 +77,6 @@ export const SpinWheelBanner = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* الجانب النصي */}
           <div className="text-center lg:text-right">
-            <motion.span
-              initial={{ opacity: 0, y: 14 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="inline-flex items-center gap-2 rounded-full bg-amber-400/10 border border-amber-300/30 px-4 py-1.5 text-sm font-bold text-amber-300 mb-5 backdrop-blur"
-            >
-              <Trophy className="w-4 h-4" />
-              تجربة حظ استثنائية · الفوز مضمون
-            </motion.span>
 
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
@@ -114,9 +105,8 @@ export const SpinWheelBanner = () => {
               transition={{ delay: 0.2 }}
               className="text-base sm:text-lg text-slate-300/90 leading-relaxed mb-7 max-w-xl mx-auto lg:mx-0"
             >
-              لأن التميّز يستحق مكافأة، جهّزنا لك عجلة لا تعرف الخسارة:
-              خصومات فورية وخدمات مجانية على الترجمة والبحث والتدقيق والنشر —
-              قسيمتك تصلك في لحظات، وتُستخدم مباشرة عند طلبك.
+              بمناسبة تجديد الموقع وانطلاقته التجريبية، نقدّم لك هدية مجانية عبر
+              عجلة الجوائز، تضم مزايا وخدمات تدعم رحلتك الأكاديمية.
             </motion.p>
 
             {/* شارات ثقة */}
@@ -163,12 +153,12 @@ export const SpinWheelBanner = () => {
                 <Button
                   asChild
                   size="lg"
-                  className="relative text-lg px-8 py-6 rounded-2xl gap-2 bg-gradient-to-l from-amber-300 via-amber-400 to-orange-500 hover:from-amber-400 hover:to-orange-600 text-slate-950 font-extrabold shadow-2xl shadow-amber-500/30 border-0"
+                  className="relative text-base sm:text-lg px-7 py-6 rounded-2xl gap-2 bg-gradient-to-l from-amber-300 via-amber-400 to-orange-500 hover:from-amber-400 hover:to-orange-600 text-slate-950 font-extrabold shadow-2xl shadow-amber-500/30 border-0"
                 >
                   <Link to="/spin-the-wheel">
-                    <Gift className="w-5 h-5" />
-                    جرّب حظّك الآن
-                    <ArrowLeft className="w-5 h-5" />
+                    <Gift className="w-5 h-5 shrink-0" />
+                    جرّب حظك الآن واكتشف جائزتك
+                    <ArrowLeft className="w-5 h-5 shrink-0" />
                   </Link>
                 </Button>
               </motion.div>
