@@ -212,6 +212,28 @@ export const financingDocumentsRepository = createRepository('financing_document
 export const financingStatusLogsRepository = createRepository('financing_status_logs');
 export const financingContractsRepository = createRepository('financing_contracts');
 export const financingPaymentReceiptsRepository = createRepository('financing_payment_receipts');
+export const financingInterestsRepository = {
+  ...createRepository('financing_interests'),
+  async findForUser(userId: string) {
+    return await db.selectOne<Row<'financing_interests'>>('financing_interests', {
+      filters: [where.eq('user_id', userId)],
+    });
+  },
+  async register(userId: string, customerName: string, email: string) {
+    const rows = await db.upsert<Row<'financing_interests'>>(
+      'financing_interests',
+      {
+        user_id: userId,
+        customer_name: customerName,
+        email,
+        status: 'interested',
+        source: 'client_dashboard',
+      },
+      { onConflict: 'user_id' },
+    );
+    return rows[0];
+  },
+};
 
 /* =============================== العقود =============================== */
 
