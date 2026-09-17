@@ -265,7 +265,7 @@ serve(async (req) => {
     // Send immediate notification to admin
     console.log("Sending immediate admin notification...");
     const adminEmailResponse = await resend.emails.send({
-      from: "المحرر الذكي - إشعار فوري <onboarding@resend.dev>",
+      from: "المحرر الذكي - إشعار فوري <noreply@fekrahedu.com>",
       to: ["info@fekrahedu.com"],
       subject: `🔔 طلب توصيات جديد - ${requestData.researchTitle}`,
       replyTo: "info@fekrahedu.com",

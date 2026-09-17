@@ -46,7 +46,7 @@ export const WinnerClientEmail = ({
         {/* Header with gradient */}
         <Section style={header}>
           <div style={headerContent}>
-            <Text style={logoText}>مسار الخبراء للتعليم</Text>
+            <Text style={logoText}>FekrahEdu</Text>
             <Text style={headerSubtitle}>FekrahEdu</Text>
           </div>
         </Section>
@@ -112,7 +112,7 @@ export const WinnerClientEmail = ({
 
         {/* Footer */}
         <Section style={footer}>
-          <Text style={footerTitle}>مسار الخبراء للتعليم</Text>
+          <Text style={footerTitle}>FekrahEdu</Text>
           <Text style={footerText}>
             نحن معكم لتحقيق أحلامكم الأكاديمية
           </Text>
@@ -129,7 +129,7 @@ export const WinnerClientEmail = ({
           </Section>
 
           <Text style={copyright}>
-            © 2025 مسار الخبراء للتعليم - جميع الحقوق محفوظة
+            © 2025 FekrahEdu - جميع الحقوق محفوظة
           </Text>
         </Section>
       </Container>

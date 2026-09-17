@@ -33,7 +33,7 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     const emailResponse = await resend.emails.send({
-      from: "FekrahEdu <onboarding@resend.dev>",
+      from: "FekrahEdu <noreply@fekrahedu.com>",
       to: ["info@fekrahtech.com"], // إيميل المطور للاختبار
       subject: "🤖 رسالة جديدة من الشات بوت - FekrahEdu",
       html: `

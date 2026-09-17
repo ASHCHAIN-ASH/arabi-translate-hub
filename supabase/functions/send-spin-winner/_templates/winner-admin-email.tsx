@@ -150,7 +150,7 @@ export const WinnerAdminEmail = ({
         {/* Footer */}
         <Section style={footer}>
           <Text style={footerTitle}>نظام إدارة المسابقات</Text>
-          <Text style={footerText}>مسار الخبراء للتعليم</Text>
+          <Text style={footerText}>FekrahEdu</Text>
           <Text style={footerSubtext}>
             هذا البريد مرسل تلقائياً من نظام إدارة المسابقات
           </Text>

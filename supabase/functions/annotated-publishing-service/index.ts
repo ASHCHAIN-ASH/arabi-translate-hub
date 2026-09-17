@@ -61,7 +61,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Send confirmation email to client
     console.log("Sending client confirmation email...");
     const clientEmailResponse = await resend.emails.send({
-      from: "النشر المشروح - تأكيد الطلب <onboarding@resend.dev>",
+      from: "النشر المشروح - تأكيد الطلب <noreply@fekrahedu.com>",
       to: [requestData.email],
       subject: "✅ تم استلام طلب النشر المشروح بنجاح",
       replyTo: "info@fekrahedu.com",
@@ -158,7 +158,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Send notification to admin
     console.log("Sending admin notification...");
     const adminEmailResponse = await resend.emails.send({
-      from: "النشر المشروح - طلب جديد <onboarding@resend.dev>",
+      from: "النشر المشروح - طلب جديد <noreply@fekrahedu.com>",
       to: ["info@fekrahedu.com"],
       subject: `📑 طلب نشر مشروح جديد - ${requestData.fullName}`,
       replyTo: "info@fekrahedu.com",
