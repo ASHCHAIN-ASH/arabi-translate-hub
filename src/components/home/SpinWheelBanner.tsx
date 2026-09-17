@@ -92,11 +92,10 @@ export const SpinWheelBanner = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-[1.3] mb-5"
+              className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-[1.5] sm:leading-[1.45] mb-5"
             >
-              أدر العجلة… ودَع الحظ
-              <br />
-              <span className="relative inline-block text-transparent bg-clip-text bg-gradient-to-l from-amber-200 via-yellow-400 to-orange-500">
+              <span className="block">أدر العجلة… ودَع الحظ</span>
+              <span className="relative block pb-2 text-transparent bg-clip-text bg-gradient-to-l from-amber-200 via-yellow-400 to-orange-500">
                 يكافئ طموحك الأكاديمي
                 <motion.span
                   aria-hidden="true"
