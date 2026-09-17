@@ -6,6 +6,7 @@ import {
   getPaylinkInvoiceStatus,
   mapPaylinkStatus,
 } from '../_shared/paylink-adapter.ts';
+import { getUserPhone, notifyWhatsApp } from '../_shared/whatsapp-notify.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
