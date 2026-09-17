@@ -17,6 +17,7 @@ import { InstitutionalPartnershipBanner } from "@/components/InstitutionalPartne
 import { FloatingWhatsAppButton } from "@/components/FloatingWhatsAppButton";
 import Footer from "@/components/Footer";
 import { InteractiveAcademicSystems } from "@/components/home/InteractiveAcademicSystems";
+import { TwinklingStars } from "@/components/home/TwinklingStars";
 
 // Import academic service images
 import academicTranslationImg from "@/assets/academic-service-translation.jpg";
