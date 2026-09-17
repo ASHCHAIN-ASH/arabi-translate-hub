@@ -53,6 +53,22 @@ export async function settlePaymentIntent(
       payment_intent_id: intent.id,
     });
 
+    // كاش باك موحّد 2% على الدفع بالبطاقة
+    const CARD_CASHBACK_PCT = 2;
+    const cashback = Math.round(Number(intent.amount || 0) * CARD_CASHBACK_PCT) / 100;
+    if (cashback > 0) {
+      await admin.from('wallet_transactions').insert({
+        wallet_id: wallet.id,
+        user_id: intent.user_id,
+        type: 'deposit',
+        amount: cashback,
+        description: `🎁 كاش باك ${CARD_CASHBACK_PCT}% على شحن المحفظة - عملية ${intent.internal_order_number}`,
+        reference_type: 'topup_bonus',
+        reference_id: intent.id,
+        metadata: { bonus_pct: CARD_CASHBACK_PCT, base_amount: Number(intent.amount || 0) },
+      });
+    }
+
     // إشعار واتساب بالإيداع
     try {
       const { data: fresh } = await admin.from('wallets')
