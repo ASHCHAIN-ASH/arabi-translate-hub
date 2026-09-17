@@ -55,6 +55,7 @@ Deno.serve(async (req) => {
   const messageId = crypto.randomUUID()
   let recipient = ''
   let templateName = 'email-verification'
+  let createdUserId: string | null = null
 
   try {
     const body = await req.json().catch(() => ({}))
@@ -70,7 +71,7 @@ Deno.serve(async (req) => {
     if (action === 'signup') {
       const password: string = body.password
       if (!password) throw new Error('كلمة المرور مطلوبة')
-      const { error: createErr } = await admin.auth.admin.createUser({
+      const { data: created, error: createErr } = await admin.auth.admin.createUser({
         email,
         password,
         email_confirm: false,
@@ -81,10 +82,11 @@ Deno.serve(async (req) => {
       }
       if (createErr) {
         return new Response(JSON.stringify({ error: 'already_registered' }), {
-          status: 409,
+          status: 200,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         })
       }
+      createdUserId = created?.user?.id ?? null
     }
 
     const isRecovery = action === 'recovery'
@@ -130,7 +132,7 @@ Deno.serve(async (req) => {
       status: 'sent',
     })
 
-    return new Response(JSON.stringify({ success: true, message_id: messageId }), {
+    return new Response(JSON.stringify({ success: true, message_id: messageId, user_id: createdUserId }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
   } catch (error) {
