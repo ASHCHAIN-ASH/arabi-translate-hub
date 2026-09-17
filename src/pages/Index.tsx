@@ -388,7 +388,7 @@ const Index = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.5 }}
               >
-                أكثر من {UNIFIED_STATS.studentsServed.toLocaleString()} باحث وطالب وثقوا بنا في {UNIFIED_STATS.countriesServed}+ دولة.
+                على مدى 11 عامًا، حظينا بثقة أكثر من {UNIFIED_STATS.studentsServed.toLocaleString()} باحث وطالب من أكثر من {UNIFIED_STATS.countriesServed} دولة حول العالم.
                 احصل على خدمة احترافية خلال 24 ساعة.
               </motion.p>
 
