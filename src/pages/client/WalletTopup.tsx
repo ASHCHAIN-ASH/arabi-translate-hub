@@ -25,7 +25,7 @@ import MoyasarCardForm from '@/components/payments/MoyasarCardForm';
 const QUICK_AMOUNTS = [100, 250, 500, 1000, 2500, 5000];
 
 // كاش باك موحّد حسب طريقة الدفع
-export const CASHBACK_RATES = { instant: 2, manual: 3 } as const;
+export const CASHBACK_RATES = { instant: 1, manual: 2 } as const;
 
 const getBonus = (m: 'instant' | 'manual') => {
   const pct = CASHBACK_RATES[m];

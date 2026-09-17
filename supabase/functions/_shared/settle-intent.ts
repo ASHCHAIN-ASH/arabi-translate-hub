@@ -54,7 +54,7 @@ export async function settlePaymentIntent(
     });
 
     // كاش باك موحّد 2% على الدفع بالبطاقة
-    const CARD_CASHBACK_PCT = 2;
+    const CARD_CASHBACK_PCT = 1;
     const cashback = Math.round(Number(intent.amount || 0) * CARD_CASHBACK_PCT) / 100;
     if (cashback > 0) {
       await admin.from('wallet_transactions').insert({
