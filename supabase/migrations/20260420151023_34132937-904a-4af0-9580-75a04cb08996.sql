@@ -3,7 +3,7 @@ INSERT INTO public.whatsapp_templates (event_key, title, body_text, variables, i
 VALUES (
   'quote_sent',
   'إرسال عرض السعر',
-  E'🎓 *منصة فكرة إيدو الأكاديمية*\n━━━━━━━━━━━━━━━\nمرحباً {{name}} 👋\n\nتم إعداد عرض السعر الخاص بطلبك الأكاديمي ✨\n\n📚 *الخدمة:* {{service}}\n🔖 *رقم الطلب:* {{order_no}}\n💰 *المبلغ الإجمالي:* {{amount}} ر.س\n📅 *الموعد النهائي:* {{deadline}}\n🕐 *تاريخ الإرسال:* {{sent_at}}\n\n📝 *ملاحظات العرض:*\n{{notes}}\n\n✅ للموافقة على العرض والمتابعة:\n{{link}}\n\n— فريق FekrahEdu الأكاديمي',
+  E'🎓 *FekrahEdu*\n━━━━━━━━━━━━━━━\nمرحباً {{name}} 👋\n\nتم إعداد عرض السعر الخاص بطلبك الأكاديمي ✨\n\n📚 *الخدمة:* {{service}}\n🔖 *رقم الطلب:* {{order_no}}\n💰 *المبلغ الإجمالي:* {{amount}} ر.س\n📅 *الموعد النهائي:* {{deadline}}\n🕐 *تاريخ الإرسال:* {{sent_at}}\n\n📝 *ملاحظات العرض:*\n{{notes}}\n\n✅ للموافقة على العرض والمتابعة:\n{{link}}\n\n— فريق FekrahEdu الأكاديمي',
   '["name","service","order_no","amount","deadline","sent_at","notes","link"]'::jsonb,
   true
 )

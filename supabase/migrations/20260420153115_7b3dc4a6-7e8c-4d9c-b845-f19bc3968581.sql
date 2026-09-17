@@ -11,7 +11,7 @@ VALUES (
 ⏱️ صالح لمدة {{expires_in}} دقائق
 ⚠️ لا تُشارك هذا الرمز مع أي شخص.
 
-— فكرة إيدو',
+— FekrahEdu',
   '["client_name","contract_number","otp_code","expires_in"]'::jsonb,
   true
 )

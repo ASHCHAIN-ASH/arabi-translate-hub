@@ -2,7 +2,7 @@
 // IBAN ثابت للتحويلات اليدوية (الدفعة الأولى)
 export const FEKRAHEDU_PAYLATER_BANK = {
   bankName: 'البنك الأهلي السعودي (SNB)',
-  beneficiaryName: 'منصة فكرة للخدمات التعليمية',
+  beneficiaryName: 'FekrahEdu',
   iban: 'SA0000000000000000000000',
   accountNumber: '00000000000000',
   swift: 'NCBKSAJE',

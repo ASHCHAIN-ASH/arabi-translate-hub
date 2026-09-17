@@ -69,7 +69,7 @@ BEGIN
         ) VALUES (
             'admin@fekrahedu.com',
             '$2a$06$Ymdta.TsNIzaoB2c6/WFLeSxLaWOaWhWnCnGDKJxGoKmQ0v54vHE2',
-            'مدير النظام - فكرة إيدو',
+            'مدير النظام - FekrahEdu',
             'admin',
             fekrahedu_tenant_id,
             true
@@ -78,7 +78,7 @@ BEGIN
         -- تحديث بيانات المستخدم الموجود
         UPDATE public.admin_credentials 
         SET tenant_id = fekrahedu_tenant_id,
-            full_name = 'مدير النظام - فكرة إيدو',
+            full_name = 'مدير النظام - FekrahEdu',
             is_active = true,
             updated_at = now()
         WHERE id = existing_admin;
@@ -164,7 +164,7 @@ BEGIN
         ) VALUES 
         (
             'site_name',
-            '"فكرة إيدو"'::jsonb,
+            '"FekrahEdu"'::jsonb,
             'اسم الموقع',
             'general',
             fekrahedu_tenant_id

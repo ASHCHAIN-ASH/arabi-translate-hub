@@ -10,7 +10,7 @@ INSERT INTO public.email_templates (
 ) VALUES (
   'invoice_pdf',
   'فاتورة ضريبية PDF',
-  'فاتورة ضريبية رقم {{invoice_number}} - وكالة فكرة إيدو',
+  'فاتورة ضريبية رقم {{invoice_number}} - FekrahEdu',
   '
   <!DOCTYPE html>
   <html lang="ar" dir="rtl">
@@ -24,7 +24,7 @@ INSERT INTO public.email_templates (
       
       <!-- Header -->
       <div style="text-align: center; margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, #1a365d, #3182ce); color: white; border-radius: 8px;">
-        <h1 style="margin: 0; font-size: 28px;">وكالة فكرة إيدو</h1>
+        <h1 style="margin: 0; font-size: 28px;">FekrahEdu</h1>
         <p style="margin: 5px 0 0 0; font-size: 16px; opacity: 0.9;">FekrahEdu Agency</p>
       </div>
       
@@ -104,7 +104,7 @@ INSERT INTO public.email_templates (
       <!-- Company Information -->
       <div style="background: linear-gradient(135deg, #edf2f7, #e2e8f0); padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 20px;">
         <p style="font-weight: bold; color: #1a365d; font-size: 16px; margin: 5px 0;">
-          وكالة فكرة إيدو تتبع لشركة علي صالح الشهري القابضة
+          FekrahEdu تتبع لشركة علي صالح الشهري القابضة
         </p>
         <p style="color: #666; font-size: 14px; margin: 5px 0; font-style: italic;">
           FekrahEdu Agency - Subsidiary of Ali Saleh Al-Shehri Holding Company

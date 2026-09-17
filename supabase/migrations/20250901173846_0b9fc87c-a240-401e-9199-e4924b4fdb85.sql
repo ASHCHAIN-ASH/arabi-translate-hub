@@ -63,7 +63,7 @@ BEGIN
         gen_random_uuid(),
         'admin@fekrahedu.com',
         '$2a$06$Ymdta.TsNIzaoB2c6/WFLeSxLaWOaWhWnCnGDKJxGoKmQ0v54vHE2', -- Ali@@#@@1409
-        'مدير النظام - فكرة إيدو',
+        'مدير النظام - FekrahEdu',
         'admin',
         fekrahedu_tenant_id,
         true,
@@ -141,7 +141,7 @@ BEGIN
     ) VALUES 
     (
         'site_name',
-        '"فكرة إيدو"'::jsonb,
+        '"FekrahEdu"'::jsonb,
         'اسم الموقع',
         'general',
         fekrahedu_tenant_id

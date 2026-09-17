@@ -46,7 +46,7 @@ BEGIN
                '👤 العضو: ' || v_referred_name || E'\n' ||
                '💰 المبلغ: ' || NEW.commission_amount || ' ر.س' || E'\n\n' ||
                'يمكنك سحب رصيدك أو استخدامه في أي خدمة من المنصة.' || E'\n' ||
-               'شكراً لثقتك بمنصة فكرة إيدو 🌟';
+               'شكراً لثقتك بFekrahEdu 🌟';
 
   -- Vault credentials
   SELECT decrypted_secret INTO v_supabase_url

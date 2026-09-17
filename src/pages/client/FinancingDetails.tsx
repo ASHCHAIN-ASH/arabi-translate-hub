@@ -331,7 +331,7 @@ const FinancingDetails: React.FC = () => {
       const firstInstallment = new Date();
       firstInstallment.setDate(firstInstallment.getDate() + 30);
       const firstInstallmentDate = firstInstallment.toISOString().slice(0, 10);
-      const content = `عقد تمويل داخلي — FekrahEdu PayLater — مبلغ التمويل ${fmt(Number(app.total_amount))} ر.س يُضاف للمحفظة الرقمية لشراء خدمات منصة فكرة، يُسدَّد على ${app.duration_months} قسط شهري بقيمة ${fmt(Number(app.monthly_installment))} ر.س. (سيتم توليد العقد التفصيلي تلقائياً)`;
+      const content = `عقد تمويل داخلي — FekrahEdu PayLater — مبلغ التمويل ${fmt(Number(app.total_amount))} ر.س يُضاف للمحفظة الرقمية لشراء خدمات FekrahEdu، يُسدَّد على ${app.duration_months} قسط شهري بقيمة ${fmt(Number(app.monthly_installment))} ر.س. (سيتم توليد العقد التفصيلي تلقائياً)`;
 
       const { data: created, error } = await supabase
         .from('contracts')

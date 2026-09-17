@@ -104,7 +104,7 @@ const FinancingHome: React.FC = () => {
   };
 
   useEffect(() => {
-    document.title = 'FekrahEdu PayLater — التمويل | منصة فكرة';
+    document.title = 'FekrahEdu PayLater — التمويل | FekrahEdu';
   }, []);
 
   const load = async () => {

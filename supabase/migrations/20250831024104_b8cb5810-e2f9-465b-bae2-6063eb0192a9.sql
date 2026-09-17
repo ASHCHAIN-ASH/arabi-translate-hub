@@ -1,4 +1,4 @@
--- Update the FekrahEdu tenant name to "منصة وكالة فكرة إيدو"
+-- Update the FekrahEdu tenant name to "FekrahEdu"
 UPDATE public.tenants 
-SET name = 'منصة وكالة فكرة إيدو'
+SET name = 'FekrahEdu'
 WHERE code = 'mep';
