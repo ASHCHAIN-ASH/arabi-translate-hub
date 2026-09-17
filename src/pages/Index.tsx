@@ -25,7 +25,7 @@ import academicEditingImg from "@/assets/academic-service-editing.jpg";
 import academicPublishingImg from "@/assets/academic-service-publishing.jpg";
 
 // Real photography for hero & testimonials
-import heroResearcherImg from "@/assets/fekrahedu-academic-hero.jpg";
+import heroResearcherImg from "@/assets/fekrahedu-academic-interactive-hero.jpg";
 import heroCampusImg from "@/assets/home-saudi-campus.jpg";
 import heroCollabImg from "@/assets/home-students-collaboration.jpg";
 import testimonialProfessorImg from "@/assets/home-testimonial-professor.jpg";
@@ -461,7 +461,7 @@ const Index = () => {
                 >
                   <motion.img
                     src={heroResearcherImg}
-                    alt="باحثة عربية تتعاون مع فريق أكاديمي داخل مكتبة جامعية حديثة"
+                    alt="مساحة بحث أكاديمية تفاعلية تضم تحليلات علمية ومراجع ومجهرًا"
                     className="w-full h-full object-cover object-[52%_45%] transition-transform duration-700 ease-out group-hover:scale-[1.06]"
                     initial={{ scale: 1.1 }}
                     animate={{ scale: 1.02 }}
