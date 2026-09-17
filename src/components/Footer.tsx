@@ -28,6 +28,7 @@ import {
   Calculator,
   Newspaper
 } from "lucide-react";
+const fekrahLogoUrl = "/fekrah-logo.jpg";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
@@ -113,8 +114,8 @@ const Footer = () => {
             className="col-span-1 md:col-span-2 lg:col-span-1 space-y-6"
           >
             <div className="flex items-center gap-3 justify-start mb-6">
-              <div className="w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
-                <Globe className="h-6 w-6 text-white" />
+              <div className="w-12 h-12 rounded-full overflow-hidden bg-white flex items-center justify-center flex-shrink-0">
+                <img src={fekrahLogoUrl} alt="شعار FekrahEdu" className="w-full h-full object-contain" loading="lazy" />
               </div>
               <div className="text-right">
                 <h3 className="text-lg font-bold font-arabic-title">FekrahEdu</h3>
