@@ -192,6 +192,32 @@ async function settleIntent(admin: any, intent: any, paylinkRes: any) {
         reference_id: intent.id,
         payment_intent_id: intent.id,
       });
+
+      // إشعار واتساب بإيداع الرصيد في المحفظة
+      try {
+        const { data: fresh } = await admin.from('wallets').select('balance').eq('id', wallet.id).maybeSingle();
+        const phone = await getUserPhone(admin, intent.user_id);
+        const { data: prof } = await admin.from('profiles').select('full_name').eq('id', intent.user_id).maybeSingle();
+        if (phone) {
+          await notifyWhatsApp(admin, {
+            to: phone,
+            event_key: 'wallet_credited',
+            variables: {
+              name: prof?.full_name || 'عميلنا العزيز',
+              amount: Number(intent.amount || 0).toLocaleString('ar-SA'),
+              reason: `شحن المحفظة - عملية ${intent.internal_order_number}`,
+              balance: Number(fresh?.balance || 0).toLocaleString('ar-SA'),
+              date: new Date().toISOString().slice(0, 10),
+              link: 'https://fekrahedu.com/wallet',
+            },
+            user_id: intent.user_id,
+            related_entity_type: 'wallet_topup',
+            related_entity_id: intent.id,
+          });
+        }
+      } catch (waError) {
+        console.warn('wallet credit whatsapp skipped', waError);
+      }
     }
   } else if (intent.purpose === 'invoice_payment' && intent.invoice_id) {
     const { data: existing } = await admin.from('invoice_payments')
