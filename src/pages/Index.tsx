@@ -25,7 +25,7 @@ import academicEditingImg from "@/assets/academic-service-editing.jpg";
 import academicPublishingImg from "@/assets/academic-service-publishing.jpg";
 
 // Real photography for hero & testimonials
-import heroResearcherImg from "@/assets/home-hero-researcher-female.jpg";
+import heroResearcherImg from "@/assets/fekrahedu-academic-hero.jpg";
 import heroCampusImg from "@/assets/home-saudi-campus.jpg";
 import heroCollabImg from "@/assets/home-students-collaboration.jpg";
 import testimonialProfessorImg from "@/assets/home-testimonial-professor.jpg";
@@ -447,33 +447,33 @@ const Index = () => {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.7, delay: 0.3 }}
-              className="relative flex justify-center mt-8 lg:mt-0"
+              className="group relative flex justify-center mt-8 lg:mt-0"
             >
-              <div className="relative w-full max-w-[320px] sm:max-w-[420px] lg:max-w-[520px] aspect-[4/5]">
+              <div className="relative w-[min(88vw,360px)] sm:w-full sm:max-w-[430px] lg:max-w-[520px] aspect-[4/5] lg:aspect-[5/6]">
                 {/* وهج خلفي */}
                 <div className="absolute -inset-6 bg-gradient-to-br from-blue-400/30 via-indigo-400/20 to-purple-400/30 dark:from-blue-500/20 dark:via-indigo-500/15 dark:to-purple-500/20 rounded-[2rem] blur-3xl" />
 
                 {/* الصورة الرئيسية — باحثة */}
                 <motion.div
-                  className="absolute inset-0 rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white dark:border-slate-800 z-10"
-                  whileHover={{ scale: 1.02, rotate: -1 }}
+                  className="absolute inset-0 rounded-2xl sm:rounded-[2rem] overflow-hidden shadow-2xl border-4 border-background z-10"
+                  whileHover={{ scale: 1.025, rotate: -0.7, y: -6 }}
                   transition={{ type: "spring", stiffness: 200, damping: 20 }}
                 >
                   <motion.img
                     src={heroResearcherImg}
-                    alt="باحثة سعودية في مكتبة جامعية تستخدم لابتوب"
-                    className="w-full h-full object-cover"
-                    initial={{ scale: 1.15 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 1.2, ease: "easeOut" }}
-                    width={1024}
-                    height={1280}
+                    alt="باحثة عربية تتعاون مع فريق أكاديمي داخل مكتبة جامعية حديثة"
+                    className="w-full h-full object-cover object-[52%_45%] transition-transform duration-700 ease-out group-hover:scale-[1.06]"
+                    initial={{ scale: 1.1 }}
+                    animate={{ scale: 1.02 }}
+                    transition={{ duration: 1.25, ease: "easeOut" }}
+                    width={1280}
+                    height={1536}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-blue-900/40 via-transparent to-transparent" />
 
                   {/* شارة عائمة سفلية */}
                   <motion.div
-                    className="absolute bottom-4 right-4 left-4 sm:bottom-6 sm:right-6 sm:left-6 px-4 py-3 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl shadow-xl flex items-center gap-3"
+                    className="absolute bottom-3 right-3 left-3 sm:bottom-6 sm:right-6 sm:left-6 px-3 sm:px-4 py-2.5 sm:py-3 bg-background/95 backdrop-blur-md rounded-xl sm:rounded-2xl shadow-xl flex items-center gap-3"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 1.2, duration: 0.6 }}
@@ -494,7 +494,7 @@ const Index = () => {
 
                 {/* بطاقة عائمة علوية يمين — تقييم */}
                 <motion.div
-                  className="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 z-20 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl p-3 sm:p-4 border border-slate-200 dark:border-slate-700"
+                    className="absolute -top-3 right-1 sm:-top-6 sm:-right-6 z-20 bg-background rounded-xl sm:rounded-2xl shadow-2xl p-2.5 sm:p-4 border border-border"
                   initial={{ opacity: 0, scale: 0, rotate: -15 }}
                   animate={{ opacity: 1, scale: 1, rotate: -6 }}
                   transition={{ delay: 0.9, type: "spring", stiffness: 200 }}
@@ -513,7 +513,7 @@ const Index = () => {
 
                 {/* بطاقة عائمة سفلية يسار — مدة الإنجاز */}
                 <motion.div
-                  className="absolute -bottom-4 -left-4 sm:-bottom-6 sm:-left-6 z-20 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl shadow-2xl p-3 sm:p-4 text-white"
+                  className="absolute -bottom-3 left-1 sm:-bottom-6 sm:-left-6 z-20 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl sm:rounded-2xl shadow-2xl p-2.5 sm:p-4 text-primary-foreground"
                   initial={{ opacity: 0, scale: 0, rotate: 15 }}
                   animate={{ opacity: 1, scale: 1, rotate: 6 }}
                   transition={{ delay: 1.1, type: "spring", stiffness: 200 }}
