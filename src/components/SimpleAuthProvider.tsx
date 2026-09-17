@@ -38,8 +38,8 @@ export const useAuth = () => {
 };
 
 export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<SessionUser | null>(null);
+  const [session, setSession] = useState<AuthSession | null>(null);
   const [userRole, setUserRole] = useState<AppRole | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -48,18 +48,7 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   // or any fallback to elevate privileges.
   const fetchUserRole = useCallback(async (userId: string): Promise<AppRole | null> => {
     try {
-      const { data, error } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', userId);
-
-      if (error) {
-        // Hard fail — do NOT default to any role. Caller will sign the user out.
-        console.error('[SECURITY] Failed to fetch user role:', error.message);
-        return null;
-      }
-
-      const roles = (data ?? []).map((r) => r.role as string);
+      const roles = await userRolesRepository.rolesOf(userId);
 
       // Strict whitelist: admin only if an 'admin' row exists.
       if (roles.includes('admin')) return 'admin';
@@ -67,7 +56,8 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       // Any authenticated user without 'admin' is a client (UI alias for 'user').
       return 'client';
     } catch (err) {
-      console.error('[SECURITY] Unexpected error fetching user role:', err);
+      // Hard fail — do NOT default to any role. Caller will sign the user out.
+      console.error('[SECURITY] Failed to fetch user role:', err);
       return null;
     }
   }, []);
@@ -75,11 +65,11 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   useEffect(() => {
     let isMounted = true;
 
-    const applySession = async (currentSession: Session | null) => {
+    const applySession = async (currentSession: AuthSession | null) => {
       if (!isMounted) return;
 
       setSession(currentSession);
-      setUser(currentSession?.user ?? null);
+      setUser(toSessionUser(currentSession?.user ?? null));
 
       if (currentSession?.user) {
         setLoading(true);
@@ -93,7 +83,7 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         // protected route with an unknown privilege level.
         if (role === null) {
           console.error('[SECURITY] Role resolution failed — forcing sign-out');
-          await supabase.auth.signOut();
+          await authService.signOut();
           if (!isMounted) return;
           setSession(null);
           setUser(null);
@@ -111,7 +101,7 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       setLoading(false);
     };
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, currentSession) => {
+    const unsubscribe = authService.onAuthStateChange((event, currentSession) => {
       console.log('Auth state change:', event);
       setTimeout(() => {
         void applySession(currentSession);
@@ -126,15 +116,16 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       }
     });
 
-    supabase.auth.getSession().then(({ data: { session: initialSession } }) => {
+    authService.getSession().then((initialSession) => {
       void applySession(initialSession);
     });
 
     return () => {
       isMounted = false;
-      subscription.unsubscribe();
+      unsubscribe();
     };
   }, [fetchUserRole]);
+
 
   const signIn = async (email: string, password: string): Promise<{ error?: string }> => {
     try {
