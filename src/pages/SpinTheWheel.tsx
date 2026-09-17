@@ -696,8 +696,13 @@ const SpinTheWheel = () => {
                   </div>
                   <div>
                     <Label htmlFor="email">البريد الإلكتروني</Label>
-                    <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="أدخل بريدك الإلكتروني" required />
+                    <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)}
+                      placeholder="أدخل بريدك الإلكتروني" required readOnly={isAuthed} />
+                    {isAuthed && (
+                      <p className="text-[11px] text-muted-foreground mt-1">بريد حسابك المسجَّل في الموقع — تصلك الجائزة عليه.</p>
+                    )}
                   </div>
+
                   <Button
                     type="submit"
                     className="w-full font-bold"
