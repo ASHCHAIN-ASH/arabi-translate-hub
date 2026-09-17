@@ -247,7 +247,10 @@ const SpinTheWheel = () => {
     const idx = Math.floor(norm / arc) % SEGMENTS.length;
     const prize = SEGMENTS[idx].text;
     setWonPrize(prize);
+    setClaimCode("");
+    setEmailSent(false);
     setShowResult(true);
+
     setIsSpinning(false);
     try {
       const audio = new Audio("https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3");
