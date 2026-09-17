@@ -19,12 +19,14 @@ interface Segment {
 }
 
 const SEGMENTS: Segment[] = [
-  { text: "خصم 10%",          short: "10%",  color: "hsl(43 74% 52%)", accent: "hsl(43 74% 38%)" },
-  { text: "بحث مجاني",        short: "بحث",  color: "hsl(220 40% 22%)", accent: "hsl(220 40% 14%)" },
-  { text: "خصم 15%",          short: "15%",  color: "hsl(38 85% 58%)", accent: "hsl(38 85% 42%)" },
-  { text: "خصم 20%",          short: "20%",  color: "hsl(220 35% 30%)", accent: "hsl(220 40% 18%)" },
-  { text: "جائزة مفاجأة",     short: "🎁",   color: "hsl(45 90% 60%)", accent: "hsl(45 90% 45%)" },
-  { text: "استشارة مجانية",   short: "استشارة", color: "hsl(220 45% 18%)", accent: "hsl(220 50% 10%)" },
+  { text: "سيرة ذاتية ATS مجانًا",            short: "سيرة ATS",   color: "hsl(43 74% 52%)", accent: "hsl(43 74% 38%)" },
+  { text: "بوستر بحثي مجانًا",                 short: "بوستر بحثي", color: "hsl(220 40% 22%)", accent: "hsl(220 40% 14%)" },
+  { text: "تصميم شعار خاص بك مجانًا",          short: "تصميم شعار", color: "hsl(38 85% 58%)", accent: "hsl(38 85% 42%)" },
+  { text: "شرح تفاعلي لبحثك بالذكاء الاصطناعي", short: "شرح تفاعلي", color: "hsl(220 35% 30%)", accent: "hsl(220 40% 18%)" },
+  { text: "مراجعة بحثك بالذكاء الاصطناعي مجانًا", short: "مراجعة ذكية", color: "hsl(45 90% 60%)", accent: "hsl(45 90% 45%)" },
+  { text: "فحص صلاحية الاستبيان مجانًا",        short: "فحص استبيان", color: "hsl(220 45% 18%)", accent: "hsl(220 50% 10%)" },
+  { text: "متابعة نشر بحثك مع فكرة مجانًا",     short: "متابعة نشر", color: "hsl(40 80% 55%)", accent: "hsl(40 80% 40%)" },
+  { text: "تجهيز ملفات IRB مجانًا",             short: "ملفات IRB",  color: "hsl(220 38% 26%)", accent: "hsl(220 45% 15%)" },
 ];
 
 const SpinTheWheel = () => {
@@ -275,7 +277,7 @@ const SpinTheWheel = () => {
               }}>واربح فوراً</span>
             </h1>
             <p className="text-base sm:text-lg text-muted-foreground">
-              فرصتك اليومية للحصول على خصومات وخدمات أكاديمية مجانية
+              جوائز وخدمات أكاديمية مجانية من «فكرة» بانتظارك عند لف العجلة
             </p>
           </motion.div>
 
@@ -397,9 +399,9 @@ const SpinTheWheel = () => {
             className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mt-12 sm:mt-16 max-w-4xl mx-auto"
           >
             {[
-              { icon: Trophy, title: "جوائز قيمة", desc: "خصومات تصل إلى 20%" },
-              { icon: Gift, title: "خدمات مجانية", desc: "بحث أو استشارة مجانية" },
-              { icon: Sparkles, title: "مفاجآت يومية", desc: "جوائز خاصة للفائزين" },
+              { icon: Trophy, title: "جوائز حقيقية", desc: "سيرة ATS · بوستر بحثي · تصميم شعار" },
+              { icon: Gift, title: "خدمات مجانية", desc: "مراجعة بحثك وفحص الاستبيان بالذكاء الاصطناعي" },
+              { icon: Sparkles, title: "دعم مستمر", desc: "متابعة النشر وتجهيز ملفات IRB" },
             ].map((item, i) => (
               <motion.div
                 key={i}
