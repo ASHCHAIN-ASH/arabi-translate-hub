@@ -1,426 +1,169 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useEffect, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { GraduationCap, ArrowLeft, Handshake, Sparkles, Globe, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/data/legacy/client";
-import {
-  GraduationCap,
-  Users,
-  Award,
-  CheckCircle,
-  Star,
-  BookOpen,
-  Globe,
-  Clock,
-  FileText,
-  Send,
-  Phone,
-  Mail,
-  MapPin,
-  Target,
-  TrendingUp,
-  Shield,
-  Heart,
-  Zap,
-  Calendar,
-  User,
-  School,
-  CreditCard,
-  AlertTriangle,
-  Info
-} from "lucide-react";
-import { z } from "zod";
-import admissionBackground from "@/assets/university-admission-background.jpg";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import AuthCtaCard from "@/components/research/AuthCtaCard";
-// Schema validation for the admission form
-const admissionSchema = z.object({
-  fullName: z.string().trim().min(2, { message: "الاسم يجب أن يكون أكثر من حرفين" }).max(100, { message: "الاسم يجب أن يكون أقل من 100 حرف" }),
-  email: z.string().trim().email({ message: "البريد الإلكتروني غير صحيح" }).max(255, { message: "البريد الإلكتروني طويل جداً" }),
-  phone: z.string().trim().min(10, { message: "رقم الهاتف يجب أن يكون على الأقل 10 أرقام" }).max(15, { message: "رقم الهاتف طويل جداً" }),
-  nationality: z.string().trim().min(2, { message: "يرجى اختيار الجنسية" }),
-  currentEducation: z.string().trim().min(2, { message: "يرجى اختيار المستوى التعليمي الحالي" }),
-  desiredField: z.string().trim().min(2, { message: "يرجى اختيار التخصص المرغوب" }),
-  desiredUniversity: z.string().trim().min(2, { message: "يرجى اختيار الجامعة المرغوبة" }),
-  gpa: z.string().trim().optional(),
-  englishLevel: z.string().trim().min(1, { message: "يرجى اختيار مستوى اللغة الإنجليزية" }),
-  additionalInfo: z.string().trim().max(1000, { message: "المعلومات الإضافية يجب أن تكون أقل من 1000 حرف" }).optional(),
-  hasScholarship: z.boolean().optional(),
-  agreeToTerms: z.boolean().refine(val => val === true, { message: "يجب الموافقة على الشروط والأحكام" })
-});
+const ADMISSION_URL = "https://fekrah-global.com/";
+const COUNTDOWN_SECONDS = 7;
+
+const partnerPillars = [
+  { icon: Handshake, label: "شراكات موثوقة" },
+  { icon: Globe, label: "جامعات حول العالم" },
+  { icon: ShieldCheck, label: "رحلة دراسية آمنة" },
+];
 
 const AdmissionServices = () => {
-  const { toast } = useToast();
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    nationality: "",
-    currentEducation: "",
-    desiredField: "",
-    desiredUniversity: "",
-    gpa: "",
-    englishLevel: "",
-    additionalInfo: "",
-    hasScholarship: false,
-    agreeToTerms: false
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const reduceMotion = useReducedMotion();
+  const [secondsLeft, setSecondsLeft] = useState(COUNTDOWN_SECONDS);
 
-  const handleInputChange = (field: string, value: string | boolean) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setSecondsLeft((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => window.clearInterval(timer);
+  }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      // Validate form data
-      const validatedData = admissionSchema.parse(formData);
-      
-      // Call Supabase edge function to send emails
-      const { data, error } = await supabase.functions.invoke('send-admission-inquiry', {
-        body: validatedData
-      });
-
-      if (error) {
-        throw error;
-      }
-      
-      toast({
-        title: "تم إرسال الطلب بنجاح",
-        description: `رقم الطلب: ${data.applicationNumber}. سيتم التواصل معك خلال 24 ساعة لمتابعة طلب القبول`,
-      });
-      
-      // Reset form
-      setFormData({
-        fullName: "",
-        email: "",
-        phone: "",
-        nationality: "",
-        currentEducation: "",
-        desiredField: "",
-        desiredUniversity: "",
-        gpa: "",
-        englishLevel: "",
-        additionalInfo: "",
-        hasScholarship: false,
-        agreeToTerms: false
-      });
-      
-    } catch (error) {
-      console.error("Submission error:", error);
-      if (error instanceof z.ZodError) {
-        const firstError = error.errors[0];
-        toast({
-          title: "خطأ في البيانات",
-          description: firstError.message,
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "خطأ في الإرسال",
-          description: error?.message || "حدث خطأ أثناء إرسال الطلب، يرجى المحاولة مرة أخرى",
-          variant: "destructive",
-        });
-      }
-    } finally {
-      setIsSubmitting(false);
+  useEffect(() => {
+    if (secondsLeft === 0) {
+      window.location.href = ADMISSION_URL;
     }
-  };
-
-  const services = [
-    {
-      icon: School,
-      title: "اختيار الجامعة المناسبة",
-      description: "نساعدك في اختيار الجامعة التي تناسب تخصصك وأهدافك المهنية",
-      color: "text-white",
-      bgColor: "bg-gradient-to-br from-blue-500 to-blue-600"
-    },
-    {
-      icon: FileText,
-      title: "إعداد الوثائق",
-      description: "نقوم بإعداد وترجمة جميع الوثائق المطلوبة للقبول الجامعي",
-      color: "text-white",
-      bgColor: "bg-gradient-to-br from-green-500 to-green-600"
-    },
-    {
-      icon: Target,
-      title: "كتابة المقالات الشخصية",
-      description: "فريقنا المتخصص يساعدك في كتابة مقالات شخصية مميزة",
-      color: "text-white",
-      bgColor: "bg-gradient-to-br from-purple-500 to-purple-600"
-    },
-    {
-      icon: Globe,
-      title: "متابعة طلب القبول",
-      description: "نتابع معك جميع مراحل طلب القبول حتى الحصول على القبول النهائي",
-      color: "text-white",
-      bgColor: "bg-gradient-to-br from-orange-500 to-orange-600"
-    }
-  ];
-
-  const universities = [
-    "الجامعات السعودية الحكومية",
-    "الجامعات السعودية الأهلية", 
-    "الجامعات الأمريكية",
-    "الجامعات البريطانية",
-    "الجامعات الكندية",
-    "الجامعات الأسترالية",
-    "الجامعات الألمانية",
-    "جامعات أخرى"
-  ];
-
-  const fields = [
-    "الطب البشري",
-    "طب الأسنان",
-    "الصيدلة",
-    "الهندسة",
-    "علوم الحاسب",
-    "إدارة الأعمال",
-    "القانون",
-    "العلوم",
-    "الآداب والعلوم الإنسانية",
-    "التربية",
-    "أخرى"
-  ];
+  }, [secondsLeft]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white" dir="rtl">
+    <div className="min-h-screen bg-background flex flex-col" dir="rtl">
       <Header />
-      {/* Hero Section */}
-      <section className="py-16 md:py-24 relative overflow-hidden bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(${admissionBackground})` }}>
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-blue-900/30 to-purple-900/20"></div>
-        
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+
+      <main className="flex-1 relative overflow-hidden flex items-center justify-center">
+        {/* خلفية متحركة */}
+        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-background to-accent/5" />
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-12"
+            className="absolute top-1/4 right-1/4 w-72 h-72 rounded-full bg-primary/15 blur-3xl"
+            animate={reduceMotion ? undefined : { scale: [1, 1.25, 1], opacity: [0.5, 0.8, 0.5] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute bottom-1/4 left-1/4 w-80 h-80 rounded-full bg-accent/15 blur-3xl"
+            animate={reduceMotion ? undefined : { scale: [1.2, 1, 1.2], opacity: [0.6, 0.9, 0.6] }}
+            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          />
+          {/* نقاط مدارية */}
+          {[...Array(6)].map((_, i) => (
+            <motion.span
+              key={i}
+              className="absolute w-2 h-2 rounded-full bg-secondary/60"
+              style={{ top: `${15 + i * 12}%`, right: `${10 + (i % 3) * 35}%` }}
+              animate={reduceMotion ? undefined : { y: [0, -18, 0], opacity: [0.3, 0.9, 0.3] }}
+              transition={{ duration: 4 + i, repeat: Infinity, ease: "easeInOut", delay: i * 0.4 }}
+            />
+          ))}
+        </div>
+
+        <div className="relative z-10 container mx-auto px-4 py-20 text-center max-w-3xl">
+          {/* الأيقونة الرئيسية */}
+          <motion.div
+            initial={{ scale: 0, rotate: -30 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ type: "spring", stiffness: 160, damping: 14 }}
+            className="mx-auto mb-8 w-24 h-24 rounded-3xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-2xl shadow-primary/30"
           >
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primary to-blue-600 rounded-full mb-6 shadow-lg">
-              <GraduationCap className="h-10 w-10 text-white" />
+            <GraduationCap className="w-12 h-12 text-primary-foreground" />
+            <motion.span
+              className="absolute -top-2 -left-2"
+              animate={reduceMotion ? undefined : { rotate: [0, 360] }}
+              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+            >
+              <Sparkles className="w-6 h-6 text-secondary" />
+            </motion.span>
+          </motion.div>
+
+          {/* شارة */}
+          <motion.span
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 text-sm font-semibold text-primary mb-6"
+          >
+            <Handshake className="w-4 h-4" />
+            القبول الجامعي
+          </motion.span>
+
+          {/* المحتوى */}
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.45, duration: 0.6 }}
+            className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground leading-snug mb-6"
+          >
+            رحلتك الدراسية تبدأ من هنا
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.65, duration: 0.6 }}
+            className="text-lg sm:text-xl leading-relaxed text-muted-foreground mb-10"
+          >
+            في «فكرة»، نحرص على بناء شراكات موثوقة مع الجهات والخدمات التي يحتاجها الطالب طوال رحلته الدراسية. نوفّر لك حلولاً متكاملة تسهّل كل مرحلة، من البداية حتى تحقيق أهدافك الأكاديمية، لأن راحتك وثقتك هما أساس ما نقدّمه.
+          </motion.p>
+
+          {/* الركائز */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.85, duration: 0.6 }}
+            className="flex flex-wrap items-center justify-center gap-3 mb-12"
+          >
+            {partnerPillars.map(({ icon: Icon, label }) => (
+              <span
+                key={label}
+                className="inline-flex items-center gap-2 rounded-full bg-card border border-border px-4 py-2 text-sm font-medium text-foreground shadow-sm"
+              >
+                <Icon className="w-4 h-4 text-secondary" />
+                {label}
+              </span>
+            ))}
+          </motion.div>
+
+          {/* التحويل إلى موقع القبول */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 1.05, type: "spring", stiffness: 140, damping: 12 }}
+            className="space-y-4"
+          >
+            <Button
+              size="lg"
+              className="text-lg px-8 py-6 rounded-2xl shadow-xl shadow-primary/25 gap-2"
+              onClick={() => (window.location.href = ADMISSION_URL)}
+            >
+              الانتقال إلى منصة القبول الجامعي
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+
+            <div className="flex flex-col items-center gap-2">
+              <p className="text-sm text-muted-foreground">
+                سيتم تحويلك تلقائيًا إلى موقع القبول خلال{" "}
+                <span className="font-bold text-primary tabular-nums">{secondsLeft}</span>{" "}
+                ثوانٍ
+              </p>
+              {/* شريط التقدم */}
+              <div className="w-48 h-1.5 rounded-full bg-muted overflow-hidden">
+                <motion.div
+                  className="h-full rounded-full bg-gradient-to-l from-primary to-secondary"
+                  initial={{ width: "100%" }}
+                  animate={{ width: `${(secondsLeft / COUNTDOWN_SECONDS) * 100}%` }}
+                  transition={{ duration: 0.9, ease: "linear" }}
+                />
+              </div>
             </div>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight drop-shadow-lg">
-              خدمات القبول الجامعي المتميزة
-            </h1>
-            <p className="text-lg md:text-xl text-gray-100 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
-              نحن شريكك المتخصص للحصول على القبول في أفضل الجامعات المحلية والدولية. 
-              فريق خبراء متخصص لضمان نجاح رحلتك التعليمية
-            </p>
-          </motion.div>
-
-          {/* Stats Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16"
-          >
-            {[
-              { icon: Users, number: "5000+", label: "طالب حصل على القبول" },
-              { icon: Award, number: "200+", label: "جامعة شريكة" },
-              { icon: CheckCircle, number: "95%", label: "معدل نجاح القبول" },
-              { icon: Star, number: "5.0", label: "تقييم العملاء" }
-            ].map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.5 + index * 0.1, duration: 0.5 }}
-                className="text-center bg-white/95 backdrop-blur-sm rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-white/20"
-              >
-                <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-full mb-4 shadow-md">
-                  <stat.icon className="h-6 w-6 text-white" />
-                </div>
-                <div className="text-2xl font-bold text-gray-800 mb-2">{stat.number}</div>
-                <div className="text-sm text-gray-700 font-medium">{stat.label}</div>
-              </motion.div>
-            ))}
           </motion.div>
         </div>
-      </section>
+      </main>
 
-      {/* Services Section */}
-      <section className="py-16 md:py-20">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
-              خدماتنا المتخصصة
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              نقدم مجموعة شاملة من الخدمات لضمان حصولك على القبول الجامعي المناسب
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {services.map((service, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1, duration: 0.6 }}
-                whileHover={{ scale: 1.02, y: -5 }}
-                className="group"
-              >
-                <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden hover:scale-105">
-                  <CardContent className="p-6 text-center">
-                    <motion.div 
-                      className={`inline-flex items-center justify-center w-16 h-16 ${service.bgColor} rounded-full mb-4 shadow-lg`}
-                      whileHover={{ scale: 1.1, rotate: 5 }}
-                      transition={{ type: "spring", stiffness: 300 }}
-                    >
-                      <service.icon className={`h-8 w-8 ${service.color}`} />
-                    </motion.div>
-                    <h3 className="text-lg font-bold text-gray-800 mb-3">{service.title}</h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">{service.description}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Application Form Section */}
-      <section className="py-16 md:py-20 bg-gradient-to-br from-gray-50 to-blue-50/30">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
-              ابدأ رحلتك الجامعية معنا
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto mb-6">
-              املأ النموذج أدناه وسيتواصل معك فريقنا المتخصص لبدء إجراءات القبول
-            </p>
-            
-            {/* Pricing Notice */}
-            <Alert className="max-w-2xl mx-auto bg-amber-50 border-amber-200">
-              <AlertTriangle className="h-4 w-4 text-amber-600" />
-              <AlertDescription className="text-amber-800 text-sm">
-                <strong>تنبيه مهم:</strong> خدمات القبول الجامعي مدفوعة الأجر. سيتم إرسال عرض الأسعار التفصيلي بعد مراجعة طلبكم والتأكد من صحة المعلومات المقدمة من قبل فريقنا الأكاديمي المتخصص.
-              </AlertDescription>
-            </Alert>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="max-w-4xl mx-auto"
-          >
-            <Card className="border-0 shadow-xl">
-              <CardHeader className="bg-gradient-to-r from-primary to-blue-600 text-white text-center">
-                <CardTitle className="text-xl md:text-2xl flex items-center justify-center gap-3">
-                  <FileText className="h-6 w-6" />
-                  نموذج طلب القبول الجامعي
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6 md:p-8">
-                <AuthCtaCard serviceTitle="خدمات القبول الجامعي" />
-              </CardContent>
-            </Card>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section className="py-16 md:py-20 bg-gradient-to-br from-primary/5 to-blue-50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
-              تواصل مع خبرائنا
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              فريقنا المتخصص جاهز للإجابة على جميع استفساراتك ومساعدتك في رحلتك الجامعية
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: Phone,
-                title: "اتصل بنا",
-                description: "متاحون للرد على مكالماتك",
-                contact: "0559600824",
-                color: "text-green-500",
-                bgColor: "bg-green-50"
-              },
-              {
-                icon: Mail,
-                title: "راسلنا",
-                description: "نرد على رسائلك خلال ساعات",
-                contact: "info@fekrahedu.com",
-                color: "text-blue-500",
-                bgColor: "bg-blue-50"
-              },
-              {
-                icon: MapPin,
-                title: "موقعنا",
-                description: "زورونا في مقرنا الرئيسي",
-                contact: "المملكة العربية السعودية",
-                color: "text-purple-500",
-                bgColor: "bg-purple-50"
-              }
-            ].map((contact, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1, duration: 0.6 }}
-                whileHover={{ scale: 1.02, y: -5 }}
-              >
-                <Card className="text-center border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full">
-                  <CardContent className="p-6">
-                    <div className={`inline-flex items-center justify-center w-16 h-16 ${contact.bgColor} rounded-full mb-4`}>
-                      <contact.icon className={`h-8 w-8 ${contact.color}`} />
-                    </div>
-                    <h3 className="text-lg font-bold text-gray-800 mb-2">{contact.title}</h3>
-                    <p className="text-sm text-gray-600 mb-3">{contact.description}</p>
-                    <p className="font-semibold text-gray-800">{contact.contact}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-          <Footer />
+      <Footer />
     </div>
   );
 };
