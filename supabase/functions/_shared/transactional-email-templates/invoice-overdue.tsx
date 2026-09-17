@@ -23,8 +23,8 @@ const E = ({ customerName, invoiceNumber, remainingAmount, dueDate, daysOverdue,
     <Html lang="ar" dir="rtl">
       <Head />
       <Preview>{`${isLate ? 'تذكير بتأخر سداد' : 'تذكير باستحقاق'} الفاتورة ${invoiceNumber ?? ''}`}</Preview>
-      <Body style={S.main}>
-        <Container style={S.container}>
+      <Body dir="rtl" style={S.main}>
+        <Container dir="rtl" style={S.container}>
           <Section style={S.header}>
             <Row>
               <Column>

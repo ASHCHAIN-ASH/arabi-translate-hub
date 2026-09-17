@@ -21,8 +21,8 @@ const E = ({ customerName, invoiceNumber, amount, newBalance, paidAt, transactio
   <Html lang="ar" dir="rtl">
     <Head />
     <Preview>{`💳 تم دفع الفاتورة ${invoiceNumber ?? ''} بمبلغ ${amount ?? ''} ر.س من محفظتك — ${SITE_NAME}`}</Preview>
-    <Body style={main}>
-      <Container style={container}>
+    <Body dir="rtl" style={main}>
+      <Container dir="rtl" style={container}>
         <Section style={bankHeader}>
           <Row>
             <Column>
@@ -152,8 +152,8 @@ export const template = {
   },
 } satisfies TemplateEntry
 
-const main = { backgroundColor: '#f1f5f9', fontFamily: "'IBM Plex Sans Arabic', Arial, sans-serif", margin: 0, padding: '20px 0' }
-const container = { padding: '0', maxWidth: '620px', margin: '0 auto', backgroundColor: '#ffffff', borderRadius: '16px', overflow: 'hidden' as const, boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }
+const main = { direction: 'rtl' as const, textAlign: 'right' as const, backgroundColor: '#f1f5f9', fontFamily: "'IBM Plex Sans Arabic', Arial, sans-serif", margin: 0, padding: '20px 0' }
+const container = { direction: 'rtl' as const, textAlign: 'right' as const, padding: '0', maxWidth: '620px', margin: '0 auto', backgroundColor: '#ffffff', borderRadius: '16px', overflow: 'hidden' as const, boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }
 
 const bankHeader = { background: 'linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%)', padding: '24px 28px', color: '#fff' }
 const bankBrand = { fontSize: '20px', fontWeight: '800' as const, color: '#fff', margin: 0 }

@@ -55,8 +55,8 @@ const CSS = `
 `
 
 export const S = {
-  main: { backgroundColor: '#f1f5f9', fontFamily: FONT, margin: 0, padding: '24px 12px' },
-  container: {
+  main: { direction: 'rtl' as const, textAlign: 'right' as const, backgroundColor: '#f1f5f9', fontFamily: FONT, margin: 0, padding: '24px 12px' },
+  container: { direction: 'rtl' as const, textAlign: 'right' as const,
     maxWidth: '620px', margin: '0 auto', backgroundColor: '#ffffff',
     borderRadius: '18px', overflow: 'hidden' as const, boxShadow: '0 6px 28px rgba(15,23,42,.10)',
   },
@@ -137,8 +137,8 @@ export function BrandEmail({ preview, accent = 'blue', tagline, badge, cta, chil
         <style>{CSS}</style>
       </Head>
       <Preview>{preview}</Preview>
-      <Body style={S.main}>
-        <Container style={S.container} className="fk-card">
+      <Body dir="rtl" style={S.main}>
+        <Container dir="rtl" style={S.container} className="fk-card">
           <Section
             className="fk-bar"
             style={{ background: `linear-gradient(90deg, ${a.from} 0%, ${a.to} 50%, ${a.from} 100%)`, height: '6px', lineHeight: '6px', fontSize: '1px' }}

@@ -18,7 +18,7 @@ const E = ({ customerName, prize, claimCode, wonAt, nextEligibleAt, validUntil }
     accent="amber"
     tagline="عجلة الجوائز الأكاديمية"
     badge="🎉 فوز مؤكّد"
-    cta={{ label: 'المطالبة بالجائزة الآن', url: `${SITE_URL}/order-now` }}
+    cta={{ label: 'ادخل إلى حسابك وطالب بجائزتك', url: `${SITE_URL}/login` }}
     footerNote="أرفق رمز المطالبة عند تواصلك معنا لتفعيل جائزتك."
   >
     <Heading style={S.title} className="fk-title">مبروك {customerName || ''} — لقد فزت! 🎁</Heading>
@@ -45,10 +45,16 @@ const E = ({ customerName, prize, claimCode, wonAt, nextEligibleAt, validUntil }
 
     <Text style={noteBox('amber')}>
       {'كيف تستلم جائزتك؟\n'}
-      {'1) تواصل معنا عبر الموقع أو واتساب.\n'}
-      {'2) أرسل رمز المطالبة الموضّح أعلاه.\n'}
-      {'3) يبدأ فريقنا بتنفيذ الخدمة المجانية مباشرة.'}
+      {'1) سجّل الدخول إلى حسابك في الموقع: '}{`${SITE_URL}/login`}{'\n'}
+      {'2) ليس لديك حساب بعد؟ أنشئه مجانًا: '}{`${SITE_URL}/register`}{'\n'}
+      {'3) أرسل رمز المطالبة الموضّح أعلاه عبر الموقع أو واتساب.\n'}
+      {'4) يبدأ فريقنا بتنفيذ الخدمة المجانية مباشرة.'}
     </Text>
+
+    <Text style={S.small}>
+      التسجيل في الموقع شرط أساسي للحصول على الجائزة — الجائزة مرتبطة بحسابك وببريدك المسجَّل.
+    </Text>
+
 
     <Text style={S.small}>
       تنبيه موثّق: المشاركة في العجلة متاحة مرة واحدة كل 30 يومًا لكل مشارك، ويُحتسب موعد محاولتك القادمة تلقائيًا من تاريخ هذا الفوز.

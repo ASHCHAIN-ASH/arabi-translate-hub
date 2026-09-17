@@ -35,8 +35,8 @@ const E = ({
     <Html lang="ar" dir="rtl">
       <Head />
       <Preview>{`تم استلام دفعة بمبلغ ${S.fmt(amountPaid)} ${cur} على الفاتورة ${invoiceNumber ?? ''}`}</Preview>
-      <Body style={S.main}>
-        <Container style={S.container}>
+      <Body dir="rtl" style={S.main}>
+        <Container dir="rtl" style={S.container}>
           <Section style={S.header}>
             <Row>
               <Column>

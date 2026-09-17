@@ -8,7 +8,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Copy, Gift, Sparkles, Trophy, Clock, ShieldCheck, Mail } from "lucide-react";
+import { Copy, Gift, Sparkles, Trophy, Clock, ShieldCheck, Mail, LogIn, UserPlus, Lock } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useAuth } from "@/components/SimpleAuthProvider";
 import { supabase } from "@/data/legacy/client";
 
 interface Segment {
@@ -51,8 +53,20 @@ const SpinTheWheel = () => {
   const [remaining, setRemaining] = useState<{ d: number; h: number; m: number; s: number } | null>(null);
   const [isChecking, setIsChecking] = useState(true);
   const { toast } = useToast();
+  const { user, loading: authLoading } = useAuth();
+
+  /** التسجيل شرط أساسي للحصول على الجائزة */
+  const isAuthed = !!user;
 
   const isLocked = !!nextEligibleAt && !!remaining;
+
+  // تعبئة بيانات الحساب تلقائيًا
+  useEffect(() => {
+    if (!user) return;
+    setEmail((prev) => prev || (user.email ?? ""));
+    setName((prev) => prev || (user.user_metadata?.name ?? user.user_metadata?.full_name ?? ""));
+  }, [user]);
+
 
   // Responsive canvas size — based on viewport, not just container
   useEffect(() => {
@@ -70,7 +84,7 @@ const SpinTheWheel = () => {
     return () => window.removeEventListener("resize", update);
   }, []);
 
-  useEffect(() => { checkEligibility(); }, []);
+  useEffect(() => { if (!authLoading) checkEligibility(); }, [authLoading, user?.id]);
 
   // العدّ التنازلي الحيّ حتى موعد المحاولة القادمة
   useEffect(() => {
@@ -90,7 +104,9 @@ const SpinTheWheel = () => {
     return () => clearInterval(t);
   }, [nextEligibleAt]);
 
+  /** المعرّف = حساب المستخدم المسجَّل (شرط أساسي)، مع معرّف جهاز احتياطي */
   const getUserIdentifier = () => {
+    if (user?.id) return user.id;
     let id = localStorage.getItem("spin_user_id");
     if (!id) {
       id = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -102,7 +118,7 @@ const SpinTheWheel = () => {
   const checkEligibility = async () => {
     try {
       const { data, error } = await supabase.functions.invoke("send-spin-winner", {
-        body: { action: "check", userIdentifier: getUserIdentifier() },
+        body: { action: "check", userIdentifier: getUserIdentifier(), email: user?.email ?? undefined },
       });
       if (error) throw error;
       if (data && data.eligible === false && data.nextEligibleAt) {
@@ -113,6 +129,7 @@ const SpinTheWheel = () => {
     } catch (e) { console.error(e); }
     finally { setIsChecking(false); }
   };
+
 
   const nextDateLabel = nextEligibleAt
     ? new Date(nextEligibleAt).toLocaleDateString("ar", {
@@ -232,6 +249,14 @@ const SpinTheWheel = () => {
 
   const spinWheel = () => {
     if (isSpinning) return;
+    if (!isAuthed) {
+      toast({
+        title: "التسجيل شرط أساسي",
+        description: "سجّل دخولك أو أنشئ حسابًا في الموقع للحصول على الجائزة",
+        variant: "destructive",
+      });
+      return;
+    }
     if (isLocked) {
       toast({
         title: "محاولتك الشهرية مُستخدمة",
@@ -240,6 +265,7 @@ const SpinTheWheel = () => {
       });
       return;
     }
+
 
     setIsSpinning(true);
     const spinRotations = Math.random() * 5 + 10;
@@ -285,12 +311,21 @@ const SpinTheWheel = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isAuthed) {
+      toast({
+        title: "التسجيل شرط أساسي",
+        description: "سجّل دخولك أو أنشئ حسابًا لاستلام الجائزة",
+        variant: "destructive",
+      });
+      return;
+    }
     setIsSubmitting(true);
     try {
       const userIdentifier = getUserIdentifier();
       const { data, error } = await supabase.functions.invoke("send-spin-winner", {
-        body: { name, email, prize: wonPrize, userIdentifier },
+        body: { name, email: user?.email ?? email, prize: wonPrize, userIdentifier, userId: user?.id },
       });
+
 
       // الدالة ترجع 429 عند استهلاك المحاولة الشهرية — نقرأ التفاصيل من جسم الرد
       let payload: any = data;
@@ -396,13 +431,15 @@ const SpinTheWheel = () => {
               {/* Center spin button */}
               <button
                 onClick={spinWheel}
-                disabled={isSpinning || isLocked || isChecking}
+                disabled={isSpinning || isLocked || isChecking || !isAuthed}
                 aria-label="ابدأ الدوران"
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full font-bold text-white shadow-2xl transition-transform active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
                 style={{
                   width: size * 0.18,
                   height: size * 0.18,
-                  background: isLocked
+                  background: !isAuthed
+                    ? "linear-gradient(135deg, hsl(220 15% 45%), hsl(220 20% 30%))"
+                    : isLocked
                     ? "linear-gradient(135deg, hsl(220 10% 50%), hsl(220 10% 35%))"
                     : "linear-gradient(135deg, hsl(43 74% 50%), hsl(38 80% 40%))",
                   fontSize: Math.max(11, size * 0.032),
@@ -412,7 +449,7 @@ const SpinTheWheel = () => {
                   <motion.span animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }}>
                     <Sparkles className="w-5 h-5" />
                   </motion.span>
-                ) : isLocked ? `${remaining!.d}ي` : "SPIN"}
+                ) : !isAuthed ? <Lock className="w-5 h-5" /> : isLocked ? `${remaining!.d}ي` : "SPIN"}
               </button>
 
             </motion.div>
@@ -485,30 +522,60 @@ const SpinTheWheel = () => {
                 </motion.div>
               )}
 
-              <Button
-                onClick={spinWheel}
-                disabled={isSpinning || isLocked || isChecking}
-                size="lg"
-                className="w-full text-base sm:text-lg py-6 font-bold shadow-lg hover:shadow-xl transition-all"
-                style={{
-                  background: isLocked
-                    ? "hsl(220 10% 60%)"
-                    : "linear-gradient(135deg, hsl(43 74% 50%), hsl(38 85% 55%))",
-                  color: "hsl(220 50% 12%)",
-                }}
-              >
-                {isChecking ? "جاري التحميل..."
-                  : isSpinning ? <><Sparkles className="w-5 h-5 ml-2 animate-spin" /> جاري الدوران...</>
-                  : isLocked ? <><Clock className="w-5 h-5 ml-2" /> محاولتك القادمة بعد {remaining!.d} يومًا</>
-                  : <><Gift className="w-5 h-5 ml-2" /> ابدأ الدوران الآن</>}
-              </Button>
+              {!isAuthed && !authLoading ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="rounded-2xl p-5 border-2 shadow-lg text-center"
+                  style={{
+                    background: "linear-gradient(135deg, hsl(45 80% 96%), hsl(45 60% 90%))",
+                    borderColor: "hsl(43 74% 55%)",
+                  }}
+                >
+                  <div className="flex items-center justify-center gap-2 mb-2 font-bold"
+                       style={{ color: "hsl(220 45% 18%)" }}>
+                    <Lock className="w-4 h-4" /> التسجيل شرط أساسي للحصول على الجائزة
+                  </div>
+                  <p className="text-xs sm:text-sm mb-4" style={{ color: "hsl(220 30% 35%)" }}>
+                    سجّل دخولك أو أنشئ حسابًا مجانيًا في الموقع لتتمكن من لف العجلة واستلام جائزتك على بريدك.
+                  </p>
+                  <div className="grid grid-cols-2 gap-3">
+                    <Button asChild className="w-full font-bold"
+                      style={{ background: "linear-gradient(135deg, hsl(43 74% 50%), hsl(38 85% 55%))", color: "hsl(220 50% 12%)" }}>
+                      <Link to="/register"><UserPlus className="w-4 h-4 ml-2" /> إنشاء حساب</Link>
+                    </Button>
+                    <Button asChild variant="outline" className="w-full font-bold">
+                      <Link to="/login"><LogIn className="w-4 h-4 ml-2" /> تسجيل الدخول</Link>
+                    </Button>
+                  </div>
+                </motion.div>
+              ) : (
+                <Button
+                  onClick={spinWheel}
+                  disabled={isSpinning || isLocked || isChecking || authLoading}
+                  size="lg"
+                  className="w-full text-base sm:text-lg py-6 font-bold shadow-lg hover:shadow-xl transition-all"
+                  style={{
+                    background: isLocked
+                      ? "hsl(220 10% 60%)"
+                      : "linear-gradient(135deg, hsl(43 74% 50%), hsl(38 85% 55%))",
+                    color: "hsl(220 50% 12%)",
+                  }}
+                >
+                  {isChecking ? "جاري التحميل..."
+                    : isSpinning ? <><Sparkles className="w-5 h-5 ml-2 animate-spin" /> جاري الدوران...</>
+                    : isLocked ? <><Clock className="w-5 h-5 ml-2" /> محاولتك القادمة بعد {remaining!.d} يومًا</>
+                    : <><Gift className="w-5 h-5 ml-2" /> ابدأ الدوران الآن</>}
+                </Button>
+              )}
 
               <div className="flex items-start justify-center gap-2 text-xs sm:text-sm text-muted-foreground text-center">
                 <ShieldCheck className="w-4 h-4 mt-0.5 flex-shrink-0" />
                 <span>
-                  محاولة مجانية واحدة لكل مشارك كل {COOLDOWN_DAYS} يومًا · تصلك الجائزة على بريدك الإلكتروني فورًا
+                  التسجيل في الموقع شرط أساسي · محاولة واحدة لكل حساب كل {COOLDOWN_DAYS} يومًا · تصلك الجائزة على بريدك فورًا
                 </span>
               </div>
+
 
             </motion.div>
           </div>
@@ -629,8 +696,13 @@ const SpinTheWheel = () => {
                   </div>
                   <div>
                     <Label htmlFor="email">البريد الإلكتروني</Label>
-                    <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="أدخل بريدك الإلكتروني" required />
+                    <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)}
+                      placeholder="أدخل بريدك الإلكتروني" required readOnly={isAuthed} />
+                    {isAuthed && (
+                      <p className="text-[11px] text-muted-foreground mt-1">بريد حسابك المسجَّل في الموقع — تصلك الجائزة عليه.</p>
+                    )}
                   </div>
+
                   <Button
                     type="submit"
                     className="w-full font-bold"

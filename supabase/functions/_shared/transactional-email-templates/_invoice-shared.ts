@@ -8,14 +8,14 @@ export const fmt = (v: unknown) => {
   return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 }
 
-export const main = {
+export const main = { direction: 'rtl' as const, textAlign: 'right' as const,
   backgroundColor: '#f1f5f9',
   fontFamily: "'IBM Plex Sans Arabic', Tahoma, Arial, sans-serif",
   margin: 0,
   padding: '20px 0',
 }
 
-export const container = {
+export const container = { direction: 'rtl' as const, textAlign: 'right' as const,
   padding: '0',
   maxWidth: '620px',
   margin: '0 auto',

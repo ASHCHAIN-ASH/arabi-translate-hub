@@ -52,8 +52,8 @@ const FinancingStatusEmail = (props: FinancingStatusEmailProps) => {
     <Html lang="ar" dir="rtl">
       <Head />
       <Preview>{`${meta.emoji} ${meta.title} — ${SITE_NAME}`}</Preview>
-      <Body style={main}>
-        <Container style={container}>
+      <Body dir="rtl" style={main}>
+        <Container dir="rtl" style={container}>
           <Section style={header}>
             <Heading style={brand}>🏦 {SITE_NAME}</Heading>
           </Section>
@@ -155,8 +155,8 @@ export const template = {
   },
 } satisfies TemplateEntry
 
-const main = { backgroundColor: '#ffffff', fontFamily: '"IBM Plex Sans Arabic", Arial, sans-serif', margin: 0, padding: 0 }
-const container = { maxWidth: '560px', margin: '0 auto', padding: '0' }
+const main = { direction: 'rtl' as const, textAlign: 'right' as const, backgroundColor: '#ffffff', fontFamily: '"IBM Plex Sans Arabic", Arial, sans-serif', margin: 0, padding: 0 }
+const container = { direction: 'rtl' as const, textAlign: 'right' as const, maxWidth: '560px', margin: '0 auto', padding: '0' }
 const header = { backgroundColor: BRAND_COLOR, padding: '24px', textAlign: 'center' as const }
 const brand = { color: '#ffffff', fontSize: '20px', fontWeight: 'bold', margin: 0 }
 const hero = { padding: '32px 24px 16px', textAlign: 'center' as const }
