@@ -54,7 +54,8 @@ export const useRealtimeOrders = () => {
           clientName: order.client_name,
           clientEmail: order.client_email,
           trackingId: order.tracking_id,
-          estimatedDelivery: order.estimated_delivery
+          estimatedDelivery: order.estimated_delivery,
+          serviceType: order.service_type
         }
       });
 

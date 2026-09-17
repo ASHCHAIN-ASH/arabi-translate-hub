@@ -4,6 +4,9 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
+const PUBLICATION_EMAIL = "publishing@fekrahedu.com";
+const PUBLICATION_FROM = `قسم النشر العلمي في FekrahEdu <${PUBLICATION_EMAIL}>`;
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -61,10 +64,10 @@ const handler = async (req: Request): Promise<Response> => {
     // Send confirmation email to client
     console.log("Sending client confirmation email...");
     const clientEmailResponse = await resend.emails.send({
-      from: "النشر المشروح - تأكيد الطلب <noreply@fekrahedu.com>",
+      from: PUBLICATION_FROM,
       to: [requestData.email],
       subject: "✅ تم استلام طلب النشر المشروح بنجاح",
-      replyTo: "info@fekrahedu.com",
+      replyTo: PUBLICATION_EMAIL,
       attachments: [{
         filename: requestData.originalFileName,
         content: fileBase64,
@@ -136,7 +139,7 @@ const handler = async (req: Request): Promise<Response> => {
             <div style="background: #e0f2fe; padding: 20px; border-radius: 8px; text-align: center;">
               <h4 style="color: #0277bd; margin-top: 0; margin-bottom: 15px;">📞 للاستفسارات والتواصل</h4>
               <p style="color: #0277bd; margin: 0; line-height: 1.6;">
-                📧 info@fekrahedu.com<br>
+                 📧 ${PUBLICATION_EMAIL}<br>
                 🌐 www.fekrahedu.com
               </p>
             </div>
@@ -158,10 +161,10 @@ const handler = async (req: Request): Promise<Response> => {
     // Send notification to admin
     console.log("Sending admin notification...");
     const adminEmailResponse = await resend.emails.send({
-      from: "النشر المشروح - طلب جديد <noreply@fekrahedu.com>",
-      to: ["info@fekrahedu.com"],
+      from: PUBLICATION_FROM,
+      to: [PUBLICATION_EMAIL],
       subject: `📑 طلب نشر مشروح جديد - ${requestData.fullName}`,
-      replyTo: "info@fekrahedu.com",
+      replyTo: requestData.email,
       attachments: [{
         filename: requestData.originalFileName,
         content: fileBase64,

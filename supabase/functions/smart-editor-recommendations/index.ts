@@ -5,6 +5,8 @@ import { PDFDocument } from "https://esm.sh/pdf-lib@1.17.1?target=deno";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 const openAIApiKey = Deno.env.get("OPENAI_API_KEY");
+const PUBLICATION_EMAIL = "publishing@fekrahedu.com";
+const PUBLICATION_FROM = `قسم النشر العلمي في FekrahEdu <${PUBLICATION_EMAIL}>`;
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -220,9 +222,10 @@ serve(async (req) => {
     // Send confirmation email to client
     console.log("Sending confirmation email to client...");
     const clientEmailResponse = await resend.emails.send({
-      from: "المحرر الذكي <no-reply@fekrahedu.com>",
+      from: PUBLICATION_FROM,
       to: [requestData.email],
       subject: "تأكيد استلام طلب التوصيات - المحرر الذكي",
+      replyTo: PUBLICATION_EMAIL,
       html: `
         <div dir="rtl" style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="text-align: center; margin-bottom: 30px;">
@@ -265,10 +268,10 @@ serve(async (req) => {
     // Send immediate notification to admin
     console.log("Sending immediate admin notification...");
     const adminEmailResponse = await resend.emails.send({
-      from: "المحرر الذكي - إشعار فوري <noreply@fekrahedu.com>",
-      to: ["info@fekrahedu.com"],
+      from: PUBLICATION_FROM,
+      to: [PUBLICATION_EMAIL],
       subject: `🔔 طلب توصيات جديد - ${requestData.researchTitle}`,
-      replyTo: "info@fekrahedu.com",
+      replyTo: requestData.email,
       attachments: (summaryPdfBase64 && summaryPdfBase64.length > 0)
         ? [{ filename: "research-summary.pdf", content: summaryPdfBase64, contentType: "application/pdf" }]
         : [],

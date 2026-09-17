@@ -289,6 +289,7 @@ const AdminServiceOrders = () => {
             orderTitle: order?.service_name || 'طلب خدمة',
             clientName, clientEmail,
             trackingId: order?.tracking_id,
+            serviceType: order?.service_name,
           }
         }).catch(err => console.error('Email send error:', err));
       }

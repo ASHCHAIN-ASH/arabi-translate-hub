@@ -9,6 +9,8 @@ const corsHeaders = {
 };
 
 const FROM_LABEL = "FekrahEdu <info@fekrahedu.com>";
+const PUBLICATION_EMAIL = "publishing@fekrahedu.com";
+const PUBLICATION_FROM = `قسم النشر العلمي في FekrahEdu <${PUBLICATION_EMAIL}>`;
 
 const escapeHtml = (s: string) =>
   s.replace(/[&<>"']/g, (c) =>
@@ -63,7 +65,7 @@ serve(async (req) => {
 
     const { data: msg, error: msgErr } = await admin
       .from("inbox_messages")
-      .select("id, sender_name, sender_email, subject, message")
+      .select("id, sender_name, sender_email, subject, message, service_type, form_type")
       .eq("id", messageId)
       .single();
     if (msgErr || !msg) throw msgErr ?? new Error("message not found");
@@ -80,6 +82,11 @@ serve(async (req) => {
         const safeBody = escapeHtml(body).replace(/\n/g, "<br/>");
         const safeOriginal = escapeHtml(msg.message).replace(/\n/g, "<br/>");
         const safeSubject = escapeHtml(msg.subject ?? "رسالتك");
+        const isPublicationMessage = /publication|publishing|journal|نشر/i.test(
+          `${msg.service_type ?? ""} ${msg.form_type ?? ""} ${msg.subject ?? ""}`,
+        );
+        const replyFrom = isPublicationMessage ? PUBLICATION_FROM : FROM_LABEL;
+        const replyAddress = isPublicationMessage ? PUBLICATION_EMAIL : "info@fekrahedu.com";
 
         const r = await fetch("https://api.resend.com/emails", {
           method: "POST",
@@ -88,8 +95,9 @@ serve(async (req) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            from: FROM_LABEL,
+            from: replyFrom,
             to: [msg.sender_email],
+            reply_to: replyAddress,
             subject: `رد على: ${safeSubject}`,
             html: `<!DOCTYPE html><html dir="rtl" lang="ar"><body style="font-family:Tahoma,Arial,sans-serif;background:#f6f7fb;padding:24px;color:#1f2937">
             <div style="max-width:640px;margin:auto;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #e5e7eb">

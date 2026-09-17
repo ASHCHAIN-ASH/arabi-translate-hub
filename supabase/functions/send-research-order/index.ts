@@ -3,6 +3,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { Resend } from "npm:resend@2.0.0";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+const PUBLICATION_EMAIL = "publishing@fekrahedu.com";
+const GENERAL_EMAIL = "info@fekrahedu.com";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -48,6 +50,11 @@ const handler = async (req: Request): Promise<Response> => {
     );
 
     const orderData: ResearchOrderRequest = await req.json();
+    const isPublicationOrder = /publication|publishing|journal|نشر/i.test(
+      `${orderData.category} ${orderData.categoryTitle} ${orderData.researchType}`,
+    );
+    const departmentEmail = isPublicationOrder ? PUBLICATION_EMAIL : GENERAL_EMAIL;
+    const senderName = isPublicationOrder ? "قسم النشر العلمي في FekrahEdu" : "FekrahEdu";
 
     // توليد معرف فريد للطلب
     const orderId = `RO${Date.now()}`;
@@ -213,7 +220,7 @@ const handler = async (req: Request): Promise<Response> => {
 
             <div style="margin-top: 30px; padding: 20px; background: #f3f4f6; border-radius: 8px; text-align: center;">
               <h3 style="color: #1f2937; margin-top: 0;">للتواصل معنا</h3>
-              <p style="margin: 5px 0;">📧 البريد الإلكتروني: info@fekrahedu.com</p>
+              <p style="margin: 5px 0;">📧 البريد الإلكتروني: ${departmentEmail}</p>
               <p style="margin: 5px 0;">📱 جوال: 0559600824</p>
               <p style="margin: 5px 0;">📱 واتساب: 0559600824</p>
               <p style="margin: 5px 0;">⏰ ساعات العمل: الأحد - الخميس (9 صباحاً - 6 مساءً)</p>
@@ -226,8 +233,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // إرسال إيميل للإدارة (فقط للإيميل الموثق)
     const adminEmail = await resend.emails.send({
-      from: "FekrahEdu <noreply@fekrahedu.com>",
-      to: ["info@fekrahedu.com"],
+      from: `${senderName} <${departmentEmail}>`,
+      to: [departmentEmail],
       replyTo: orderData.email,
       subject: `🎓 طلب جديد: ${orderData.categoryTitle} - ${orderData.fullName}`,
       html: adminEmailHtml,
@@ -235,8 +242,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // إرسال إيميل للعميل
     const clientEmail = await resend.emails.send({
-      from: "FekrahEdu <info@fekrahedu.com>",
+      from: `${senderName} <${departmentEmail}>`,
       to: [orderData.email],
+      replyTo: departmentEmail,
       subject: `✅ تم استلام طلبك - ${orderData.categoryTitle}`,
       html: clientEmailHtml,
     });

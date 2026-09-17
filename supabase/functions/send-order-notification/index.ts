@@ -2,6 +2,8 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@4.0.0";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+const PUBLICATION_EMAIL = "publishing@fekrahedu.com";
+const GENERAL_EMAIL = "info@fekrahedu.com";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -33,13 +35,19 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     const orderData: OrderNotificationRequest = await req.json();
+    const isPublicationOrder = /research-publication|journal-publication|publishing|نشر/i.test(
+      orderData.serviceType,
+    );
+    const departmentEmail = isPublicationOrder ? PUBLICATION_EMAIL : GENERAL_EMAIL;
+    const senderName = isPublicationOrder ? "قسم النشر العلمي في FekrahEdu" : "FekrahEdu";
 
     console.log("Processing order notification:", orderData);
 
     // Send notification to admin
     const adminEmailResponse = await resend.emails.send({
-      from: "FekrahEdu <info@fekrahedu.com>",
-      to: ["admin@fekrahedu.com"],
+      from: `${senderName} <${departmentEmail}>`,
+      to: [isPublicationOrder ? PUBLICATION_EMAIL : "admin@fekrahedu.com"],
+      replyTo: orderData.email,
       subject: `طلب جديد من ${orderData.contactPerson} - ${getServiceTypeArabic(orderData.serviceType)}`,
       html: `
         <div dir="rtl" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8fafc;">
@@ -101,8 +109,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send confirmation to client
     const clientEmailResponse = await resend.emails.send({
-      from: "FekrahEdu <info@fekrahedu.com>",
+      from: `${senderName} <${departmentEmail}>`,
       to: [orderData.email],
+      replyTo: departmentEmail,
       subject: "تأكيد استلام طلبكم - FekrahEdu",
       html: `
         <div dir="rtl" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8fafc;">
@@ -153,7 +162,7 @@ const handler = async (req: Request): Promise<Response> => {
 
             <div style="text-align: center; margin-top: 30px; padding: 20px; background: #f9fafb; border-radius: 8px;">
               <p style="color: #374151; font-weight: bold;">للاستفسارات والدعم الفني</p>
-              <p style="color: #6b7280;">البريد الإلكتروني: support@fekrahedu.com</p>
+              <p style="color: #6b7280;">البريد الإلكتروني: ${departmentEmail}</p>
               <p style="color: #6b7280;">الهاتف: +966 50 123 4567</p>
             </div>
 
