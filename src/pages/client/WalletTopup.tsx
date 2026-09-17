@@ -81,20 +81,10 @@ const WalletTopup: React.FC = () => {
 
   useEffect(() => { setShowCardForm(false); }, [amount, method]);
 
-  const bonus = useMemo(() => getBonus(amount), [amount]);
+  const bonus = useMemo(() => getBonus(method), [method]);
   const bonusAmount = useMemo(() => Math.round((amount * bonus.pct) / 100), [amount, bonus.pct]);
   const totalReceived = amount + bonusAmount;
   const newBalance = (wallet?.balance || 0) + totalReceived;
-
-  // progress to next tier (for the live progress bar)
-  const nextTier = useMemo(
-    () => BONUS_TIERS.find((t) => amount < t.min),
-    [amount],
-  );
-  const progressPct = useMemo(() => {
-    if (!nextTier) return 100;
-    return Math.min(100, Math.round((amount / nextTier.min) * 100));
-  }, [amount, nextTier]);
 
   const copy = (text: string, key: string) => {
     navigator.clipboard.writeText(text);
