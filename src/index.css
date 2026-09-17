@@ -1,5 +1,27 @@
-/* خطوط احترافية عالمية */
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Noto+Sans+Arabic:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+/* خط الهوية محفوظ ضمن أصول الموقع لتسريع ظهوره ومنع تبدّل النص أثناء التحميل */
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  src: url('/__l5e/assets-v1/3cd0c7c4-dcf5-4f49-94f7-59dabcc32ddf/ibm-plex-arabic-regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 300 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  src: url('/__l5e/assets-v1/6da0e78c-9b7b-4b91-a6d6-3138ed71e65f/ibm-plex-arabic-semibold.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  src: url('/__l5e/assets-v1/8e15f405-cdc2-4ce3-b4b7-31e8458dd75b/ibm-plex-arabic-bold.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
 
 @tailwind base;
 @tailwind components;
