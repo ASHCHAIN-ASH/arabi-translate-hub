@@ -203,26 +203,29 @@ export const SpinWheelBanner = () => {
               <div className="absolute inset-0 rounded-full bg-[conic-gradient(from_210deg,#7c5b18,#f5d97a,#b8862c,#fff2c4,#8a651f,#f5d97a,#7c5b18)] p-[6%] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.85)]">
                 <div className="relative w-full h-full rounded-full bg-[#120a2a] p-[3%] shadow-[inset_0_0_24px_rgba(0,0,0,0.8)]">
                   {/* مصابيح الإطار */}
-                  {Array.from({ length: 16 }).map((_, i) => (
-                    <motion.span
-                      key={i}
-                      aria-hidden="true"
-                      className="absolute top-1/2 left-1/2 w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-amber-100"
-                      style={{
-                        transform: `translate(-50%, -50%) rotate(${i * 22.5}deg) translateY(-48.5%) translateY(-0px)`,
-                        transformOrigin: "center",
-                        // تموضع دائري عبر الإزاحة النسبية
-                        marginTop: 0,
-                      }}
-                      initial={false}
-                      animate={
-                        reduceMotion
-                          ? undefined
-                          : { opacity: [0.25, 1, 0.25], boxShadow: ["0 0 0px #fde68a", "0 0 10px #fbbf24", "0 0 0px #fde68a"] }
-                      }
-                      transition={{ duration: 1.2, repeat: Infinity, delay: (i % 4) * 0.3, ease: "easeInOut" }}
-                    />
-                  ))}
+                  {Array.from({ length: 16 }).map((_, i) => {
+                    const a = (i * 22.5 * Math.PI) / 180;
+                    const rr = 50.5;
+                    return (
+                      <motion.span
+                        key={i}
+                        aria-hidden="true"
+                        className="absolute z-20 w-2 h-2 sm:w-2.5 sm:h-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-100"
+                        style={{
+                          left: `${50 + rr * Math.sin(a)}%`,
+                          top: `${50 - rr * Math.cos(a)}%`,
+                        }}
+                        initial={false}
+                        animate={
+                          reduceMotion
+                            ? undefined
+                            : { opacity: [0.25, 1, 0.25], boxShadow: ["0 0 0px #fde68a", "0 0 12px #fbbf24", "0 0 0px #fde68a"] }
+                        }
+                        transition={{ duration: 1.2, repeat: Infinity, delay: (i % 4) * 0.3, ease: "easeInOut" }}
+                      />
+                    );
+                  })}
+
 
                   {/* قرص العجلة الدوّار */}
                   <motion.div
