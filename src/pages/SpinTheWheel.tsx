@@ -314,7 +314,7 @@ const SpinTheWheel = () => {
           >
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[hsl(220_40%_20%)] text-[hsl(45_90%_70%)] text-xs sm:text-sm font-semibold mb-4 shadow-md">
               <Sparkles className="w-4 h-4" />
-              عرض حصري · مرة واحدة يومياً
+              عرض حصري · محاولة واحدة كل 30 يومًا
             </div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-3 leading-[1.45] sm:leading-[1.4]"
                 style={{ color: "hsl(220 45% 18%)" }}>
