@@ -20,6 +20,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { WalletService, type Wallet as WalletT } from '@/utils/walletService';
 import { BANK_INFO } from './Wallet';
 import { cn } from '@/lib/utils';
+import MoyasarCardForm from '@/components/payments/MoyasarCardForm';
 
 const QUICK_AMOUNTS = [100, 250, 500, 1000, 2500, 5000];
 
@@ -55,6 +56,7 @@ const WalletTopup: React.FC = () => {
     () => `TOP-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 5).toUpperCase()}`,
   );
   const [dragOver, setDragOver] = useState(false);
+  const [showCardForm, setShowCardForm] = useState(false);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -81,6 +83,8 @@ const WalletTopup: React.FC = () => {
     toast.success('تم اختيار الإيصال', { description: f.name });
   };
 
+  useEffect(() => { setShowCardForm(false); }, [amount, method]);
+
   const bonus = useMemo(() => getBonus(amount), [amount]);
   const bonusAmount = useMemo(() => Math.round((amount * bonus.pct) / 100), [amount, bonus.pct]);
   const totalReceived = amount + bonusAmount;
@@ -105,21 +109,9 @@ const WalletTopup: React.FC = () => {
     setTimeout(() => setCopied(null), 1800);
   };
 
-  const payInstant = async () => {
+  const payInstant = () => {
     if (!amount || amount <= 0) return toast.error('يرجى إدخال مبلغ صحيح');
-    setSubmitting(true);
-    try {
-      const { supabase } = await import('@/data/legacy/client');
-      const { data, error } = await supabase.functions.invoke('create-payment-intent', {
-        body: { purpose: 'wallet_topup', amount, note: 'شحن المحفظة بالبطاقة' },
-      });
-      if (error) throw error;
-      if (!data?.checkout_url) throw new Error('لم يتم استلام رابط الدفع');
-      window.location.href = data.checkout_url;
-    } catch (e: any) {
-      toast.error('فشل بدء عملية الدفع', { description: e.message });
-      setSubmitting(false);
-    }
+    setShowCardForm(true);
   };
 
   const submitManual = async () => {
@@ -1049,8 +1041,30 @@ const WalletTopup: React.FC = () => {
                     </motion.div>
                   )}
 
+                  {/* نموذج الدفع الفوري بالبطاقة (مضمّن داخل الصفحة) */}
+                  <AnimatePresence>
+                    {method === 'instant' && showCardForm && amount > 0 && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        className="rounded-2xl border border-primary/20 bg-card p-4"
+                      >
+                        <MoyasarCardForm
+                          purpose="wallet_topup"
+                          amount={amount}
+                          note="شحن المحفظة بالبطاقة"
+                        />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
                   {/* Action button */}
-                  <motion.div whileHover={amount > 0 && !submitting ? { scale: 1.01 } : {}} whileTap={amount > 0 && !submitting ? { scale: 0.99 } : {}}>
+                  <motion.div
+                    whileHover={amount > 0 && !submitting ? { scale: 1.01 } : {}}
+                    whileTap={amount > 0 && !submitting ? { scale: 0.99 } : {}}
+                    className={cn(method === 'instant' && showCardForm && 'hidden')}
+                  >
                     <Button
                       onClick={method === 'instant' ? payInstant : submitManual}
                       disabled={!amount || amount <= 0 || submitting || (method === 'manual' && !receiptFile)}

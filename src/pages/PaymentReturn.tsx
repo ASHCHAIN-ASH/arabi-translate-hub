@@ -15,6 +15,8 @@ const PaymentReturn: React.FC = () => {
   const [details, setDetails] = useState<any>(null);
 
   const orderNumber = params.get('order') || params.get('orderNumber') || '';
+  const provider = params.get('provider') || '';
+  const moyasarPaymentId = params.get('id') || '';
 
   useEffect(() => {
     let cancelled = false;
@@ -25,9 +27,14 @@ const PaymentReturn: React.FC = () => {
         return;
       }
       try {
-        const { data, error } = await supabase.functions.invoke('verify-payment', {
-          body: { internal_order_number: orderNumber },
-        });
+        const isMoyasar = provider === 'moyasar' || !!moyasarPaymentId;
+        const { data, error } = isMoyasar
+          ? await supabase.functions.invoke('moyasar-verify-payment', {
+              body: { internal_order_number: orderNumber, payment_id: moyasarPaymentId },
+            })
+          : await supabase.functions.invoke('verify-payment', {
+              body: { internal_order_number: orderNumber },
+            });
         if (cancelled) return;
         if (error) throw error;
         setDetails(data);
@@ -44,7 +51,7 @@ const PaymentReturn: React.FC = () => {
       }
     })();
     return () => { cancelled = true; };
-  }, [orderNumber]);
+  }, [orderNumber, provider, moyasarPaymentId]);
 
   const Icon =
     status === 'succeeded' ? CheckCircle2
