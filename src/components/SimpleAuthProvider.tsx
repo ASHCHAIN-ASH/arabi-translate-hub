@@ -21,6 +21,7 @@ interface AuthContextType {
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
   signUp: (email: string, password: string, metadata: { name: string; phone?: string }) => Promise<{ error?: string }>;
+  resendConfirmation: (email: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
   forgotPassword: (email: string) => Promise<{ error?: string }>;
   resetPassword: (token: string, password: string) => Promise<{ error?: string }>;
@@ -221,6 +222,22 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     // State cleared via onAuthStateChange
   };
 
+  const resendConfirmation = async (email: string): Promise<{ error?: string }> => {
+    try {
+      const normalizedEmail = email.toLowerCase().trim();
+      if (!normalizedEmail) return { error: 'يرجى إدخال البريد الإلكتروني أولاً' };
+
+      const { error } = await authService.resendSignupConfirmation(
+        normalizedEmail,
+        `${window.location.origin}/login`,
+      );
+      if (error) return { error: 'تعذر إرسال رسالة التأكيد الآن: ' + error };
+      return {};
+    } catch {
+      return { error: 'تعذر إرسال رسالة التأكيد الآن، يرجى المحاولة لاحقًا' };
+    }
+  };
+
   const forgotPassword = async (email: string): Promise<{ error?: string }> => {
     try {
       const { error } = await authService.requestPasswordReset(
@@ -264,6 +281,7 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     loading,
     signIn,
     signUp,
+    resendConfirmation,
     signOut,
     forgotPassword,
     resetPassword,

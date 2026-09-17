@@ -8,7 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
 import { triggerLoginWelcome } from '@/components/LoginWelcomeOverlay';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { LogIn, Mail, Lock, Eye, EyeOff, MessageCircle, ArrowLeft, AlertCircle } from 'lucide-react';
+import { LogIn, Mail, Lock, Eye, EyeOff, MessageCircle, ArrowLeft, AlertCircle, Send } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { WhatsappAuthForm } from '@/components/auth/WhatsappAuthForm';
 import AuthShell from '@/components/auth/AuthShell';
@@ -22,8 +22,10 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(false);
   const [capsOn, setCapsOn] = useState(false);
+  const [needsConfirmation, setNeedsConfirmation] = useState(false);
+  const [resendingConfirmation, setResendingConfirmation] = useState(false);
 
-  const { signIn, user, userRole, loading: authLoading } = useAuth();
+  const { signIn, resendConfirmation, user, userRole, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const redirectTo = (location.state as { from?: { pathname?: string; search?: string } } | null)?.from;
@@ -53,9 +55,11 @@ const Login = () => {
     }
 
     setLoading(true);
+    setNeedsConfirmation(false);
     try {
       const { error } = await signIn(email, password);
       if (error) {
+        if (error.includes('تأكيد البريد الإلكتروني')) setNeedsConfirmation(true);
         toast.error(error);
         return;
       }
@@ -66,6 +70,26 @@ const Login = () => {
       toast.error(error.message || 'خطأ في تسجيل الدخول');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleResendConfirmation = async () => {
+    if (!email.trim()) {
+      toast.error('أدخل بريدك الإلكتروني أولاً');
+      return;
+    }
+
+    setResendingConfirmation(true);
+    try {
+      const { error } = await resendConfirmation(email);
+      if (error) {
+        toast.error(error);
+        return;
+      }
+      toast.success('أرسلنا رسالة تأكيد جديدة. افحص الوارد والبريد غير المرغوب فيه.');
+      setNeedsConfirmation(false);
+    } finally {
+      setResendingConfirmation(false);
     }
   };
 
@@ -165,6 +189,30 @@ const Login = () => {
                 )}
               </AnimatePresence>
             </div>
+
+            <AnimatePresence>
+              {needsConfirmation && (
+                <motion.div
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  className="rounded-lg border border-warning/40 bg-warning/10 p-3"
+                >
+                  <p className="mb-2 text-sm text-foreground">لم يتم تأكيد بريدك بعد.</p>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={handleResendConfirmation}
+                    disabled={resendingConfirmation}
+                    className="w-full gap-2 border-warning/50"
+                  >
+                    <Send className="h-4 w-4" />
+                    {resendingConfirmation ? 'جاري إرسال الرسالة...' : 'إعادة إرسال رسالة التأكيد'}
+                  </Button>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Remember me */}
             <div className="flex items-center gap-2">
