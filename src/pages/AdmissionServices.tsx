@@ -17,7 +17,7 @@ import Footer from "@/components/Footer";
 import admissionDesk from "@/assets/admission-acceptance-desk.jpg";
 import universityCampus from "@/assets/admission-university-campus.jpg";
 
-const ADMISSION_URL = "https://fekrah-global.com/";
+const ADMISSION_URL = "https://fekrah-global.com/ar/auth/register";
 const COUNTDOWN_SECONDS = 6;
 
 const HEADLINE = "رحلتك الدراسية تبدأ من هنا";
