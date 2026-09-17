@@ -27,8 +27,8 @@ import { TransactionItem } from '@/components/wallet/TransactionItem';
 const QUICK_AMOUNTS = [100, 250, 500, 1000, 2500, 5000];
 
 // كاش باك موحّد: 2% للدفع بالبطاقة و3% للتحويل البنكي — على أي مبلغ
-export const CARD_CASHBACK_PCT = 2;
-export const BANK_CASHBACK_PCT = 3;
+export const CARD_CASHBACK_PCT = 1;
+export const BANK_CASHBACK_PCT = 2;
 
 const getBonus = (_amt: number) => ({ pct: BANK_CASHBACK_PCT, label: `كاش باك ${BANK_CASHBACK_PCT}%` });
 
