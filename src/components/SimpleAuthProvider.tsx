@@ -129,23 +129,23 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
   const signIn = async (email: string, password: string): Promise<{ error?: string }> => {
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: email.toLowerCase().trim(),
+      const { user: signedInUser, error } = await authService.signInWithPassword(
+        email.toLowerCase().trim(),
         password,
-      });
+      );
 
       if (error) {
         console.error('Sign in error:', error);
-        if (error.message.includes('Invalid login credentials')) {
+        if (error.includes('Invalid login credentials')) {
           return { error: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' };
         }
-        if (error.message.includes('Email not confirmed')) {
+        if (error.includes('Email not confirmed')) {
           return { error: 'يرجى تأكيد البريد الإلكتروني أولاً' };
         }
-        return { error: error.message };
+        return { error };
       }
 
-      if (!data.user) {
+      if (!signedInUser) {
         return { error: 'حدث خطأ أثناء تسجيل الدخول' };
       }
 
@@ -177,36 +177,32 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         return { error: 'كلمة المرور يجب أن تحتوي على رمز خاص واحد على الأقل' };
       }
 
-      const { data, error } = await supabase.auth.signUp({
-        email: email.toLowerCase().trim(),
+      const { user: createdUser, error } = await authService.signUp(
+        email.toLowerCase().trim(),
         password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/`,
-          data: {
-            full_name: metadata.name,
-            phone: metadata.phone || '',
-          },
+        {
+          full_name: metadata.name,
+          phone: metadata.phone || '',
         },
-      });
+        `${window.location.origin}/`,
+      );
 
       if (error) {
-        if (error.message.includes('already registered')) {
+        if (error.includes('already registered')) {
           return { error: 'البريد الإلكتروني مستخدم بالفعل' };
         }
-        return { error: `خطأ في التسجيل: ${error.message}` };
+        return { error: `خطأ في التسجيل: ${error}` };
       }
 
-      if (!data.user) {
+      if (!createdUser) {
         return { error: 'حدث خطأ أثناء إنشاء الحساب' };
       }
 
       // Send welcome email (non-blocking)
-      supabase.functions.invoke('send-welcome-email', {
-        body: {
-          user_email: data.user.email,
-          user_name: metadata.name,
-          user_id: data.user.id,
-        },
+      db.callFunction('send-welcome-email', {
+        user_email: createdUser.email,
+        user_name: metadata.name,
+        user_id: createdUser.id,
       }).catch(console.error);
 
       return {};
@@ -217,19 +213,23 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   };
 
   const signOut = async (): Promise<void> => {
-    const { error } = await supabase.auth.signOut();
-    if (error) console.error('Sign out error:', error);
+    try {
+      await authService.signOut();
+    } catch (error) {
+      console.error('Sign out error:', error);
+    }
     // State cleared via onAuthStateChange
   };
 
   const forgotPassword = async (email: string): Promise<{ error?: string }> => {
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email.toLowerCase().trim(), {
-        redirectTo: `${window.location.origin}/auth/reset-password`,
-      });
+      const { error } = await authService.requestPasswordReset(
+        email.toLowerCase().trim(),
+        `${window.location.origin}/auth/reset-password`,
+      );
 
       if (error) {
-        return { error: 'حدث خطأ أثناء إرسال رسالة إعادة التعيين: ' + error.message };
+        return { error: 'حدث خطأ أثناء إرسال رسالة إعادة التعيين: ' + error };
       }
 
       return {};
@@ -244,10 +244,10 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         return { error: 'كلمة المرور يجب أن تكون 8 أحرف على الأقل' };
       }
 
-      const { error } = await supabase.auth.updateUser({ password });
+      const { error } = await authService.updatePassword(password);
 
       if (error) {
-        return { error: 'حدث خطأ أثناء تحديث كلمة المرور: ' + error.message };
+        return { error: 'حدث خطأ أثناء تحديث كلمة المرور: ' + error };
       }
 
       return {};
@@ -255,6 +255,7 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       return { error: 'حدث خطأ أثناء تحديث كلمة المرور' };
     }
   };
+
 
   const value: AuthContextType = {
     user,
