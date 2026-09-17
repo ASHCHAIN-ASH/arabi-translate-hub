@@ -165,10 +165,19 @@ export const PaymentCard: React.FC<Props> = ({ invoice, userId, onPaid }) => {
                 ستتحوّل لصفحة دفع آمنة ومشفرة، وسنحدّث حالة فاتورتك تلقائياً عند إتمام العملية.
               </p>
             </div>
-            <Button onClick={payByCard} disabled={loading} className="w-full" size="lg">
-              {loading ? <Loader2 className="h-4 w-4 ml-2 animate-spin" /> : <CreditCard className="h-4 w-4 ml-2" />}
-              ادفع {remaining.toLocaleString('ar-SA')} {invoice.currency || 'SAR'} الآن
-            </Button>
+            {showCardForm ? (
+              <MoyasarCardForm
+                purpose="invoice_payment"
+                amount={remaining}
+                invoiceId={invoice.id}
+                note={`سداد فاتورة ${invoice.invoice_number}`}
+              />
+            ) : (
+              <Button onClick={() => setShowCardForm(true)} className="w-full" size="lg">
+                <CreditCard className="h-4 w-4 ml-2" />
+                ادفع {remaining.toLocaleString('ar-SA')} {invoice.currency || 'SAR'} الآن
+              </Button>
+            )}
           </TabsContent>
 
 
