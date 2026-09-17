@@ -522,30 +522,60 @@ const SpinTheWheel = () => {
                 </motion.div>
               )}
 
-              <Button
-                onClick={spinWheel}
-                disabled={isSpinning || isLocked || isChecking}
-                size="lg"
-                className="w-full text-base sm:text-lg py-6 font-bold shadow-lg hover:shadow-xl transition-all"
-                style={{
-                  background: isLocked
-                    ? "hsl(220 10% 60%)"
-                    : "linear-gradient(135deg, hsl(43 74% 50%), hsl(38 85% 55%))",
-                  color: "hsl(220 50% 12%)",
-                }}
-              >
-                {isChecking ? "جاري التحميل..."
-                  : isSpinning ? <><Sparkles className="w-5 h-5 ml-2 animate-spin" /> جاري الدوران...</>
-                  : isLocked ? <><Clock className="w-5 h-5 ml-2" /> محاولتك القادمة بعد {remaining!.d} يومًا</>
-                  : <><Gift className="w-5 h-5 ml-2" /> ابدأ الدوران الآن</>}
-              </Button>
+              {!isAuthed && !authLoading ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="rounded-2xl p-5 border-2 shadow-lg text-center"
+                  style={{
+                    background: "linear-gradient(135deg, hsl(45 80% 96%), hsl(45 60% 90%))",
+                    borderColor: "hsl(43 74% 55%)",
+                  }}
+                >
+                  <div className="flex items-center justify-center gap-2 mb-2 font-bold"
+                       style={{ color: "hsl(220 45% 18%)" }}>
+                    <Lock className="w-4 h-4" /> التسجيل شرط أساسي للحصول على الجائزة
+                  </div>
+                  <p className="text-xs sm:text-sm mb-4" style={{ color: "hsl(220 30% 35%)" }}>
+                    سجّل دخولك أو أنشئ حسابًا مجانيًا في الموقع لتتمكن من لف العجلة واستلام جائزتك على بريدك.
+                  </p>
+                  <div className="grid grid-cols-2 gap-3">
+                    <Button asChild className="w-full font-bold"
+                      style={{ background: "linear-gradient(135deg, hsl(43 74% 50%), hsl(38 85% 55%))", color: "hsl(220 50% 12%)" }}>
+                      <Link to="/register"><UserPlus className="w-4 h-4 ml-2" /> إنشاء حساب</Link>
+                    </Button>
+                    <Button asChild variant="outline" className="w-full font-bold">
+                      <Link to="/login"><LogIn className="w-4 h-4 ml-2" /> تسجيل الدخول</Link>
+                    </Button>
+                  </div>
+                </motion.div>
+              ) : (
+                <Button
+                  onClick={spinWheel}
+                  disabled={isSpinning || isLocked || isChecking || authLoading}
+                  size="lg"
+                  className="w-full text-base sm:text-lg py-6 font-bold shadow-lg hover:shadow-xl transition-all"
+                  style={{
+                    background: isLocked
+                      ? "hsl(220 10% 60%)"
+                      : "linear-gradient(135deg, hsl(43 74% 50%), hsl(38 85% 55%))",
+                    color: "hsl(220 50% 12%)",
+                  }}
+                >
+                  {isChecking ? "جاري التحميل..."
+                    : isSpinning ? <><Sparkles className="w-5 h-5 ml-2 animate-spin" /> جاري الدوران...</>
+                    : isLocked ? <><Clock className="w-5 h-5 ml-2" /> محاولتك القادمة بعد {remaining!.d} يومًا</>
+                    : <><Gift className="w-5 h-5 ml-2" /> ابدأ الدوران الآن</>}
+                </Button>
+              )}
 
               <div className="flex items-start justify-center gap-2 text-xs sm:text-sm text-muted-foreground text-center">
                 <ShieldCheck className="w-4 h-4 mt-0.5 flex-shrink-0" />
                 <span>
-                  محاولة مجانية واحدة لكل مشارك كل {COOLDOWN_DAYS} يومًا · تصلك الجائزة على بريدك الإلكتروني فورًا
+                  التسجيل في الموقع شرط أساسي · محاولة واحدة لكل حساب كل {COOLDOWN_DAYS} يومًا · تصلك الجائزة على بريدك فورًا
                 </span>
               </div>
+
 
             </motion.div>
           </div>
