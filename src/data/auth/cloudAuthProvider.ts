@@ -61,6 +61,15 @@ export const cloudAuthProvider: AuthProvider = {
     return { session: mapSession(data.session), user: mapUser(data.user) };
   },
 
+  async resendSignupConfirmation(email, redirectTo) {
+    const { error } = await supabase.auth.resend({
+      type: 'signup',
+      email,
+      options: { emailRedirectTo: redirectTo ?? window.location.origin },
+    });
+    return { error: error?.message };
+  },
+
   async signInWithOAuth(provider, redirectTo) {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,

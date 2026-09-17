@@ -92,6 +92,15 @@ export const selfHostedAuthProvider: AuthProvider = {
     }
   },
 
+  async resendSignupConfirmation(email, redirectTo) {
+    try {
+      await authApi('/resend-confirmation', { email, redirectTo });
+      return {};
+    } catch (error) {
+      return { error: (error as Error).message };
+    }
+  },
+
   async signInWithOAuth(provider, redirectTo) {
     assertSelfHostedConfig();
     const target = new URL(`${dataConfig.apiBaseUrl}/auth/oauth/${provider}`);

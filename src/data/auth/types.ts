@@ -30,6 +30,7 @@ export interface AuthProvider {
   onAuthStateChange(handler: (event: AuthEvent, session: AuthSession | null) => void): () => void;
   signInWithPassword(email: string, password: string): Promise<AuthResult>;
   signUp(email: string, password: string, metadata?: Record<string, unknown>, redirectTo?: string): Promise<AuthResult>;
+  resendSignupConfirmation(email: string, redirectTo?: string): Promise<{ error?: string }>;
   signInWithOAuth(provider: 'google', redirectTo?: string): Promise<{ error?: string }>;
   signOut(): Promise<void>;
   requestPasswordReset(email: string, redirectTo?: string): Promise<{ error?: string }>;
