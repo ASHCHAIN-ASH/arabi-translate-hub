@@ -294,6 +294,8 @@ export default function TranslationServices() {
         </div>
       </section>
 
+      <CertifiedTranslationComingSoon />
+
       {/* Services Grid */}
       <section className="container mx-auto p-6 pb-24">
         <motion.div
