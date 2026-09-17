@@ -189,6 +189,29 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Emails sent successfully:", { customerEmailResponse, adminEmailResponse });
 
+    // إشعار واتساب باستلام طلب العضوية
+    try {
+      const admin = createClient(
+        Deno.env.get("SUPABASE_URL")!,
+        Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+      );
+      await notifyWhatsApp(admin, {
+        to: phone,
+        event_key: "membership_subscribed",
+        variables: {
+          name,
+          plan: membershipNameAr,
+          price,
+          discount,
+          cashback,
+        },
+        related_entity_type: "membership",
+        related_entity_id: membershipType,
+      });
+    } catch (waError) {
+      console.warn("membership whatsapp skipped", waError);
+    }
+
     return new Response(JSON.stringify({ 
       success: true, 
       message: "تم إرسال طلب الاشتراك بنجاح. سيتم التواصل معك قريباً." 
