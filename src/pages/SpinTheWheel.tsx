@@ -548,31 +548,69 @@ const SpinTheWheel = () => {
                 <p className="text-2xl sm:text-3xl font-extrabold break-words" style={{ color: "hsl(220 45% 18%)" }}>{wonPrize}</p>
               </div>
 
-              <Button onClick={copyCoupon} variant="outline" className="w-full">
-                <Copy className="w-4 h-4 ml-2" /> نسخ الكوبون
-              </Button>
-
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <Label htmlFor="name">الاسم</Label>
-                  <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="أدخل اسمك" required />
-                </div>
-                <div>
-                  <Label htmlFor="email">البريد الإلكتروني</Label>
-                  <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="أدخل بريدك الإلكتروني" required />
-                </div>
-                <Button
-                  type="submit"
-                  className="w-full font-bold"
-                  style={{
-                    background: "linear-gradient(135deg, hsl(43 74% 50%), hsl(38 85% 55%))",
-                    color: "hsl(220 50% 12%)",
-                  }}
-                  disabled={isSubmitting}
+              {emailSent ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="space-y-4"
                 >
-                  {isSubmitting ? "جاري الإرسال..." : "إرسال البيانات والمطالبة بالجائزة"}
-                </Button>
-              </form>
+                  <div className="rounded-xl p-4 text-center border-2"
+                       style={{ background: "hsl(150 60% 96%)", borderColor: "hsl(150 50% 45%)" }}>
+                    <div className="flex items-center justify-center gap-2 font-bold mb-1"
+                         style={{ color: "hsl(150 60% 24%)" }}>
+                      <Mail className="w-5 h-5" /> أُرسلت جائزتك إلى بريدك
+                    </div>
+                    <p className="text-xs text-muted-foreground break-all">{email}</p>
+                  </div>
+
+                  {claimCode && (
+                    <div className="rounded-xl p-4 text-center border-2 border-dashed"
+                         style={{ borderColor: "hsl(43 74% 55%)", background: "hsl(45 80% 97%)" }}>
+                      <p className="text-xs text-muted-foreground mb-1">رمز المطالبة</p>
+                      <p className="text-xl font-extrabold tracking-widest" dir="ltr"
+                         style={{ color: "hsl(220 45% 18%)" }}>{claimCode}</p>
+                    </div>
+                  )}
+
+                  <Button onClick={copyCoupon} variant="outline" className="w-full">
+                    <Copy className="w-4 h-4 ml-2" /> نسخ رمز المطالبة
+                  </Button>
+
+                  {nextEligibleAt && (
+                    <p className="text-center text-xs text-muted-foreground">
+                      محاولتك القادمة متاحة في <span className="font-bold">{nextDateLabel}</span> (بعد {COOLDOWN_DAYS} يومًا)
+                    </p>
+                  )}
+
+                  <Button className="w-full" onClick={() => setShowResult(false)}>إغلاق</Button>
+                </motion.div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <p className="text-xs text-muted-foreground text-center">
+                    أدخل بياناتك لتصلك الجائزة ورمز المطالبة على بريدك الإلكتروني.
+                  </p>
+                  <div>
+                    <Label htmlFor="name">الاسم</Label>
+                    <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="أدخل اسمك" required />
+                  </div>
+                  <div>
+                    <Label htmlFor="email">البريد الإلكتروني</Label>
+                    <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="أدخل بريدك الإلكتروني" required />
+                  </div>
+                  <Button
+                    type="submit"
+                    className="w-full font-bold"
+                    style={{
+                      background: "linear-gradient(135deg, hsl(43 74% 50%), hsl(38 85% 55%))",
+                      color: "hsl(220 50% 12%)",
+                    }}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "جاري الإرسال..." : <><Mail className="w-4 h-4 ml-2" /> أرسل الجائزة إلى بريدي</>}
+                  </Button>
+                </form>
+              )}
+
             </motion.div>
           </AnimatePresence>
         </DialogContent>
