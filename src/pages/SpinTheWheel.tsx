@@ -257,8 +257,8 @@ const SpinTheWheel = () => {
   };
 
   const copyCoupon = () => {
-    navigator.clipboard.writeText(wonPrize);
-    toast({ title: "تم النسخ!", description: "تم نسخ الكوبون إلى الحافظة" });
+    navigator.clipboard.writeText(claimCode || wonPrize);
+    toast({ title: "تم النسخ!", description: "تم نسخ رمز المطالبة إلى الحافظة" });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -266,19 +266,28 @@ const SpinTheWheel = () => {
     setIsSubmitting(true);
     try {
       const userIdentifier = getUserIdentifier();
-      const { error } = await supabase.functions.invoke("send-spin-winner", {
+      const { data, error } = await supabase.functions.invoke("send-spin-winner", {
         body: { name, email, prize: wonPrize, userIdentifier },
       });
       if (error) throw error;
-      setHasSpunToday(true);
-      toast({ title: "تم الإرسال بنجاح!", description: "تحقق من بريدك الإلكتروني للحصول على الكوبون" });
-      setShowResult(false);
-      setName(""); setEmail("");
+      if (data?.error) {
+        if (data.nextEligibleAt) setNextEligibleAt(data.nextEligibleAt);
+        toast({ title: "تعذّر تسجيل الفوز", description: data.error, variant: "destructive" });
+        return;
+      }
+      if (data?.nextEligibleAt) setNextEligibleAt(data.nextEligibleAt);
+      if (data?.claimCode) setClaimCode(data.claimCode);
+      setEmailSent(true);
+      toast({
+        title: "وصلت جائزتك إلى بريدك ✉️",
+        description: "افتح بريدك الإلكتروني (وصندوق الرسائل غير المرغوبة) لمشاهدة رمز المطالبة",
+      });
     } catch (e) {
       console.error(e);
       toast({ title: "حدث خطأ", description: "حاول مرة أخرى لاحقاً", variant: "destructive" });
     } finally { setIsSubmitting(false); }
   };
+
 
   return (
     <div
