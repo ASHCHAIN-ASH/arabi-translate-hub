@@ -388,7 +388,7 @@ const Index = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.5 }}
               >
-                على مدى 11 عامًا، حظينا بثقة أكثر من {UNIFIED_STATS.studentsServed.toLocaleString()} باحث وطالب.
+                على مدى 11 عامًا، حظينا بثقة أكثر من {UNIFIED_STATS.studentsServed.toLocaleString()} باحث وطالب.{" "}
                 <span className="font-semibold text-slate-800 dark:text-slate-100">احصل على خدمة احترافية خلال 24 ساعة.</span>
               </motion.p>
 
