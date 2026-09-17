@@ -274,34 +274,39 @@ const Index = () => {
          initial={{ opacity: 0, y: -20 }}
          animate={{ opacity: 1, y: 0 }}
          transition={{ duration: 0.5 }}
-          className="bg-secondary/10 text-secondary py-2 sm:py-3 px-3 sm:px-4 relative overflow-hidden border-b border-secondary/20 dark:bg-secondary/15"
+          className="bg-deep-violet-dark text-deep-violet-foreground py-2 sm:py-3 px-3 sm:px-4 relative overflow-hidden border-b border-deep-violet-glow/40"
+          style={{
+            background:
+              "radial-gradient(120% 180% at 50% -70%, hsl(var(--deep-violet-glow)) 0%, hsl(var(--deep-violet)) 45%, hsl(var(--deep-violet-dark)) 100%)",
+          }}
        >
-         <div className="absolute inset-0 bg-gradient-to-l from-secondary/15 via-secondary/5 to-secondary/15" />
+         <div className="absolute inset-0 bg-gradient-to-l from-deep-violet-dark/60 via-transparent to-deep-violet-dark/60" />
          <div className="container mx-auto relative">
            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-center">
              <motion.div animate={{ rotate: [0, 15, -15, 0] }} transition={{ duration: 2, repeat: Infinity }}>
-               <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-secondary" />
+               <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-deep-violet-foreground" />
              </motion.div>
              <div className="flex-1">
-               <p className="text-xs sm:text-sm md:text-base font-semibold mb-0.5 text-secondary dark:text-secondary-light">
+               <p className="text-xs sm:text-sm md:text-base font-semibold mb-0.5 text-deep-violet-foreground">
                  🎁 بمناسبة تجديد الموقع وانطلاقته التجريبية — هدية مجانية عبر عجلة الجوائز
                </p>
-               <p className="text-xs sm:text-sm text-secondary/75 hidden sm:block dark:text-secondary-light/80">
+               <p className="text-xs sm:text-sm text-deep-violet-foreground/80 hidden sm:block">
                  مزايا وخدمات تدعم رحلتك الأكاديمية — جرّب حظك الآن واكتشف جائزتك!
                </p>
              </div>
              <Button 
                variant="secondary" 
                size="sm"
-               className="bg-secondary hover:bg-secondary/90 text-secondary-foreground border border-secondary/30 font-bold text-xs sm:text-sm px-3 py-1.5 sm:px-4 sm:py-2"
+               className="bg-deep-violet-foreground hover:bg-deep-violet-foreground/90 text-deep-violet border border-deep-violet-foreground/30 font-bold text-xs sm:text-sm px-3 py-1.5 sm:px-4 sm:py-2"
                onClick={() => navigate('/spin-the-wheel')}
              >
-               <Sparkles className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4 text-secondary-foreground" />
+               <Sparkles className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4 text-deep-violet" />
               جرّب حظك الآن
             </Button>
           </div>
         </div>
       </motion.div>
+
       
       <Header />
       
