@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { usePlatformAuth } from '@/components/auth/PlatformAuthProvider';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import { Bell, Package, CreditCard, User, LogOut, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 

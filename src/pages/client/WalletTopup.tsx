@@ -109,7 +109,7 @@ const WalletTopup: React.FC = () => {
     if (!amount || amount <= 0) return toast.error('يرجى إدخال مبلغ صحيح');
     setSubmitting(true);
     try {
-      const { supabase } = await import('@/integrations/supabase/client');
+      const { supabase } = await import('@/data/legacy/client');
       const { data, error } = await supabase.functions.invoke('create-payment-intent', {
         body: { purpose: 'wallet_topup', amount, note: 'شحن المحفظة بالبطاقة' },
       });
@@ -147,7 +147,7 @@ const WalletTopup: React.FC = () => {
 
       // Notify the review team with full request summary (amount, method, id, receipt link)
       try {
-        const { supabase } = await import('@/integrations/supabase/client');
+        const { supabase } = await import('@/data/legacy/client');
         let receipt_url: string | undefined;
         try {
           const { data: signed } = await supabase.storage

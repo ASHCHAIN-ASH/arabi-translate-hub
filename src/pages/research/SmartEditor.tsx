@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import { toast } from 'sonner';
 
 type Operation = 'correct' | 'rephrase' | 'academic' | 'shorten' | 'expand';

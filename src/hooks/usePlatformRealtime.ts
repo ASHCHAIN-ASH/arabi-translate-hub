@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 
 interface RealtimeStats {
   users: number;

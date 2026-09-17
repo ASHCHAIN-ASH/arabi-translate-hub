@@ -21,7 +21,7 @@ import {
   ChevronLeft, ChevronRight, Info, Receipt, ShieldCheck, CircleDollarSign,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import { InvoiceService, type Invoice } from '@/utils/invoiceService';
 import { openInvoicePrintWindow, downloadInvoiceAsPDF } from '@/utils/invoicePdf';
 

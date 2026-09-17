@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Loader2, Sparkles, Copy, CheckCircle2, RefreshCw, GraduationCap, Minimize2, Maximize2, Crown, Zap, Save } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import { toast } from 'sonner';
 
 type Operation = 'correct' | 'rephrase' | 'academic' | 'shorten' | 'expand';

@@ -15,7 +15,7 @@ import {
   Award, Shield, Rocket, Zap, Search, Brain, Layers, Eye
 } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/data/legacy/client";
 
 import Footer from '@/components/Footer';
 import AuthCtaCard from "@/components/research/AuthCtaCard";

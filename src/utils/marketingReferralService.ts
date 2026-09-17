@@ -1,4 +1,4 @@
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/data/legacy/client";
 import { buildReferralLink } from "@/utils/referralLink";
 
 const REF_KEY = "mep_marketing_ref";

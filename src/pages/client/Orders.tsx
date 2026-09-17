@@ -11,7 +11,7 @@ import { useAuth } from '@/components/SimpleAuthProvider';
 import { useClientData } from '@/hooks/useClientData';
 import { useRealtimeServiceOrders } from '@/hooks/useRealtimeServiceOrders';
 import { ClientDashboardService } from '@/utils/clientDashboardService';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import { toast } from 'sonner';
 import {
   Search, Eye, Calendar, DollarSign,

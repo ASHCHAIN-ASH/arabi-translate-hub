@@ -29,7 +29,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Building2, Phone, Mail, Users, CheckCircle, Loader2, Sparkles } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/data/legacy/client";
 import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({

@@ -16,7 +16,7 @@ import {
   Search, Users, Mail, Phone, Calendar, Filter, Key, Eye, EyeOff,
   Shield, ShieldCheck, UserPlus, RefreshCw, CheckCircle2, Activity, UserCog, Trash2,
 } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAdminUsers, AdminUser } from '@/hooks/useAdminUsers';

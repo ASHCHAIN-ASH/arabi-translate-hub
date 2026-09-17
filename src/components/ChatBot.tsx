@@ -20,7 +20,7 @@ import {
   Maximize2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 
 interface Message {
   id: string;

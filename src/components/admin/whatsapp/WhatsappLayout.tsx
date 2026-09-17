@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { MessageSquare, Megaphone, BarChart3, Volume2, VolumeX, Moon, Sun, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/data/legacy/client";
 import { cn } from "@/lib/utils";
 
 const NAV = [

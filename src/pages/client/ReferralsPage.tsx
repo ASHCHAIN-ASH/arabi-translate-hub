@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { useMyReferralCode, useMyReferrals } from '@/hooks/useReferrals';
 import { useAuth } from '@/components/SimpleAuthProvider';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import WithdrawDialog from '@/components/referrals/WithdrawDialog';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';

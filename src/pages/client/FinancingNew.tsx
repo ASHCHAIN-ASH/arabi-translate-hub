@@ -106,7 +106,7 @@ const SAUDI_CITIES = [
 const QUICK_AMOUNTS = [2500, 5000, 10000, 20000, 50000, 100000];
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import {
   FINANCING_DISCLAIMER_AR,

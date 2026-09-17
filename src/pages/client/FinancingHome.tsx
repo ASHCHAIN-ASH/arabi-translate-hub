@@ -28,7 +28,7 @@ import ClientLayout from '@/components/client/ClientLayout';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import {
   FINANCING_DISCLAIMER_AR,

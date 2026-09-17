@@ -9,7 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { CommandPalette } from '@/components/admin/CommandPalette';
 import { AIInsightsWidget } from '@/components/admin/AIInsightsWidget';
 import { AdminAIChat } from '@/components/admin/AdminAIChat';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import {
   DollarSign, ShoppingCart, FileText, TrendingUp, Users,
   AlertTriangle, CheckCircle, Eye, Target, HelpCircle, RefreshCw,

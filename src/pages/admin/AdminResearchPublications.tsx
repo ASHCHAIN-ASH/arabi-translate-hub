@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { RESEARCH_STATUSES, PRIORITIES, getStatus, getPriority } from '@/utils/researchPublicationStatuses';
 

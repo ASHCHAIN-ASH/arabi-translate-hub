@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import Header from "@/components/Header";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/data/legacy/client";
 
 import Footer from '@/components/Footer';
 import AuthCtaCard from "@/components/research/AuthCtaCard";

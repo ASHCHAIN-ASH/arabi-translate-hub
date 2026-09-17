@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/data/legacy/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Bell, Clock } from "lucide-react";
 import { Link } from "react-router-dom";

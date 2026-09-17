@@ -11,7 +11,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useChat } from '@/hooks/useChat';
 import { useAuth } from '@/components/SimpleAuthProvider';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import {

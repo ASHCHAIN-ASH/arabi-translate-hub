@@ -9,7 +9,7 @@ import { ArrowRight, UserPlus, Loader2, Mail, User, Phone, Lock, Shield } from '
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 
 const AddUser = () => {
   const navigate = useNavigate();

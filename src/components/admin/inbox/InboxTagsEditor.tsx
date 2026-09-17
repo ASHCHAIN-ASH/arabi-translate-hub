@@ -1,5 +1,5 @@
 import { useState, KeyboardEvent } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Tag, X, Plus } from 'lucide-react';

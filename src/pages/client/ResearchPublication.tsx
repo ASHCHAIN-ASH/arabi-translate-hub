@@ -11,7 +11,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/components/SimpleAuthProvider';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import ClientLayout from '@/components/client/ClientLayout';
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; icon: any }> = {

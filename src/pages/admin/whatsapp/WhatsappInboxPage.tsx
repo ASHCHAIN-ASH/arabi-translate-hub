@@ -1,6 +1,6 @@
 // صندوق محادثات الواتساب — تصميم مدمج مع فلاتر وشارات حالة
 import React, { useEffect, useRef, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/data/legacy/client";
 import WhatsappLayout from "@/components/admin/whatsapp/WhatsappLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

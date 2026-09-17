@@ -24,7 +24,7 @@ import {
   Bell, Copy, XCircle, Trash2, Download, FileDown,
 } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/data/legacy/client";
 import {
   listContracts, ContractRow, STATUS_LABELS, STATUS_COLORS,
   sendContractToClient, createManualContract, ContractStatus,

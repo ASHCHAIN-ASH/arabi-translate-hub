@@ -1,4 +1,4 @@
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 
 // ============ Types ============
 export type TicketCategory = 'general' | 'technical' | 'billing' | 'complaint' | 'suggestion';

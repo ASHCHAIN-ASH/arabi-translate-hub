@@ -38,7 +38,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { FINANCING_STATUS_LABELS_AR, FINANCING_DOC_LABELS_AR } from '@/lib/financing';
 import { FEKRAHEDU_PAYLATER_BANK, FINANCING_TEAMS } from '@/lib/financing-bank';

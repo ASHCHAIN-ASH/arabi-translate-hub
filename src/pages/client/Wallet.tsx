@@ -92,7 +92,7 @@ const ClientWallet: React.FC = () => {
     if (!user?.id) return;
     let cancelled = false;
     let channel: any = null;
-    import('@/integrations/supabase/client').then(({ supabase }) => {
+    import('@/data/legacy/client').then(({ supabase }) => {
       if (cancelled) return;
       channel = supabase
         .channel(`client-wallet-${user.id}`)
@@ -103,7 +103,7 @@ const ClientWallet: React.FC = () => {
     });
     return () => {
       cancelled = true;
-      if (channel) import('@/integrations/supabase/client').then(({ supabase }) => supabase.removeChannel(channel));
+      if (channel) import('@/data/legacy/client').then(({ supabase }) => supabase.removeChannel(channel));
     };
   }, [user?.id]);
 

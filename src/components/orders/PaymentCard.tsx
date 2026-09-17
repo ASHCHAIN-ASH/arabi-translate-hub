@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { CreditCard, Wallet, Upload, Loader2, CheckCircle2, ShieldCheck } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import { useToast } from '@/hooks/use-toast';
 import { recordInvoicePayment } from '@/utils/invoicePaymentService';
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Navigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/data/legacy/client";
 import { Loader2 } from "lucide-react";
 
 export default function ContractSignByToken() {

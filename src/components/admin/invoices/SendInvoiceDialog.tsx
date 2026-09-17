@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Loader2, Mail, Paperclip, FileText } from 'lucide-react';
 import { toast } from 'sonner';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import { InvoiceService, type Invoice } from '@/utils/invoiceService';
 import { buildInvoiceHTML } from '@/utils/invoicePdf';
 

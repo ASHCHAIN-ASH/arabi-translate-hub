@@ -11,7 +11,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
 } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import type { WalletTransaction } from '@/utils/walletService';
 
 const TYPE_META: Record<string, { label: string; icon: any; color: string; sign: '+' | '-' | '' }> = {

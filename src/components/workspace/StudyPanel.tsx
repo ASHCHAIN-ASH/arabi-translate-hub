@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Brain, ChevronRight, ChevronLeft, Sparkles, Loader2, CheckCircle2, XCircle } from 'lucide-react';
 import { toast } from 'sonner';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 
 interface Flashcard { q: string; a: string; }
 interface MCQ { question: string; options: string[]; answer: number; explanation?: string; }

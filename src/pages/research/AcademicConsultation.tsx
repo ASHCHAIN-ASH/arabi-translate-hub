@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Badge } from "@/components/ui/badge";
 import { Users, MessageCircle, Lightbulb, Target, BookOpen, Clock, Star, CheckCircle, Mail, Phone, Calendar, Award, Globe } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/data/legacy/client";
 
 import Footer from '@/components/Footer';
 import AuthCtaCard from "@/components/research/AuthCtaCard";
