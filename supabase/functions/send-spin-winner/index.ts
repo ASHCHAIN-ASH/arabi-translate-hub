@@ -176,19 +176,19 @@ serve(async (req: Request): Promise<Response> => {
     const adminHtml = await renderAsync(
       React.createElement(SpinPrizeAdmin, {
         customerName: name,
-        customerEmail: email,
-        deviceId: userIdentifier ?? "—",
+        customerEmail: accountEmail,
+        deviceId: userIdentifier ?? authedUser.id,
         ...shared,
       }),
     );
 
     const clientRes = await resend.emails.send({
       from: FROM,
-      to: [email],
+      to: [accountEmail],
       subject: `🎉 مبروك! ربحت ${prize} — FekrahEdu`,
       html: clientHtml,
     });
-    await logEmail("spin-prize-won", email, clientRes.data?.id ?? null, clientRes.error?.message);
+    await logEmail("spin-prize-won", accountEmail, clientRes.data?.id ?? null, clientRes.error?.message);
     if (clientRes.error) {
       console.error("client email failed:", clientRes.error.message);
       return json({ error: "تعذّر إرسال الجائزة إلى بريدك", details: clientRes.error.message }, 502);
