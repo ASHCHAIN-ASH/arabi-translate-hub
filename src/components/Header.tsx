@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import fekrahLogo from "@/assets/fekrah-logo.jpg.asset.json";
 import { 
   Menu, GraduationCap, ChevronDown, Languages, Home, Users, Phone, 
   Briefcase, Microscope, ArrowLeft, FileText, MapIcon, LogIn, UserPlus, LogOut, User

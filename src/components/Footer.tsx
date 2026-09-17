@@ -28,6 +28,7 @@ import {
   Calculator,
   Newspaper
 } from "lucide-react";
+import fekrahLogo from "@/assets/fekrah-logo.jpg.asset.json";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
