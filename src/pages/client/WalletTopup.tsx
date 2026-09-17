@@ -24,16 +24,12 @@ import MoyasarCardForm from '@/components/payments/MoyasarCardForm';
 
 const QUICK_AMOUNTS = [100, 250, 500, 1000, 2500, 5000];
 
-const BONUS_TIERS = [
-  { min: 500, pct: 1, label: '+500', color: 'from-sky-500/15 to-sky-500/5', accent: 'text-sky-600 dark:text-sky-400' },
-  { min: 1000, pct: 3, label: '+1,000', color: 'from-violet-500/15 to-violet-500/5', accent: 'text-violet-600 dark:text-violet-400' },
-  { min: 2500, pct: 6, label: '+2,500', color: 'from-amber-500/15 to-amber-500/5', accent: 'text-amber-600 dark:text-amber-400' },
-  { min: 5000, pct: 10, label: '+5,000', color: 'from-emerald-500/20 to-emerald-500/5', accent: 'text-emerald-600 dark:text-emerald-400' },
-];
+// كاش باك موحّد حسب طريقة الدفع
+export const CASHBACK_RATES = { instant: 2, manual: 3 } as const;
 
-const getBonus = (amt: number) => {
-  const tier = [...BONUS_TIERS].reverse().find((t) => amt >= t.min);
-  return tier ? { pct: tier.pct, label: `كاش باك ${tier.pct}%` } : { pct: 0, label: '' };
+const getBonus = (m: 'instant' | 'manual') => {
+  const pct = CASHBACK_RATES[m];
+  return { pct, label: `كاش باك ${pct}%` };
 };
 
 const WalletTopup: React.FC = () => {
