@@ -4,28 +4,34 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
-import { Loader2, Mail, Paperclip, FileText } from 'lucide-react';
+import { Loader2, Mail, Link2 } from 'lucide-react';
 import { toast } from 'sonner';
-import { supabase } from '@/data/legacy/client';
 import { InvoiceService, type Invoice } from '@/utils/invoiceService';
-import { buildInvoiceHTML } from '@/utils/invoicePdf';
+import { InvoiceEmailService, type InvoiceEmailEvent } from '@/utils/invoiceEmailService';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface Props {
   open: boolean;
   onOpenChange: (o: boolean) => void;
   invoice: Invoice | null;
   onSent?: () => void;
+  defaultEvent?: InvoiceEmailEvent;
 }
 
-export default function SendInvoiceDialog({ open, onOpenChange, invoice, onSent }: Props) {
+const EVENT_LABELS: Record<InvoiceEmailEvent, string> = {
+  issued: 'إرسال الفاتورة',
+  payment_received: 'إشعار استلام دفعة',
+  paid: 'إيصال اكتمال السداد',
+  overdue: 'تذكير بالسداد',
+};
+
+export default function SendInvoiceDialog({ open, onOpenChange, invoice, onSent, defaultEvent = 'issued' }: Props) {
   const [to, setTo] = useState('');
   const [cc, setCc] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
-  const [attachPdf, setAttachPdf] = useState(true);
+  const [event, setEvent] = useState<InvoiceEmailEvent>(defaultEvent);
   const [sending, setSending] = useState(false);
-  const [preparingPdf, setPreparingPdf] = useState(false);
 
   useEffect(() => {
     if (!invoice) return;
@@ -33,46 +39,24 @@ export default function SendInvoiceDialog({ open, onOpenChange, invoice, onSent 
     setCc('');
     setSubject(`فاتورة ${invoice.invoice_number} — FekrahEdu`);
     setMessage(`عزيزنا ${invoice.customer_name ?? ''}،\n\nنرفق لكم الفاتورة رقم ${invoice.invoice_number} بمبلغ إجمالي ${InvoiceService.formatCurrency(invoice.total_amount, invoice.currency)}.\n\nللاستفسار يرجى التواصل معنا.\n\nمع التحية،\nفريق FekrahEdu`);
-    setAttachPdf(true);
-  }, [invoice, open]);
-
-  const buildPdfAttachment = async (): Promise<{ filename: string; content: string } | null> => {
-    if (!invoice) return null;
-    setPreparingPdf(true);
-    try {
-      const [items, payments] = await Promise.all([
-        InvoiceService.getItems(invoice.id),
-        InvoiceService.getPayments(invoice.id),
-      ]);
-      const html = buildInvoiceHTML(invoice, items, payments);
-      // Encode HTML as base64 — Edge Function will attach as .html (browsers/clients render it natively).
-      // True PDF generation requires server-side rendering; this attaches a print-ready HTML document.
-      const b64 = btoa(unescape(encodeURIComponent(html)));
-      return { filename: `${invoice.invoice_number}.html`, content: b64 };
-    } finally {
-      setPreparingPdf(false);
-    }
-  };
+    setEvent(defaultEvent);
+  }, [invoice, open, defaultEvent]);
 
   const handleSend = async () => {
     if (!invoice) return;
     if (!to.trim()) { toast.error('يجب إدخال البريد المستلم'); return; }
     setSending(true);
     try {
-      const attachment = attachPdf ? await buildPdfAttachment() : null;
       const ccList = cc.split(',').map(s => s.trim()).filter(Boolean);
-      const { error } = await supabase.functions.invoke('send-invoice-email', {
-        body: {
-          invoice_id: invoice.id,
-          to: to.trim(),
-          cc: ccList,
-          subject: subject.trim() || undefined,
-          custom_message: message.trim() || undefined,
-          attachment,
-        },
+      await InvoiceEmailService.send({
+        invoiceId: invoice.id,
+        event,
+        to: to.trim(),
+        cc: ccList,
+        subject: subject.trim() || undefined,
+        customMessage: event === 'issued' ? (message.trim() || undefined) : undefined,
       });
-      if (error) throw error;
-      toast.success('تم إرسال الفاتورة', { description: to });
+      toast.success('تمت جدولة الإرسال', { description: `${to} — يظهر في سجل الرسائل خلال لحظات` });
       onSent?.();
       onOpenChange(false);
     } catch (e: any) {
@@ -96,6 +80,18 @@ export default function SendInvoiceDialog({ open, onOpenChange, invoice, onSent 
 
         <div className="space-y-4 py-2">
           <div className="space-y-2">
+            <Label>نوع الرسالة</Label>
+            <Select value={event} onValueChange={(v) => setEvent(v as InvoiceEmailEvent)}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {(Object.keys(EVENT_LABELS) as InvoiceEmailEvent[]).map((k) => (
+                  <SelectItem key={k} value={k}>{EVENT_LABELS[k]}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
             <Label htmlFor="to">البريد المستلم *</Label>
             <Input id="to" type="email" value={to} onChange={(e) => setTo(e.target.value)} placeholder="customer@example.com" dir="ltr" className="text-left" />
           </div>
@@ -111,32 +107,26 @@ export default function SendInvoiceDialog({ open, onOpenChange, invoice, onSent 
             <Input id="subject" value={subject} onChange={(e) => setSubject(e.target.value)} />
           </div>
 
-          <div className="space-y-2">
+          {event === 'issued' && <div className="space-y-2">
             <Label htmlFor="message">الرسالة المخصصة</Label>
             <Textarea id="message" value={message} onChange={(e) => setMessage(e.target.value)} rows={6} className="resize-none" />
             <p className="text-xs text-muted-foreground">ستظهر هذه الرسالة في أعلى الإيميل، ثم تفاصيل الفاتورة تلقائياً.</p>
-          </div>
+          </div>}
 
-          <div className="flex items-center justify-between p-3 bg-muted/40 rounded-lg border">
-            <div className="flex items-center gap-2">
-              <Paperclip className="w-4 h-4 text-primary" />
-              <div>
-                <Label htmlFor="attach" className="cursor-pointer">إرفاق نسخة PDF من الفاتورة</Label>
-                <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
-                  <FileText className="w-3 h-3" />
-                  {invoice.invoice_number}.html (مستند مطبوع للحفظ كـ PDF)
-                </p>
-              </div>
-            </div>
-            <Switch id="attach" checked={attachPdf} onCheckedChange={setAttachPdf} />
+          <div className="flex items-start gap-2 p-3 bg-muted/40 rounded-lg border">
+            <Link2 className="w-4 h-4 text-primary mt-0.5" />
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              تتضمن الرسالة زرًا يفتح الفاتورة في الموقع للعرض والتحميل والدفع — أضمن وصولًا لصندوق الوارد من المرفقات.
+              كل رسالة تُسجَّل تلقائيًا في سجل الرسائل.
+            </p>
           </div>
         </div>
 
         <DialogFooter className="gap-2 sm:gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={sending}>إلغاء</Button>
-          <Button onClick={handleSend} disabled={sending || preparingPdf || !to.trim()}>
-            {(sending || preparingPdf) && <Loader2 className="w-4 h-4 ml-2 animate-spin" />}
-            {preparingPdf ? 'جاري تجهيز المرفق...' : sending ? 'جاري الإرسال...' : 'إرسال الآن'}
+          <Button onClick={handleSend} disabled={sending || !to.trim()}>
+            {sending && <Loader2 className="w-4 h-4 ml-2 animate-spin" />}
+            {sending ? 'جاري الإرسال...' : 'إرسال الآن'}
           </Button>
         </DialogFooter>
       </DialogContent>
