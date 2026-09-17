@@ -452,10 +452,7 @@ const Index = () => {
       </section>
 
 
-      {/* بانر عجلة الحظ */}
-      <Suspense fallback={<LoadingSpinner />}>
-        <SpinWheelBanner />
-      </Suspense>
+
 
 
 
