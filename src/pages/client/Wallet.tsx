@@ -30,7 +30,7 @@ const QUICK_AMOUNTS = [100, 250, 500, 1000, 2500, 5000];
 export const CARD_CASHBACK_PCT = 2;
 export const BANK_CASHBACK_PCT = 3;
 
-const getBonus = (_amt: number) => ({ pct: CARD_CASHBACK_PCT, label: `كاش باك ${CARD_CASHBACK_PCT}%` });
+const getBonus = (_amt: number) => ({ pct: BANK_CASHBACK_PCT, label: `كاش باك ${BANK_CASHBACK_PCT}%` });
 
 const PAYMENT_METHODS = [
   { value: 'bank_transfer', label: 'تحويل بنكي', icon: '🏦' },
