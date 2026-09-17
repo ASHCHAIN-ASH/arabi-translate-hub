@@ -218,7 +218,7 @@ const FinancingAdminDetails: React.FC = () => {
           <AlertCircle className="w-12 h-12 mx-auto text-muted-foreground mb-3" />
           <p className="text-muted-foreground font-arabic">لم يتم العثور على الطلب</p>
           <Button asChild variant="outline" className="mt-4">
-            <Link to="/adminmaster/financing">العودة للقائمة</Link>
+            <Link to="/adminfekrah/financing">العودة للقائمة</Link>
           </Button>
         </div>
       </AdminLayout>
@@ -254,7 +254,7 @@ const FinancingAdminDetails: React.FC = () => {
           <div className="absolute -top-24 -left-24 w-96 h-96 bg-primary/20 rounded-full blur-3xl" />
           <div className="relative flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-4">
-              <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 rounded-full" onClick={() => navigate('/adminmaster/financing')}>
+              <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 rounded-full" onClick={() => navigate('/adminfekrah/financing')}>
                 <ArrowRight className="w-5 h-5" />
               </Button>
               <motion.div

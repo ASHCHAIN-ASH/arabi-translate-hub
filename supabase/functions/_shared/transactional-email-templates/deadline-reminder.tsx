@@ -45,7 +45,7 @@ const DeadlineReminderEmail = ({
   orderName = 'طلبك',
   reminderType = '1_day',
   deadlineAt,
-  orderLink = 'https://masteredupath.com/dashboard',
+  orderLink = 'https://fekrahedu.com/dashboard',
 }: Props) => {
   const c = COPY[reminderType] || COPY['1_day']
   const dl = deadlineAt ? new Date(deadlineAt).toLocaleString('ar-SA', { dateStyle: 'full', timeStyle: 'short' }) : ''
@@ -70,9 +70,9 @@ const DeadlineReminderEmail = ({
           <Section style={upsellBox}>
             <Text style={upsellTitle}>💡 خدمة إضافية</Text>
             <Text style={upsellText}>{c.upsell}</Text>
-            <Button href="https://masteredupath.com/services" style={buttonOutline}>استعراض الخدمات</Button>
+            <Button href="https://fekrahedu.com/services" style={buttonOutline}>استعراض الخدمات</Button>
           </Section>
-          <Text style={footer}>منصة ماستر إيدو باث — شريكك في التميز الأكاديمي</Text>
+          <Text style={footer}>FekrahEdu — شريكك في التميز الأكاديمي</Text>
         </Container>
       </Body>
     </Html>
@@ -91,7 +91,7 @@ export const template = {
     orderName: 'ترجمة بحث أكاديمي',
     reminderType: '1_day',
     deadlineAt: new Date(Date.now() + 86400000).toISOString(),
-    orderLink: 'https://masteredupath.com/dashboard',
+    orderLink: 'https://fekrahedu.com/dashboard',
   },
 } satisfies TemplateEntry
 

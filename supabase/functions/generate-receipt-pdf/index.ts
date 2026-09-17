@@ -94,7 +94,7 @@ serve(async (req) => {
     doc.text("OFFICIAL RECEIPT", pageW / 2, 18, { align: "center" });
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
-    doc.text("Mastered Edu Path  |  ALI SALEH ALSHEHRI HOLDING CO.", pageW / 2, 27, { align: "center" });
+    doc.text("FekrahEdu  |  ALI SALEH ALSHEHRI HOLDING CO.", pageW / 2, 27, { align: "center" });
     doc.setFontSize(8);
     doc.text("Verified Digital Receipt - SHA-256 Signed", pageW / 2, 33, { align: "center" });
 
@@ -193,7 +193,7 @@ serve(async (req) => {
     doc.setFontSize(8);
     doc.setTextColor(100);
     doc.text("This is a system-generated official receipt. No signature required.", pageW / 2, 281, { align: "center" });
-    doc.text("masteredupath.com  |  info@masteredupath.com", pageW / 2, 286, { align: "center" });
+    doc.text("fekrahedu.com  |  info@fekrahedu.com", pageW / 2, 286, { align: "center" });
     doc.text(`Generated: ${new Date().toISOString()}`, pageW / 2, 291, { align: "center" });
 
     const pdfBytes = doc.output("arraybuffer");

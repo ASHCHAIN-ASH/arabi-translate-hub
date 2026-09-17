@@ -38,13 +38,13 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send notification to admin
     const adminEmailResponse = await resend.emails.send({
-      from: "MasterEduPath <info@masteredupath.com>",
-      to: ["admin@masteredupath.com"],
+      from: "FekrahEdu <info@fekrahedu.com>",
+      to: ["admin@fekrahedu.com"],
       subject: `طلب جديد من ${orderData.contactPerson} - ${getServiceTypeArabic(orderData.serviceType)}`,
       html: `
         <div dir="rtl" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8fafc;">
           <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 12px; text-align: center; margin-bottom: 20px;">
-            <h1 style="color: white; margin: 0; font-size: 24px;">🚨 طلب جديد - وكالة ماستر إيدو باث</h1>
+            <h1 style="color: white; margin: 0; font-size: 24px;">🚨 طلب جديد - FekrahEdu</h1>
           </div>
           
           <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
@@ -90,7 +90,7 @@ const handler = async (req: Request): Promise<Response> => {
 
             <div style="text-align: center; margin-top: 30px;">
               <p style="color: #6b7280; font-size: 14px;">يرجى التواصل مع العميل خلال 24 ساعة</p>
-              <p style="color: #6b7280; font-size: 12px;">تم إرسال هذا الإشعار تلقائياً من نظام وكالة ماستر إيدو باث</p>
+              <p style="color: #6b7280; font-size: 12px;">تم إرسال هذا الإشعار تلقائياً من نظام FekrahEdu</p>
             </div>
           </div>
         </div>
@@ -101,14 +101,14 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send confirmation to client
     const clientEmailResponse = await resend.emails.send({
-      from: "وكالة ماستر إيدو باث <info@masteredupath.com>",
+      from: "FekrahEdu <info@fekrahedu.com>",
       to: [orderData.email],
-      subject: "تأكيد استلام طلبكم - وكالة ماستر إيدو باث",
+      subject: "تأكيد استلام طلبكم - FekrahEdu",
       html: `
         <div dir="rtl" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8fafc;">
           <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 30px; border-radius: 12px; text-align: center; margin-bottom: 20px;">
             <h1 style="color: white; margin: 0; font-size: 24px;">✅ تم استلام طلبكم بنجاح</h1>
-            <p style="color: #d1fae5; margin: 10px 0 0 0;">وكالة ماستر إيدو باث</p>
+            <p style="color: #d1fae5; margin: 10px 0 0 0;">FekrahEdu</p>
           </div>
           
           <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
@@ -153,13 +153,13 @@ const handler = async (req: Request): Promise<Response> => {
 
             <div style="text-align: center; margin-top: 30px; padding: 20px; background: #f9fafb; border-radius: 8px;">
               <p style="color: #374151; font-weight: bold;">للاستفسارات والدعم الفني</p>
-              <p style="color: #6b7280;">البريد الإلكتروني: support@masteredupath.com</p>
+              <p style="color: #6b7280;">البريد الإلكتروني: support@fekrahedu.com</p>
               <p style="color: #6b7280;">الهاتف: +966 50 123 4567</p>
             </div>
 
             <div style="text-align: center; margin-top: 20px;">
               <p style="color: #9ca3af; font-size: 12px;">
-                شكراً لثقتكم في وكالة ماستر إيدو باث<br>
+                شكراً لثقتكم في FekrahEdu<br>
                 نحن هنا لخدمتكم على مدار الساعة
               </p>
             </div>

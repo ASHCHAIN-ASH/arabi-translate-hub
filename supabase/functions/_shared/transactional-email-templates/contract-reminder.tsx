@@ -18,7 +18,7 @@ const ContractReminderEmail = ({
   contractNumber = '',
   contractTitle = '',
   hoursPending = 48,
-  contractUrl = 'https://masteredupath.com/client/contracts',
+  contractUrl = 'https://fekrahedu.com/client/contracts',
 }: Props) => (
   <Html lang="ar" dir="rtl">
     <Head />
@@ -44,7 +44,7 @@ const ContractReminderEmail = ({
         <Text style={footer}>
           إذا واجهتك أي مشكلة في التوقيع، يرجى التواصل معنا.
           <br />
-          فريق ماستر إيدو باث
+          فريق FekrahEdu
         </Text>
       </Container>
     </Body>
@@ -68,6 +68,6 @@ export const template: TemplateEntry = {
     contractNumber: 'CTR-12345',
     contractTitle: 'عقد خدمة ترجمة',
     hoursPending: 48,
-    contractUrl: 'https://masteredupath.com/client/contracts',
+    contractUrl: 'https://fekrahedu.com/client/contracts',
   },
 }

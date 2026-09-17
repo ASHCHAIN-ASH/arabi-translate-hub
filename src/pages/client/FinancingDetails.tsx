@@ -41,7 +41,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { FINANCING_STATUS_LABELS_AR, FINANCING_DOC_LABELS_AR } from '@/lib/financing';
-import { MASTER_PAYLATER_BANK, FINANCING_TEAMS } from '@/lib/financing-bank';
+import { FEKRAHEDU_PAYLATER_BANK, FINANCING_TEAMS } from '@/lib/financing-bank';
 
 interface FinancingApp {
   id: string;
@@ -205,7 +205,7 @@ const FinancingDetails: React.FC = () => {
   }, [id, user]);
 
   useEffect(() => {
-    document.title = 'تفاصيل طلب التمويل — Master PayLater';
+    document.title = 'تفاصيل طلب التمويل — FekrahEdu PayLater';
     load();
   }, [load]);
 
@@ -235,7 +235,7 @@ const FinancingDetails: React.FC = () => {
   const canPay = app?.status === 'waiting_down_payment' && !hasPendingReceipt && !hasApprovedReceipt;
 
   const copyIban = () => {
-    navigator.clipboard.writeText(MASTER_PAYLATER_BANK.iban);
+    navigator.clipboard.writeText(FEKRAHEDU_PAYLATER_BANK.iban);
     toast({ title: 'تم نسخ رقم الآيبان' });
   };
 
@@ -326,12 +326,12 @@ const FinancingDetails: React.FC = () => {
         .eq('id', user.id)
         .maybeSingle();
 
-      const title = `عقد تمويل Master PayLater — ${app.id.slice(0, 8).toUpperCase()}`;
+      const title = `عقد تمويل FekrahEdu PayLater — ${app.id.slice(0, 8).toUpperCase()}`;
       // Compute first installment date = today + 30 days
       const firstInstallment = new Date();
       firstInstallment.setDate(firstInstallment.getDate() + 30);
       const firstInstallmentDate = firstInstallment.toISOString().slice(0, 10);
-      const content = `عقد تمويل داخلي — Master PayLater — مبلغ التمويل ${fmt(Number(app.total_amount))} ر.س يُضاف للمحفظة الرقمية لشراء خدمات منصة ماستر، يُسدَّد على ${app.duration_months} قسط شهري بقيمة ${fmt(Number(app.monthly_installment))} ر.س. (سيتم توليد العقد التفصيلي تلقائياً)`;
+      const content = `عقد تمويل داخلي — FekrahEdu PayLater — مبلغ التمويل ${fmt(Number(app.total_amount))} ر.س يُضاف للمحفظة الرقمية لشراء خدمات FekrahEdu، يُسدَّد على ${app.duration_months} قسط شهري بقيمة ${fmt(Number(app.monthly_installment))} ر.س. (سيتم توليد العقد التفصيلي تلقائياً)`;
 
       const { data: created, error } = await supabase
         .from('contracts')
@@ -892,16 +892,16 @@ const FinancingDetails: React.FC = () => {
                         <div className="space-y-2 text-sm">
                           <div className="flex justify-between gap-2">
                             <span className="text-white/60">البنك</span>
-                            <span className="font-semibold">{MASTER_PAYLATER_BANK.bankName}</span>
+                            <span className="font-semibold">{FEKRAHEDU_PAYLATER_BANK.bankName}</span>
                           </div>
                           <div className="flex justify-between gap-2">
                             <span className="text-white/60">المستفيد</span>
-                            <span className="font-semibold text-left">{MASTER_PAYLATER_BANK.beneficiaryName}</span>
+                            <span className="font-semibold text-left">{FEKRAHEDU_PAYLATER_BANK.beneficiaryName}</span>
                           </div>
                           <div className="flex justify-between items-center gap-2 border-t border-white/10 pt-2">
                             <span className="text-white/60">IBAN</span>
                             <button onClick={copyIban} className="font-mono text-xs bg-white/10 hover:bg-white/20 transition px-2 py-1 rounded flex items-center gap-1.5">
-                              {MASTER_PAYLATER_BANK.iban}
+                              {FEKRAHEDU_PAYLATER_BANK.iban}
                               <Copy className="h-3 w-3" />
                             </button>
                           </div>

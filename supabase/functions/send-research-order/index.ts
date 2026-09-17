@@ -213,7 +213,7 @@ const handler = async (req: Request): Promise<Response> => {
 
             <div style="margin-top: 30px; padding: 20px; background: #f3f4f6; border-radius: 8px; text-align: center;">
               <h3 style="color: #1f2937; margin-top: 0;">للتواصل معنا</h3>
-              <p style="margin: 5px 0;">📧 البريد الإلكتروني: info@masteredupath.com</p>
+              <p style="margin: 5px 0;">📧 البريد الإلكتروني: info@fekrahedu.com</p>
               <p style="margin: 5px 0;">📱 جوال: 0559600824</p>
               <p style="margin: 5px 0;">📱 واتساب: 0559600824</p>
               <p style="margin: 5px 0;">⏰ ساعات العمل: الأحد - الخميس (9 صباحاً - 6 مساءً)</p>
@@ -226,8 +226,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // إرسال إيميل للإدارة (فقط للإيميل الموثق)
     const adminEmail = await resend.emails.send({
-      from: "MasterEduPath <noreply@masteredupath.com>",
-      to: ["info@masteredupath.com"],
+      from: "FekrahEdu <noreply@fekrahedu.com>",
+      to: ["info@fekrahedu.com"],
       replyTo: orderData.email,
       subject: `🎓 طلب جديد: ${orderData.categoryTitle} - ${orderData.fullName}`,
       html: adminEmailHtml,
@@ -235,7 +235,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // إرسال إيميل للعميل
     const clientEmail = await resend.emails.send({
-      from: "Master Edu Path <info@masteredupath.com>",
+      from: "FekrahEdu <info@fekrahedu.com>",
       to: [orderData.email],
       subject: `✅ تم استلام طلبك - ${orderData.categoryTitle}`,
       html: clientEmailHtml,

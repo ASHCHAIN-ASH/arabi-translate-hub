@@ -6,7 +6,7 @@ const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 const RAW_FROM = Deno.env.get("RESEND_FROM_EMAIL") || "";
 const FROM = /^[^<>@]+@[^<>@]+\.[^<>@]+$/.test(RAW_FROM) || /<[^<>@]+@[^<>@]+\.[^<>@]+>/.test(RAW_FROM)
   ? RAW_FROM
-  : "MasterEduPath <onboarding@resend.dev>";
+  : "FekrahEdu <onboarding@resend.dev>";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -57,7 +57,7 @@ serve(async (req) => {
     <div dir="rtl" style="font-family:Tahoma,Arial;max-width:680px;margin:0 auto;background:#f8fafc;padding:24px">
       <div style="background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff;padding:24px;border-radius:12px;text-align:center">
         <h1 style="margin:0;font-size:22px">فاتورة ${escapeHtml(invoice.invoice_number)}</h1>
-        <p style="margin:8px 0 0">منصة ماستر إيدو باث — MasterEduPath</p>
+        <p style="margin:8px 0 0">FekrahEdu — FekrahEdu</p>
       </div>
       <div style="background:#fff;border-radius:12px;padding:24px;margin-top:16px">
         ${customMessageBlock}
@@ -80,14 +80,14 @@ serve(async (req) => {
         ${invoice.due_date ? `<p style="margin-top:16px;color:#64748b">تاريخ الاستحقاق: ${invoice.due_date}</p>` : ""}
         ${invoice.notes ? `<div style="background:#f8fafc;padding:12px;border-radius:8px;margin-top:12px"><strong>ملاحظات:</strong> ${escapeHtml(invoice.notes)}</div>` : ""}
         ${attachment ? `<p style="margin-top:16px;color:#64748b;font-size:13px">📎 تجدون نسخة كاملة من الفاتورة كمرفق مع هذا البريد.</p>` : ""}
-        <p style="color:#64748b;font-size:13px;margin-top:24px">شكراً لثقتكم — منصة ماستر إيدو باث</p>
+        <p style="color:#64748b;font-size:13px;margin-top:24px">شكراً لثقتكم — FekrahEdu</p>
       </div>
     </div>`;
 
     const emailPayload: any = {
       from: FROM,
       to: [recipient],
-      subject: subject || `فاتورة ${invoice.invoice_number} — منصة ماستر إيدو باث`,
+      subject: subject || `فاتورة ${invoice.invoice_number} — FekrahEdu`,
       html,
     };
 

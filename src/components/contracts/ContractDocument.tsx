@@ -38,9 +38,9 @@ const CREAM = "#fdfbf5";
 
 const PLATFORM = {
   name: "Master U Path",
-  nameAr: "ماستر يو المسار",
-  legal: "منصة ماستر إيدو باث للخدمات الأكاديمية",
-  domain: "masteredupath.com",
+  nameAr: "فكرة يو المسار",
+  legal: "FekrahEdu للخدمات الأكاديمية",
+  domain: "fekrahedu.com",
   jurisdiction: "المملكة العربية السعودية",
 };
 

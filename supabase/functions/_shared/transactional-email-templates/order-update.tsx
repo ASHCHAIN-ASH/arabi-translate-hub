@@ -4,8 +4,8 @@ import {
 } from 'npm:@react-email/components@0.0.22'
 import type { TemplateEntry } from './registry.ts'
 
-const SITE_NAME = 'Master Edu Path'
-const SITE_URL = 'https://masteredupath.com'
+const SITE_NAME = 'FekrahEdu'
+const SITE_URL = 'https://fekrahedu.com'
 
 interface OrderUpdateProps {
   clientName?: string

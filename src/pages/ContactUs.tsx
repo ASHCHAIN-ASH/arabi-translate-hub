@@ -50,7 +50,7 @@ const ContactUs = () => {
     setLoading(true);
     
     try {
-      // 1) Persist into unified admin inbox (also notifies info@masteredupath.com)
+      // 1) Persist into unified admin inbox (also notifies info@fekrahedu.com)
       await sendToInbox({
         name: formData.name,
         email: formData.email,
@@ -105,7 +105,7 @@ const ContactUs = () => {
     {
       icon: Mail,
       title: "البريد الإلكتروني",
-      value: "info@masteredupath.com",
+      value: "info@fekrahedu.com",
       description: "للاستفسارات العامة والدعم الفني"
     },
     {
@@ -184,21 +184,21 @@ const ContactUs = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/10" dir="rtl">
       <SEO 
-        title="تواصل معنا - MasterEduPath | استفسارات الخدمات الأكاديمية"
-        description="تواصل مع فريق MasterEduPath للحصول على استشارة مجانية حول خدماتنا الأكاديمية والبحثية. نرد على استفساراتك خلال 4 ساعات. اتصل: +966559600824"
-        keywords="تواصل معنا, استشارة أكاديمية مجانية, دعم عملاء MasterEduPath, استفسارات بحثية, خدمة عملاء 24/7"
-        url="https://masteredupath.com/contact-us"
+        title="تواصل معنا - FekrahEdu | استفسارات الخدمات الأكاديمية"
+        description="تواصل مع فريق FekrahEdu للحصول على استشارة مجانية حول خدماتنا الأكاديمية والبحثية. نرد على استفساراتك خلال 4 ساعات. اتصل: +966559600824"
+        keywords="تواصل معنا, استشارة أكاديمية مجانية, دعم عملاء FekrahEdu, استفسارات بحثية, خدمة عملاء 24/7"
+        url="https://fekrahedu.com/contact-us"
         type="ContactPage"
         schema={{
           "@context": "https://schema.org",
           "@type": "ContactPage",
-          "name": "تواصل معنا - MasterEduPath",
-          "description": "صفحة التواصل مع وكالة MasterEduPath",
+          "name": "تواصل معنا - FekrahEdu",
+          "description": "صفحة التواصل مع وكالة FekrahEdu",
           "mainEntity": {
             "@type": "Organization",
-            "name": "MasterEduPath Agency",
+            "name": "FekrahEdu Agency",
             "telephone": "+966559600824",
-            "email": "info@masteredupath.com",
+            "email": "info@fekrahedu.com",
             "address": {
               "@type": "PostalAddress",
               "addressLocality": "جدة",
@@ -756,28 +756,28 @@ const ContactUs = () => {
                         {[
                           { 
                             Icon: Facebook, 
-                            href: "https://facebook.com/masteredupath", 
+                            href: "https://facebook.com/fekrahedu", 
                             label: "فيسبوك",
                             color: "from-blue-500 to-blue-700",
                             hoverColor: "hover:shadow-blue-500/50"
                           },
                           { 
                             Icon: Twitter, 
-                            href: "https://twitter.com/masteredupath", 
+                            href: "https://twitter.com/fekrahedu", 
                             label: "تويتر",
                             color: "from-sky-400 to-sky-600",
                             hoverColor: "hover:shadow-sky-500/50"
                           },
                           { 
                             Icon: Instagram, 
-                            href: "https://instagram.com/masteredupath", 
+                            href: "https://instagram.com/fekrahedu", 
                             label: "انستغرام",
                             color: "from-pink-500 to-purple-600",
                             hoverColor: "hover:shadow-pink-500/50"
                           },
                           { 
                             Icon: Linkedin, 
-                            href: "https://linkedin.com/company/masteredupath", 
+                            href: "https://linkedin.com/company/fekrahedu", 
                             label: "لينكدإن",
                             color: "from-blue-600 to-blue-800",
                             hoverColor: "hover:shadow-blue-700/50"

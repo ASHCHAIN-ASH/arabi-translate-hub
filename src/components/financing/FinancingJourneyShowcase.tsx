@@ -42,7 +42,7 @@ const STEPS: Step[] = [
   },
   {
     img: familyImg,
-    alt: 'عائلة سعودية تستفيد من خدمات منصة ماستر بعد الموافقة',
+    alt: 'عائلة سعودية تستفيد من خدمات FekrahEdu بعد الموافقة',
     badge: 'الخطوة 3',
     title: 'رصيدك جاهز للاستخدام',
     desc: 'فور الموافقة يُضاف مبلغ التمويل إلى محفظتك، استخدمه لطلب أي خدمة أكاديمية.',
@@ -57,7 +57,7 @@ interface Props {
 }
 
 const FinancingJourneyShowcase: React.FC<Props> = ({
-  title = 'رحلتك مع تمويل ماستر',
+  title = 'رحلتك مع تمويل فكرة',
   subtitle = 'ثلاث خطوات بسيطة تفصلك عن تفعيل رصيدك التعليمي.',
 }) => {
   const reduce = useReducedMotion();

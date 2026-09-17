@@ -1,7 +1,7 @@
--- إنشاء tenant منفصل لموقع masteredupath.com
+-- إنشاء tenant منفصل لموقع fekrahedu.com
 -- إزالة أي بيانات مختلطة وإنشاء عزل كامل
 
--- إنشاء tenant خاص بموقع masteredupath.com
+-- إنشاء tenant خاص بموقع fekrahedu.com
 INSERT INTO public.tenants (
     id,
     name,
@@ -13,10 +13,10 @@ INSERT INTO public.tenants (
     created_at
 ) VALUES (
     gen_random_uint()::uuid,
-    'Master Edu Path',
-    'masteredupath',
-    'masteredupath.com',
-    'masteredupath_db',
+    'FekrahEdu',
+    'fekrahedu',
+    'fekrahedu.com',
+    'fekrahedu_db',
     jsonb_build_object(
         'theme', 'academic',
         'language', 'ar',
@@ -26,7 +26,7 @@ INSERT INTO public.tenants (
         'branding', jsonb_build_object(
             'primary_color', '#2D5AA0',
             'secondary_color', '#F8B500',
-            'logo_url', '/assets/masteredupath-logo.png'
+            'logo_url', '/assets/fekrahedu-logo.png'
         )
     ),
     true,
@@ -42,12 +42,12 @@ INSERT INTO public.tenants (
 -- الحصول على tenant_id للموقع الجديد
 DO $$
 DECLARE
-    masteredupath_tenant_id UUID;
+    fekrahedu_tenant_id UUID;
 BEGIN
     -- الحصول على tenant_id
-    SELECT id INTO masteredupath_tenant_id 
+    SELECT id INTO fekrahedu_tenant_id 
     FROM public.tenants 
-    WHERE code = 'masteredupath';
+    WHERE code = 'fekrahedu';
     
     -- إنشاء مستخدم إداري للموقع
     INSERT INTO public.admin_credentials (
@@ -61,15 +61,15 @@ BEGIN
         created_at
     ) VALUES (
         gen_random_uuid(),
-        'admin@masteredupath.com',
+        'admin@fekrahedu.com',
         '$2a$06$Ymdta.TsNIzaoB2c6/WFLeSxLaWOaWhWnCnGDKJxGoKmQ0v54vHE2', -- Ali@@#@@1409
-        'مدير النظام - ماستر إيدو باث',
+        'مدير النظام - FekrahEdu',
         'admin',
-        masteredupath_tenant_id,
+        fekrahedu_tenant_id,
         true,
         now()
     ) ON CONFLICT (email) DO UPDATE SET
-        tenant_id = masteredupath_tenant_id,
+        tenant_id = fekrahedu_tenant_id,
         full_name = EXCLUDED.full_name,
         is_active = true,
         updated_at = now();
@@ -88,7 +88,7 @@ BEGIN
     ) VALUES 
     (
         gen_random_uuid(),
-        masteredupath_tenant_id,
+        fekrahedu_tenant_id,
         'خدمات الأطروحات والرسائل',
         'Thesis and Dissertation Services',
         'خدمات شاملة لكتابة وتطوير الأطروحات والرسائل الأكاديمية',
@@ -99,7 +99,7 @@ BEGIN
     ),
     (
         gen_random_uuid(),
-        masteredupath_tenant_id,
+        fekrahedu_tenant_id,
         'خدمات البحث العلمي',
         'Research Services',
         'خدمات البحث العلمي والتحليل الإحصائي والمراجعة الأكاديمية',
@@ -110,7 +110,7 @@ BEGIN
     ),
     (
         gen_random_uuid(),
-        masteredupath_tenant_id,
+        fekrahedu_tenant_id,
         'خدمات النشر الأكاديمي',
         'Academic Publishing Services',
         'خدمات النشر في المجلات العلمية المحكمة والمؤتمرات الأكاديمية',
@@ -128,7 +128,7 @@ BEGIN
     ) VALUES (
         EXTRACT(YEAR FROM CURRENT_DATE)::INTEGER,
         1000, -- البدء من رقم 1000
-        masteredupath_tenant_id
+        fekrahedu_tenant_id
     ) ON CONFLICT (year, tenant_id) DO NOTHING;
     
     -- إنشاء إعدادات النظام الخاصة بالموقع
@@ -141,31 +141,31 @@ BEGIN
     ) VALUES 
     (
         'site_name',
-        '"ماستر إيدو باث"'::jsonb,
+        '"FekrahEdu"'::jsonb,
         'اسم الموقع',
         'general',
-        masteredupath_tenant_id
+        fekrahedu_tenant_id
     ),
     (
         'contact_email',
-        '"info@masteredupath.com"'::jsonb,
+        '"info@fekrahedu.com"'::jsonb,
         'البريد الإلكتروني للتواصل',
         'contact',
-        masteredupath_tenant_id
+        fekrahedu_tenant_id
     ),
     (
         'academic_year',
         '"2024-2025"'::jsonb,
         'السنة الأكاديمية الحالية',
         'academic',
-        masteredupath_tenant_id
+        fekrahedu_tenant_id
     ),
     (
         'default_language',
         '"ar"'::jsonb,
         'اللغة الافتراضية',
         'localization',
-        masteredupath_tenant_id
+        fekrahedu_tenant_id
     ) ON CONFLICT (key, tenant_id) DO UPDATE SET
         value = EXCLUDED.value,
         updated_at = now();

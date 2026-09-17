@@ -50,7 +50,7 @@ const handler = async (req: Request): Promise<Response> => {
       const data: any = body;
       await supabaseAdmin.from("inbox_messages").insert({
         sender_name: (data.name || "زائر").toString().slice(0, 200),
-        sender_email: (data.email || "unknown@masteredupath.com").toString().slice(0, 200),
+        sender_email: (data.email || "unknown@fekrahedu.com").toString().slice(0, 200),
         sender_phone: (data.phone || null) ? data.phone.toString().slice(0, 50) : null,
         subject: (`استفسار ترجمة مستندات: ${data.documentType || ''}`).toString().slice(0, 300),
         message: (data.additionalNotes || `ترجمة ${data.documentType} من ${data.sourceLanguage} إلى ${data.targetLanguage}` || "").toString().slice(0, 8000),
@@ -81,9 +81,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send confirmation email to customer
     const customerEmailResponse = await resend.emails.send({
-      from: "Master Edu Path <info@masteredupath.com>",
+      from: "FekrahEdu <info@fekrahedu.com>",
       to: [inquiry.email],
-      subject: "✅ تأكيد استلام طلبك - ماستر إيدو باث",
+      subject: "✅ تأكيد استلام طلبك - FekrahEdu",
       html: `
         <!DOCTYPE html>
         <html dir="rtl" lang="ar">
@@ -339,7 +339,7 @@ const handler = async (req: Request): Promise<Response> => {
         <body>
           <div class="email-wrapper">
             <div class="header">
-              <h1>🎯 ماستر إيدو باث</h1>
+              <h1>🎯 FekrahEdu</h1>
               <h2>تأكيد استلام طلب ترجمة المستندات</h2>
             </div>
             
@@ -384,10 +384,10 @@ const handler = async (req: Request): Promise<Response> => {
               <div class="contact-section">
                 <h3>📞 طرق التواصل معنا</h3>
                 <div class="contact-item">
-                  📧 البريد الإلكتروني: info@masteredupath.com
+                  📧 البريد الإلكتروني: info@fekrahedu.com
                 </div>
                 <div class="contact-item">
-                  🌐 الموقع الإلكتروني: www.masteredupath.com
+                  🌐 الموقع الإلكتروني: www.fekrahedu.com
                 </div>
                 <div class="contact-item">
                   ⏰ أوقات العمل: من الأحد إلى الخميس (9 صباحاً - 6 مساءً)
@@ -396,7 +396,7 @@ const handler = async (req: Request): Promise<Response> => {
             </div>
             
             <div class="footer">
-              <p class="company-name">ماستر إيدو باث</p>
+              <p class="company-name">FekrahEdu</p>
               <p>&copy; 2024 جميع الحقوق محفوظة</p>
               <p>نحن ملتزمون بتقديم أفضل خدمات الترجمة الاحترافية والمعتمدة</p>
               <p>شكراً لثقتكم بنا ونتطلع لخدمتكم</p>
@@ -409,8 +409,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send notification email to admin
     const adminEmailResponse = await resend.emails.send({
-      from: "Master Edu Path System <info@masteredupath.com>",
-      to: ["info@masteredupath.com"],
+      from: "FekrahEdu System <info@fekrahedu.com>",
+      to: ["info@fekrahedu.com"],
       subject: `🚨 طلب جديد عاجل: ترجمة المستندات من ${inquiry.name}`,
       html: `
         <!DOCTYPE html>
@@ -835,7 +835,7 @@ const handler = async (req: Request): Promise<Response> => {
             </div>
             
             <div class="footer">
-              <p><strong>ماستر إيدو باث - نظام إدارة الطلبات</strong></p>
+              <p><strong>FekrahEdu - نظام إدارة الطلبات</strong></p>
               <p>هذا تنبيه تلقائي من نظام إدارة طلبات الترجمة</p>
               <p>&copy; 2024 جميع الحقوق محفوظة</p>
             </div>

@@ -343,13 +343,13 @@ export default function AdminResearchPublicationDetails() {
     // إذا كان هناك عقد سابق مرتبط بالطلب، افتحه مباشرة
     const existing = contracts?.[0];
     if (existing) {
-      navigate(`/adminmaster/research/contracts/${existing.id}`);
+      navigate(`/adminfekrah/research/contracts/${existing.id}`);
       return;
     }
     setCreatingContract(true);
     try {
       const amount = Number(item.final_amount || item.estimated_amount || 0);
-      const contractContent = `عقد نشر بحث علمي\n\nالعميل: ${item.client_name || ''}\nالبريد: ${item.client_email || ''}\nالجوال: ${item.client_phone || ''}\n\nعنوان البحث: ${item.title || ''}\nالتخصص: ${item.field_of_study || item.specialization || '—'}\nاللغة: ${item.language || '—'}\nالمجلة المستهدفة: ${item.target_journal || '—'}\n\nالقيمة الإجمالية: ${amount.toLocaleString('ar-SA')} ر.س (شاملة الضريبة)\n\nيلتزم الطرف الثاني (ماستر إيدو باث) بتقديم خدمة نشر البحث وفق المعايير الأكاديمية المتفق عليها، ويلتزم الطرف الأول (العميل) بسداد القيمة المتفق عليها.`;
+      const contractContent = `عقد نشر بحث علمي\n\nالعميل: ${item.client_name || ''}\nالبريد: ${item.client_email || ''}\nالجوال: ${item.client_phone || ''}\n\nعنوان البحث: ${item.title || ''}\nالتخصص: ${item.field_of_study || item.specialization || '—'}\nاللغة: ${item.language || '—'}\nالمجلة المستهدفة: ${item.target_journal || '—'}\n\nالقيمة الإجمالية: ${amount.toLocaleString('ar-SA')} ر.س (شاملة الضريبة)\n\nيلتزم الطرف الثاني (FekrahEdu) بتقديم خدمة نشر البحث وفق المعايير الأكاديمية المتفق عليها، ويلتزم الطرف الأول (العميل) بسداد القيمة المتفق عليها.`;
 
       // إيجاد أو إنشاء customer مرتبط بمالك الطلب (customers.id ≠ auth.users.id)
       let customerId: string | null = null;
@@ -437,7 +437,7 @@ export default function AdminResearchPublicationDetails() {
         extra: { contract_number: created?.contract_number, total_amount: amount },
       });
       toast({ title: '✅ تم إنشاء العقد', description: `رقم العقد: ${created?.contract_number || ''}` });
-      navigate(`/adminmaster/research/contracts/${created.id}`);
+      navigate(`/adminfekrah/research/contracts/${created.id}`);
     } catch (e: any) {
       toast({ title: 'تعذّر إنشاء العقد', description: e.message, variant: 'destructive' });
     } finally {
@@ -449,7 +449,7 @@ export default function AdminResearchPublicationDetails() {
     return <AdminLayout><div className="p-12 text-center"><Loader2 className="w-10 h-10 animate-spin mx-auto text-indigo-600" /></div></AdminLayout>;
   }
   if (!item) {
-    return <AdminLayout><div className="p-12 text-center"><p>الطلب غير موجود</p><Button onClick={() => navigate('/adminmaster/research')} className="mt-4">عودة</Button></div></AdminLayout>;
+    return <AdminLayout><div className="p-12 text-center"><p>الطلب غير موجود</p><Button onClick={() => navigate('/adminfekrah/research')} className="mt-4">عودة</Button></div></AdminLayout>;
   }
 
   const status = getStatus(item.status);
@@ -461,7 +461,7 @@ export default function AdminResearchPublicationDetails() {
     <AdminLayout>
       <div className="p-4 sm:p-6 space-y-5" dir="rtl">
         <div className="flex items-center gap-3 flex-wrap">
-          <Button variant="outline" size="sm" onClick={() => navigate('/adminmaster/research')}>
+          <Button variant="outline" size="sm" onClick={() => navigate('/adminfekrah/research')}>
             <ArrowRight className="w-4 h-4 ml-1" /> سجل الطلبات
           </Button>
         </div>
@@ -674,7 +674,7 @@ export default function AdminResearchPublicationDetails() {
                       </div>
                     </div>
                     <div className="flex flex-col gap-2">
-                      <Button size="sm" variant="outline" onClick={() => navigate(`/adminmaster/research/contracts/${c.id}`)}>
+                      <Button size="sm" variant="outline" onClick={() => navigate(`/adminfekrah/research/contracts/${c.id}`)}>
                         <ExternalLink className="w-4 h-4 ml-1" /> فتح
                       </Button>
                       <Button
@@ -791,7 +791,7 @@ export default function AdminResearchPublicationDetails() {
                       </div>
                     </div>
                     <div className="flex flex-col gap-2">
-                      <Button size="sm" variant="outline" onClick={() => navigate(`/adminmaster/invoices/${inv.id}`)}>
+                      <Button size="sm" variant="outline" onClick={() => navigate(`/adminfekrah/invoices/${inv.id}`)}>
                         <ExternalLink className="w-4 h-4 ml-1" /> فتح
                       </Button>
                       <Button

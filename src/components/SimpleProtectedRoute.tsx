@@ -44,8 +44,8 @@ const SimpleProtectedRoute: React.FC<ProtectedRouteProps> = ({
     const isAdminRoute =
       adminOnly ||
       requiredRole === 'admin' ||
-      location.pathname.startsWith('/adminmaster');
-    const loginPath = isAdminRoute ? '/adminmaster/login' : '/login';
+      location.pathname.startsWith('/adminfekrah');
+    const loginPath = isAdminRoute ? '/adminfekrah/login' : '/login';
     return <Navigate to={loginPath} state={{ from: location }} replace />;
   }
 
@@ -75,10 +75,10 @@ const SimpleProtectedRoute: React.FC<ProtectedRouteProps> = ({
   } else if (effectiveRequired === 'client') {
     // Only non-admin authenticated users by default.
     // EXCEPTION: admins are allowed to enter the order creation flow so they
-    // can test/preview the client experience without being kicked back to /adminmaster.
+    // can test/preview the client experience without being kicked back to /adminfekrah.
     const isOrderFlow = location.pathname.startsWith('/orders/new');
     if (userRole !== 'client' && !(userRole === 'admin' && isOrderFlow)) {
-      return <Navigate to="/adminmaster" replace />;
+      return <Navigate to="/adminfekrah" replace />;
     }
   }
 

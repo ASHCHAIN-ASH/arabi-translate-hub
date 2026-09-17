@@ -46,7 +46,7 @@ BEGIN
           INSERT INTO public.user_wallets (user_id, balance) VALUES (v_app.user_id, v_credit);
         END IF;
         INSERT INTO public.wallet_transactions (user_id, amount, type, description, reference_id)
-          VALUES (v_app.user_id, v_credit, 'credit', 'تفعيل تمويل Master PayLater', v_app.id::text);
+          VALUES (v_app.user_id, v_credit, 'credit', 'تفعيل تمويل Fekrah PayLater', v_app.id::text);
       EXCEPTION WHEN OTHERS THEN
         -- silently skip if wallet tables differ
         NULL;

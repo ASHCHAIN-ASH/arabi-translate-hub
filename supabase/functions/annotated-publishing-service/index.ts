@@ -64,7 +64,7 @@ const handler = async (req: Request): Promise<Response> => {
       from: "النشر المشروح - تأكيد الطلب <onboarding@resend.dev>",
       to: [requestData.email],
       subject: "✅ تم استلام طلب النشر المشروح بنجاح",
-      replyTo: "info@masteredupath.com",
+      replyTo: "info@fekrahedu.com",
       attachments: [{
         filename: requestData.originalFileName,
         content: fileBase64,
@@ -136,8 +136,8 @@ const handler = async (req: Request): Promise<Response> => {
             <div style="background: #e0f2fe; padding: 20px; border-radius: 8px; text-align: center;">
               <h4 style="color: #0277bd; margin-top: 0; margin-bottom: 15px;">📞 للاستفسارات والتواصل</h4>
               <p style="color: #0277bd; margin: 0; line-height: 1.6;">
-                📧 info@masteredupath.com<br>
-                🌐 www.masteredupath.com
+                📧 info@fekrahedu.com<br>
+                🌐 www.fekrahedu.com
               </p>
             </div>
 
@@ -145,7 +145,7 @@ const handler = async (req: Request): Promise<Response> => {
             <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 2px solid #e5e7eb;">
               <p style="color: #6b7280; font-size: 14px; margin: 0;">
                 شكراً لثقتكم في خدماتنا 🙏<br>
-                Master Edu Path - النشر المشروح
+                FekrahEdu - النشر المشروح
               </p>
             </div>
           </div>
@@ -159,9 +159,9 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Sending admin notification...");
     const adminEmailResponse = await resend.emails.send({
       from: "النشر المشروح - طلب جديد <onboarding@resend.dev>",
-      to: ["info@masteredupath.com"],
+      to: ["info@fekrahedu.com"],
       subject: `📑 طلب نشر مشروح جديد - ${requestData.fullName}`,
-      replyTo: "info@masteredupath.com",
+      replyTo: "info@fekrahedu.com",
       attachments: [{
         filename: requestData.originalFileName,
         content: fileBase64,

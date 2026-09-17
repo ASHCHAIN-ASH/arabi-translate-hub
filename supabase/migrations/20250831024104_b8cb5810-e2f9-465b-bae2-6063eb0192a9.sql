@@ -1,4 +1,4 @@
--- Update the MasterEduPath tenant name to "منصة وكالة ماستر إيدو باث"
+-- Update the FekrahEdu tenant name to "FekrahEdu"
 UPDATE public.tenants 
-SET name = 'منصة وكالة ماستر إيدو باث'
+SET name = 'FekrahEdu'
 WHERE code = 'mep';

@@ -31,7 +31,7 @@ WITH CHECK (has_role(auth.uid(), 'admin'::app_role));
 
 -- Insert default tenant data
 INSERT INTO public.tenants (code, name, primary_domain, extra_domains, cookie_name, jwt_secret, storage_prefix) VALUES
-('mep', 'منصة وكالة ماستر إيدو باث', 'masteredupath.com', ARRAY['*.sandbox.lovable.dev', 'localhost'], 'mep_session', 'your_jwt_secret_here', 'uploads/mep/'),
+('mep', 'FekrahEdu', 'fekrahedu.com', ARRAY['*.sandbox.lovable.dev', 'localhost'], 'mep_session', 'your_jwt_secret_here', 'uploads/mep/'),
 ('ash', 'ASH Platform', 'ash.example.com', ARRAY['*.sandbox.lovable.dev'], 'ash_session', 'ash_jwt_secret_here', 'uploads/ash/'),
 ('fka', 'FKA Platform', 'fka.example.com', ARRAY['*.sandbox.lovable.dev'], 'fka_session', 'fka_jwt_secret_here', 'uploads/fka/')
 ON CONFLICT (code) DO NOTHING;

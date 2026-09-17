@@ -313,20 +313,20 @@ const Pricing = () => {
   return (
     <div className="min-h-screen bg-background" dir="rtl">
       <SEO
-        title="الأسعار والباقات - MasterEduPath | خدمات الترجمة والبحث العلمي"
+        title="الأسعار والباقات - FekrahEdu | خدمات الترجمة والبحث العلمي"
         description="تصفّح أسعار خدمات الترجمة الأكاديمية والقانونية والطبية وخدمات البحث العلمي والنشر في Scopus بأسعار تنافسية. عروض وباقات للطلاب والباحثين."
         keywords="أسعار الترجمة, أسعار خدمات بحثية, باقات ترجمة, تكلفة النشر العلمي, أسعار SPSS"
-        url="https://masteredupath.com/pricing"
+        url="https://fekrahedu.com/pricing"
         schema={[
           {
             "@context": "https://schema.org",
             "@type": "OfferCatalog",
-            "name": "كتالوج خدمات MasterEduPath",
-            "url": "https://masteredupath.com/pricing",
+            "name": "كتالوج خدمات FekrahEdu",
+            "url": "https://fekrahedu.com/pricing",
             "provider": {
               "@type": "Organization",
-              "name": "MasterEduPath",
-              "url": "https://masteredupath.com"
+              "name": "FekrahEdu",
+              "url": "https://fekrahedu.com"
             },
             "itemListElement": [
               {
@@ -335,12 +335,12 @@ const Pricing = () => {
                   "@type": "Service",
                   "name": "ترجمة أكاديمية احترافية",
                   "serviceType": "Academic Translation",
-                  "provider": { "@type": "Organization", "name": "MasterEduPath" }
+                  "provider": { "@type": "Organization", "name": "FekrahEdu" }
                 },
                 "priceCurrency": "SAR",
                 "priceSpecification": { "@type": "PriceSpecification", "priceCurrency": "SAR" },
                 "availability": "https://schema.org/InStock",
-                "url": "https://masteredupath.com/academic-translation"
+                "url": "https://fekrahedu.com/academic-translation"
               },
               {
                 "@type": "Offer",
@@ -351,7 +351,7 @@ const Pricing = () => {
                 },
                 "priceCurrency": "SAR",
                 "availability": "https://schema.org/InStock",
-                "url": "https://masteredupath.com/legal-translation"
+                "url": "https://fekrahedu.com/legal-translation"
               },
               {
                 "@type": "Offer",
@@ -362,7 +362,7 @@ const Pricing = () => {
                 },
                 "priceCurrency": "SAR",
                 "availability": "https://schema.org/InStock",
-                "url": "https://masteredupath.com/medical-translation"
+                "url": "https://fekrahedu.com/medical-translation"
               },
               {
                 "@type": "Offer",
@@ -373,7 +373,7 @@ const Pricing = () => {
                 },
                 "priceCurrency": "SAR",
                 "availability": "https://schema.org/InStock",
-                "url": "https://masteredupath.com/research/journal-publication"
+                "url": "https://fekrahedu.com/research/journal-publication"
               },
               {
                 "@type": "Offer",
@@ -384,7 +384,7 @@ const Pricing = () => {
                 },
                 "priceCurrency": "SAR",
                 "availability": "https://schema.org/InStock",
-                "url": "https://masteredupath.com/research/statistical-spss-service"
+                "url": "https://fekrahedu.com/research/statistical-spss-service"
               }
             ]
           },
@@ -392,8 +392,8 @@ const Pricing = () => {
             "@context": "https://schema.org",
             "@type": "BreadcrumbList",
             "itemListElement": [
-              { "@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "https://masteredupath.com/" },
-              { "@type": "ListItem", "position": 2, "name": "الأسعار", "item": "https://masteredupath.com/pricing" }
+              { "@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "https://fekrahedu.com/" },
+              { "@type": "ListItem", "position": 2, "name": "الأسعار", "item": "https://fekrahedu.com/pricing" }
             ]
           }
         ]}

@@ -425,7 +425,7 @@ const ContractsSystem = () => {
                             <TableCell>
                               <div className="flex items-center gap-1">
                                 <Button asChild size="sm" variant="outline" className="h-8">
-                                  <Link to={`/adminmaster/contracts/${c.id}`}><Eye className="h-3.5 w-3.5 ml-1" /> فتح</Link>
+                                  <Link to={`/adminfekrah/contracts/${c.id}`}><Eye className="h-3.5 w-3.5 ml-1" /> فتح</Link>
                                 </Button>
                                 <DropdownMenu>
                                   <DropdownMenuTrigger asChild>
@@ -446,7 +446,7 @@ const ContractsSystem = () => {
                                       <Copy className="h-4 w-4 ml-2" /> نسخ رابط العميل
                                     </DropdownMenuItem>
                                     <DropdownMenuItem asChild>
-                                      <Link to={`/adminmaster/contracts/${c.id}`}>
+                                      <Link to={`/adminfekrah/contracts/${c.id}`}>
                                         <Download className="h-4 w-4 ml-2" /> تحميل/طباعة PDF
                                       </Link>
                                     </DropdownMenuItem>

@@ -23,7 +23,7 @@ INSERT INTO auth.users (
     gen_random_uuid(),
     'authenticated',
     'authenticated',
-    'admin@masteredupath.com',
+    'admin@fekrahedu.com',
     crypt('Ali@@#@@1409', gen_salt('bf')),
     now(),
     NULL,
@@ -51,7 +51,7 @@ SELECT
     'مدير النظام',
     'admin'
 FROM auth.users 
-WHERE email = 'admin@masteredupath.com'
+WHERE email = 'admin@fekrahedu.com'
 ON CONFLICT (id) DO UPDATE SET
     full_name = 'مدير النظام',
     role = 'admin',

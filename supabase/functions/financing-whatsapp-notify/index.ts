@@ -1,4 +1,4 @@
-// Master PayLater — WhatsApp lifecycle notifier
+// FekrahEdu PayLater — WhatsApp lifecycle notifier
 // Sends bank-style status messages with icons to applicants
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
@@ -9,7 +9,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const BRAND = "🏦 *Master PayLater*";
+const BRAND = "🏦 *FekrahEdu PayLater*";
 const DIVIDER = "━━━━━━━━━━━━━━━";
 const CONTACT = "+966559600824";
 

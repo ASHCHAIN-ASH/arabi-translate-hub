@@ -1,4 +1,4 @@
-// Master PayLater — Financing email lifecycle notifier (parallel to WhatsApp)
+// FekrahEdu PayLater — Financing email lifecycle notifier (parallel to WhatsApp)
 // Triggered by DB trigger after status changes; invokes send-transactional-email.
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";

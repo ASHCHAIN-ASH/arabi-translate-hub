@@ -23,7 +23,7 @@ CREATE TRIGGER update_tenants_updated_at
 
 -- Seed tenant data
 INSERT INTO public.tenants (code, name, primary_domain, extra_domains, cookie_name, storage_prefix) VALUES
-('mep', 'MasterEduPath', 'masteredupath.com', ARRAY['www.masteredupath.com'], 'sid_mep', 'uploads/mep/'),
+('mep', 'FekrahEdu', 'fekrahedu.com', ARRAY['www.fekrahedu.com'], 'sid_mep', 'uploads/mep/'),
 ('ash', 'Ali Saleh Al Shehri Holding', 'alialshehriholding.com', ARRAY['www.alialshehriholding.com'], 'sid_ash', 'uploads/ash/'),
 ('fka', 'Fekrah Academy', 'fekrah-academy.com', ARRAY['www.fekrah-academy.com'], 'sid_fka', 'uploads/fka/');
 

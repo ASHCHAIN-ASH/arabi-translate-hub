@@ -52,10 +52,10 @@ const Header = () => {
             </div>
             <div className="text-right">
               <h1 className="text-sm lg:text-base font-bold text-foreground leading-tight tracking-tight">
-                ماستر إيدو باث
+                FekrahEdu
               </h1>
               <p className="text-[10px] lg:text-xs text-muted-foreground font-medium hidden sm:block">
-                MasterEduPath
+                FekrahEdu
               </p>
             </div>
           </Link>
@@ -131,7 +131,7 @@ const Header = () => {
                 <DropdownMenuContent align="end" className="w-48 glass border-border/50 rounded-xl p-1">
                   {userRole === 'admin' && (
                     <DropdownMenuItem asChild>
-                      <Link to="/adminmaster" className="flex items-center gap-2 text-sm cursor-pointer">
+                      <Link to="/adminfekrah" className="flex items-center gap-2 text-sm cursor-pointer">
                         <Briefcase className="h-4 w-4" />
                         لوحة التحكم
                       </Link>
@@ -171,8 +171,8 @@ const Header = () => {
                       <GraduationCap className="h-5 w-5 text-white" />
                     </div>
                     <div>
-                      <span className="font-bold text-foreground">ماستر إيدو باث</span>
-                      <p className="text-xs text-muted-foreground">MasterEduPath</p>
+                      <span className="font-bold text-foreground">FekrahEdu</span>
+                      <p className="text-xs text-muted-foreground">FekrahEdu</p>
                     </div>
                   </div>
                   

@@ -19,7 +19,7 @@ BEGIN
     '📦 طلب جديد: ' || order_title,
     'تم استلام طلب جديد برقم ' || NEW.tracking_id || ' ويحتاج مراجعة',
     'order',
-    '/adminmaster/orders'
+    '/adminfekrah/orders'
   FROM public.user_roles ur
   WHERE ur.role = 'admin';
 

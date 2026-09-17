@@ -4,48 +4,48 @@ import { FileText, CreditCard, FileSignature, MessageCircle, Receipt, Users, Set
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarTrigger } from '@/components/ui/sidebar';
 
 const items = [
-  { title: 'صندوق الوارد', url: '/adminmaster/inbox', icon: Inbox },
-  { title: 'إدارة العملاء', url: '/adminmaster/customers', icon: Users },
-  { title: 'إدارة المستخدمين', url: '/adminmaster/users', icon: Settings },
-  { title: 'اللوحة المالية', url: '/adminmaster/financial', icon: BarChart3 },
+  { title: 'صندوق الوارد', url: '/adminfekrah/inbox', icon: Inbox },
+  { title: 'إدارة العملاء', url: '/adminfekrah/customers', icon: Users },
+  { title: 'إدارة المستخدمين', url: '/adminfekrah/users', icon: Settings },
+  { title: 'اللوحة المالية', url: '/adminfekrah/financial', icon: BarChart3 },
   {
     title: 'العقود',
-    url: '/adminmaster/contracts',
+    url: '/adminfekrah/contracts',
     icon: FileText,
   },
   {
     title: 'إحصائيات العقود',
-    url: '/adminmaster/contracts/analytics',
+    url: '/adminfekrah/contracts/analytics',
     icon: TrendingUp,
   },
   {
     title: 'إنشاء عقد جديد',
-    url: '/adminmaster/contracts/new',
+    url: '/adminfekrah/contracts/new',
     icon: FileSignature,
   },
   {
     title: 'قوالب العقود',
-    url: '/adminmaster/contract-templates',
+    url: '/adminfekrah/contract-templates',
     icon: FileText,
   },
   {
     title: 'الفواتير الضريبية',
-    url: '/adminmaster/invoices',
+    url: '/adminfekrah/invoices',
     icon: Receipt,
   },
   {
     title: 'المحاسبة',
-    url: '/adminmaster/accounting',
+    url: '/adminfekrah/accounting',
     icon: CreditCard,
   },
   {
     title: 'نشر الأبحاث',
-    url: '/adminmaster/research',
+    url: '/adminfekrah/research',
     icon: BookOpen,
   },
   {
     title: 'واتساب',
-    url: '/adminmaster/whatsapp',
+    url: '/adminfekrah/whatsapp',
     icon: MessageCircle,
   }
 ];

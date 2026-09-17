@@ -145,7 +145,7 @@ const AdminContractDetails = () => {
         {/* Header */}
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="flex items-center gap-3">
-            <Button asChild variant="ghost" size="sm"><Link to="/adminmaster/contracts"><ArrowRight className="h-4 w-4 ml-1" /> عودة</Link></Button>
+            <Button asChild variant="ghost" size="sm"><Link to="/adminfekrah/contracts"><ArrowRight className="h-4 w-4 ml-1" /> عودة</Link></Button>
             <div>
               <h1 className="text-xl font-bold">{c.title}</h1>
               <p className="text-xs text-muted-foreground"><Building2 className="inline h-3 w-3 ml-1" /> {PARENT_COMPANY.platformName}</p>

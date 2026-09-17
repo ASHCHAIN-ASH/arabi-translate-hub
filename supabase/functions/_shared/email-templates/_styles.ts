@@ -1,12 +1,12 @@
-// 🎨 نظام تصميم موحّد لإيميلات Master Edu Path
+// 🎨 نظام تصميم موحّد لإيميلات FekrahEdu
 // رسمي • أكاديمي • عصري • RTL
 
 export const BRAND = {
-  name: 'Master Edu Path',
-  nameAr: 'ماستر إديو باث',
+  name: 'FekrahEdu',
+  nameAr: 'FekrahEdu',
   tagline: 'منصّتك الأكاديمية الموثوقة',
-  url: 'https://masteredupath.com',
-  supportEmail: 'support@masteredupath.com',
+  url: 'https://fekrahedu.com',
+  supportEmail: 'support@fekrahedu.com',
   year: new Date().getFullYear(),
 };
 

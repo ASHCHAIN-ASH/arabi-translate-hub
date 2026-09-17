@@ -46,7 +46,7 @@ serve(async (req) => {
       const data: any = body;
       await supabaseAdmin.from("inbox_messages").insert({
         sender_name: (data.contactPerson || "زائر").toString().slice(0, 200),
-        sender_email: (data.email || "unknown@masteredupath.com").toString().slice(0, 200),
+        sender_email: (data.email || "unknown@fekrahedu.com").toString().slice(0, 200),
         sender_phone: (data.phone || null) ? data.phone.toString().slice(0, 50) : null,
         subject: (`طلب شراكة - ${data.institutionName || ''} - ${data.selectedPackage || ''}`).toString().slice(0, 300),
         message: (data.additionalNotes || `${data.institutionName} (${data.institutionType}) - باقة ${data.selectedPackage} - ${data.employeesCount} موظف` || "").toString().slice(0, 8000),
@@ -80,7 +80,7 @@ serve(async (req) => {
 
     // Send email to client
     const clientEmailResult = await resend.emails.send({
-      from: 'Master Edu Path <partnerships@masteredupath.com>',
+      from: 'FekrahEdu <partnerships@fekrahedu.com>',
       to: [requestData.email],
       subject: 'شكراً لاهتمامك بالشراكة المؤسسية معنا 🎓',
       html: clientHtml,
@@ -95,8 +95,8 @@ serve(async (req) => {
 
     // Send email to admin
     const adminEmailResult = await resend.emails.send({
-      from: 'Partnership System <partnerships@masteredupath.com>',
-      to: ['info@masteredupath.com'],
+      from: 'Partnership System <partnerships@fekrahedu.com>',
+      to: ['info@fekrahedu.com'],
       subject: `🔔 طلب شراكة مؤسسية عاجل من ${requestData.institutionName}`,
       html: adminHtml,
       replyTo: requestData.email,

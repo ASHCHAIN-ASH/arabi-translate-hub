@@ -151,7 +151,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Send custom reset email
     try {
       await resend.emails.send({
-        from: 'نظام إدارة المشاريع <no-reply@masteredupath.com>',
+        from: 'نظام إدارة المشاريع <no-reply@fekrahedu.com>',
         to: [user.email],
         subject: 'إعادة تعيين كلمة المرور - نظام إدارة المشاريع',
         html: `

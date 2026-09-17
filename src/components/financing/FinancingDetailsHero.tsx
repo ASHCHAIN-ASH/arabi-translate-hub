@@ -120,7 +120,7 @@ const FinancingDetailsHero: React.FC<FinancingDetailsHeroProps> = ({
             <div className="flex items-center gap-2 mb-2">
               <Sparkles className="h-4 w-4 text-cyan-300" />
               <div className="text-[10px] uppercase tracking-[0.25em] text-white/70">
-                Master PayLater · رقم الطلب
+                FekrahEdu PayLater · رقم الطلب
               </div>
             </div>
             <div className="font-mono text-sm font-bold text-white/90 mb-3">

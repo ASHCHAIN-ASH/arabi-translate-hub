@@ -82,8 +82,8 @@ INSERT INTO public.email_templates (
             </div>
             
             <div style="text-align: center; margin: 30px 0;">
-                <a href="https://masteredupath.com/login" class="btn">تسجيل الدخول الآن</a>
-                <a href="https://masteredupath.com/contact" class="btn" style="background-color: #dc3545;">التواصل مع الدعم</a>
+                <a href="https://fekrahedu.com/login" class="btn">تسجيل الدخول الآن</a>
+                <a href="https://fekrahedu.com/contact" class="btn" style="background-color: #dc3545;">التواصل مع الدعم</a>
             </div>
             
             <p style="color: #6c757d; font-size: 14px;">
@@ -94,7 +94,7 @@ INSERT INTO public.email_templates (
         <div class="footer">
             <p><strong>شركة علي صالح الشهري للترجمة والخدمات</strong></p>
             <p>المملكة العربية السعودية - الرياض</p>
-            <p>📧 admin@masteredupath.com | 📞 +966501234567</p>
+            <p>📧 admin@fekrahedu.com | 📞 +966501234567</p>
             <p style="margin-top: 15px; font-size: 12px;">
                 جميع الحقوق محفوظة © 2025 شركة علي صالح الشهري
             </p>

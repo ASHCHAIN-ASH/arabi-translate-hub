@@ -1,10 +1,10 @@
-// RSS 2.0 feed generator for MasterEduPath blog
+// RSS 2.0 feed generator for FekrahEdu blog
 // Public endpoint — no auth required, returns application/rss+xml
 
-const SITE_URL = "https://masteredupath.com";
-const SITE_TITLE = "MasterEduPath - مدونة الترجمة والبحث العلمي";
+const SITE_URL = "https://fekrahedu.com";
+const SITE_TITLE = "FekrahEdu - مدونة الترجمة والبحث العلمي";
 const SITE_DESCRIPTION =
-  "أحدث المقالات والأخبار في الترجمة الأكاديمية والنشر العلمي والتحليل الإحصائي من MasterEduPath.";
+  "أحدث المقالات والأخبار في الترجمة الأكاديمية والنشر العلمي والتحليل الإحصائي من FekrahEdu.";
 const SITE_LANGUAGE = "ar-SA";
 
 const corsHeaders = {
@@ -93,7 +93,7 @@ function buildRss(posts: BlogPost[], category?: string): string {
     <link>${xmlEscape(link)}</link>
     <guid isPermaLink="true">${xmlEscape(link)}</guid>
     <pubDate>${formatRfc822(p.published_at)}</pubDate>
-    <author>noreply@masteredupath.com (${xmlEscape(p.author_name)})</author>
+    <author>noreply@fekrahedu.com (${xmlEscape(p.author_name)})</author>
     <description>${cdata(desc)}</description>
     <content:encoded>${cdata(p.content)}</content:encoded>
 ${categoryTags}
@@ -113,9 +113,9 @@ ${enclosure}
   <atom:link href="${xmlEscape(feedUrl)}" rel="self" type="application/rss+xml"/>
   <description>${cdata(SITE_DESCRIPTION)}</description>
   <language>${SITE_LANGUAGE}</language>
-  <copyright>© ${new Date().getFullYear()} MasterEduPath</copyright>
+  <copyright>© ${new Date().getFullYear()} FekrahEdu</copyright>
   <lastBuildDate>${lastBuildDate}</lastBuildDate>
-  <generator>MasterEduPath RSS Generator</generator>
+  <generator>FekrahEdu RSS Generator</generator>
   <ttl>60</ttl>
   <image>
     <url>${SITE_URL}/assets/national-day-logo-original.webp</url>

@@ -110,12 +110,12 @@ FOR EACH ROW EXECUTE FUNCTION public.notify_ticket_whatsapp();
 INSERT INTO public.whatsapp_templates (event_key, title, body_text, variables, is_active)
 VALUES
   ('ticket_created', 'تذكرة دعم جديدة',
-   E'مرحباً {{name}} 👋\n\nتم استلام تذكرتك بنجاح ✅\nرقم التذكرة: {{ticket_number}}\nالموضوع: {{subject}}\n\nسيتواصل معك فريق الدعم قريباً.\n— ماستر إدو باث',
+   E'مرحباً {{name}} 👋\n\nتم استلام تذكرتك بنجاح ✅\nرقم التذكرة: {{ticket_number}}\nالموضوع: {{subject}}\n\nسيتواصل معك فريق الدعم قريباً.\n— FekrahEdu',
    '["name","ticket_number","subject"]'::jsonb, true),
   ('ticket_admin_reply', 'رد جديد على تذكرتك',
-   E'مرحباً {{name}} 💬\n\nلديك رد جديد على تذكرتك:\n🎫 {{ticket_number}} — {{subject}}\n\n"{{message_preview}}"\n\nافتح التذكرة من لوحة عميلك للرد.\n— ماستر إدو باث',
+   E'مرحباً {{name}} 💬\n\nلديك رد جديد على تذكرتك:\n🎫 {{ticket_number}} — {{subject}}\n\n"{{message_preview}}"\n\nافتح التذكرة من لوحة عميلك للرد.\n— FekrahEdu',
    '["name","ticket_number","subject","message_preview"]'::jsonb, true),
   ('ticket_status_changed', 'تحديث حالة التذكرة',
-   E'مرحباً {{name}} 🔔\n\nتم تحديث حالة تذكرتك:\n🎫 {{ticket_number}} — {{subject}}\nالحالة الجديدة: {{status}}\n\n— ماستر إدو باث',
+   E'مرحباً {{name}} 🔔\n\nتم تحديث حالة تذكرتك:\n🎫 {{ticket_number}} — {{subject}}\nالحالة الجديدة: {{status}}\n\n— FekrahEdu',
    '["name","ticket_number","subject","status"]'::jsonb, true)
 ON CONFLICT (event_key) DO NOTHING;

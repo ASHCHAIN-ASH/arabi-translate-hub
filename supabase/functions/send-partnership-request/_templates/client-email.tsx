@@ -49,7 +49,7 @@ export const ClientEmail = ({
           }
         `}</style>
       </Head>
-      <Preview>🎉 شكراً لاهتمامك بالشراكة المؤسسية مع Master Edu Path</Preview>
+      <Preview>🎉 شكراً لاهتمامك بالشراكة المؤسسية مع FekrahEdu</Preview>
       <Body style={main}>
         <Container style={container}>
           
@@ -60,7 +60,7 @@ export const ClientEmail = ({
                 <td>
                   <div style={logoContainer}>
                     <span style={logoIcon}>🎓</span>
-                    <Heading style={logoText}>Master Edu Path</Heading>
+                    <Heading style={logoText}>FekrahEdu</Heading>
                     <Text style={tagline}>شريكك الأكاديمي الموثوق 🌟</Text>
                   </div>
                 </td>
@@ -194,8 +194,8 @@ export const ClientEmail = ({
                               <span style={contactIconStyle}>📧</span>
                               <div>
                                 <Text style={contactLabel}>البريد الإلكتروني</Text>
-                                <Link href="mailto:info@masteredupath.com" style={contactValue}>
-                                  info@masteredupath.com
+                                <Link href="mailto:info@fekrahedu.com" style={contactValue}>
+                                  info@fekrahedu.com
                                 </Link>
                               </div>
                             </td>
@@ -231,8 +231,8 @@ export const ClientEmail = ({
                               <span style={contactIconStyle}>🌐</span>
                               <div>
                                 <Text style={contactLabel}>الموقع الإلكتروني</Text>
-                                <Link href="https://masteredupath.com" style={contactValue}>
-                                  www.masteredupath.com
+                                <Link href="https://fekrahedu.com" style={contactValue}>
+                                  www.fekrahedu.com
                                 </Link>
                               </div>
                             </td>
@@ -254,7 +254,7 @@ export const ClientEmail = ({
                     </tr>
                     <tr>
                       <td style={{ textAlign: 'center', padding: '10px 20px' }}>
-                        <Link href="https://masteredupath.com" style={websiteButton}>
+                        <Link href="https://fekrahedu.com" style={websiteButton}>
                           <span style={{ fontSize: '20px', marginLeft: '10px' }}>🌐</span>
                           زيارة الموقع الإلكتروني
                         </Link>
@@ -278,7 +278,7 @@ export const ClientEmail = ({
                     شكراً لثقتكم بنا 🙏
                   </Text>
                   <Text style={footerBrand}>
-                    <strong>🎓 Master Edu Path</strong>
+                    <strong>🎓 FekrahEdu</strong>
                   </Text>
                   <Text style={footerTagline}>
                     التميز الأكاديمي في خدمتكم
@@ -288,7 +288,7 @@ export const ClientEmail = ({
                     هذه رسالة تلقائية، للتواصل استخدم معلومات الاتصال أعلاه
                   </Text>
                   <Text style={footerSmall}>
-                    © 2024 Master Edu Path. جميع الحقوق محفوظة
+                    © 2024 FekrahEdu. جميع الحقوق محفوظة
                   </Text>
                 </td>
               </tr>

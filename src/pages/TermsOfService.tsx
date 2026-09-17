@@ -63,7 +63,7 @@ const TermsOfService = () => {
               الشروط والأحكام
             </h1>
             <p className="text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              شروط وأحكام استخدام خدمات وكالة ماستر إيدو باث للخدمات التعليمية والأكاديمية والترجمة المتخصصة
+              شروط وأحكام استخدام خدمات FekrahEdu للخدمات التعليمية والأكاديمية والترجمة المتخصصة
             </p>
             <Button 
               onClick={downloadTerms}
@@ -79,7 +79,7 @@ const TermsOfService = () => {
             <Card className="shadow-2xl border-0 bg-card/90 backdrop-blur-sm">
               <CardHeader className="text-center pb-6 bg-gradient-to-r from-primary/5 to-primary/10">
                 <CardTitle className="text-2xl lg:text-3xl text-primary font-bold">
-                  وكالة ماستر إيدو باث - الشروط والأحكام
+                  FekrahEdu - الشروط والأحكام
                 </CardTitle>
                 <p className="text-muted-foreground mt-2">
                   تاريخ السريان: {new Date().toLocaleDateString('ar-SA')}
@@ -95,11 +95,11 @@ const TermsOfService = () => {
                   </h3>
                   <div className="space-y-4 text-muted-foreground leading-relaxed">
                     <p className="font-semibold text-foreground">
-                      مرحباً بكم في وكالة ماستر إيدو باث، الوجهة الرائدة للتميز الأكاديمي والتعليمي.
+                      مرحباً بكم في FekrahEdu، الوجهة الرائدة للتميز الأكاديمي والتعليمي.
                     </p>
                     <div className="grid lg:grid-cols-2 gap-4">
                       <div>
-                        <p><strong className="text-primary">الوكالة:</strong> وكالة ماستر إيدو باث للخدمات التعليمية والأكاديمية والترجمة المتخصصة</p>
+                        <p><strong className="text-primary">الوكالة:</strong> FekrahEdu للخدمات التعليمية والأكاديمية والترجمة المتخصصة</p>
                         <p><strong className="text-primary">العميل:</strong> أي شخص طبيعي أو اعتباري يستفيد من خدماتنا</p>
                       </div>
                       <div>
@@ -205,7 +205,7 @@ const TermsOfService = () => {
 
                 {/* التزامات الوكالة */}
                 <motion.section variants={itemVariants}>
-                  <h3 className="text-xl lg:text-2xl font-bold mb-6 text-primary">التزامات وكالة ماستر إيدو باث</h3>
+                  <h3 className="text-xl lg:text-2xl font-bold mb-6 text-primary">التزامات FekrahEdu</h3>
                   <div className="space-y-6">
                     <div className="grid lg:grid-cols-3 gap-4">
                       <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg border border-blue-200">
@@ -436,7 +436,7 @@ const TermsOfService = () => {
               للاستفسارات التفصيلية حول الشروط والأحكام أو لطلب توضيحات إضافية
             </p>
             <div className="flex flex-wrap justify-center gap-4 text-sm text-primary">
-              <span>📧 info@masteredupath.com</span>
+              <span>📧 info@fekrahedu.com</span>
               <span>📞 0559600824</span>
             </div>
           </motion.div>

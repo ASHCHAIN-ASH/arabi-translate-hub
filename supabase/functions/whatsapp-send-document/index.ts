@@ -69,7 +69,7 @@ serve(async (req) => {
 
       bucket = "contracts";
       filename = `${c.contract_number || "contract"}.pdf`;
-      defaultCaption = `📄 عقدكم الموقّع رقم ${c.contract_number}\n${c.title || ""}\n\nمنصة ماستر إيدو باث`;
+      defaultCaption = `📄 عقدكم الموقّع رقم ${c.contract_number}\n${c.title || ""}\n\nFekrahEdu`;
     } else {
       if (!invoice_id) return json({ success: false, error: "invoice_id مطلوب" }, 400);
       related_entity_id = invoice_id;
@@ -100,7 +100,7 @@ serve(async (req) => {
       const amount = new Intl.NumberFormat("ar-SA", {
         style: "currency", currency: inv.currency || "SAR", maximumFractionDigits: 2,
       }).format(Number(inv.total_amount) || 0);
-      defaultCaption = `🧾 فاتورتكم رقم ${inv.invoice_number}\nالإجمالي: ${amount}\n\nشكراً لتعاملكم مع ماستر إيدو باث`;
+      defaultCaption = `🧾 فاتورتكم رقم ${inv.invoice_number}\nالإجمالي: ${amount}\n\nشكراً لتعاملكم مع FekrahEdu`;
     }
 
     if (!phone) return json({ success: false, error: "رقم الهاتف غير متوفر" }, 400);

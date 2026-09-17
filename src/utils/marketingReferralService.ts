@@ -102,7 +102,7 @@ export const MarketingReferralService = {
   },
 
   buildShareUrl(refCode: string): string {
-    // Always use the canonical public domain (e.g. masteredupath.com),
+    // Always use the canonical public domain (e.g. fekrahedu.com),
     // never the preview/iframe origin like *.lovableproject.com.
     return buildReferralLink(refCode);
   },

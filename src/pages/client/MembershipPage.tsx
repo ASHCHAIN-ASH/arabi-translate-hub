@@ -192,7 +192,7 @@ export default function MembershipPage() {
               className="inline-flex items-center gap-2 px-5 py-2 bg-primary text-primary-foreground rounded-full text-sm font-bold shadow-lg"
             >
               <Crown className="w-4 h-4" />
-              <span>عضويات ماستر إيدو باث</span>
+              <span>عضويات FekrahEdu</span>
               <Sparkles className="w-4 h-4" />
             </motion.div>
 

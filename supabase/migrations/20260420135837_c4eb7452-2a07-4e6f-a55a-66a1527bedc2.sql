@@ -52,7 +52,7 @@ WITH CHECK (public.has_role(auth.uid(), 'admin'));
 INSERT INTO public.whatsapp_templates (event_key, title, body_text, variables) VALUES
 ('order_created', 'طلب جديد', '🎉 مرحباً {{name}}، تم استلام طلبك رقم *{{order_no}}* بنجاح. سنبدأ العمل عليه فوراً. تابع طلبك: {{link}}', '["name","order_no","link"]'::jsonb),
 ('order_status_changed', 'تحديث حالة الطلب', 'مرحباً {{name}}، تم تحديث حالة طلبك *{{order_no}}* إلى: *{{status}}*. التفاصيل: {{link}}', '["name","order_no","status","link"]'::jsonb),
-('order_delivered', 'تسليم الطلب', '✅ {{name}}، تم تسليم طلبك *{{order_no}}*. شكراً لثقتك بمنصة ماستر إيدو باث.', '["name","order_no"]'::jsonb),
+('order_delivered', 'تسليم الطلب', '✅ {{name}}، تم تسليم طلبك *{{order_no}}*. شكراً لثقتك بFekrahEdu.', '["name","order_no"]'::jsonb),
 ('invoice_new', 'فاتورة جديدة', '🧾 {{name}}، صدرت فاتورتك رقم *{{invoice_no}}* بقيمة {{amount}} ريال. للدفع: {{link}}', '["name","invoice_no","amount","link"]'::jsonb),
 ('invoice_reminder', 'تذكير دفع', '⏰ {{name}}، تذكير لطيف بفاتورتك *{{invoice_no}}* بقيمة {{amount}} ريال. الدفع: {{link}}', '["name","invoice_no","amount","link"]'::jsonb),
 ('invoice_paid', 'تأكيد دفع', '✅ {{name}}، استلمنا دفعتك للفاتورة *{{invoice_no}}* بقيمة {{amount}} ريال. شكراً لك.', '["name","invoice_no","amount"]'::jsonb),

@@ -44,7 +44,7 @@ const handler = async (req: Request): Promise<Response> => {
       const data: any = body;
       await supabaseAdmin.from("inbox_messages").insert({
         sender_name: (data.fullName || "زائر").toString().slice(0, 200),
-        sender_email: (data.email || "unknown@masteredupath.com").toString().slice(0, 200),
+        sender_email: (data.email || "unknown@fekrahedu.com").toString().slice(0, 200),
         sender_phone: (data.phone || null) ? data.phone.toString().slice(0, 50) : null,
         subject: (`طلب توظيف - ${data.position || ''}`).toString().slice(0, 300),
         message: (data.motivation || `تقديم لوظيفة ${data.position} - ${data.experience}` || "").toString().slice(0, 8000),
@@ -80,7 +80,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Email to applicant (confirmation)
     console.log("Sending confirmation email to applicant...");
     const applicantEmailResponse = await resend.emails.send({
-      from: "MasterEduPath <info@masteredupath.com>",
+      from: "FekrahEdu <info@fekrahedu.com>",
       to: [applicationData.email],
       subject: `تأكيد استلام طلب التوظيف - ${applicationData.position}`,
       html: `
@@ -123,7 +123,7 @@ const handler = async (req: Request): Promise<Response> => {
         <body>
             <div class="email-container">
                 <div class="header">
-                    <div class="logo">🎯 MasterEduPath</div>
+                    <div class="logo">🎯 FekrahEdu</div>
                     <div class="tagline">وكالة الحلول التعليمية المتقدمة</div>
                 </div>
                 
@@ -131,7 +131,7 @@ const handler = async (req: Request): Promise<Response> => {
                     <h1 class="greeting">مرحباً ${applicationData.fullName}!</h1>
                     
                     <p class="message">
-                        شكراً لك على ثقتك في MasterEduPath وتقديمك لطلب التوظيف. 
+                        شكراً لك على ثقتك في FekrahEdu وتقديمك لطلب التوظيف. 
                         نحن سعداء باهتمامك بالانضمام لفريقنا المتخصص في الحلول التعليمية.
                     </p>
                     
@@ -178,7 +178,7 @@ const handler = async (req: Request): Promise<Response> => {
                     <div class="contact-section">
                         <div class="contact-title">📞 للاستفسارات والمتابعة</div>
                         <div class="contact-info">
-                            <a href="mailto:info@masteredupath.com" class="contact-link">📧 info@masteredupath.com</a>
+                            <a href="mailto:info@fekrahedu.com" class="contact-link">📧 info@fekrahedu.com</a>
                         </div>
                         <div class="contact-info">
                             <a href="tel:0559600824" class="contact-link">📱 0559600824</a>
@@ -187,7 +187,7 @@ const handler = async (req: Request): Promise<Response> => {
                 </div>
                 
                 <div class="footer">
-                    <div class="footer-logo">MasterEduPath</div>
+                    <div class="footer-logo">FekrahEdu</div>
                     <div class="footer-text">
                         وكالة رائدة في مجال الحلول التعليمية والترجمة الأكاديمية<br>
                         نفخر بخدمة أكثر من 10,000 عميل حول العالم
@@ -203,8 +203,8 @@ const handler = async (req: Request): Promise<Response> => {
     // Email to admin (notification)
     console.log("Sending notification email to admin...");
     const adminEmailResponse = await resend.emails.send({
-      from: "MasterEduPath <info@masteredupath.com>",
-      to: ["info@masteredupath.com"], // تغيير العنوان للإدارة الصحيح
+      from: "FekrahEdu <info@fekrahedu.com>",
+      to: ["info@fekrahedu.com"], // تغيير العنوان للإدارة الصحيح
       subject: `طلب توظيف جديد - ${applicationData.position} | ${applicationData.fullName}`,
       html: `
         <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 700px; margin: 0 auto; background: #f8fafc; border-radius: 15px; overflow: hidden; border: 3px solid #e2e8f0;">

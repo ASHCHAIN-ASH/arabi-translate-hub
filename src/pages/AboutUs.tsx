@@ -185,26 +185,26 @@ const AboutUs = () => {
   return (
     <div className="min-h-screen bg-background" dir="rtl">
       <SEO 
-        title="من نحن - MasterEduPath | وكالة الحلول التعليمية المتقدمة"
-        description="تعرف على MasterEduPath - وكالة رائدة في تقديم الخدمات الأكاديمية والبحثية للطلاب والباحثين في السعودية والوطن العربي. خبرة أكثر من 10 سنوات في خدمة 50,000+ طالب وباحث"
-        keywords="من نحن MasterEduPath, وكالة تعليمية, خدمات أكاديمية, خبرة أكاديمية, شركاء جامعات, خدمات بحثية احترافية"
-        url="https://masteredupath.com/about-us"
+        title="من نحن - FekrahEdu | وكالة الحلول التعليمية المتقدمة"
+        description="تعرف على FekrahEdu - وكالة رائدة في تقديم الخدمات الأكاديمية والبحثية للطلاب والباحثين في السعودية والوطن العربي. خبرة أكثر من 10 سنوات في خدمة 50,000+ طالب وباحث"
+        keywords="من نحن FekrahEdu, وكالة تعليمية, خدمات أكاديمية, خبرة أكاديمية, شركاء جامعات, خدمات بحثية احترافية"
+        url="https://fekrahedu.com/about-us"
         schema={[
           {
             "@context": "https://schema.org",
             "@type": "AboutPage",
-            "name": "من نحن - MasterEduPath",
-            "description": "صفحة تعريفية بوكالة MasterEduPath للحلول التعليمية",
-            "url": "https://masteredupath.com/about-us",
+            "name": "من نحن - FekrahEdu",
+            "description": "صفحة تعريفية بوكالة FekrahEdu للحلول التعليمية",
+            "url": "https://fekrahedu.com/about-us",
             "inLanguage": "ar-SA"
           },
           {
             "@context": "https://schema.org",
             "@type": "Organization",
-            "name": "MasterEduPath Agency",
-            "alternateName": "وكالة ماستر إيدو باث",
-            "url": "https://masteredupath.com",
-            "logo": "https://masteredupath.com/assets/national-day-logo-original.webp",
+            "name": "FekrahEdu Agency",
+            "alternateName": "FekrahEdu",
+            "url": "https://fekrahedu.com",
+            "logo": "https://fekrahedu.com/assets/national-day-logo-original.webp",
             "foundingDate": "2014",
             "numberOfEmployees": { "@type": "QuantitativeValue", "value": "50+" },
             "slogan": "شريكك الموثوق للحلول التعليمية المتقدمة",
@@ -217,14 +217,14 @@ const AboutUs = () => {
               "@type": "ContactPoint",
               "telephone": "+966559600824",
               "contactType": "customer service",
-              "email": "info@masteredupath.com",
+              "email": "info@fekrahedu.com",
               "areaServed": "SA",
               "availableLanguage": ["ar", "en"]
             },
             "sameAs": [
-              "https://twitter.com/MasterEduPath",
-              "https://www.linkedin.com/company/masteredupath",
-              "https://www.instagram.com/masteredupath"
+              "https://twitter.com/FekrahEdu",
+              "https://www.linkedin.com/company/fekrahedu",
+              "https://www.instagram.com/fekrahedu"
             ],
             "aggregateRating": {
               "@type": "AggregateRating",
@@ -237,8 +237,8 @@ const AboutUs = () => {
             "@context": "https://schema.org",
             "@type": "BreadcrumbList",
             "itemListElement": [
-              { "@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "https://masteredupath.com/" },
-              { "@type": "ListItem", "position": 2, "name": "من نحن", "item": "https://masteredupath.com/about-us" }
+              { "@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "https://fekrahedu.com/" },
+              { "@type": "ListItem", "position": 2, "name": "من نحن", "item": "https://fekrahedu.com/about-us" }
             ]
           }
         ]}
@@ -326,7 +326,7 @@ const AboutUs = () => {
               transition={{ duration: 0.8, delay: 0.3 }}
             >
               <span className="bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-                ماستر إيدو باث
+                FekrahEdu
               </span>
               <br />
               <span className="text-foreground text-4xl sm:text-5xl lg:text-6xl">

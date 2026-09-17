@@ -9,12 +9,12 @@ import type { Invoice, InvoiceItem, InvoicePayment } from './invoiceService';
 import { InvoiceService } from './invoiceService';
 
 const COMPANY = {
-  name: 'ماستر إدو باث',
-  nameEn: 'Mastered Edu Path',
+  name: 'FekrahEdu',
+  nameEn: 'FekrahEdu',
   address: 'المملكة العربية السعودية — الرياض',
-  email: 'info@masteredupath.com',
+  email: 'info@fekrahedu.com',
   phone: '+966 53 530 0148',
-  website: 'masteredupath.com',
+  website: 'fekrahedu.com',
   vatNumber: '300000000000003',
   crNumber: '1010000000',
   iban: 'SA00 8000 0000 0000 0000 0000',

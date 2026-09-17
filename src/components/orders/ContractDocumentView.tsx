@@ -17,7 +17,7 @@ interface Props {
   issueDateHijri?: string;
 }
 
-const SITE_NAME = 'منصة ماستر إيدو باث';
+const SITE_NAME = 'FekrahEdu';
 const PARENT = 'شركة علي صالح الشهري القابضة';
 
 /**

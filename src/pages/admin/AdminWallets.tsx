@@ -236,7 +236,7 @@ const AdminWallets: React.FC = () => {
             `━━━━━━━━━━━━━━`,
             ``,
             `شكراً لثقتك بنا 🌟`,
-            `— MasterEduPath`,
+            `— FekrahEdu`,
           ].filter(Boolean).join('\n')
         : [
             `مرحباً ${name} 👋`,
@@ -254,7 +254,7 @@ const AdminWallets: React.FC = () => {
             `━━━━━━━━━━━━━━`,
             ``,
             `للاستفسار، تواصل مع خدمة العملاء عبر تذاكر الدعم.`,
-            `— MasterEduPath`,
+            `— FekrahEdu`,
           ].filter(Boolean).join('\n');
 
       await sendWhatsApp({

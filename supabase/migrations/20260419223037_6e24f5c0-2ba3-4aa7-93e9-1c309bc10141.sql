@@ -39,7 +39,7 @@ BEGIN
   INSERT INTO public.user_notifications (user_id, title, message, type, link)
   SELECT ur.user_id, '🎫 تذكرة دعم جديدة',
          'تذكرة جديدة: ' || NEW.subject,
-         'support', '/adminmaster/tickets/' || NEW.id::text
+         'support', '/adminfekrah/tickets/' || NEW.id::text
   FROM public.user_roles ur WHERE ur.role = 'admin';
 
   RETURN NEW;
@@ -81,7 +81,7 @@ BEGIN
     INSERT INTO public.user_notifications (user_id, title, message, type, link)
     SELECT ur.user_id, '💬 رد جديد من العميل',
            'تذكرة #' || v_ticket.ticket_number,
-           'support', '/adminmaster/tickets/' || v_ticket.id::text
+           'support', '/adminfekrah/tickets/' || v_ticket.id::text
     FROM public.user_roles ur WHERE ur.role = 'admin';
   END IF;
 

@@ -2,7 +2,7 @@
 -- تحديث كلمة المرور المُشفرة مسبقاً
 UPDATE public.admin_credentials 
 SET password_hash = '$2a$06$Ymdta.TsNIzaoB2c6/WFLeSxLaWOaWhWnCnGDKJxGoKmQ0v54vHE2'
-WHERE email = 'admin@masteredupath.com';
+WHERE email = 'admin@fekrahedu.com';
 
 -- إنشاء وظيفة تحقق جديدة بدون استخدام crypt
 CREATE OR REPLACE FUNCTION public.verify_admin_login(

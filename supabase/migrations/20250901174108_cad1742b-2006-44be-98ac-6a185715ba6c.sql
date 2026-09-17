@@ -1,5 +1,5 @@
 -- إنشاء نظام tenant كامل لعزل قواعد البيانات
--- خاص بموقع masteredupath.com بشكل منفصل تماماً
+-- خاص بموقع fekrahedu.com بشكل منفصل تماماً
 
 -- إنشاء جدول tenants إذا لم يكن موجوداً
 CREATE TABLE IF NOT EXISTS public.tenants (

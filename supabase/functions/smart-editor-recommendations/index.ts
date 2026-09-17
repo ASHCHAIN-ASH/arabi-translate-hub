@@ -220,7 +220,7 @@ serve(async (req) => {
     // Send confirmation email to client
     console.log("Sending confirmation email to client...");
     const clientEmailResponse = await resend.emails.send({
-      from: "المحرر الذكي <no-reply@masteredupath.com>",
+      from: "المحرر الذكي <no-reply@fekrahedu.com>",
       to: [requestData.email],
       subject: "تأكيد استلام طلب التوصيات - المحرر الذكي",
       html: `
@@ -255,7 +255,7 @@ serve(async (req) => {
 
           <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
             <p style="color: #64748b; font-size: 14px; margin: 0;">
-              تم إرسال هذه الرسالة تلقائياً من المحرر الذكي - Master Edu Path
+              تم إرسال هذه الرسالة تلقائياً من المحرر الذكي - FekrahEdu
             </p>
           </div>
         </div>
@@ -266,9 +266,9 @@ serve(async (req) => {
     console.log("Sending immediate admin notification...");
     const adminEmailResponse = await resend.emails.send({
       from: "المحرر الذكي - إشعار فوري <onboarding@resend.dev>",
-      to: ["info@masteredupath.com"],
+      to: ["info@fekrahedu.com"],
       subject: `🔔 طلب توصيات جديد - ${requestData.researchTitle}`,
-      replyTo: "info@masteredupath.com",
+      replyTo: "info@fekrahedu.com",
       attachments: (summaryPdfBase64 && summaryPdfBase64.length > 0)
         ? [{ filename: "research-summary.pdf", content: summaryPdfBase64, contentType: "application/pdf" }]
         : [],

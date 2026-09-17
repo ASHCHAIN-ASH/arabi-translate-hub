@@ -1,4 +1,4 @@
--- إصلاح مشكلة service_categories وإتمام إنشاء قاعدة بيانات منفصلة لـ masteredupath.com
+-- إصلاح مشكلة service_categories وإتمام إنشاء قاعدة بيانات منفصلة لـ fekrahedu.com
 
 -- إضافة tenant_id إلى service_categories إذا لم يكن موجوداً
 DO $$
@@ -23,18 +23,18 @@ CREATE POLICY "Anyone can view active service categories by tenant" ON public.se
 CREATE POLICY "Admins can manage service categories for their tenant" ON public.service_categories
     FOR ALL USING (has_role(auth.uid(), 'admin'::app_role));
 
--- إنشاء البيانات الأساسية لموقع masteredupath.com
+-- إنشاء البيانات الأساسية لموقع fekrahedu.com
 DO $$
 DECLARE
-    masteredupath_tenant_id UUID;
+    fekrahedu_tenant_id UUID;
 BEGIN
     -- الحصول على tenant_id أو إنشاؤه
-    SELECT id INTO masteredupath_tenant_id 
+    SELECT id INTO fekrahedu_tenant_id 
     FROM public.tenants 
-    WHERE code = 'masteredupath';
+    WHERE code = 'fekrahedu';
     
     -- إذا لم يكن موجوداً، أنشئه
-    IF masteredupath_tenant_id IS NULL THEN
+    IF fekrahedu_tenant_id IS NULL THEN
         INSERT INTO public.tenants (
             name,
             code,
@@ -43,10 +43,10 @@ BEGIN
             settings,
             is_active
         ) VALUES (
-            'Master Edu Path',
-            'masteredupath',
-            'masteredupath.com',
-            'masteredupath_db',
+            'FekrahEdu',
+            'fekrahedu',
+            'fekrahedu.com',
+            'fekrahedu_db',
             jsonb_build_object(
                 'theme', 'academic',
                 'language', 'ar',
@@ -56,12 +56,12 @@ BEGIN
                 'branding', jsonb_build_object(
                     'primary_color', '#2D5AA0',
                     'secondary_color', '#F8B500',
-                    'logo_url', '/assets/masteredupath-logo.png'
+                    'logo_url', '/assets/fekrahedu-logo.png'
                 )
             ),
             true
         )
-        RETURNING id INTO masteredupath_tenant_id;
+        RETURNING id INTO fekrahedu_tenant_id;
     END IF;
     
     -- إنشاء المستخدم الإداري للموقع
@@ -73,14 +73,14 @@ BEGIN
         tenant_id,
         is_active
     ) VALUES (
-        'admin@masteredupath.com',
+        'admin@fekrahedu.com',
         '$2a$06$Ymdta.TsNIzaoB2c6/WFLeSxLaWOaWhWnCnGDKJxGoKmQ0v54vHE2',
-        'مدير النظام - ماستر إيدو باث',
+        'مدير النظام - FekrahEdu',
         'admin',
-        masteredupath_tenant_id,
+        fekrahedu_tenant_id,
         true
     ) ON CONFLICT (email) DO UPDATE SET
-        tenant_id = masteredupath_tenant_id,
+        tenant_id = fekrahedu_tenant_id,
         full_name = EXCLUDED.full_name,
         is_active = true,
         updated_at = now();
@@ -97,7 +97,7 @@ BEGIN
         is_active
     ) VALUES 
     (
-        masteredupath_tenant_id,
+        fekrahedu_tenant_id,
         'خدمات الأطروحات والرسائل الجامعية',
         'Thesis and Dissertation Services',
         'خدمات شاملة لكتابة وتطوير الأطروحات والرسائل الأكاديمية للدراسات العليا',
@@ -107,7 +107,7 @@ BEGIN
         true
     ),
     (
-        masteredupath_tenant_id,
+        fekrahedu_tenant_id,
         'خدمات البحث العلمي والإحصاء',
         'Research and Statistical Analysis',
         'خدمات البحث العلمي والتحليل الإحصائي والمراجعة الأكاديمية',
@@ -117,7 +117,7 @@ BEGIN
         true
     ),
     (
-        masteredupath_tenant_id,
+        fekrahedu_tenant_id,
         'خدمات النشر الأكاديمي',
         'Academic Publishing Services',
         'دعم النشر في المجلات العلمية المحكمة والمؤتمرات',
@@ -127,7 +127,7 @@ BEGIN
         true
     ),
     (
-        masteredupath_tenant_id,
+        fekrahedu_tenant_id,
         'الاستشارات الأكاديمية',
         'Academic Consultation',
         'استشارات متخصصة في التعليم العالي والبحث العلمي',
@@ -145,7 +145,7 @@ BEGIN
     ) VALUES (
         EXTRACT(YEAR FROM CURRENT_DATE)::INTEGER,
         1000,
-        masteredupath_tenant_id
+        fekrahedu_tenant_id
     ) ON CONFLICT (year, tenant_id) DO UPDATE SET
         counter = GREATEST(invoice_counters.counter, EXCLUDED.counter);
     
@@ -159,38 +159,38 @@ BEGIN
     ) VALUES 
     (
         'site_name',
-        '"ماستر إيدو باث"'::jsonb,
+        '"FekrahEdu"'::jsonb,
         'اسم الموقع',
         'general',
-        masteredupath_tenant_id
+        fekrahedu_tenant_id
     ),
     (
         'contact_email',
-        '"info@masteredupath.com"'::jsonb,
+        '"info@fekrahedu.com"'::jsonb,
         'البريد الإلكتروني للتواصل',
         'contact',
-        masteredupath_tenant_id
+        fekrahedu_tenant_id
     ),
     (
         'phone_number',
         '"+966501234567"'::jsonb,
         'رقم الهاتف',
         'contact',
-        masteredupath_tenant_id
+        fekrahedu_tenant_id
     ),
     (
         'academic_year',
         '"2024-2025"'::jsonb,
         'السنة الأكاديمية',
         'academic',
-        masteredupath_tenant_id
+        fekrahedu_tenant_id
     ),
     (
         'default_language',
         '"ar"'::jsonb,
         'اللغة الافتراضية',
         'localization',
-        masteredupath_tenant_id
+        fekrahedu_tenant_id
     ) ON CONFLICT (key, tenant_id) DO UPDATE SET
         value = EXCLUDED.value,
         updated_at = now();

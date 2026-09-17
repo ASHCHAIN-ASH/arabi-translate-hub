@@ -154,7 +154,7 @@ const createClientEmailHtml = (
 <body>
   <div class="container">
     <div class="header">
-      <div class="logo">وكالة MasterEduPath</div>
+      <div class="logo">وكالة FekrahEdu</div>
       <div class="subtitle">للحلول التعليمية المتقدمة</div>
     </div>
     
@@ -169,7 +169,7 @@ const createClientEmailHtml = (
       </div>
       
       <div class="paragraph">
-        نشكركم لاختياركم وكالة MasterEduPath للحلول التعليمية المتقدمة. 
+        نشكركم لاختياركم وكالة FekrahEdu للحلول التعليمية المتقدمة. 
         لقد تم استلام طلب القبول الجامعي الخاص بكم بنجاح، وسيقوم فريقنا المتخصص 
         بمراجعة طلبكم والتواصل معكم خلال 24 ساعة القادمة.
       </div>
@@ -209,13 +209,13 @@ const createClientEmailHtml = (
       <div class="contact-section">
         <div class="contact-title">معلومات التواصل</div>
         <div class="contact-item">📞 الهاتف: 0559600824</div>
-        <div class="contact-item">📧 البريد الإلكتروني: info@masteredupath.com</div>
+        <div class="contact-item">📧 البريد الإلكتروني: info@fekrahedu.com</div>
         <div class="contact-item">📍 العنوان: المملكة العربية السعودية</div>
         <div class="contact-item">🕐 ساعات العمل: الأحد - الخميس | 10:00 ص - 7:00 م</div>
       </div>
       
       <div class="button-section">
-        <a href="https://masteredupath.com/admission-services" class="action-button">
+        <a href="https://fekrahedu.com/admission-services" class="action-button">
           تتبع طلب القبول
         </a>
       </div>
@@ -227,8 +227,8 @@ const createClientEmailHtml = (
     </div>
     
     <div class="footer">
-      <div class="footer-text">وكالة MasterEduPath للحلول التعليمية المتقدمة</div>
-      <div class="footer-subtext">© 2024 وكالة ماستر إيدو باث. جميع الحقوق محفوظة.</div>
+      <div class="footer-text">وكالة FekrahEdu للحلول التعليمية المتقدمة</div>
+      <div class="footer-subtext">© 2024 FekrahEdu. جميع الحقوق محفوظة.</div>
     </div>
   </div>
 </body>
@@ -370,7 +370,7 @@ const createAdminEmailHtml = (
   <div class="container">
     <div class="header">
       <div class="logo">نظام إدارة القبول الجامعي</div>
-      <div class="subtitle">وكالة MasterEduPath للحلول التعليمية</div>
+      <div class="subtitle">وكالة FekrahEdu للحلول التعليمية</div>
     </div>
     
     <div class="alert-banner">
@@ -507,7 +507,7 @@ const createAdminEmailHtml = (
           <strong>وقت الاستلام:</strong> ${new Date().toLocaleString('ar-SA')}
         </div>
         <div class="system-info">
-          <strong>مصدر الطلب:</strong> موقع وكالة MasterEduPath - صفحة خدمات القبول
+          <strong>مصدر الطلب:</strong> موقع وكالة FekrahEdu - صفحة خدمات القبول
         </div>
         <div class="system-info">
           <strong>حالة الطلب:</strong> جديد - في انتظار المراجعة
@@ -516,9 +516,9 @@ const createAdminEmailHtml = (
     </div>
     
     <div class="footer">
-      <div class="footer-text">نظام إدارة القبول الجامعي - وكالة MasterEduPath</div>
+      <div class="footer-text">نظام إدارة القبول الجامعي - وكالة FekrahEdu</div>
       <div class="footer-subtext">هذا البريد تم إرساله تلقائياً من نظام إدارة طلبات القبول</div>
-      <div class="footer-contact">للدعم التقني: info@masteredupath.com | 0559600824</div>
+      <div class="footer-contact">للدعم التقني: info@fekrahedu.com | 0559600824</div>
     </div>
   </div>
 </body>
@@ -550,7 +550,7 @@ const handler = async (req: Request): Promise<Response> => {
       const data: any = body;
       await supabaseAdmin.from("inbox_messages").insert({
         sender_name: (data.fullName || "زائر").toString().slice(0, 200),
-        sender_email: (data.email || "unknown@masteredupath.com").toString().slice(0, 200),
+        sender_email: (data.email || "unknown@fekrahedu.com").toString().slice(0, 200),
         sender_phone: (data.phone || null) ? data.phone.toString().slice(0, 50) : null,
         subject: (`استفسار قبول جامعي - ${data.desiredField || ''}`).toString().slice(0, 300),
         message: (data.additionalInfo || `قبول في ${data.desiredUniversity || 'جامعة غير محددة'} - تخصص ${data.desiredField || 'غير محدد'}` || "").toString().slice(0, 8000),
@@ -596,7 +596,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email to client
     const clientEmailResult = await resend.emails.send({
-      from: "مسار الخبراء للتعليم <info@masteredupath.com>",
+      from: "مسار الخبراء للتعليم <info@fekrahedu.com>",
       to: [inquiryData.email],
       subject: `✅ تأكيد استلام طلب القبول الجامعي - رقم الطلب: ${applicationNumber}`,
       html: clientEmailHtml,
@@ -606,8 +606,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email to admin
     const adminEmailResult = await resend.emails.send({
-      from: "إشعار طلب قبول جديد <info@masteredupath.com>",
-      to: ["info@masteredupath.com"],
+      from: "إشعار طلب قبول جديد <info@fekrahedu.com>",
+      to: ["info@fekrahedu.com"],
       subject: `🚨 طلب قبول جامعي جديد من ${inquiryData.fullName} - ${applicationNumber}`,
       html: adminEmailHtml,
     });

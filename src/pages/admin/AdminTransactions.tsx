@@ -782,7 +782,7 @@ const AdminTransactions = () => {
               <Button variant="outline" onClick={() => setDetailsTarget(null)}>إغلاق</Button>
               {detailsTarget?.invoice_id && (
                 <Button asChild>
-                  <Link to={`/adminmaster/invoices/${detailsTarget.invoice_id}`}>
+                  <Link to={`/adminfekrah/invoices/${detailsTarget.invoice_id}`}>
                     <ExternalLink className="h-4 w-4 ml-2" />
                     فتح صفحة الفاتورة
                   </Link>

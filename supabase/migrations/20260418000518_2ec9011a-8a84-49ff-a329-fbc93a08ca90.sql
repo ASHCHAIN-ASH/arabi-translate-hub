@@ -194,7 +194,7 @@ BEGIN
   INSERT INTO public.user_notifications (user_id, title, message, type, link)
   SELECT ur.user_id, '👑 طلب اشتراك عضوية جديد',
          'يوجد طلب اشتراك عضوية جديد بانتظار المراجعة',
-         'membership', '/adminmaster/memberships'
+         'membership', '/adminfekrah/memberships'
   FROM public.user_roles ur WHERE ur.role = 'admin';
 
   RETURN NEW;

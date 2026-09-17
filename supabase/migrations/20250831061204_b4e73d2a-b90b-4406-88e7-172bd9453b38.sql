@@ -9,7 +9,7 @@ INSERT INTO public.user_profiles (
     updated_at
 ) VALUES (
     gen_random_uuid(),
-    'admin@masteredupath.com',
+    'admin@fekrahedu.com',
     'مدير النظام',
     'admin',
     now(),
@@ -30,7 +30,7 @@ INSERT INTO public.admin_users (
 ) VALUES (
     gen_random_uuid(),
     'مدير النظام',
-    'admin@masteredupath.com',
+    'admin@fekrahedu.com',
     crypt('Ali@@#@@1409', gen_salt('bf')),
     'admin'::user_role,
     true,

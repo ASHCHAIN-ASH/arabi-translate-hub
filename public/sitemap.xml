@@ -5,48 +5,48 @@
 
   <!-- ============ CORE PAGES ============ -->
   <url>
-    <loc>https://masteredupath.com/</loc>
+    <loc>https://fekrahedu.com/</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://masteredupath.com/" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://masteredupath.com/" />
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/" />
     <image:image>
-      <image:loc>https://masteredupath.com/assets/national-day-logo-original.webp</image:loc>
-      <image:title>MasterEduPath - وكالة الحلول التعليمية المتقدمة</image:title>
+      <image:loc>https://fekrahedu.com/assets/national-day-logo-original.webp</image:loc>
+      <image:title>FekrahEdu - وكالة الحلول التعليمية المتقدمة</image:title>
     </image:image>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/about-us</loc>
+    <loc>https://fekrahedu.com/about-us</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/contact-us</loc>
+    <loc>https://fekrahedu.com/contact-us</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/services</loc>
+    <loc>https://fekrahedu.com/services</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/pricing</loc>
+    <loc>https://fekrahedu.com/pricing</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/order-now</loc>
+    <loc>https://fekrahedu.com/order-now</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -54,7 +54,7 @@
 
   <!-- ============ BLOG ============ -->
   <url>
-    <loc>https://masteredupath.com/blog</loc>
+    <loc>https://fekrahedu.com/blog</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
@@ -62,63 +62,63 @@
 
   <!-- ============ TRANSLATION SERVICES ============ -->
   <url>
-    <loc>https://masteredupath.com/translation-services</loc>
+    <loc>https://fekrahedu.com/translation-services</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/academic-translation</loc>
+    <loc>https://fekrahedu.com/academic-translation</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/legal-translation</loc>
+    <loc>https://fekrahedu.com/legal-translation</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/medical-translation</loc>
+    <loc>https://fekrahedu.com/medical-translation</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/technical-translation</loc>
+    <loc>https://fekrahedu.com/technical-translation</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/business-translation</loc>
+    <loc>https://fekrahedu.com/business-translation</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/instant-translation</loc>
+    <loc>https://fekrahedu.com/instant-translation</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/media-translation</loc>
+    <loc>https://fekrahedu.com/media-translation</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/literary-translation</loc>
+    <loc>https://fekrahedu.com/literary-translation</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -126,161 +126,161 @@
 
   <!-- ============ RESEARCH SERVICES ============ -->
   <url>
-    <loc>https://masteredupath.com/research-services</loc>
+    <loc>https://fekrahedu.com/research-services</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/research/services-hub</loc>
+    <loc>https://fekrahedu.com/research/services-hub</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/research/academic</loc>
+    <loc>https://fekrahedu.com/research/academic</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/research/scientific</loc>
+    <loc>https://fekrahedu.com/research/scientific</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/research/business</loc>
+    <loc>https://fekrahedu.com/research/business</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/research/social</loc>
+    <loc>https://fekrahedu.com/research/social</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/research/legal</loc>
+    <loc>https://fekrahedu.com/research/legal</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/research/medical</loc>
+    <loc>https://fekrahedu.com/research/medical</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/research/academic-writing-service</loc>
+    <loc>https://fekrahedu.com/research/academic-writing-service</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/research/proofreading-service</loc>
+    <loc>https://fekrahedu.com/research/proofreading-service</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/research/statistical-spss-service</loc>
+    <loc>https://fekrahedu.com/research/statistical-spss-service</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/research/proposal-service</loc>
+    <loc>https://fekrahedu.com/research/proposal-service</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/research/powerpoint-service</loc>
+    <loc>https://fekrahedu.com/research/powerpoint-service</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/research/paper-review-service</loc>
+    <loc>https://fekrahedu.com/research/paper-review-service</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/research/consultation-service</loc>
+    <loc>https://fekrahedu.com/research/consultation-service</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/research/other-student-services</loc>
+    <loc>https://fekrahedu.com/research/other-student-services</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/research/book-summarization</loc>
+    <loc>https://fekrahedu.com/research/book-summarization</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/research/assignment-execution</loc>
+    <loc>https://fekrahedu.com/research/assignment-execution</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/research/ebook-creation</loc>
+    <loc>https://fekrahedu.com/research/ebook-creation</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/research/research-proposal</loc>
+    <loc>https://fekrahedu.com/research/research-proposal</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/research/references-provision</loc>
+    <loc>https://fekrahedu.com/research/references-provision</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/research/homework-assistance</loc>
+    <loc>https://fekrahedu.com/research/homework-assistance</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/research/journey</loc>
+    <loc>https://fekrahedu.com/research/journey</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -288,35 +288,35 @@
 
   <!-- ============ MEMBERSHIP & PROGRAMS ============ -->
   <url>
-    <loc>https://masteredupath.com/master-membership</loc>
+    <loc>https://fekrahedu.com/fekrahedu-membership</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/academic-competitions</loc>
+    <loc>https://fekrahedu.com/academic-competitions</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/spin-the-wheel</loc>
+    <loc>https://fekrahedu.com/spin-the-wheel</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/study-to-earn</loc>
+    <loc>https://fekrahedu.com/study-to-earn</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/institutional-partnerships</loc>
+    <loc>https://fekrahedu.com/institutional-partnerships</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
@@ -324,42 +324,42 @@
 
   <!-- ============ DIRECTORIES & RESOURCES ============ -->
   <url>
-    <loc>https://masteredupath.com/universities</loc>
+    <loc>https://fekrahedu.com/universities</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/journals</loc>
+    <loc>https://fekrahedu.com/journals</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/client-guide</loc>
+    <loc>https://fekrahedu.com/client-guide</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/payment-methods</loc>
+    <loc>https://fekrahedu.com/payment-methods</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/careers</loc>
+    <loc>https://fekrahedu.com/careers</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.65</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/license-request</loc>
+    <loc>https://fekrahedu.com/license-request</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -367,35 +367,35 @@
 
   <!-- ============ INFO & POLICY PAGES ============ -->
   <url>
-    <loc>https://masteredupath.com/faq</loc>
+    <loc>https://fekrahedu.com/faq</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/academic-integrity</loc>
+    <loc>https://fekrahedu.com/academic-integrity</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.65</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/intellectual-property</loc>
+    <loc>https://fekrahedu.com/intellectual-property</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/privacy-policy</loc>
+    <loc>https://fekrahedu.com/privacy-policy</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
 
   <url>
-    <loc>https://masteredupath.com/terms-of-service</loc>
+    <loc>https://fekrahedu.com/terms-of-service</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>

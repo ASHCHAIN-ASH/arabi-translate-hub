@@ -8,7 +8,7 @@
  * This guarantees share links never leak preview/iframe domains
  * like *.lovableproject.com or *.lovable.app.
  */
-const PRODUCTION_FALLBACK = 'https://masteredupath.com';
+const PRODUCTION_FALLBACK = 'https://fekrahedu.com';
 
 const PREVIEW_HOST_PATTERNS = [
   /lovableproject\.com$/i,

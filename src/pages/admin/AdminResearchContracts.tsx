@@ -83,7 +83,7 @@ export default function AdminResearchContracts() {
               </h1>
               <p className="text-sm text-muted-foreground mt-1">إدارة جميع العقود الأكاديمية المرتبطة بطلبات النشر</p>
             </div>
-            <Button variant="outline" onClick={() => navigate('/adminmaster/research')}>
+            <Button variant="outline" onClick={() => navigate('/adminfekrah/research')}>
               <ArrowRight className="w-4 h-4 ml-1" /> سجل طلبات النشر
             </Button>
           </div>
@@ -154,7 +154,7 @@ export default function AdminResearchContracts() {
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-2">
-                          <Button size="sm" variant="outline" onClick={() => navigate(`/adminmaster/research/contracts/${c.id}`)}>
+                          <Button size="sm" variant="outline" onClick={() => navigate(`/adminfekrah/research/contracts/${c.id}`)}>
                             <Eye className="w-3 h-3 ml-1" /> فتح
                           </Button>
                           <Button size="sm" variant="outline" onClick={() => deleteContract(c.id, c.contract_number)} className="border-rose-300 text-rose-700 hover:bg-rose-50">

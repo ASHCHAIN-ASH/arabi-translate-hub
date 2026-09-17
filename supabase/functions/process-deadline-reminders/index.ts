@@ -118,7 +118,7 @@ Deno.serve(async (req) => {
                   orderName,
                   reminderType: r.reminder_type,
                   deadlineAt: r.deadline_at,
-                  orderLink: `https://masteredupath.com${link}`,
+                  orderLink: `https://fekrahedu.com${link}`,
                 },
               },
             });

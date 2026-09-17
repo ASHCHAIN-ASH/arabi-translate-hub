@@ -27,7 +27,7 @@ export default function AdminGrowthAutomationRules() {
       <div className="max-w-5xl mx-auto p-4 md:p-6 space-y-6">
         <div>
           <Link
-            to="/adminmaster/growth/automation"
+            to="/adminfekrah/growth/automation"
             className="text-sm text-muted-foreground hover:text-primary inline-flex items-center gap-1"
           >
             <ArrowRight className="h-3.5 w-3.5" /> العودة لأتمتة النمو

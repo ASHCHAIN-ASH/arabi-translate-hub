@@ -133,7 +133,7 @@ const Register = () => {
     <AuthShell
       icon={<UserPlus className="h-8 w-8" />}
       title="إنشاء حساب جديد"
-      subtitle="انضم إلى منصة ماستر إيدو باث وابدأ رحلتك"
+      subtitle="انضم إلى FekrahEdu وابدأ رحلتك"
       ribbon={ribbon}
     >
       <Tabs defaultValue="email" dir="rtl" className="w-full">

@@ -107,7 +107,7 @@ const AdminNotificationSystem: React.FC<AdminNotificationSystemProps> = ({ onNot
 
     // إشعار صوتي (اختياري)
     if ('Notification' in window && window.Notification.permission === 'granted') {
-      new window.Notification('طلب جديد - وكالة ماستر إيدو باث', {
+      new window.Notification('طلب جديد - FekrahEdu', {
         body: `طلب جديد من ${notification.companyName}`,
         icon: '/favicon.ico',
       });

@@ -53,7 +53,7 @@ export default function AdminExperimentDetail() {
     <div dir="rtl" className="container mx-auto p-6 space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="space-y-1">
-          <Button variant="ghost" size="sm" onClick={() => navigate('/adminmaster/experiments')} className="gap-1 mb-2">
+          <Button variant="ghost" size="sm" onClick={() => navigate('/adminfekrah/experiments')} className="gap-1 mb-2">
             <ArrowRight className="h-4 w-4" /> رجوع للقائمة
           </Button>
           <h1 className="text-2xl font-bold flex items-center gap-3">

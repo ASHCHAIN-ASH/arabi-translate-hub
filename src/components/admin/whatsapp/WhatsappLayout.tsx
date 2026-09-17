@@ -10,9 +10,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 
 const NAV = [
-  { to: "/adminmaster/whatsapp/inbox", label: "صندوق المحادثات", icon: MessageSquare, color: "from-emerald-500 to-teal-600" },
-  { to: "/adminmaster/whatsapp/campaigns", label: "الحملات الإعلانية", icon: Megaphone, color: "from-violet-500 to-purple-600" },
-  { to: "/adminmaster/whatsapp/analytics", label: "لوحة الإحصائيات", icon: BarChart3, color: "from-amber-500 to-orange-600" },
+  { to: "/adminfekrah/whatsapp/inbox", label: "صندوق المحادثات", icon: MessageSquare, color: "from-emerald-500 to-teal-600" },
+  { to: "/adminfekrah/whatsapp/campaigns", label: "الحملات الإعلانية", icon: Megaphone, color: "from-violet-500 to-purple-600" },
+  { to: "/adminfekrah/whatsapp/analytics", label: "لوحة الإحصائيات", icon: BarChart3, color: "from-amber-500 to-orange-600" },
 ];
 
 export default function WhatsappLayout({

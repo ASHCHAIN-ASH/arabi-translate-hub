@@ -11,10 +11,10 @@ const corsHeaders = {
 };
 
 const PLATFORM = {
-  name: "MasterEduPath",
-  nameAr: "ماستر إيدو باث",
-  legal: "منصة ماستر إيدو باث للخدمات الأكاديمية",
-  domain: "masteredupath.com",
+  name: "FekrahEdu",
+  nameAr: "FekrahEdu",
+  legal: "FekrahEdu للخدمات الأكاديمية",
+  domain: "fekrahedu.com",
   jurisdiction: "المملكة العربية السعودية",
 };
 
@@ -369,7 +369,7 @@ ${opts.forPdf ? '' : `<div class="toolbar">
     </div>
     <div class="brand-mark">
       <h1>${esc(PLATFORM.nameAr)}</h1>
-      <p class="en">MASTEREDUPATH — ACADEMIC SERVICES</p>
+      <p class="en">fekrahedu — ACADEMIC SERVICES</p>
       <div class="seal">MEP</div>
     </div>
   </header>
@@ -595,7 +595,7 @@ Deno.serve(async (req: Request) => {
       ? await sha256Hex(`${contract.id}|${signature.signed_at}|${signature.ip_address || ""}|${signature.signature_text}`)
       : "";
     const verifyToken = contract.verification_token;
-    const publicOrigin = body.public_origin || url.searchParams.get("public_origin") || "https://masteredupath.com";
+    const publicOrigin = body.public_origin || url.searchParams.get("public_origin") || "https://fekrahedu.com";
     const verifyUrl = verifyToken ? `${publicOrigin}/verify/${verifyToken}` : "";
 
     // ===== signed_final path: idempotent, immutable, versioned =====

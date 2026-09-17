@@ -54,7 +54,7 @@ const BlogPostPage = () => {
     );
   }
 
-  const url = `https://masteredupath.com/blog/${post.slug}`;
+  const url = `https://fekrahedu.com/blog/${post.slug}`;
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -65,10 +65,10 @@ const BlogPostPage = () => {
     author: { "@type": "Organization", name: post.author_name },
     publisher: {
       "@type": "Organization",
-      name: "MasterEduPath",
+      name: "FekrahEdu",
       logo: {
         "@type": "ImageObject",
-        url: "https://masteredupath.com/assets/national-day-logo-original.webp",
+        url: "https://fekrahedu.com/assets/national-day-logo-original.webp",
       },
     },
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
@@ -77,7 +77,7 @@ const BlogPostPage = () => {
   return (
     <div className="min-h-screen bg-background" dir="rtl">
       <SEO
-        title={`${post.title} | MasterEduPath`}
+        title={`${post.title} | FekrahEdu`}
         description={post.meta_description || post.excerpt || post.title}
         url={url}
         type="article"

@@ -323,14 +323,14 @@ export const AdminEmail = ({
                     نظام إدارة الشراكات المؤسسية
                   </Text>
                   <Text style={footerBrand}>
-                    <strong>🎓 Master Edu Path</strong>
+                    <strong>🎓 FekrahEdu</strong>
                   </Text>
                   <Text style={footerSmall}>
                     هذه رسالة تلقائية من نظام إدارة الطلبات
                   </Text>
                   <Hr style={{ borderColor: '#e0e0e0', margin: '15px 0', width: '50%', marginLeft: 'auto', marginRight: 'auto' }} />
                   <Text style={footerSmall}>
-                    © 2024 Master Edu Path. جميع الحقوق محفوظة
+                    © 2024 FekrahEdu. جميع الحقوق محفوظة
                   </Text>
                 </td>
               </tr>

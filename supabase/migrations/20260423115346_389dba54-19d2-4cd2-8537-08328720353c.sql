@@ -47,7 +47,7 @@ BEGIN
       VALUES
         (v_wallet_id, v_app.user_id, 'financing_credit', v_credit,
          COALESCE(v_balance_before, 0), v_balance_after,
-         'تمويل Master PayLater — تم إضافة مبلغ التمويل بعد اعتماد الدفعة الأولى',
+         'تمويل Fekrah PayLater — تم إضافة مبلغ التمويل بعد اعتماد الدفعة الأولى',
          'financing_application', v_app.id, 'SAR',
          CASE WHEN NEW.payment_method = 'wallet' THEN 'wallet' ELSE 'bank_transfer' END);
     EXCEPTION WHEN OTHERS THEN

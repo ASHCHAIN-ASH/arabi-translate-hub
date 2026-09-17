@@ -41,7 +41,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Email to client
     const clientEmail = await resend.emails.send({
-      from: "خدمات الطلاب <info@masteredupath.com>",
+      from: "خدمات الطلاب <info@fekrahedu.com>",
       to: [orderData.email],
       subject: `تأكيد طلب خدمة: ${orderData.serviceTitle}`,
       html: `
@@ -454,7 +454,7 @@ const handler = async (req: Request): Promise<Response> => {
             <div class="header">
               <div class="header-icon">📚</div>
               <h1>تم استلام طلبك بنجاح</h1>
-              <p>Master Edu Path - الطريق للتميز الأكاديمي</p>
+              <p>FekrahEdu - الطريق للتميز الأكاديمي</p>
             </div>
             
             <div class="success-badge">
@@ -529,11 +529,11 @@ const handler = async (req: Request): Promise<Response> => {
             
             <div class="footer">
               <div class="footer-icon">🎓</div>
-              <h4>Master Edu Path</h4>
+              <h4>FekrahEdu</h4>
               <p>رحلتك نحو التميز الأكاديمي تبدأ هنا</p>
               <div class="footer-divider"></div>
-              <p>info@masteredupath.com</p>
-              <p>© 2025 Master Edu Path. جميع الحقوق محفوظة</p>
+              <p>info@fekrahedu.com</p>
+              <p>© 2025 FekrahEdu. جميع الحقوق محفوظة</p>
             </div>
           </div>
         </body>
@@ -543,8 +543,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Email to admin
     const adminEmail = await resend.emails.send({
-      from: "طلب خدمة جديد <info@masteredupath.com>",
-      to: ["info@masteredupath.com"],
+      from: "طلب خدمة جديد <info@fekrahedu.com>",
+      to: ["info@fekrahedu.com"],
       subject: `طلب خدمة جديد: ${orderData.serviceTitle}`,
       html: `
         <!DOCTYPE html>
@@ -1010,11 +1010,11 @@ const handler = async (req: Request): Promise<Response> => {
             
             <div class="footer">
               <div class="footer-icon">🎓</div>
-              <h4>Master Edu Path</h4>
+              <h4>FekrahEdu</h4>
               <p>نظام إدارة الطلبات</p>
               <div class="footer-divider"></div>
-              <p>info@masteredupath.com</p>
-              <p>© 2025 Master Edu Path. جميع الحقوق محفوظة</p>
+              <p>info@fekrahedu.com</p>
+              <p>© 2025 FekrahEdu. جميع الحقوق محفوظة</p>
             </div>
           </div>
         </body>

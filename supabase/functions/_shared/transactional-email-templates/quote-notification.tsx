@@ -4,7 +4,7 @@ import {
 } from 'npm:@react-email/components@0.0.22'
 import type { TemplateEntry } from './registry.ts'
 
-const SITE_NAME = "مسار الماستر"
+const SITE_NAME = "مسار فكرة"
 
 interface QuoteNotificationProps {
   serviceName?: string
@@ -77,7 +77,7 @@ export const template = {
     serviceName: 'ترجمة أكاديمية',
     trackingId: 'ORD-123456',
     amount: '1,500',
-    ordersUrl: 'https://masteredupath.com/orders',
+    ordersUrl: 'https://fekrahedu.com/orders',
   },
 } satisfies TemplateEntry
 

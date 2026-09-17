@@ -140,7 +140,7 @@ const AdminUsers = () => {
               <RefreshCw className={`w-4 h-4 ml-2 ${loading ? 'animate-spin' : ''}`} />
               تحديث
             </Button>
-            <Button onClick={() => navigate('/adminmaster/add-user')} className="bg-gradient-to-r from-primary to-primary/80">
+            <Button onClick={() => navigate('/adminfekrah/add-user')} className="bg-gradient-to-r from-primary to-primary/80">
               <UserPlus className="w-4 h-4 ml-2" />
               مستخدم جديد
             </Button>

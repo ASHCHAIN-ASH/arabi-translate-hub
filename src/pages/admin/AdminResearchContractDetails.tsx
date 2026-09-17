@@ -300,7 +300,7 @@ export default function AdminResearchContractDetails() {
     if (!contract?.verification_token) return;
     // Always use the official production domain for client-facing links,
     // never the lovableproject.com sandbox/preview origin.
-    const PUBLIC_BASE = 'https://masteredupath.com';
+    const PUBLIC_BASE = 'https://fekrahedu.com';
     const url = `${PUBLIC_BASE}/contracts/sign/${contract.verification_token}`;
     await navigator.clipboard.writeText(url);
     toast({ title: '🔗 تم نسخ رابط التوقيع', description: url });
@@ -312,7 +312,7 @@ export default function AdminResearchContractDetails() {
     const { error } = await (supabase.from('contracts') as any).delete().eq('id', contract.id);
     if (error) { toast({ title: 'تعذّر الحذف', description: error.message, variant: 'destructive' }); return; }
     toast({ title: '🗑️ تم حذف العقد' });
-    navigate('/adminmaster/research/contracts');
+    navigate('/adminfekrah/research/contracts');
   };
 
   if (loading) return <AdminLayout><div className="p-12 text-center"><Loader2 className="w-8 h-8 mx-auto animate-spin text-indigo-600" /></div></AdminLayout>;
@@ -363,7 +363,7 @@ export default function AdminResearchContractDetails() {
                     {pub?.title || contract.title}
                   </h1>
                   <p className="text-xs mt-1" style={{ color: '#c9a96199' }}>
-                    منصة ماستر إيدو باث للخدمات الأكاديمية — المملكة العربية السعودية
+                    FekrahEdu للخدمات الأكاديمية — المملكة العربية السعودية
                   </p>
                 </div>
               </div>
@@ -385,7 +385,7 @@ export default function AdminResearchContractDetails() {
                 </Button>
                 <Button
                   variant="outline"
-                  onClick={() => navigate('/adminmaster/research/contracts')}
+                  onClick={() => navigate('/adminfekrah/research/contracts')}
                   className="border-[#c9a961]/40 text-[#c9a961] bg-transparent hover:bg-[#c9a961]/10 hover:text-[#c9a961]"
                 >
                   <ArrowRight className="w-4 h-4 ml-1" /> عودة للقائمة
@@ -408,7 +408,7 @@ export default function AdminResearchContractDetails() {
               } else if (contract.metadata?.duration_days) {
                 durationText = `${contract.metadata.duration_days} يوم`;
               }
-              const partyOne = 'منصة ماستر إيدو باث';
+              const partyOne = 'FekrahEdu';
               const partyTwo = pub?.client_name || contract.client_full_name || '—';
               const cellStyle = { background: 'rgba(201,169,97,0.08)', borderColor: 'rgba(201,169,97,0.25)' } as const;
               const labelStyle = { color: '#c9a961' } as const;
@@ -818,7 +818,7 @@ export default function AdminResearchContractDetails() {
                   <FileSignature className="w-12 h-12 mx-auto text-muted-foreground/30 mb-2" />
                   <p className="text-muted-foreground mb-3">لا يوجد محتوى للعقد بعد</p>
                   {pub?.id && (
-                    <Button onClick={() => navigate(`/adminmaster/research/${pub.id}`)} className="bg-indigo-600 hover:bg-indigo-700">
+                    <Button onClick={() => navigate(`/adminfekrah/research/${pub.id}`)} className="bg-indigo-600 hover:bg-indigo-700">
                       توليد المحتوى من صفحة الطلب ←
                     </Button>
                   )}
@@ -826,7 +826,7 @@ export default function AdminResearchContractDetails() {
               )}
               {pub?.id && contract.content && (
                 <div className="flex justify-end mt-3">
-                  <Button size="sm" variant="outline" onClick={() => navigate(`/adminmaster/research/${pub.id}`)}>
+                  <Button size="sm" variant="outline" onClick={() => navigate(`/adminfekrah/research/${pub.id}`)}>
                     تعديل من صفحة الطلب ←
                   </Button>
                 </div>

@@ -4,7 +4,7 @@ import {
 } from 'npm:@react-email/components@0.0.22'
 import type { TemplateEntry } from './registry.ts'
 
-const SITE_NAME = 'مسار الماستر'
+const SITE_NAME = 'مسار فكرة'
 
 interface Props {
   customerName?: string
@@ -111,7 +111,7 @@ const E = ({ customerName, amount, newBalance, requestId, approvedAt, paymentMet
         </Section>
 
         <Section style={btnSection}>
-          <Button style={btnPrimary} href={walletUrl || 'https://masteredupath.com/wallet'}>
+          <Button style={btnPrimary} href={walletUrl || 'https://fekrahedu.com/wallet'}>
             عرض المحفظة والرصيد
           </Button>
         </Section>
@@ -138,7 +138,7 @@ export const template = {
     requestId: 'a1b2c3d4',
     approvedAt: new Date().toLocaleDateString('ar-SA'),
     paymentMethod: 'تحويل بنكي',
-    walletUrl: 'https://masteredupath.com/wallet',
+    walletUrl: 'https://fekrahedu.com/wallet',
   },
 } satisfies TemplateEntry
 

@@ -8,7 +8,7 @@ import { useLocation } from "react-router-dom";
  */
 const NOINDEX_PATTERNS: RegExp[] = [
   /^\/admin(\/|$)/i,
-  /^\/adminmaster(\/|$)/i,
+  /^\/adminfekrah(\/|$)/i,
   /^\/client(\/|$)/i,
   /^\/client-services(\/|$)/i,
   /^\/platform(\/|$)/i,

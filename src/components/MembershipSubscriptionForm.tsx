@@ -332,7 +332,7 @@ const MembershipSubscriptionForm = ({ plan, isOpen, onClose }: MembershipSubscri
                       <span>بيانات آمنة ومحمية</span>
                     </div>
                     <p className="text-xs text-gray-400 mt-2">
-                      وكالة ماستر إيدو باث - شريكك الموثوق في التعلم والتطوير
+                      FekrahEdu - شريكك الموثوق في التعلم والتطوير
                     </p>
                   </div>
                 </form>

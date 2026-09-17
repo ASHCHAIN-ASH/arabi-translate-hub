@@ -36,7 +36,7 @@ const generateCustomerEmailTemplate = (consultationData: ConsultationRequest, se
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>تأكيد طلب الاستشارة الأكاديمية - وكالة ماستر إيدو باث</title>
+      <title>تأكيد طلب الاستشارة الأكاديمية - FekrahEdu</title>
       <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
       <style>
         * {
@@ -621,8 +621,8 @@ const generateCustomerEmailTemplate = (consultationData: ConsultationRequest, se
               ✅ تم استلام طلبكم بنجاح
             </div>
             <div class="main-logo">🎓</div>
-            <h1 class="company-name">وكالة ماستر إيدو باث</h1>
-            <p class="company-tagline">Master Edu Path Agency - للخدمات الأكاديمية والبحثية المتخصصة</p>
+            <h1 class="company-name">FekrahEdu</h1>
+            <p class="company-tagline">FekrahEdu Agency - للخدمات الأكاديمية والبحثية المتخصصة</p>
             <div class="service-badge">
               <span class="icon">🎯</span>
               <span>استشارة أكاديمية متخصصة</span>
@@ -635,7 +635,7 @@ const generateCustomerEmailTemplate = (consultationData: ConsultationRequest, se
             <h2>السلام عليكم ورحمة الله وبركاته</h2>
             <p>
               المحترم/ة <span class="customer-name">${consultationData.fullName}</span><br><br>
-              نتقدم بجزيل الشكر لثقتكم الغالية في <strong>وكالة ماستر إيدو باث</strong> ولاختياركم خدماتنا الأكاديمية والبحثية المتخصصة. يسعدنا إعلامكم بأنه تم استلام طلب الاستشارة الأكاديمية بنجاح، وسيقوم فريقنا المختص من الأكاديميين والخبراء بمراجعته والتواصل معكم في أقرب وقت ممكن.
+              نتقدم بجزيل الشكر لثقتكم الغالية في <strong>FekrahEdu</strong> ولاختياركم خدماتنا الأكاديمية والبحثية المتخصصة. يسعدنا إعلامكم بأنه تم استلام طلب الاستشارة الأكاديمية بنجاح، وسيقوم فريقنا المختص من الأكاديميين والخبراء بمراجعته والتواصل معكم في أقرب وقت ممكن.
             </p>
           </div>
 
@@ -714,7 +714,7 @@ const generateCustomerEmailTemplate = (consultationData: ConsultationRequest, se
               <div class="contact-card">
                 <span class="icon">📧</span>
                 <div class="label">البريد الإلكتروني</div>
-                <div class="value">info@masteredupath.com</div>
+                <div class="value">info@fekrahedu.com</div>
               </div>
               
               <div class="contact-card">
@@ -726,20 +726,20 @@ const generateCustomerEmailTemplate = (consultationData: ConsultationRequest, se
               <div class="contact-card">
                 <span class="icon">🌐</span>
                 <div class="label">الموقع الإلكتروني</div>
-                <div class="value">www.masteredupath.com</div>
+                <div class="value">www.fekrahedu.com</div>
               </div>
             </div>
           </div>
         </div>
         
         <div class="footer">
-          <h4>وكالة ماستر إيدو باث</h4>
+          <h4>FekrahEdu</h4>
           <p class="footer-tagline">"نحو التميز الأكاديمي والبحثي"</p>
           
           <div class="footer-info">
             <div class="info-block">
               <h5>🏢 معلومات الشركة</h5>
-              <p>وكالة ماستر إيدو باث للخدمات الأكاديمية</p>
+              <p>FekrahEdu للخدمات الأكاديمية</p>
               <p>المملكة العربية السعودية</p>
               <p>مرخصة من وزارة التجارة والاستثمار</p>
             </div>
@@ -776,8 +776,8 @@ const generateCustomerEmailTemplate = (consultationData: ConsultationRequest, se
           </div>
           
           <div class="copyright">
-            © 2024 وكالة ماستر إيدو باث للخدمات الأكاديمية - جميع الحقوق محفوظة<br>
-            <small>Master Edu Path Agency - All Rights Reserved</small><br>
+            © 2024 FekrahEdu للخدمات الأكاديمية - جميع الحقوق محفوظة<br>
+            <small>FekrahEdu Agency - All Rights Reserved</small><br>
             <small>ترخيص رقم: 1234567890 - وزارة التجارة والاستثمار - المملكة العربية السعودية</small><br><br>
             <strong style="color: #94a3b8;">⚖️ إشعار الملكية الفكرية:</strong><br>
             <small style="font-size: 12px; line-height: 1.5;">
@@ -800,7 +800,7 @@ const generateAdminEmailTemplate = (consultationData: ConsultationRequest, servi
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>طلب استشارة أكاديمية جديد - وكالة ماستر إيدو باث</title>
+      <title>طلب استشارة أكاديمية جديد - FekrahEdu</title>
       <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
       <style>
         * {
@@ -1319,11 +1319,11 @@ const generateAdminEmailTemplate = (consultationData: ConsultationRequest, servi
         </div>
 
         <div class="footer">
-          <h4>🏢 وكالة ماستر إيدو باث</h4>
+          <h4>🏢 FekrahEdu</h4>
           <p>نظام إدارة الطلبات الأكاديمية والإشعارات</p>
           <p>للخدمات الأكاديمية والبحثية المتخصصة</p>
           <div class="copyright">
-            © 2024 وكالة ماستر إيدو باث - جميع الحقوق محفوظة<br>
+            © 2024 FekrahEdu - جميع الحقوق محفوظة<br>
             <small>هذه رسالة تلقائية من نظام إدارة الطلبات الأكاديمية</small>
           </div>
         </div>
@@ -1348,7 +1348,7 @@ const handler = async (req: Request): Promise<Response> => {
       const data: any = body;
       await supabaseAdmin.from("inbox_messages").insert({
         sender_name: (data.fullName || "زائر").toString().slice(0, 200),
-        sender_email: (data.email || "unknown@masteredupath.com").toString().slice(0, 200),
+        sender_email: (data.email || "unknown@fekrahedu.com").toString().slice(0, 200),
         sender_phone: (data.phone || null) ? data.phone.toString().slice(0, 50) : null,
         subject: (`استشارة خبرة أكاديمية - ${data.serviceType || data.specialization || ''}`).toString().slice(0, 300),
         message: (data.projectDescription || data.additionalNotes || data.projectTitle || 'استشارة خبرة أكاديمية' || "").toString().slice(0, 8000),
@@ -1392,7 +1392,7 @@ const handler = async (req: Request): Promise<Response> => {
     const customerEmailHtml = generateCustomerEmailTemplate(consultationData, serviceTypeArabic, academicLevelArabic);
     
     const customerEmailResponse = await resend.emails.send({
-      from: "وكالة ماستر إيدو باث <info@masteredupath.com>",
+      from: "FekrahEdu <info@fekrahedu.com>",
       to: [consultationData.email],
       subject: `تأكيد طلب الاستشارة الأكاديمية - ${serviceTypeArabic}`,
       html: customerEmailHtml,
@@ -1404,8 +1404,8 @@ const handler = async (req: Request): Promise<Response> => {
     const adminEmailHtml = generateAdminEmailTemplate(consultationData, serviceTypeArabic, academicLevelArabic);
     
     const adminEmailResponse = await resend.emails.send({
-      from: "نظام الإشعارات الأكاديمية <info@masteredupath.com>",
-      to: ["info@masteredupath.com"],
+      from: "نظام الإشعارات الأكاديمية <info@fekrahedu.com>",
+      to: ["info@fekrahedu.com"],
       subject: `🚨 طلب ${serviceTypeArabic} جديد من ${consultationData.fullName}`,
       html: adminEmailHtml,
     });

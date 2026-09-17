@@ -38,7 +38,7 @@ const handler = async (req: Request): Promise<Response> => {
       const data: any = body;
       await supabaseAdmin.from("inbox_messages").insert({
         sender_name: (data.name || "زائر").toString().slice(0, 200),
-        sender_email: (data.email || "unknown@masteredupath.com").toString().slice(0, 200),
+        sender_email: (data.email || "unknown@fekrahedu.com").toString().slice(0, 200),
         sender_phone: (data.phone || null) ? data.phone.toString().slice(0, 50) : null,
         subject: (data.subject || 'رسالة تواصل').toString().slice(0, 300),
         message: (data.message || "").toString().slice(0, 8000),
@@ -58,8 +58,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send notification email to company
     const companyEmailResponse = await resend.emails.send({
-      from: "نظام التواصل <info@masteredupath.com>",
-      to: ["info@masteredupath.com", "admin@masteredupath.com"],
+      from: "نظام التواصل <info@fekrahedu.com>",
+      to: ["info@fekrahedu.com", "admin@fekrahedu.com"],
       subject: `رسالة جديدة من العميل: ${name} - ${subject}`,
       html: `
         <!DOCTYPE html>
@@ -179,7 +179,7 @@ const handler = async (req: Request): Promise<Response> => {
             
             <div class="footer">
               <p>تم إرسال هذه الرسالة تلقائياً من نظام إدارة التواصل</p>
-              <p>© 2024 وكالة ماستر إيدو باث. جميع الحقوق محفوظة.</p>
+              <p>© 2024 FekrahEdu. جميع الحقوق محفوظة.</p>
             </div>
           </div>
         </body>
@@ -189,9 +189,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send confirmation email to customer
     const customerEmailResponse = await resend.emails.send({
-      from: "وكالة ماستر إيدو باث <info@masteredupath.com>",
+      from: "FekrahEdu <info@fekrahedu.com>",
       to: [email],
-      subject: "تأكيد استلام رسالتك - وكالة ماستر إيدو باث",
+      subject: "تأكيد استلام رسالتك - FekrahEdu",
       html: `
         <!DOCTYPE html>
         <html dir="rtl" lang="ar">
@@ -295,7 +295,7 @@ const handler = async (req: Request): Promise<Response> => {
               
               <div class="contact-info">
                 <h3 style="color: #1f2937; margin-bottom: 15px;">معلومات التواصل السريع:</h3>
-                <p>📧 البريد الإلكتروني: info@masteredupath.com</p>
+                <p>📧 البريد الإلكتروني: info@fekrahedu.com</p>
                 <p>📞 الهاتف: 0559600824</p>
                 <p>💬 الواتساب: 0559600824</p>
                 <p>⏰ ساعات العمل: السبت - الخميس، 10 صباحاً - 6 مساءً</p>
@@ -303,7 +303,7 @@ const handler = async (req: Request): Promise<Response> => {
               </div>
               
               <div style="text-align: center;">
-                <a href="${Deno.env.get('SUPABASE_URL')?.replace('.supabase.co', '.netlify.app') || 'https://masteredupath.com'}" class="cta-button">
+                <a href="${Deno.env.get('SUPABASE_URL')?.replace('.supabase.co', '.netlify.app') || 'https://fekrahedu.com'}" class="cta-button">
                   زيارة موقعنا
                 </a>
               </div>
@@ -314,7 +314,7 @@ const handler = async (req: Request): Promise<Response> => {
               
               <p style="margin-bottom: 0;">
                 مع أطيب التحيات،<br>
-                <strong>فريق وكالة ماستر إيدو باث</strong>
+                <strong>فريق FekrahEdu</strong>
               </p>
             </div>
             
@@ -323,7 +323,7 @@ const handler = async (req: Request): Promise<Response> => {
                 هذا البريد الإلكتروني تم إرساله تلقائياً لتأكيد استلام رسالتك.
               </p>
               <p>
-                © 2024 وكالة ماستر إيدو باث. جميع الحقوق محفوظة.
+                © 2024 FekrahEdu. جميع الحقوق محفوظة.
               </p>
             </div>
           </div>

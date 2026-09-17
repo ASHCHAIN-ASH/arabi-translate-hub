@@ -129,7 +129,7 @@ const AdminServiceOrderDetails = () => {
     if (orderErr || !orderData) {
       console.error('[order detail] load error', orderErr);
       toast({ title: 'تعذّر تحميل الطلب', variant: 'destructive' });
-      navigate('/adminmaster/service-orders');
+      navigate('/adminfekrah/service-orders');
       return;
     }
 
@@ -188,7 +188,7 @@ const AdminServiceOrderDetails = () => {
   const clientName = order?.customer?.name || order?.profile?.full_name || 'غير محدد';
   const clientEmail = order?.customer?.email || '';
   const clientPhone = order?.customer?.phone || order?.profile?.phone || '';
-  const orderDetailsLink = order ? `https://masteredupath.com/orders/${order.id}` : 'https://masteredupath.com/orders';
+  const orderDetailsLink = order ? `https://fekrahedu.com/orders/${order.id}` : 'https://fekrahedu.com/orders';
   const formatRiyadhDateTime = () =>
     new Date().toLocaleString('ar-SA', {
       timeZone: 'Asia/Riyadh',
@@ -490,7 +490,7 @@ const AdminServiceOrderDetails = () => {
       <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 max-w-7xl space-y-4" dir="rtl">
         {/* Top bar */}
         <div className="flex items-center justify-between gap-3 flex-wrap">
-          <Button variant="ghost" size="sm" onClick={() => navigate('/adminmaster/service-orders')} className="gap-2">
+          <Button variant="ghost" size="sm" onClick={() => navigate('/adminfekrah/service-orders')} className="gap-2">
             <ArrowRight className="w-4 h-4" /> العودة للطلبات
           </Button>
           <div className="flex items-center gap-2">
@@ -558,7 +558,7 @@ const AdminServiceOrderDetails = () => {
                     .order('created_at', { ascending: false })
                     .limit(1)
                     .maybeSingle();
-                  if (data?.id) navigate(`/adminmaster/contracts/${data.id}`);
+                  if (data?.id) navigate(`/adminfekrah/contracts/${data.id}`);
                   else toast({ title: 'لا يوجد عقد مرتبط', description: 'يُنشأ العقد تلقائياً بعد قبول العميل لعرض السعر' });
                 }}
               >
@@ -957,7 +957,7 @@ const AdminServiceOrderDetails = () => {
                   <Button size="sm" onClick={createInvoice} disabled={creatingInvoice} className="gap-2">
                     {creatingInvoice ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Receipt className="w-4 h-4" />} إنشاء فاتورة
                   </Button>
-                  <Link to="/adminmaster/invoices"><Button size="sm" variant="outline" className="gap-2"><Receipt className="w-4 h-4" /> كل الفواتير</Button></Link>
+                  <Link to="/adminfekrah/invoices"><Button size="sm" variant="outline" className="gap-2"><Receipt className="w-4 h-4" /> كل الفواتير</Button></Link>
                 </div>
 
                 {order.quote_status && (

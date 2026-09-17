@@ -82,7 +82,7 @@ const handler = async (req: Request): Promise<Response> => {
     // إرسال إيميل للإدارة
     await resend.emails.send({
       from: "مسار الخبراء للتعليم <onboarding@resend.dev>",
-      to: ["info@masteredupath.com"],
+      to: ["info@fekrahedu.com"],
       subject: "🎊 فائز جديد في مسابقة دوران العجلة - يتطلب إجراء",
       html: adminHtml,
     });

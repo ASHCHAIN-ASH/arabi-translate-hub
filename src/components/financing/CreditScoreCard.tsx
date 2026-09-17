@@ -59,7 +59,7 @@ export const CreditScoreCard: React.FC<Props> = ({ result, compact }) => {
                 </Tooltip>
               </TooltipProvider>
             </div>
-            <div className="text-[11px] text-muted-foreground">نموذج Master PayLater Score™</div>
+            <div className="text-[11px] text-muted-foreground">نموذج FekrahEdu PayLater Score™</div>
           </div>
         </div>
         <Badge className={`${result.gradeColor} border font-bold`}>

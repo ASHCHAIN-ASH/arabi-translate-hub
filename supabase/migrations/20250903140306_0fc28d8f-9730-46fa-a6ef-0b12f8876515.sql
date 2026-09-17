@@ -21,7 +21,7 @@ AS $$
     WHERE id = auth.uid() 
     AND is_active = true 
     AND role = 'admin'
-    AND email = 'admin@masteredupath.com'
+    AND email = 'admin@fekrahedu.com'
   );
 $$;
 
@@ -53,7 +53,7 @@ INSERT INTO public.admin_credentials (
   is_active
 ) VALUES (
   '4863727d-86ae-4a66-b52a-af3ee8001e48'::uuid,
-  'admin@masteredupath.com',
+  'admin@fekrahedu.com',
   '$2a$06$Ymdta.TsNIzaoB2c6/WFLeSxLaWOaWhWnCnGDKJxGoKmQ0v54vHE2',
   'مدير النظام الرئيسي',
   'admin',
@@ -104,7 +104,7 @@ INSERT INTO auth.users (
   '00000000-0000-0000-0000-000000000000',
   'authenticated',
   'authenticated',
-  'admin@masteredupath.com',
+  'admin@fekrahedu.com',
   '$2a$06$Ymdta.TsNIzaoB2c6/WFLeSxLaWOaWhWnCnGDKJxGoKmQ0v54vHE2',
   now(),
   now(),

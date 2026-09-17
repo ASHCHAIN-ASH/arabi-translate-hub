@@ -8,7 +8,7 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
-const FROM_LABEL = "وكالة ماستر إيدو باث <info@masteredupath.com>";
+const FROM_LABEL = "FekrahEdu <info@fekrahedu.com>";
 
 const escapeHtml = (s: string) =>
   s.replace(/[&<>"']/g, (c) =>
@@ -95,7 +95,7 @@ serve(async (req) => {
             <div style="max-width:640px;margin:auto;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #e5e7eb">
               <div style="background:linear-gradient(135deg,#3b82f6,#6366f1);color:#fff;padding:22px 24px">
                 <h2 style="margin:0">مرحباً ${safeName}</h2>
-                <p style="margin:6px 0 0;opacity:.9">رد من فريق وكالة ماستر إيدو باث</p>
+                <p style="margin:6px 0 0;opacity:.9">رد من فريق FekrahEdu</p>
               </div>
               <div style="padding:22px 24px;line-height:1.8">
                 <div style="background:#f9fafb;border-right:4px solid #3b82f6;padding:14px 16px;border-radius:8px;margin-bottom:18px">

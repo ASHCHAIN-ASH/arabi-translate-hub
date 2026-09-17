@@ -247,8 +247,8 @@ async function handleMigration(supabase: any): Promise<Response> {
         const { data: newAdmin, error } = await supabase
           .from('platform_users')
           .insert({
-            email: 'admin@masteredupath.com',
-            email_normalized: 'admin@masteredupath.com',
+            email: 'admin@fekrahedu.com',
+            email_normalized: 'admin@fekrahedu.com',
             full_name: 'مدير النظام',
             role: 'admin',
             status: 'active',

@@ -107,7 +107,7 @@ Deno.serve(async (req) => {
     // Build callback URL (our verify endpoint will be called by browser on return)
     const origin = req.headers.get('origin') || req.headers.get('referer') || '';
     const baseReturn = body.return_url
-      || (origin ? `${origin.replace(/\/$/, '')}/payment/return` : 'https://masteredupath.com/payment/return');
+      || (origin ? `${origin.replace(/\/$/, '')}/payment/return` : 'https://fekrahedu.com/payment/return');
     const callBackUrl = `${baseReturn}?order=${encodeURIComponent(internalOrderNumber)}`;
 
     // Fetch customer info for Paylink

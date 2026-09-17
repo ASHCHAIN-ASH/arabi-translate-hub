@@ -60,7 +60,7 @@ INSERT INTO public.user_profiles (
     updated_at
 ) VALUES (
     gen_random_uuid(),
-    'admin@masteredupath.com',
+    'admin@fekrahedu.com',
     'مدير النظام',
     'admin',
     now(),

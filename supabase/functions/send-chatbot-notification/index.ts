@@ -33,9 +33,9 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     const emailResponse = await resend.emails.send({
-      from: "ماستر إيدو باث <onboarding@resend.dev>",
+      from: "FekrahEdu <onboarding@resend.dev>",
       to: ["info@fekrahtech.com"], // إيميل المطور للاختبار
-      subject: "🤖 رسالة جديدة من الشات بوت - وكالة ماستر إيدو باث",
+      subject: "🤖 رسالة جديدة من الشات بوت - FekrahEdu",
       html: `
         <!DOCTYPE html>
         <html dir="rtl" lang="ar">
@@ -297,14 +297,14 @@ const handler = async (req: Request): Promise<Response> => {
               <div style="background: #fef3c7; border: 1px solid #fbbf24; border-radius: 8px; padding: 15px; margin: 20px 0;">
                 <strong style="color: #92400e;">💡 ملاحظة مهمة:</strong>
                 <p style="margin: 5px 0 0 0; color: #92400e; font-size: 14px;">
-                  هذه الرسالة تم إرسالها تلقائياً من الشات بوت الذكي في موقع وكالة ماستر إيدو باث. 
+                  هذه الرسالة تم إرسالها تلقائياً من الشات بوت الذكي في موقع FekrahEdu. 
                   يُنصح بالرد على العميل في أسرع وقت ممكن لضمان أفضل تجربة خدمة.
                 </p>
               </div>
             </div>
             
             <div class="footer">
-              <div class="logo">🎓 ماستر إيدو باث</div>
+              <div class="logo">🎓 FekrahEdu</div>
               <p>نظام إشعارات الشات بوت الذكي</p>
               <p style="font-size: 12px; color: #9ca3af;">
                 تم الإرسال تلقائياً في ${formattedTime}

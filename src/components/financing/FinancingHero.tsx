@@ -81,7 +81,7 @@ const FinancingHero: React.FC<Props> = ({ active, pending, totalCredit }) => {
             className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-xl ring-1 ring-white/20 text-[11px] sm:text-xs uppercase tracking-[0.2em] text-white/90 mb-4 sm:mb-6"
           >
             <Sparkles className="h-3 w-3 text-amber-300" />
-            <span className="font-semibold">Master PayLater · بنك تمويلي رقمي</span>
+            <span className="font-semibold">FekrahEdu PayLater · بنك تمويلي رقمي</span>
           </motion.div>
 
           {/* Heading */}
