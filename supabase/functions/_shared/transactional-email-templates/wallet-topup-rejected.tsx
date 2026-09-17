@@ -144,7 +144,7 @@ export const template = {
 } satisfies TemplateEntry
 
 const main = { direction: 'rtl' as const, textAlign: 'right' as const, backgroundColor: '#f1f5f9', fontFamily: "'IBM Plex Sans Arabic', Arial, sans-serif", margin: 0, padding: '20px 0' }
-const container = { direction: 'rtl' as const, textAlign: 'right' as const, padding: '0', maxWidth: '620px', margin: '0 auto', backgroundColor: '#ffffff', borderRadius: '16px', overflow: 'hidden' as const, boxShadow: '0 4px 24px rgba(0,0,0,0.06)', border: '1px solid #cbd5e1', borderRadius: '14px', overflow: 'hidden' as const, boxSizing: 'border-box' as const }
+const container = { direction: 'rtl' as const, textAlign: 'right' as const, width: '100%', padding: '0', maxWidth: '620px', margin: '0 auto', backgroundColor: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '14px', overflow: 'hidden' as const, boxShadow: '0 4px 24px rgba(0,0,0,0.06)', boxSizing: 'border-box' as const }
 
 const bankHeader = { background: 'linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%)', padding: '24px 28px', color: '#fff' }
 const bankBrand = { fontSize: '20px', fontWeight: '800' as const, color: '#fff', margin: 0 }

@@ -6,6 +6,7 @@ export const BRAND = {
   nameAr: 'FekrahEdu',
   tagline: 'منصّتك الأكاديمية الموثوقة',
   url: 'https://fekrahedu.com',
+  logoUrl: 'https://fekrahedu.com/fekrah-logo.jpg',
   supportEmail: 'support@fekrahedu.com',
   year: new Date().getFullYear(),
 };
@@ -84,14 +85,9 @@ export const styles = (p: { primary: string; accent: string; glow: string; tint:
     width: '44px',
     height: '44px',
     borderRadius: '12px',
-    background: 'rgba(255,255,255,0.16)',
+    background: '#FFFFFF',
     border: '1px solid rgba(255,255,255,0.28)',
-    color: '#FFFFFF',
-    fontWeight: 700,
-    fontSize: '20px',
-    lineHeight: '44px',
-    textAlign: 'center' as const,
-    backdropFilter: 'blur(8px)',
+    verticalAlign: 'middle',
   } as React.CSSProperties,
 
   brandName: {
