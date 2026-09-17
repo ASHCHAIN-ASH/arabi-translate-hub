@@ -115,8 +115,9 @@ export const SpinWheelBanner = () => {
               transition={{ delay: 0.2 }}
               className="text-base sm:text-lg text-slate-300/90 leading-relaxed mb-7 max-w-xl mx-auto lg:mx-0"
             >
-              جوائز مُفعّلة فورًا على الترجمة والبحث والتدقيق والنشر. أدر العجلة،
-              احصل على قسيمتك في ثوانٍ، واستخدمها مباشرة عند طلب الخدمة.
+              لأن التميّز يستحق مكافأة، جهّزنا لك عجلة لا تعرف الخسارة:
+              خصومات فورية وخدمات مجانية على الترجمة والبحث والتدقيق والنشر —
+              قسيمتك تصلك في لحظات، وتُستخدم مباشرة عند طلبك.
             </motion.p>
 
             {/* شارات ثقة */}
@@ -128,9 +129,9 @@ export const SpinWheelBanner = () => {
               className="flex flex-wrap items-center justify-center lg:justify-start gap-2 mb-8"
             >
               {[
-                { icon: ShieldCheck, text: "جوائز مضمونة ومفعّلة" },
-                { icon: Zap, text: "القسيمة فورية" },
-                { icon: Sparkles, text: "مجانًا وبدون تسجيل" },
+                { icon: ShieldCheck, text: "كل دورة تفوز" },
+                { icon: Zap, text: "قسيمتك في ثوانٍ" },
+                { icon: Sparkles, text: "مجانًا · دون تسجيل" },
               ].map(({ icon: Icon, text }) => (
                 <li
                   key={text}
