@@ -362,13 +362,13 @@ const SpinTheWheel = () => {
               {/* Center spin button */}
               <button
                 onClick={spinWheel}
-                disabled={isSpinning || hasSpunToday || isChecking}
+                disabled={isSpinning || isLocked || isChecking}
                 aria-label="ابدأ الدوران"
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full font-bold text-white shadow-2xl transition-transform active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
                 style={{
                   width: size * 0.18,
                   height: size * 0.18,
-                  background: hasSpunToday
+                  background: isLocked
                     ? "linear-gradient(135deg, hsl(220 10% 50%), hsl(220 10% 35%))"
                     : "linear-gradient(135deg, hsl(43 74% 50%), hsl(38 80% 40%))",
                   fontSize: Math.max(11, size * 0.032),
@@ -378,8 +378,9 @@ const SpinTheWheel = () => {
                   <motion.span animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }}>
                     <Sparkles className="w-5 h-5" />
                   </motion.span>
-                ) : hasSpunToday ? "غداً" : "SPIN"}
+                ) : isLocked ? `${remaining!.d}ي` : "SPIN"}
               </button>
+
             </motion.div>
 
             {/* Side panel */}
