@@ -17,8 +17,8 @@ const QuoteNotificationEmail = ({ serviceName, trackingId, amount, ordersUrl }: 
   <Html lang="ar" dir="rtl">
     <Head />
     <Preview>تم إرسال عرض سعر جديد لطلبك - {SITE_NAME}</Preview>
-    <Body style={main}>
-      <Container style={container}>
+    <Body dir="rtl" style={main}>
+      <Container dir="rtl" style={container}>
         <Section style={headerSection}>
           <Heading style={logo}>{SITE_NAME}</Heading>
         </Section>
@@ -81,8 +81,8 @@ export const template = {
   },
 } satisfies TemplateEntry
 
-const main = { backgroundColor: '#ffffff', fontFamily: "'IBM Plex Sans Arabic', 'IBM Plex Sans Arabic', Arial, sans-serif" }
-const container = { padding: '30px 25px', maxWidth: '580px', margin: '0 auto' }
+const main = { direction: 'rtl' as const, textAlign: 'right' as const, backgroundColor: '#ffffff', fontFamily: "'IBM Plex Sans Arabic', 'IBM Plex Sans Arabic', Arial, sans-serif" }
+const container = { direction: 'rtl' as const, textAlign: 'right' as const, padding: '30px 25px', maxWidth: '580px', margin: '0 auto' }
 const headerSection = { textAlign: 'center' as const, padding: '10px 0' }
 const logo = { fontSize: '20px', fontWeight: '700' as const, color: '#3b4ede', margin: '0' }
 const divider = { borderColor: '#e5e7eb', margin: '20px 0' }

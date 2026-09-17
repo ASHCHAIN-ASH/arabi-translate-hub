@@ -25,8 +25,8 @@ const ContractSignedAdminEmail = ({
   <Html lang="ar" dir="rtl">
     <Head />
     <Preview>تم توقيع عقد جديد — نسخة PDF مرفقة</Preview>
-    <Body style={main}>
-      <Container style={container}>
+    <Body dir="rtl" style={main}>
+      <Container dir="rtl" style={container}>
         <Section style={header}>
           <Heading style={brand}>{SITE_NAME}</Heading>
           <Text style={parent}>تابعة لـ {PARENT}</Text>
@@ -80,8 +80,8 @@ export const template = {
   },
 } satisfies TemplateEntry
 
-const main = { backgroundColor: '#ffffff', fontFamily: 'IBM Plex Sans Arabic, Arial, sans-serif' }
-const container = { padding: '24px 28px', maxWidth: 600, margin: '0 auto' }
+const main = { direction: 'rtl' as const, textAlign: 'right' as const, backgroundColor: '#ffffff', fontFamily: 'IBM Plex Sans Arabic, Arial, sans-serif' }
+const container = { direction: 'rtl' as const, textAlign: 'right' as const, padding: '24px 28px', maxWidth: 600, margin: '0 auto' }
 const header = { borderBottom: '2px solid #0f172a', paddingBottom: 12, marginBottom: 24, textAlign: 'right' as const }
 const brand = { fontSize: 20, color: '#0f172a', margin: 0, fontWeight: 700 }
 const parent = { fontSize: 12, color: '#64748b', margin: '4px 0 0' }

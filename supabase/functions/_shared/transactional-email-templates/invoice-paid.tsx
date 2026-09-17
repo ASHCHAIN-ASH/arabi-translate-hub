@@ -20,8 +20,8 @@ const E = ({ customerName, invoiceNumber, totalAmount, paidAt, currency, invoice
     <Html lang="ar" dir="rtl">
       <Head />
       <Preview>{`إيصال سداد الفاتورة ${invoiceNumber ?? ''} — ${S.SITE_NAME}`}</Preview>
-      <Body style={S.main}>
-        <Container style={S.container}>
+      <Body dir="rtl" style={S.main}>
+        <Container dir="rtl" style={S.container}>
           <Section style={S.header}>
             <Row>
               <Column>

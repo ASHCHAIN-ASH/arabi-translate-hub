@@ -23,8 +23,8 @@ const ContractReminderEmail = ({
   <Html lang="ar" dir="rtl">
     <Head />
     <Preview>تذكير: العقد {contractNumber} بانتظار توقيعك</Preview>
-    <Body style={main}>
-      <Container style={container}>
+    <Body dir="rtl" style={main}>
+      <Container dir="rtl" style={container}>
         <Heading style={h1}>⏰ تذكير بتوقيع العقد</Heading>
         <Text style={text}>مرحباً {clientName}،</Text>
         <Text style={text}>
@@ -51,8 +51,8 @@ const ContractReminderEmail = ({
   </Html>
 )
 
-const main = { backgroundColor: '#f6f9fc', fontFamily: '"IBM Plex Sans Arabic", -apple-system, sans-serif' }
-const container = { backgroundColor: '#ffffff', margin: '0 auto', padding: '32px', maxWidth: '560px', borderRadius: '12px' }
+const main = { direction: 'rtl' as const, textAlign: 'right' as const, backgroundColor: '#f6f9fc', fontFamily: '"IBM Plex Sans Arabic", -apple-system, sans-serif' }
+const container = { direction: 'rtl' as const, textAlign: 'right' as const, backgroundColor: '#ffffff', margin: '0 auto', padding: '32px', maxWidth: '560px', borderRadius: '12px' }
 const h1 = { color: '#1a1a1a', fontSize: '22px', fontWeight: '700', textAlign: 'center' as const, margin: '0 0 16px' }
 const text = { color: '#333', fontSize: '15px', lineHeight: '1.7', textAlign: 'right' as const, margin: '12px 0' }
 const button = { backgroundColor: '#0ea5e9', color: '#fff', padding: '12px 28px', borderRadius: '8px', textDecoration: 'none', fontWeight: '600', fontSize: '15px' }

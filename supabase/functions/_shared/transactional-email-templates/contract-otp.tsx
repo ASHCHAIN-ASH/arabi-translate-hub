@@ -23,8 +23,8 @@ const ContractOtpEmail = ({
   <Html lang="ar" dir="rtl">
     <Head />
     <Preview>رمز التحقق لتوقيع العقد {contractNumber}</Preview>
-    <Body style={main}>
-      <Container style={container}>
+    <Body dir="rtl" style={main}>
+      <Container dir="rtl" style={container}>
         <Heading style={h1}>رمز التحقق لتوقيع العقد</Heading>
         <Text style={text}>مرحباً {clientName}،</Text>
         <Text style={text}>
@@ -63,7 +63,7 @@ export const template = {
 } satisfies TemplateEntry
 
 const main = { backgroundColor: '#ffffff', fontFamily: "'IBM Plex Sans Arabic','Tajawal',Arial,sans-serif", direction: 'rtl' as const, textAlign: 'right' as const }
-const container = { padding: '32px 28px', maxWidth: '560px', margin: '0 auto' }
+const container = { direction: 'rtl' as const, textAlign: 'right' as const, padding: '32px 28px', maxWidth: '560px', margin: '0 auto' }
 const h1 = { fontSize: '22px', fontWeight: 700, color: '#0f172a', margin: '0 0 18px', textAlign: 'right' as const }
 const text = { fontSize: '15px', color: '#334155', lineHeight: '1.9', margin: '0 0 14px', textAlign: 'right' as const }
 const otpBox = { background: '#f1f5f9', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '20px', margin: '20px 0', textAlign: 'center' as const }

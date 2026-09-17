@@ -38,8 +38,8 @@ const E = ({
     <Html lang="ar" dir="rtl">
       <Head />
       <Preview>{`فاتورة ${invoiceNumber ?? ''} بمبلغ ${S.fmt(totalAmount)} ${cur} — ${S.SITE_NAME}`}</Preview>
-      <Body style={S.main}>
-        <Container style={S.container}>
+      <Body dir="rtl" style={S.main}>
+        <Container dir="rtl" style={S.container}>
           <Section style={S.header}>
             <Row>
               <Column>

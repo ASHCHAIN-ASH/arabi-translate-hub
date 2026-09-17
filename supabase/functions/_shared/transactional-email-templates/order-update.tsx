@@ -40,8 +40,8 @@ const OrderUpdateEmail = ({
     <Html lang="ar" dir="rtl">
       <Head />
       <Preview>{`${headline} — ${trackingId ?? ''}`}</Preview>
-      <Body style={main}>
-        <Container style={container}>
+      <Body dir="rtl" style={main}>
+        <Container dir="rtl" style={container}>
           <Section style={brandBar}>
             <Text style={brandText}>{SITE_NAME}</Text>
           </Section>
