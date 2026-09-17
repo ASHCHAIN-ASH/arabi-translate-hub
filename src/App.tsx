@@ -236,6 +236,15 @@ const LegacyContractRedirect = () => {
   return <Navigate to={id ? `/client/contracts/${id}` : "/client/contracts"} replace />;
 };
 
+const LegacyAdminPathRedirect = () => {
+  const params = useParams();
+  const rest = params["*"] ?? "";
+
+  return <Navigate to={`/adminfekrah${rest ? `/${rest}` : ""}`} replace />;
+};
+
+
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -332,6 +341,7 @@ const App = () => (
             <Route path="/auth/forgot-password" element={<ForgotPassword />} />
             <Route path="/auth/reset-password" element={<ResetPassword />} />
             <Route path="/adminfekrah/login" element={<AdminLogin />} />
+            <Route path="/adminmaster/*" element={<LegacyAdminPathRedirect />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
             
             {/* Client Dashboard Routes */}
