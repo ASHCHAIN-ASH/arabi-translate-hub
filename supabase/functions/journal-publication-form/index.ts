@@ -3,6 +3,9 @@ import { Resend } from "https://esm.sh/resend@4.0.0";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
+const PUBLICATION_EMAIL = "publishing@fekrahedu.com";
+const PUBLICATION_FROM = `قسم النشر العلمي في FekrahEdu <${PUBLICATION_EMAIL}>`;
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -269,7 +272,7 @@ const handler = async (req: Request): Promise<Response> => {
 
             <div class="contact-info">
               <h3>📞 تواصل معنا</h3>
-              <p><strong>البريد الإلكتروني:</strong> info@fekrahedu.com</p>
+              <p><strong>بريد قسم النشر:</strong> ${PUBLICATION_EMAIL}</p>
               <p><strong>نحن هنا لمساعدتك في رحلتك الأكاديمية</strong></p>
             </div>
           </div>
@@ -577,17 +580,19 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send client email
     await resend.emails.send({
-      from: "FekrahEdu <info@fekrahedu.com>",
+      from: PUBLICATION_FROM,
       to: [formData.email],
       subject: "تأكيد استلام طلب النشر في المجلات المعتمدة - FekrahEdu",
+      replyTo: PUBLICATION_EMAIL,
       html: clientEmailHtml,
     });
 
     // Send admin email
     const adminEmailResponse = await resend.emails.send({
-      from: "FekrahEdu <info@fekrahedu.com>",
-      to: ["info@fekrahedu.com"],
+      from: PUBLICATION_FROM,
+      to: [PUBLICATION_EMAIL],
       subject: `طلب جديد للنشر في المجلات المعتمدة من ${formData.fullName}`,
+      replyTo: formData.email,
       html: adminEmailHtml,
     });
 
