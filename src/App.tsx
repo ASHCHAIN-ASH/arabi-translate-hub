@@ -236,6 +236,15 @@ const LegacyContractRedirect = () => {
   return <Navigate to={id ? `/client/contracts/${id}` : "/client/contracts"} replace />;
 };
 
+const LegacyAdminPathRedirect = () => {
+  const params = useParams();
+  const rest = params["*"] ?? "";
+
+  return <Navigate to={`/adminfekrah${rest ? `/${rest}` : ""}`} replace />;
+};
+
+
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
