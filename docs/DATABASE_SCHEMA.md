@@ -563,7 +563,7 @@
 | `cover_image` | `text` | نعم | — |
 | `category` | `text` | لا | `'general'::text` |
 | `tags` | `text[]` | نعم | `'{}'::text[]` |
-| `author_name` | `text` | لا | `'MasterEduPath'::text` |
+| `author_name` | `text` | لا | `'FekrahEdu'::text` |
 | `author_id` | `uuid` | نعم | — |
 | `status` | `text` | لا | `'draft'::text` |
 | `published_at` | `timestamp with time zone` | نعم | — |

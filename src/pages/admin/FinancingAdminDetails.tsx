@@ -39,7 +39,7 @@ const notifyCustomer = async (app: any, message: string, entityId?: string) => {
   try {
     await sendWhatsApp({
       to: phone,
-      message: `مرحباً ${app.applicant_full_name || ''} 👋\n\n${message}\n\nرقم الطلب: #${String(app.id).slice(0, 8).toUpperCase()}\n\nفريق ماستر للتمويل 💼`,
+      message: `مرحباً ${app.applicant_full_name || ''} 👋\n\n${message}\n\nرقم الطلب: #${String(app.id).slice(0, 8).toUpperCase()}\n\nفريق FekrahEdu للتمويل 💼`,
       related_entity_type: 'financing_application',
       related_entity_id: entityId || app.id,
       user_id: app.user_id || undefined,

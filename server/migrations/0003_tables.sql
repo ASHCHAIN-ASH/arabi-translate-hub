@@ -227,7 +227,7 @@ CREATE TABLE public.blog_posts (
     cover_image text,
     category text DEFAULT 'general'::text NOT NULL,
     tags text[] DEFAULT '{}'::text[],
-    author_name text DEFAULT 'MasterEduPath'::text NOT NULL,
+    author_name text DEFAULT 'FekrahEdu'::text NOT NULL,
     author_id uuid,
     status text DEFAULT 'draft'::text NOT NULL,
     published_at timestamp with time zone,
