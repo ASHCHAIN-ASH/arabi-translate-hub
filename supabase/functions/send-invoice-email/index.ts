@@ -177,6 +177,37 @@ Deno.serve(async (req) => {
         .then(() => {}, () => {});
     }
 
+    // إشعار واتساب مرافق للفاتورة (لا يعطّل البريد عند الفشل)
+    try {
+      const waEvent =
+        event === "issued" ? "invoice_new" : event === "overdue" ? "invoice_reminder" : "invoice_paid";
+      const phone = invoice.customer_phone || (invoice.user_id ? await getUserPhone(admin, invoice.user_id) : null);
+      if (phone) {
+        await notifyWhatsApp(admin, {
+          to: phone,
+          event_key: waEvent,
+          variables: {
+            name: invoice.customer_name ?? "عميلنا العزيز",
+            customer_name: invoice.customer_name ?? "عميلنا العزيز",
+            invoice_no: invoice.invoice_number,
+            invoice_number: invoice.invoice_number,
+            amount: Number(invoice.total_amount || 0).toLocaleString("ar-SA"),
+            total: Number(invoice.total_amount || 0).toLocaleString("ar-SA"),
+            remaining: Number(remaining).toLocaleString("ar-SA"),
+            due_date: invoice.due_date ?? "",
+            date: new Date().toISOString().slice(0, 10),
+            currency,
+            link: invoiceUrl,
+          },
+          user_id: invoice.user_id ?? null,
+          related_entity_type: "invoice",
+          related_entity_id: invoice.id,
+        });
+      }
+    } catch (waError) {
+      console.warn("invoice whatsapp skipped", waError);
+    }
+
     return json({ ok: true, queued: true, template: templateName, recipient, result });
   } catch (error) {
     const message = error instanceof Error ? error.message : "تعذر إرسال البريد";
