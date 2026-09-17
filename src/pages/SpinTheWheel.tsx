@@ -277,7 +277,7 @@ const SpinTheWheel = () => {
               }}>واربح فوراً</span>
             </h1>
             <p className="text-base sm:text-lg text-muted-foreground">
-              فرصتك اليومية للحصول على خصومات وخدمات أكاديمية مجانية
+              جوائز وخدمات أكاديمية مجانية من «فكرة» بانتظارك عند لف العجلة
             </p>
           </motion.div>
 
