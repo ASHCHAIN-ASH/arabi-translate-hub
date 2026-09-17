@@ -128,7 +128,7 @@ const handler = async (req: Request): Promise<Response> => {
             <div class="footer">
               <h3>وكالة فكرة إيدو</h3>
               <p>شريكك الموثوق في رحلة التعلم والتطوير المهني</p>
-              <p>MASTER EDU PATH AGENCY</p>
+              <p>FEKRAH EDU AGENCY</p>
             </div>
           </div>
         </body>
