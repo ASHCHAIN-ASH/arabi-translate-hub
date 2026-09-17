@@ -84,7 +84,7 @@ const SpinTheWheel = () => {
     return () => window.removeEventListener("resize", update);
   }, []);
 
-  useEffect(() => { checkEligibility(); }, []);
+  useEffect(() => { if (!authLoading) checkEligibility(); }, [authLoading, user?.id]);
 
   // العدّ التنازلي الحيّ حتى موعد المحاولة القادمة
   useEffect(() => {
