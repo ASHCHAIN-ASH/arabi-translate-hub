@@ -187,11 +187,8 @@ const AdminWallets: React.FC = () => {
       };
       const method = methodMap[r.payment_method] || r.payment_method;
 
-      let bonusPct = 0;
-      if (amountNum >= 5000) bonusPct = 10;
-      else if (amountNum >= 2500) bonusPct = 6;
-      else if (amountNum >= 1000) bonusPct = 3;
-      else if (amountNum >= 500) bonusPct = 1;
+      // كاش باك موحّد: 3% للتحويل البنكي و2% للدفع بالبطاقة
+      const bonusPct = r.payment_method === 'mada' || r.payment_method === 'card' ? 2 : 3;
       const bonusAmount = Math.round((amountNum * bonusPct) / 100 * 100) / 100;
       const totalCredited = amountNum + bonusAmount;
 
