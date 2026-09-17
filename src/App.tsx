@@ -302,6 +302,7 @@ const App = () => (
              <Route path="/terms-of-service" element={<TermsOfService />} />
              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/fekrahedu-membership" element={<FekrahEduMembership />} />
+              <Route path="/master-membership" element={<Navigate to="/fekrahedu-membership" replace />} />
              <Route path="/faq" element={<FAQ />} />
              <Route path="/academic-competitions" element={<AcademicCompetitions />} />
              <Route path="/spin-the-wheel" element={<SpinTheWheel />} />
@@ -465,6 +466,7 @@ const App = () => (
               </SimpleProtectedRoute>
             } />
             <Route path="/fekrahedu-paylater" element={<FekrahEduPayLater />} />
+            <Route path="/master-paylater" element={<Navigate to="/fekrahedu-paylater" replace />} />
             <Route path="/financing" element={
               <SimpleProtectedRoute requiredRole="client">
                 <FinancingHome />

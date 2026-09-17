@@ -41,6 +41,7 @@ import {
 } from '@/lib/financing';
 import heroImg from '@/assets/fekrahedu-paylater-hero.jpg';
 import cardImg from '@/assets/fekrahedu-paylater-card.jpg';
+import { buildPublicUrl } from '@/lib/publicUrl';
 
 const fmt = (n: number) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(n);
 
@@ -114,7 +115,7 @@ const FekrahEduPayLater: React.FC = () => {
     setMeta('description', 'تمويل ذكي بصفر فوائد حتى 100,000 ر.س. تقييم ائتماني فوري، عقد رقمي موثّق، وأقساط مرنة من 6 إلى 36 شهر — متوافق شرعاً.');
     let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
     if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.appendChild(canonical); }
-    canonical.href = `${window.location.origin}/fekrahedu-paylater`;
+    canonical.href = buildPublicUrl('/fekrahedu-paylater');
     return () => { document.title = prevTitle; };
   }, []);
 
