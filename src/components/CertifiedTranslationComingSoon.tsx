@@ -211,8 +211,8 @@ export default function CertifiedTranslationComingSoon({
               >
                 <div className="grid place-items-center gap-1 text-center">
                   <FileBadge className="h-10 w-10" />
-                  <span className="text-sm font-extrabold tracking-wide">TRADUCTION</span>
-                  <span className="text-[10px] font-bold opacity-80">CERTIFIED · معتمدة</span>
+                  <span className="text-base font-extrabold tracking-wide">ترجمة معتمدة</span>
+                  <span className="text-[10px] font-bold opacity-80">ختم المترجم المحلّف</span>
                 </div>
               </motion.div>
 
