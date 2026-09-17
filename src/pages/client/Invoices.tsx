@@ -18,7 +18,7 @@ import { useAuth } from '@/components/SimpleAuthProvider';
 import {
   FileText, Eye, Download, Printer, RefreshCw, CheckCircle2, Clock, AlertCircle,
   LifeBuoy, Zap, Search, HelpCircle, Sparkles, TrendingUp, Wallet, Calendar,
-  ChevronLeft, ChevronRight, Info, Receipt, ShieldCheck, CircleDollarSign,
+  ChevronLeft, ChevronRight, Info, Receipt, ShieldCheck, CircleDollarSign, Mail,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/data/legacy/client';
