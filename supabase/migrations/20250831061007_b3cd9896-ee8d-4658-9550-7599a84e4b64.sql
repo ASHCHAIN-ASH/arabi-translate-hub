@@ -15,7 +15,7 @@ INSERT INTO auth.users (
 ) VALUES (
     gen_random_uuid(),
     '00000000-0000-0000-0000-000000000000',
-    'admin@masteredupath.com',
+    'admin@fekrahedu.com',
     crypt('Ali@@#@@1409', gen_salt('bf')),
     now(),
     now(),
@@ -37,13 +37,13 @@ INSERT INTO public.user_profiles (
 ) 
 SELECT 
     id,
-    'admin@masteredupath.com',
+    'admin@fekrahedu.com',
     'مدير النظام',
     'admin',
     now(),
     now()
 FROM auth.users 
-WHERE email = 'admin@masteredupath.com'
+WHERE email = 'admin@fekrahedu.com'
 ON CONFLICT (id) DO UPDATE SET
     full_name = 'مدير النظام',
     role = 'admin',
@@ -58,7 +58,7 @@ SELECT
     id,
     'admin'::app_role
 FROM auth.users 
-WHERE email = 'admin@masteredupath.com'
+WHERE email = 'admin@fekrahedu.com'
 ON CONFLICT (user_id, role) DO NOTHING;
 
 -- رابعاً: إنشاء سجل في جدول admin_users إذا كان موجوداً
@@ -75,14 +75,14 @@ INSERT INTO public.admin_users (
 SELECT 
     id,
     'مدير النظام',
-    'admin@masteredupath.com',
+    'admin@fekrahedu.com',
     crypt('Ali@@#@@1409', gen_salt('bf')),
     'admin'::user_role,
     true,
     now(),
     now()
 FROM auth.users 
-WHERE email = 'admin@masteredupath.com'
+WHERE email = 'admin@fekrahedu.com'
 ON CONFLICT (email) DO UPDATE SET
     password_hash = crypt('Ali@@#@@1409', gen_salt('bf')),
     role = 'admin'::user_role,

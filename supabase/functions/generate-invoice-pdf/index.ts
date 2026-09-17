@@ -1,4 +1,4 @@
-// Master Edu Path — ZATCA-style Tax Invoice PDF generator (premium design)
+// FekrahEdu — ZATCA-style Tax Invoice PDF generator (premium design)
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -9,12 +9,12 @@ const corsHeaders = {
 
 // === بيانات المنصة الرسمية ===
 const PLATFORM = {
-  nameAr: "وكالة ماستر إيدو باث",
-  nameEn: "Master Edu Path Agency",
+  nameAr: "وكالة فكرة إيدو",
+  nameEn: "FekrahEdu Agency",
   legal: "تتبع لشركة علي صالح الشهري القابضة",
-  domain: "masteredupath.com",
-  website: "https://masteredupath.com",
-  email: "info@masteredupath.com",
+  domain: "fekrahedu.com",
+  website: "https://fekrahedu.com",
+  email: "info@fekrahedu.com",
   whatsapp1: "0559600824",
   whatsapp2: "0559600824",
   address: "المملكة العربية السعودية — الرياض",

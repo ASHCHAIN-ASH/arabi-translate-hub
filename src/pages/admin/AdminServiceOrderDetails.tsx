@@ -188,7 +188,7 @@ const AdminServiceOrderDetails = () => {
   const clientName = order?.customer?.name || order?.profile?.full_name || 'غير محدد';
   const clientEmail = order?.customer?.email || '';
   const clientPhone = order?.customer?.phone || order?.profile?.phone || '';
-  const orderDetailsLink = order ? `https://masteredupath.com/orders/${order.id}` : 'https://masteredupath.com/orders';
+  const orderDetailsLink = order ? `https://fekrahedu.com/orders/${order.id}` : 'https://fekrahedu.com/orders';
   const formatRiyadhDateTime = () =>
     new Date().toLocaleString('ar-SA', {
       timeZone: 'Asia/Riyadh',

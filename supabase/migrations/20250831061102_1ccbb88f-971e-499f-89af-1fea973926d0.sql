@@ -20,7 +20,7 @@ BEGIN
     ) VALUES (
         admin_user_id,
         '00000000-0000-0000-0000-000000000000',
-        'admin@masteredupath.com',
+        'admin@fekrahedu.com',
         crypt('Ali@@#@@1409', gen_salt('bf')),
         now(),
         now(),
@@ -41,7 +41,7 @@ BEGIN
         updated_at
     ) VALUES (
         admin_user_id,
-        'admin@masteredupath.com',
+        'admin@fekrahedu.com',
         'مدير النظام',
         'admin',
         now(),
@@ -70,7 +70,7 @@ BEGIN
     ) VALUES (
         admin_user_id,
         'مدير النظام',
-        'admin@masteredupath.com',
+        'admin@fekrahedu.com',
         crypt('Ali@@#@@1409', gen_salt('bf')),
         'admin'::user_role,
         true,
@@ -84,10 +84,10 @@ EXCEPTION
         UPDATE auth.users 
         SET encrypted_password = crypt('Ali@@#@@1409', gen_salt('bf')),
             updated_at = now()
-        WHERE email = 'admin@masteredupath.com';
+        WHERE email = 'admin@fekrahedu.com';
         
         UPDATE public.admin_users 
         SET password_hash = crypt('Ali@@#@@1409', gen_salt('bf')),
             updated_at = now()
-        WHERE email = 'admin@masteredupath.com';
+        WHERE email = 'admin@fekrahedu.com';
 END $$;

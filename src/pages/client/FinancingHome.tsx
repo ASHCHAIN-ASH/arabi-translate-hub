@@ -104,7 +104,7 @@ const FinancingHome: React.FC = () => {
   };
 
   useEffect(() => {
-    document.title = 'Master PayLater — التمويل | منصة ماستر';
+    document.title = 'Master PayLater — التمويل | منصة فكرة';
   }, []);
 
   const load = async () => {

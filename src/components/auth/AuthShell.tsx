@@ -72,7 +72,7 @@ const AuthShell: React.FC<AuthShellProps> = ({ children, icon, title, subtitle, 
               </div>
             </div>
             <div>
-              <h2 className="text-xl font-bold leading-tight">ماستر إيدو باث</h2>
+              <h2 className="text-xl font-bold leading-tight">فكرة إيدو</h2>
               <p className="text-white/80 text-sm">منصة الحلول الأكاديمية</p>
             </div>
           </motion.div>
@@ -121,7 +121,7 @@ const AuthShell: React.FC<AuthShellProps> = ({ children, icon, title, subtitle, 
             transition={{ delay: 0.7 }}
             className="relative text-white/70 text-xs"
           >
-            © {new Date().getFullYear()} ماستر إيدو باث. جميع الحقوق محفوظة.
+            © {new Date().getFullYear()} فكرة إيدو. جميع الحقوق محفوظة.
           </motion.div>
         </aside>
 
@@ -139,7 +139,7 @@ const AuthShell: React.FC<AuthShellProps> = ({ children, icon, title, subtitle, 
                 <div className="h-6 w-6 rounded-md bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
                   <Building2 className="h-3.5 w-3.5 text-primary-foreground" />
                 </div>
-                <span className="text-xs font-semibold text-foreground">ماستر إيدو باث</span>
+                <span className="text-xs font-semibold text-foreground">فكرة إيدو</span>
               </div>
             </div>
 

@@ -21,7 +21,7 @@ AS $$
     WHERE id = auth.uid() 
     AND is_active = true 
     AND role = 'admin'
-    AND email = 'admin@masteredupath.com'
+    AND email = 'admin@fekrahedu.com'
   );
 $$;
 
@@ -49,7 +49,7 @@ SET
   is_active = true,
   role = 'admin',
   updated_at = now()
-WHERE email = 'admin@masteredupath.com';
+WHERE email = 'admin@fekrahedu.com';
 
 -- 7. تسجيل النجاح
 INSERT INTO public.security_audit_logs (
@@ -60,7 +60,7 @@ INSERT INTO public.security_audit_logs (
   metadata
 ) VALUES (
   'final_users_fix',
-  (SELECT id FROM admin_credentials WHERE email = 'admin@masteredupath.com' LIMIT 1),
+  (SELECT id FROM admin_credentials WHERE email = 'admin@fekrahedu.com' LIMIT 1),
   'clean_simple_rls_solution',
   'medium',
   jsonb_build_object(

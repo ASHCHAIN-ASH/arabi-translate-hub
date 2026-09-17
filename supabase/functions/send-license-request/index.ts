@@ -384,7 +384,7 @@ const getClientEmailTemplate = (data: LicenseRequestData, requestNumber: string)
             <div class="logo-container">
                 <div class="logo-icon">⚖️</div>
             </div>
-            <h1 class="company-name">وكالة ماستر إيدو باث</h1>
+            <h1 class="company-name">وكالة فكرة إيدو</h1>
             <p class="company-tagline">للحلول التعليمية والملكية الفكرية المتقدمة</p>
         </div>
         
@@ -495,7 +495,7 @@ const getClientEmailTemplate = (data: LicenseRequestData, requestNumber: string)
             <div class="contact-grid">
                 <div class="contact-item">
                     <span class="icon">📧</span>
-                    <div class="text">legal@masteredupath.com</div>
+                    <div class="text">legal@fekrahedu.com</div>
                 </div>
                 <div class="contact-item">
                     <span class="icon">📱</span>
@@ -503,7 +503,7 @@ const getClientEmailTemplate = (data: LicenseRequestData, requestNumber: string)
                 </div>
                 <div class="contact-item">
                     <span class="icon">🌐</span>
-                    <div class="text">www.masteredupath.com</div>
+                    <div class="text">www.fekrahedu.com</div>
                 </div>
                 <div class="contact-item">
                     <span class="icon">📍</span>
@@ -514,7 +514,7 @@ const getClientEmailTemplate = (data: LicenseRequestData, requestNumber: string)
             <div class="footer-copyright">
                 هذا الإيميل تم إرساله تلقائياً من نظام إدارة التراخيص.<br>
                 للاستفسارات والمتابعة، يرجى التواصل عبر القنوات الرسمية المذكورة أعلاه.<br><br>
-                © 2024 وكالة ماستر إيدو باث للحلول التعليمية المتقدمة<br>
+                © 2024 وكالة فكرة إيدو للحلول التعليمية المتقدمة<br>
                 جميع الحقوق محفوظة | المملكة العربية السعودية
             </div>
         </div>
@@ -535,7 +535,7 @@ serve(async (req: Request) => {
       const data: any = body;
       await supabaseAdmin.from("inbox_messages").insert({
         sender_name: (data.contactPerson || "زائر").toString().slice(0, 200),
-        sender_email: (data.email || "unknown@masteredupath.com").toString().slice(0, 200),
+        sender_email: (data.email || "unknown@fekrahedu.com").toString().slice(0, 200),
         sender_phone: (data.phone || null) ? data.phone.toString().slice(0, 50) : null,
         subject: (`طلب ترخيص - ${data.licenseType || ''} - ${data.companyName || ''}`).toString().slice(0, 300),
         message: (data.additionalInfo || `طلب ترخيص ${data.licenseType} لـ ${data.usagePurpose}` || "").toString().slice(0, 8000),
@@ -654,7 +654,7 @@ serve(async (req: Request) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "وكالة ماستر إيدو باث <noreply@masteredupath.com>",
+        from: "وكالة فكرة إيدو <noreply@fekrahedu.com>",
         to: [requestData.email],
         subject: clientEmail.subject,
         html: clientEmail.html,
@@ -670,8 +670,8 @@ serve(async (req: Request) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "نظام التراخيص <noreply@masteredupath.com>",
-        to: ["legal@masteredupath.com", "admin@masteredupath.com", "info@masteredupath.com"],
+        from: "نظام التراخيص <noreply@fekrahedu.com>",
+        to: ["legal@fekrahedu.com", "admin@fekrahedu.com", "info@fekrahedu.com"],
         subject: adminEmail.subject,
         html: adminEmail.html,
         text: adminEmail.text,

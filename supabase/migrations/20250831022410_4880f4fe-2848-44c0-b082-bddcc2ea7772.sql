@@ -1,9 +1,9 @@
 -- Update existing tenants to match required codes and domains
 UPDATE public.tenants SET 
     code = 'mep',
-    name = 'MasterEduPath',
-    primary_domain = 'masteredupath.com',
-    extra_domains = ARRAY['www.masteredupath.com', 'ac43130c-4bba-404a-ade5-b9d62d1f8904.sandbox.lovable.dev', '*.sandbox.lovable.dev'],
+    name = 'FekrahEdu',
+    primary_domain = 'fekrahedu.com',
+    extra_domains = ARRAY['www.fekrahedu.com', 'ac43130c-4bba-404a-ade5-b9d62d1f8904.sandbox.lovable.dev', '*.sandbox.lovable.dev'],
     cookie_name = 'sid_mep',
     storage_prefix = 'uploads/mep/'
 WHERE code = 'siteA';

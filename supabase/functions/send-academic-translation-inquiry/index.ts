@@ -51,7 +51,7 @@ const handler = async (req: Request): Promise<Response> => {
       const data: any = body;
       await supabaseAdmin.from("inbox_messages").insert({
         sender_name: (data.fullName || "زائر").toString().slice(0, 200),
-        sender_email: (data.email || "unknown@masteredupath.com").toString().slice(0, 200),
+        sender_email: (data.email || "unknown@fekrahedu.com").toString().slice(0, 200),
         sender_phone: (data.phone || null) ? data.phone.toString().slice(0, 50) : null,
         subject: (`استفسار ترجمة أكاديمية: ${data.documentTitle || data.documentType || ''}`).toString().slice(0, 300),
         message: (data.additionalNotes || data.specialRequirements || `ترجمة من ${data.sourceLanguage} إلى ${data.targetLanguage}` || "").toString().slice(0, 8000),
@@ -188,8 +188,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send notification email to admin - الإيميل الرسمي للإدارة فقط
     const adminEmailResponse = await resend.emails.send({
-      from: "نظام الترجمة الأكاديمية <noreply@masteredupath.com>",
-      to: ["info@masteredupath.com"],
+      from: "نظام الترجمة الأكاديمية <noreply@fekrahedu.com>",
+      to: ["info@fekrahedu.com"],
       subject: `📚 طلب جديد للترجمة الأكاديمية - ${inquiryData.documentTitle}`,
       html: `
         <!DOCTYPE html>
@@ -350,7 +350,7 @@ const handler = async (req: Request): Promise<Response> => {
         <body>
           <div class="container">
             <div class="header">
-              <div class="company-logo">🎓 Master Edu Path</div>
+              <div class="company-logo">🎓 FekrahEdu</div>
               <h1>📚 طلب ترجمة أكاديمية جديد</h1>
               <p>تم استلام طلب جديد للترجمة الأكاديمية المتخصصة</p>
             </div>
@@ -404,7 +404,7 @@ const handler = async (req: Request): Promise<Response> => {
 
               <div class="contact-info">
                 <h3>📞 معلومات التواصل العاجل</h3>
-                <p><strong>البريد الإلكتروني:</strong> <span class="ltr">info@masteredupath.com</span></p>
+                <p><strong>البريد الإلكتروني:</strong> <span class="ltr">info@fekrahedu.com</span></p>
                 <p><strong>الهاتف:</strong> <span class="ltr">0559600824</span></p>
                 <p><strong>واتساب:</strong> <span class="ltr">0559600824</span></p>
                 <p><strong>أوقات العمل:</strong> الأحد - الخميس، 10:00 ص - 7:00 م</p>
@@ -412,7 +412,7 @@ const handler = async (req: Request): Promise<Response> => {
             </div>
             
             <div class="footer">
-              <div class="company-logo">Master Edu Path</div>
+              <div class="company-logo">FekrahEdu</div>
               <p><strong>شكراً لاختيارك خدماتنا المتخصصة</strong></p>
               <p>نحن ملتزمون بتقديم أفضل خدمات الترجمة الأكاديمية</p>
               <p style="font-size: 14px; opacity: 0.8; margin-top: 15px;">
@@ -429,7 +429,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send confirmation email to client
     const clientEmailResponse = await resend.emails.send({
-      from: "فريق الترجمة الأكاديمية <noreply@masteredupath.com>",
+      from: "فريق الترجمة الأكاديمية <noreply@fekrahedu.com>",
       to: [inquiryData.email],
       subject: `تأكيد استلام طلب الترجمة الأكاديمية - ${inquiryData.documentTitle}`,
       html: `
@@ -587,7 +587,7 @@ const handler = async (req: Request): Promise<Response> => {
         <body>
           <div class="container">
             <div class="header">
-              <div class="company-logo">🎓 Master Edu Path</div>
+              <div class="company-logo">🎓 FekrahEdu</div>
               <h1>📚 تم استلام طلبك بنجاح!</h1>
               <p>شكراً لاختيارك خدمة الترجمة الأكاديمية المتخصصة</p>
             </div>
@@ -644,7 +644,7 @@ const handler = async (req: Request): Promise<Response> => {
 
               <div class="contact-info">
                 <h3>📞 معلومات التواصل:</h3>
-                <p><strong>البريد الإلكتروني:</strong> <span class="ltr">info@masteredupath.com</span></p>
+                <p><strong>البريد الإلكتروني:</strong> <span class="ltr">info@fekrahedu.com</span></p>
                 <p><strong>الهاتف:</strong> <span class="ltr">0559600824</span></p>
                 <p><strong>واتساب:</strong> <span class="ltr">0559600824</span></p>
                 <p><strong>أوقات العمل:</strong> الأحد - الخميس، 10:00 ص - 7:00 م</p>
@@ -652,7 +652,7 @@ const handler = async (req: Request): Promise<Response> => {
             </div>
             
             <div class="footer">
-              <div class="company-logo">Master Edu Path</div>
+              <div class="company-logo">FekrahEdu</div>
               <p><strong>شكراً لثقتك في خدماتنا المتخصصة</strong></p>
               <p>نتطلع لمساعدتك في تحقيق أهدافك الأكاديمية والبحثية</p>
               <p style="font-size: 14px; margin-top: 15px; opacity: 0.8;">

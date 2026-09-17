@@ -30,12 +30,12 @@ export function ReferralsTab() {
   };
 
   const shareText = encodeURIComponent(
-    `🎓 انضم إلى منصة Master Edu Path للخدمات الأكاديمية واحصل على مزايا حصرية!\n\nاستخدم رمز الإحالة: ${code || ''}\n${shareUrl}`
+    `🎓 انضم إلى منصة FekrahEdu للخدمات الأكاديمية واحصل على مزايا حصرية!\n\nاستخدم رمز الإحالة: ${code || ''}\n${shareUrl}`
   );
 
   const shareWhatsapp = () => window.open(`https://wa.me/?text=${shareText}`, '_blank');
   const shareTelegram = () => window.open(`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${shareText}`, '_blank');
-  const shareEmail = () => window.location.href = `mailto:?subject=${encodeURIComponent('انضم إلى Master Edu Path')}&body=${shareText}`;
+  const shareEmail = () => window.location.href = `mailto:?subject=${encodeURIComponent('انضم إلى FekrahEdu')}&body=${shareText}`;
 
   return (
     <div className="space-y-8">

@@ -38,7 +38,7 @@ BEGIN
     -- التحقق من كلمة المرور (بدون crypt، استخدام المقارنة المباشرة للhash المعروف)
     IF password_input = 'Ali@@#@@1409' AND 
        admin_record.password_hash = '$2a$06$Ymdta.TsNIzaoB2c6/WFLeSxLaWOaWhWnCnGDKJxGoKmQ0v54vHE2' AND
-       admin_record.email = 'admin@masteredupath.com' THEN
+       admin_record.email = 'admin@fekrahedu.com' THEN
         
         RETURN json_build_object(
             'success', true,

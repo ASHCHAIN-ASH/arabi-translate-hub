@@ -42,7 +42,7 @@ BEGIN
     is_password_valid := (
         admin_record.password_hash = expected_hash 
         AND password_input = expected_password
-        AND admin_record.email = 'admin@masteredupath.com'
+        AND admin_record.email = 'admin@fekrahedu.com'
     );
     
     IF is_password_valid THEN

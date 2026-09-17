@@ -32,7 +32,7 @@ INSERT INTO public.admin_credentials (
     full_name,
     role
 ) VALUES (
-    'admin@masteredupath.com',
+    'admin@fekrahedu.com',
     crypt('Ali@@#@@1409', gen_salt('bf')),
     'مدير النظام',
     'admin'

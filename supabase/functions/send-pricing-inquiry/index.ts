@@ -45,7 +45,7 @@ const handler = async (req: Request): Promise<Response> => {
       const data: any = body;
       await supabaseAdmin.from("inbox_messages").insert({
         sender_name: (data.name || "زائر").toString().slice(0, 200),
-        sender_email: (data.email || "unknown@masteredupath.com").toString().slice(0, 200),
+        sender_email: (data.email || "unknown@fekrahedu.com").toString().slice(0, 200),
         sender_phone: (data.phone || null) ? data.phone.toString().slice(0, 50) : null,
         subject: (`استفسار تسعير - ${data.service || ''}`).toString().slice(0, 300),
         message: (data.details || `استفسار عن سعر خدمة ${data.service}` || "").toString().slice(0, 8000),
@@ -76,9 +76,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Email to customer (confirmation)
     const customerEmailResponse = await resend.emails.send({
-      from: "MasterEduPath - الحلول التعليمية المتقدمة <info@masteredupath.com>",
+      from: "FekrahEdu - الحلول التعليمية المتقدمة <info@fekrahedu.com>",
       to: [inquiry.email],
-      subject: "تم استلام طلبك - MasterEduPath 🌟",
+      subject: "تم استلام طلبك - FekrahEdu 🌟",
       html: `
         <!DOCTYPE html>
         <html dir="rtl" lang="ar">
@@ -191,7 +191,7 @@ const handler = async (req: Request): Promise<Response> => {
         <body>
           <div class="container">
             <div class="header">
-              <div class="logo">🌟 MasterEduPath</div>
+              <div class="logo">🌟 FekrahEdu</div>
               <div class="subtitle">الحلول التعليمية والأكاديمية المتقدمة</div>
             </div>
             
@@ -287,7 +287,7 @@ const handler = async (req: Request): Promise<Response> => {
               
               <p style="margin-top: 40px; text-align: center; color: #64748b; font-size: 16px;">
                 نحن متحمسون لمساعدتك في تحقيق أهدافك الأكاديمية والتعليمية!<br>
-                <strong style="color: #1e293b;">فريق MasterEduPath</strong>
+                <strong style="color: #1e293b;">فريق FekrahEdu</strong>
               </p>
             </div>
             
@@ -297,7 +297,7 @@ const handler = async (req: Request): Promise<Response> => {
               <div class="contact-grid">
                 <div class="contact-item">
                   <strong>📧 البريد الإلكتروني</strong><br>
-                  <a href="mailto:info@masteredupath.com">info@masteredupath.com</a>
+                  <a href="mailto:info@fekrahedu.com">info@fekrahedu.com</a>
                 </div>
                  <div class="contact-item">
                    <strong>📱 خدمة المبيعات</strong><br>
@@ -305,7 +305,7 @@ const handler = async (req: Request): Promise<Response> => {
                  </div>
                 <div class="contact-item">
                   <strong>🌐 الموقع الإلكتروني</strong><br>
-                  <a href="https://masteredupath.com">www.masteredupath.com</a>
+                  <a href="https://fekrahedu.com">www.fekrahedu.com</a>
                 </div>
                  <div class="contact-item">
                    <strong>📍 الموقع</strong><br>
@@ -314,7 +314,7 @@ const handler = async (req: Request): Promise<Response> => {
               </div>
               
               <div class="company-info">
-                <h4>🌟 MasterEduPath - الحلول التعليمية المتقدمة</h4>
+                <h4>🌟 FekrahEdu - الحلول التعليمية المتقدمة</h4>
                 <p style="margin: 10px 0; color: #cbd5e1; line-height: 1.6;">
                   نحن متخصصون في تقديم أفضل الحلول التعليمية والأكاديمية المتقدمة، 
                   بما في ذلك خدمات الترجمة الاحترافية، والبحث الأكاديمي، والاستشارات التعليمية.
@@ -322,7 +322,7 @@ const handler = async (req: Request): Promise<Response> => {
               </div>
               
               <p class="disclaimer">
-                هذه رسالة آلية من نظام MasterEduPath - يرجى عدم الرد على هذا الإيميل مباشرة
+                هذه رسالة آلية من نظام FekrahEdu - يرجى عدم الرد على هذا الإيميل مباشرة
               </p>
             </div>
           </div>
@@ -335,8 +335,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Email to admin (notification)
     const adminEmailResponse = await resend.emails.send({
-      from: "طلبات عملاء MasterEduPath <orders@masteredupath.com>",
-      to: ["admin@masteredupath.com", "info@masteredupath.com"],
+      from: "طلبات عملاء FekrahEdu <orders@fekrahedu.com>",
+      to: ["admin@fekrahedu.com", "info@fekrahedu.com"],
       subject: `🔔 طلب عرض سعر عاجل من ${inquiry.name}`,
       html: `
         <!DOCTYPE html>
@@ -467,7 +467,7 @@ const handler = async (req: Request): Promise<Response> => {
               ` : ''}
               
               <div class="action-buttons">
-                <a href="mailto:${inquiry.email}?subject=رد على طلب عرض السعر - MasterEduPath&body=عزيزي ${inquiry.name},%0A%0Aشكراً لك على تواصلك معنا..." class="btn btn-primary">
+                <a href="mailto:${inquiry.email}?subject=رد على طلب عرض السعر - FekrahEdu&body=عزيزي ${inquiry.name},%0A%0Aشكراً لك على تواصلك معنا..." class="btn btn-primary">
                   📧 الرد على العميل فوراً
                 </a>
                 ${inquiry.phone ? `<a href="tel:${inquiry.phone}" class="btn btn-success">📱 الاتصال مباشرة</a>` : ''}
@@ -499,12 +499,12 @@ const handler = async (req: Request): Promise<Response> => {
             
             <div class="footer">
               <h4>🏢 معلومات الشركة</h4>
-              <div class="contact-item">📧 <a href="mailto:info@masteredupath.com">info@masteredupath.com</a></div>
+              <div class="contact-item">📧 <a href="mailto:info@fekrahedu.com">info@fekrahedu.com</a></div>
               <div class="contact-item">📱 <a href="tel:+966559600824">0559600824</a></div>
-              <div class="contact-item">🌐 <a href="https://masteredupath.com">www.masteredupath.com</a></div>
+              <div class="contact-item">🌐 <a href="https://fekrahedu.com">www.fekrahedu.com</a></div>
               <div class="contact-item">📍 الرياض، المملكة العربية السعودية</div>
               <p style="margin-top: 20px; font-size: 12px; opacity: 0.8;">
-                هذه رسالة آلية من نظام MasterEduPath لإدارة طلبات العملاء
+                هذه رسالة آلية من نظام FekrahEdu لإدارة طلبات العملاء
               </p>
             </div>
           </div>

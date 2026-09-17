@@ -56,7 +56,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email to customer
     const customerEmailResponse = await resend.emails.send({
-      from: "عضوية ماستر <info@masteredupath.com>",
+      from: "عضوية فكرة <info@fekrahedu.com>",
       to: [email],
       subject: `تأكيد طلب الاشتراك في ${membershipNameAr} - ${name}`,
       html: `
@@ -86,7 +86,7 @@ const handler = async (req: Request): Promise<Response> => {
           <div class="container">
             <div class="header">
               <h1>🎉 شكراً لك ${name}</h1>
-              <p>تم استلام طلب اشتراكك في عضوية ماستر بنجاح</p>
+              <p>تم استلام طلب اشتراكك في عضوية فكرة بنجاح</p>
             </div>
             
             <div class="content">
@@ -126,7 +126,7 @@ const handler = async (req: Request): Promise<Response> => {
             </div>
 
             <div class="footer">
-              <h3>وكالة ماستر إيدو باث</h3>
+              <h3>وكالة فكرة إيدو</h3>
               <p>شريكك الموثوق في رحلة التعلم والتطوير المهني</p>
               <p>MASTER EDU PATH AGENCY</p>
             </div>
@@ -138,8 +138,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send notification to admin
     const adminEmailResponse = await resend.emails.send({
-      from: "نظام العضويات <info@masteredupath.com>",
-      to: ["info@masteredupath.com"],
+      from: "نظام العضويات <info@fekrahedu.com>",
+      to: ["info@fekrahedu.com"],
       subject: `طلب اشتراك جديد - ${membershipNameAr} من ${name}`,
       html: `
         <!DOCTYPE html>
@@ -159,7 +159,7 @@ const handler = async (req: Request): Promise<Response> => {
           <div class="container">
             <div class="header">
               <h2>🔔 طلب اشتراك جديد</h2>
-              <p>تم استلام طلب اشتراك جديد في عضوية ماستر</p>
+              <p>تم استلام طلب اشتراك جديد في عضوية فكرة</p>
             </div>
             
             <div class="details">

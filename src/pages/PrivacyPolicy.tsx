@@ -63,7 +63,7 @@ const PrivacyPolicy = () => {
               سياسة الخصوصية والحماية
             </h1>
             <p className="text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              التزام وكالة ماستر إيدو باث الصارم بحماية خصوصيتكم وضمان أمان معلوماتكم الشخصية والأكاديمية
+              التزام وكالة فكرة إيدو الصارم بحماية خصوصيتكم وضمان أمان معلوماتكم الشخصية والأكاديمية
             </p>
             <Button 
               onClick={downloadPrivacyPolicy}
@@ -79,7 +79,7 @@ const PrivacyPolicy = () => {
             <Card className="shadow-2xl border-0 bg-card/90 backdrop-blur-sm">
               <CardHeader className="text-center pb-6 bg-gradient-to-r from-primary/5 to-primary/10">
                 <CardTitle className="text-2xl lg:text-3xl text-primary font-bold">
-                  وكالة ماستر إيدو باث - سياسة الخصوصية الشاملة
+                  وكالة فكرة إيدو - سياسة الخصوصية الشاملة
                 </CardTitle>
                 <p className="text-muted-foreground mt-2">
                   نسخة محدثة اعتباراً من: {new Date().toLocaleDateString('ar-SA')}
@@ -95,7 +95,7 @@ const PrivacyPolicy = () => {
                   </h3>
                   <div className="space-y-4 text-muted-foreground leading-relaxed">
                     <p className="font-semibold text-foreground text-lg">
-                      في وكالة ماستر إيدو باث، نؤمن بأن حماية خصوصيتكم ليست مجرد التزام قانوني، بل قيمة أساسية في علاقتنا المهنية.
+                      في وكالة فكرة إيدو، نؤمن بأن حماية خصوصيتكم ليست مجرد التزام قانوني، بل قيمة أساسية في علاقتنا المهنية.
                     </p>
                     <div className="grid lg:grid-cols-3 gap-4">
                       <div className="bg-blue-50 dark:bg-blue-950/20 p-4 rounded-lg text-center">
@@ -445,7 +445,7 @@ const PrivacyPolicy = () => {
                       <div className="text-center">
                         <p className="font-semibold text-primary">الطريقة الأولى</p>
                         <p className="text-muted-foreground">إرسال طلب عبر البريد الإلكتروني</p>
-                        <p className="text-xs text-primary">info@masteredupath.com</p>
+                        <p className="text-xs text-primary">info@fekrahedu.com</p>
                       </div>
                       <div className="text-center">
                         <p className="font-semibold text-primary">الطريقة الثانية</p>
@@ -658,7 +658,7 @@ const PrivacyPolicy = () => {
                       <div className="space-y-3 text-blue-700 text-sm lg:text-base">
                         <div>
                           <p className="font-semibold">📧 البريد الإلكتروني المتخصص:</p>
-                          <p className="text-blue-600">privacy@masteredupath.com</p>
+                          <p className="text-blue-600">privacy@fekrahedu.com</p>
                         </div>
                         <div>
                           <p className="font-semibold">📞 خط الطوارئ الأمني:</p>
@@ -771,7 +771,7 @@ const PrivacyPolicy = () => {
             <div className="flex flex-wrap justify-center gap-6 text-sm">
               <div className="flex items-center gap-2 text-primary">
                 <span>📧</span>
-                <span>info@masteredupath.com</span>
+                <span>info@fekrahedu.com</span>
               </div>
               <div className="flex items-center gap-2 text-primary">
                 <span>📞</span>

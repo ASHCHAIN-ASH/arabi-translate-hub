@@ -86,7 +86,7 @@ const generateCustomerEmailTemplate = (inquiry: ServiceInquiry, serviceName: str
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>تأكيد استلام طلبكم - وكالة ماستر إيدو باث</title>
+      <title>تأكيد استلام طلبكم - وكالة فكرة إيدو</title>
       <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
       <style>
         * {
@@ -655,7 +655,7 @@ const generateCustomerEmailTemplate = (inquiry: ServiceInquiry, serviceName: str
           <div class="header-content">
             <div class="notification-badge">✅ تم استلام طلبكم بنجاح</div>
             <div class="main-logo">🎓</div>
-            <h1 class="company-name">وكالة ماستر إيدو باث</h1>
+            <h1 class="company-name">وكالة فكرة إيدو</h1>
             <p class="company-tagline">للخدمات الأكاديمية والترجمة المتخصصة</p>
             <div class="service-badge">
               <span class="icon">${serviceIcon}</span>
@@ -783,7 +783,7 @@ const generateCustomerEmailTemplate = (inquiry: ServiceInquiry, serviceName: str
               <div class="contact-card">
                 <span class="icon">📧</span>
                 <div class="label">البريد الإلكتروني</div>
-                <div class="value">info@masteredupath.com</div>
+                <div class="value">info@fekrahedu.com</div>
               </div>
               
               <div class="contact-card">
@@ -795,20 +795,20 @@ const generateCustomerEmailTemplate = (inquiry: ServiceInquiry, serviceName: str
               <div class="contact-card">
                 <span class="icon">🌐</span>
                 <div class="label">الموقع الإلكتروني</div>
-                <div class="value">www.masteredupath.com</div>
+                <div class="value">www.fekrahedu.com</div>
               </div>
             </div>
           </div>
         </div>
         
         <div class="footer">
-          <h4>وكالة ماستر إيدو باث</h4>
+          <h4>وكالة فكرة إيدو</h4>
           <p class="footer-tagline">"نحو التميز الأكاديمي والمهني"</p>
           
           <div class="footer-info">
             <div class="info-block">
               <h5>🏢 معلومات الشركة</h5>
-              <p>وكالة ماستر إيدو باث للخدمات الأكاديمية</p>
+              <p>وكالة فكرة إيدو للخدمات الأكاديمية</p>
               <p>المملكة العربية السعودية</p>
               <p>مرخصة من وزارة التجارة والاستثمار</p>
             </div>
@@ -845,8 +845,8 @@ const generateCustomerEmailTemplate = (inquiry: ServiceInquiry, serviceName: str
           </div>
           
           <div class="copyright">
-            © 2024 وكالة ماستر إيدو باث للخدمات الأكاديمية - جميع الحقوق محفوظة<br>
-            <small>Master Edu Path Agency - All Rights Reserved</small><br>
+            © 2024 وكالة فكرة إيدو للخدمات الأكاديمية - جميع الحقوق محفوظة<br>
+            <small>FekrahEdu Agency - All Rights Reserved</small><br>
             <small>ترخيص رقم: 1234567890 - وزارة التجارة والاستثمار - المملكة العربية السعودية</small><br><br>
             <strong style="color: #94a3b8;">⚖️ إشعار الملكية الفكرية:</strong><br>
             <small style="font-size: 12px; line-height: 1.5;">
@@ -869,7 +869,7 @@ const generateAdminEmailTemplate = (inquiry: ServiceInquiry, serviceName: string
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>طلب خدمة جديد - وكالة ماستر إيدو باث</title>
+      <title>طلب خدمة جديد - وكالة فكرة إيدو</title>
       <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
       <style>
         * {
@@ -1396,11 +1396,11 @@ const generateAdminEmailTemplate = (inquiry: ServiceInquiry, serviceName: string
         </div>
         
         <div class="footer">
-          <h4>وكالة ماستر إيدو باث - نظام إدارة الطلبات</h4>
+          <h4>وكالة فكرة إيدو - نظام إدارة الطلبات</h4>
           <p>تم إرسال هذا التنبيه تلقائياً من نظام إدارة الطلبات</p>
           <p>للاستفسارات التقنية، يرجى التواصل مع فريق تطوير النظام</p>
           <p style="margin-top: 20px; font-size: 14px; opacity: 0.8;">
-            © 2024 وكالة ماستر إيدو باث - جميع الحقوق محفوظة
+            © 2024 وكالة فكرة إيدو - جميع الحقوق محفوظة
           </p>
         </div>
       </div>
@@ -1422,7 +1422,7 @@ const handler = async (req: Request): Promise<Response> => {
       const data: any = body;
       await supabaseAdmin.from("inbox_messages").insert({
         sender_name: (data.name || "زائر").toString().slice(0, 200),
-        sender_email: (data.email || "unknown@masteredupath.com").toString().slice(0, 200),
+        sender_email: (data.email || "unknown@fekrahedu.com").toString().slice(0, 200),
         sender_phone: (data.phone || null) ? data.phone.toString().slice(0, 50) : null,
         subject: (`استفسار خدمة: ${data.serviceName || data.serviceType || ''}`).toString().slice(0, 300),
         message: (data.projectDetails || data.additionalNotes || `استفسار عن خدمة ${data.serviceName || data.serviceType}` || "").toString().slice(0, 8000),
@@ -1449,7 +1449,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email to customer
     const customerEmailResponse = await resend.emails.send({
-      from: "وكالة ماستر إيدو باث <noreply@masteredupath.com>",
+      from: "وكالة فكرة إيدو <noreply@fekrahedu.com>",
       to: [inquiry.email],
       subject: `تأكيد استلام طلبكم - ${serviceName}`,
       html: customerTemplate,
@@ -1459,8 +1459,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email to admin - الإيميل الرسمي للإدارة
     const adminEmailResponse = await resend.emails.send({
-      from: "نظام الطلبات <system@masteredupath.com>",
-      to: ["info@masteredupath.com"],
+      from: "نظام الطلبات <system@fekrahedu.com>",
+      to: ["info@fekrahedu.com"],
       subject: `🚨 طلب جديد عاجل: ${serviceName} - ${inquiry.name}`,
       html: adminTemplate,
     });

@@ -52,10 +52,10 @@ const Header = () => {
             </div>
             <div className="text-right">
               <h1 className="text-sm lg:text-base font-bold text-foreground leading-tight tracking-tight">
-                ماستر إيدو باث
+                فكرة إيدو
               </h1>
               <p className="text-[10px] lg:text-xs text-muted-foreground font-medium hidden sm:block">
-                MasterEduPath
+                FekrahEdu
               </p>
             </div>
           </Link>
@@ -171,8 +171,8 @@ const Header = () => {
                       <GraduationCap className="h-5 w-5 text-white" />
                     </div>
                     <div>
-                      <span className="font-bold text-foreground">ماستر إيدو باث</span>
-                      <p className="text-xs text-muted-foreground">MasterEduPath</p>
+                      <span className="font-bold text-foreground">فكرة إيدو</span>
+                      <p className="text-xs text-muted-foreground">FekrahEdu</p>
                     </div>
                   </div>
                   

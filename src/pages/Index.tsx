@@ -128,24 +128,24 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background" dir="rtl">
       <SEO
-        title="MasterEduPath | خدمات بحثية وأكاديمية متقدمة — ترجمة، نشر علمي، تحليل SPSS"
-        description="وكالة MasterEduPath الأكاديمية: ترجمة بحثية احترافية، نشر علمي في مجلات Scopus وISI، تحليل إحصائي SPSS، تدقيق لغوي، ودعم رسائل الماجستير والدكتوراه. أكثر من 15,000 باحث في 25+ دولة. استشارة مجانية خلال ساعة."
-        keywords="MasterEduPath, ماستر إيدو باث, خدمات بحثية, ترجمة أكاديمية, نشر علمي, Scopus, ISI, تدقيق لغوي, تحليل إحصائي, SPSS, AMOS, جامعات سعودية, بحث علمي, رسائل ماجستير, رسائل دكتوراه, خدمات أكاديمية السعودية"
-        url="https://masteredupath.com/"
-        image="https://masteredupath.com/assets/national-day-logo-original.webp"
+        title="FekrahEdu | خدمات بحثية وأكاديمية متقدمة — ترجمة، نشر علمي، تحليل SPSS"
+        description="وكالة FekrahEdu الأكاديمية: ترجمة بحثية احترافية، نشر علمي في مجلات Scopus وISI، تحليل إحصائي SPSS، تدقيق لغوي، ودعم رسائل الماجستير والدكتوراه. أكثر من 15,000 باحث في 25+ دولة. استشارة مجانية خلال ساعة."
+        keywords="FekrahEdu, فكرة إيدو, خدمات بحثية, ترجمة أكاديمية, نشر علمي, Scopus, ISI, تدقيق لغوي, تحليل إحصائي, SPSS, AMOS, جامعات سعودية, بحث علمي, رسائل ماجستير, رسائل دكتوراه, خدمات أكاديمية السعودية"
+        url="https://fekrahedu.com/"
+        image="https://fekrahedu.com/assets/national-day-logo-original.webp"
         schema={[
           {
             "@context": "https://schema.org",
             "@type": "WebSite",
-            "name": "MasterEduPath",
-            "alternateName": "ماستر إيدو باث",
-            "url": "https://masteredupath.com/",
+            "name": "FekrahEdu",
+            "alternateName": "فكرة إيدو",
+            "url": "https://fekrahedu.com/",
             "inLanguage": "ar-SA",
             "potentialAction": {
               "@type": "SearchAction",
               "target": {
                 "@type": "EntryPoint",
-                "urlTemplate": "https://masteredupath.com/search?q={search_term_string}"
+                "urlTemplate": "https://fekrahedu.com/search?q={search_term_string}"
               },
               "query-input": "required name=search_term_string"
             }
@@ -153,14 +153,14 @@ const Index = () => {
           {
             "@context": "https://schema.org",
             "@type": "EducationalOrganization",
-            "name": "MasterEduPath Agency",
-            "alternateName": "وكالة ماستر إيدو باث",
+            "name": "FekrahEdu Agency",
+            "alternateName": "وكالة فكرة إيدو",
             "description": "وكالة متخصصة في تقديم الخدمات الأكاديمية والبحثية للطلاب والباحثين",
-            "url": "https://masteredupath.com/",
-            "logo": "https://masteredupath.com/assets/national-day-logo-original.webp",
-            "image": "https://masteredupath.com/assets/national-day-logo-original.webp",
+            "url": "https://fekrahedu.com/",
+            "logo": "https://fekrahedu.com/assets/national-day-logo-original.webp",
+            "image": "https://fekrahedu.com/assets/national-day-logo-original.webp",
             "telephone": "+966559600824",
-            "email": "info@masteredupath.com",
+            "email": "info@fekrahedu.com",
             "address": {
               "@type": "PostalAddress",
               "addressLocality": "جدة",
@@ -188,31 +188,31 @@ const Index = () => {
           {
             "@context": "https://schema.org",
             "@type": "ItemList",
-            "name": "خدمات MasterEduPath الأكاديمية",
+            "name": "خدمات FekrahEdu الأكاديمية",
             "itemListElement": [
               {
                 "@type": "ListItem",
                 "position": 1,
                 "name": "الترجمة الأكاديمية",
-                "url": "https://masteredupath.com/translation-services"
+                "url": "https://fekrahedu.com/translation-services"
               },
               {
                 "@type": "ListItem",
                 "position": 2,
                 "name": "خدمات البحث العلمي",
-                "url": "https://masteredupath.com/research-services"
+                "url": "https://fekrahedu.com/research-services"
               },
               {
                 "@type": "ListItem",
                 "position": 3,
                 "name": "المراجعة والتدقيق اللغوي",
-                "url": "https://masteredupath.com/services/editing-services"
+                "url": "https://fekrahedu.com/services/editing-services"
               },
               {
                 "@type": "ListItem",
                 "position": 4,
                 "name": "النشر الأكاديمي",
-                "url": "https://masteredupath.com/research/journal-publication"
+                "url": "https://fekrahedu.com/research/journal-publication"
               }
             ]
           },
@@ -224,7 +224,7 @@ const Index = () => {
                 "@type": "ListItem",
                 "position": 1,
                 "name": "الرئيسية",
-                "item": "https://masteredupath.com/"
+                "item": "https://fekrahedu.com/"
               }
             ]
           },
@@ -234,7 +234,7 @@ const Index = () => {
             "mainEntity": [
               {
                 "@type": "Question",
-                "name": "ما هي الخدمات التي تقدمها وكالة MasterEduPath؟",
+                "name": "ما هي الخدمات التي تقدمها وكالة FekrahEdu؟",
                 "acceptedAnswer": {
                   "@type": "Answer",
                   "text": "نقدم ترجمة أكاديمية احترافية، نشر علمي في مجلات Scopus وISI، تحليل إحصائي SPSS وAMOS، تدقيق لغوي، وخدمات شاملة لرسائل الماجستير والدكتوراه."
@@ -242,7 +242,7 @@ const Index = () => {
               },
               {
                 "@type": "Question",
-                "name": "كم تستغرق الخدمات لدى MasterEduPath؟",
+                "name": "كم تستغرق الخدمات لدى FekrahEdu؟",
                 "acceptedAnswer": {
                   "@type": "Answer",
                   "text": "نلتزم بأسرع تسليم في السوق — ابتداءً من 24 ساعة لمعظم الخدمات حسب حجم العمل ومتطلباته."
@@ -1014,7 +1014,7 @@ const Index = () => {
               <div className="aspect-[16/7] sm:aspect-[16/6] relative">
                 <motion.img
                   src={partnershipHandshakeImg}
-                  alt="شراكة بين ماستر إيدو باث ومؤسسات أكاديمية - مصافحة نجاح"
+                  alt="شراكة بين فكرة إيدو ومؤسسات أكاديمية - مصافحة نجاح"
                   className="absolute inset-0 w-full h-full object-cover"
                   loading="lazy"
                   whileHover={{ scale: 1.05 }}

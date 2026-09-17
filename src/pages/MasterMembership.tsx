@@ -251,7 +251,7 @@ const MasterMembership = () => {
               className="mb-8"
             >
               <h1 className="text-4xl md:text-6xl lg:text-8xl font-bold mb-6 bg-gradient-to-l from-white via-blue-100 to-indigo-200 bg-clip-text text-transparent leading-tight">
-                عضوية ماستر
+                عضوية فكرة
               </h1>
               <div className="w-40 h-1.5 bg-gradient-to-l from-blue-500 to-indigo-500 mx-auto rounded-full mb-8"></div>
               <h2 className="text-xl md:text-3xl font-semibold text-blue-200 mb-4">
@@ -432,7 +432,7 @@ const MasterMembership = () => {
 
                       {/* Corporate Header */}
                       <div className="absolute top-6 right-6 text-white text-sm font-bold opacity-95 z-20">
-                        ماستر إيدو باث الأكاديمية
+                        فكرة إيدو الأكاديمية
                       </div>
                       
                       <div className="absolute top-6 left-6 z-20">
@@ -494,7 +494,7 @@ const MasterMembership = () => {
                       </div>
 
                       <div className="absolute bottom-2 right-6 text-white/70 text-xs font-bold z-20">
-                        MASTEREDUPATH
+                        fekrahedu
                       </div>
 
                       {/* Contactless Symbol */}
@@ -947,7 +947,7 @@ const MasterMembership = () => {
                   >
                     <Crown className="w-20 h-20 md:w-24 md:h-24 mx-auto mb-6 text-yellow-300" />
                   </motion.div>
-                  <h3 className="text-3xl md:text-4xl font-bold mb-4">وكالة ماستر إيدو باث الأكاديمية</h3>
+                  <h3 className="text-3xl md:text-4xl font-bold mb-4">وكالة فكرة إيدو الأكاديمية</h3>
                   <p className="text-xl md:text-2xl mb-8">شريكك الموثوق في رحلة التميز الأكاديمي والتطوير المهني العالمي</p>
                   <div className="text-base md:text-lg text-blue-200 font-medium">
                     معتمدة دولياً • ISO 9001 • أكثر من 75,000 عضو حول العالم

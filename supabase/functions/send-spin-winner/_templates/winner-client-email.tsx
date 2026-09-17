@@ -47,7 +47,7 @@ export const WinnerClientEmail = ({
         <Section style={header}>
           <div style={headerContent}>
             <Text style={logoText}>مسار الخبراء للتعليم</Text>
-            <Text style={headerSubtitle}>MasterEduPath</Text>
+            <Text style={headerSubtitle}>FekrahEdu</Text>
           </div>
         </Section>
 
@@ -102,9 +102,9 @@ export const WinnerClientEmail = ({
           {/* Contact Section */}
           <Section style={contactSection}>
             <Text style={contactTitle}>📞 للاستفسارات</Text>
-            <Text style={contactInfo}>📧 info@masteredupath.com</Text>
+            <Text style={contactInfo}>📧 info@fekrahedu.com</Text>
             <Text style={contactInfo}>📱 966559600824+</Text>
-            <Text style={contactInfo}>🌐 www.masteredupath.com</Text>
+            <Text style={contactInfo}>🌐 www.fekrahedu.com</Text>
           </Section>
         </Section>
 

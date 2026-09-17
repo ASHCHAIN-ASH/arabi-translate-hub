@@ -403,7 +403,7 @@ export default function EmailManagement() {
                       </div>
                       <div className="text-right">
                         <p className="text-sm text-muted-foreground">
-                          من: info@masteredupath.com
+                          من: info@fekrahedu.com
                         </p>
                         {log.template_key && (
                           <p className="text-xs text-muted-foreground">

@@ -199,7 +199,7 @@ BEGIN
       'name', COALESCE(NEW.client_full_name, 'عميلنا'),
       'contract_number', NEW.contract_number,
       'title', NEW.title,
-      'link', 'https://masteredupath.com/contracts/sign/' || NEW.verification_token
+      'link', 'https://fekrahedu.com/contracts/sign/' || NEW.verification_token
     ),
     'contract', NEW.id::text, NEW.user_id
   );

@@ -1,4 +1,4 @@
-# تقرير الأمان - MasterEduPath
+# تقرير الأمان - FekrahEdu
 
 ## ملخص الفحص الأمني
 
@@ -40,17 +40,17 @@
 
 ```bash
 # فحص robots.txt
-curl -I https://masteredupath.com/robots.txt
-curl https://masteredupath.com/robots.txt
+curl -I https://fekrahedu.com/robots.txt
+curl https://fekrahedu.com/robots.txt
 
 # فحص sitemap
-curl -I https://masteredupath.com/sitemap.xml
+curl -I https://fekrahedu.com/sitemap.xml
 
 # فحص رؤوس الأمان
-curl -I https://masteredupath.com/
+curl -I https://fekrahedu.com/
 
 # فحص شهادة SSL
-openssl s_client -connect masteredupath.com:443 -servername masteredupath.com
+openssl s_client -connect fekrahedu.com:443 -servername fekrahedu.com
 ```
 
 ### 🔒 توصيات إضافية للأمان
@@ -95,11 +95,11 @@ openssl s_client -connect masteredupath.com:443 -servername masteredupath.com
 ### 📞 الإبلاغ عن الثغرات
 
 إذا اكتشفت ثغرة أمنية، يرجى التواصل عبر:
-- البريد الإلكتروني: security@masteredupath.com
+- البريد الإلكتروني: security@fekrahedu.com
 - الواتساب: +966536990321
 
 ---
 
 **آخر تحديث**: 2025-10-03  
 **الإصدار**: 1.0  
-**المسؤول**: فريق الأمان - MasterEduPath
+**المسؤول**: فريق الأمان - FekrahEdu

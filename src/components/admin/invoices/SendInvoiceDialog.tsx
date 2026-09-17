@@ -31,8 +31,8 @@ export default function SendInvoiceDialog({ open, onOpenChange, invoice, onSent 
     if (!invoice) return;
     setTo(invoice.customer_email ?? '');
     setCc('');
-    setSubject(`فاتورة ${invoice.invoice_number} — منصة ماستر إيدو باث`);
-    setMessage(`عزيزنا ${invoice.customer_name ?? ''}،\n\nنرفق لكم الفاتورة رقم ${invoice.invoice_number} بمبلغ إجمالي ${InvoiceService.formatCurrency(invoice.total_amount, invoice.currency)}.\n\nللاستفسار يرجى التواصل معنا.\n\nمع التحية،\nفريق ماستر إيدو باث`);
+    setSubject(`فاتورة ${invoice.invoice_number} — منصة فكرة إيدو`);
+    setMessage(`عزيزنا ${invoice.customer_name ?? ''}،\n\nنرفق لكم الفاتورة رقم ${invoice.invoice_number} بمبلغ إجمالي ${InvoiceService.formatCurrency(invoice.total_amount, invoice.currency)}.\n\nللاستفسار يرجى التواصل معنا.\n\nمع التحية،\nفريق فكرة إيدو`);
     setAttachPdf(true);
   }, [invoice, open]);
 

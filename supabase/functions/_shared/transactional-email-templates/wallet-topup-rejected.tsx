@@ -108,10 +108,10 @@ const E = ({ customerName, amount, requestId, rejectedAt, paymentMethod, reason,
         </Section>
 
         <Section style={btnSection}>
-          <Button style={btnPrimary} href={walletUrl || 'https://masteredupath.com/wallet'}>
+          <Button style={btnPrimary} href={walletUrl || 'https://fekrahedu.com/wallet'}>
             إعادة تقديم الطلب
           </Button>
-          <Button style={btnSecondary} href={supportUrl || 'https://masteredupath.com/support/tickets'}>
+          <Button style={btnSecondary} href={supportUrl || 'https://fekrahedu.com/support/tickets'}>
             تواصل مع الدعم
           </Button>
         </Section>
@@ -138,8 +138,8 @@ export const template = {
     rejectedAt: new Date().toLocaleDateString('ar-SA'),
     paymentMethod: 'تحويل بنكي',
     reason: 'لم نتمكن من العثور على الحوالة المرسلة. يرجى التأكد من رقم المرجع.',
-    walletUrl: 'https://masteredupath.com/wallet',
-    supportUrl: 'https://masteredupath.com/support/tickets',
+    walletUrl: 'https://fekrahedu.com/wallet',
+    supportUrl: 'https://fekrahedu.com/support/tickets',
   },
 } satisfies TemplateEntry
 

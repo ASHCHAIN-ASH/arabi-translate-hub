@@ -166,7 +166,7 @@ const handler = async (req: Request): Promise<Response> => {
           new_password: newPassword,
           change_date: changeDate,
           admin_name: adminData?.full_name || 'الإدارة',
-          admin_email: adminData?.email || 'admin@masteredupath.com',
+          admin_email: adminData?.email || 'admin@fekrahedu.com',
           admin_role: adminRoleMap[adminData?.role] || 'مدير'
         };
 

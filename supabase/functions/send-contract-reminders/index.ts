@@ -59,7 +59,7 @@ Deno.serve(async (req) => {
                 contractNumber: c.contract_number,
                 contractTitle: c.title,
                 hoursPending,
-                contractUrl: `https://masteredupath.com/client/contracts/${c.id}`,
+                contractUrl: `https://fekrahedu.com/client/contracts/${c.id}`,
               },
               purpose: 'transactional',
               idempotency_key: `contract-reminder-${c.id}-${Math.floor(Date.now() / (24 * 3600 * 1000))}`,

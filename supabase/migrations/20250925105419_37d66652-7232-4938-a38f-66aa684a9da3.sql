@@ -9,14 +9,14 @@ CREATE POLICY "admins_only_email_allowlist_contracts" ON public.contracts
 FOR ALL TO authenticated
 USING (
   auth.jwt()->>'email' IN (
-    'info@masteredupath.com',
-    'contracts@masteredupath.com'
+    'info@fekrahedu.com',
+    'contracts@fekrahedu.com'
   )
 )
 WITH CHECK (
   auth.jwt()->>'email' IN (
-    'info@masteredupath.com',
-    'contracts@masteredupath.com'
+    'info@fekrahedu.com',
+    'contracts@fekrahedu.com'
   )
 );
 
@@ -24,10 +24,10 @@ WITH CHECK (
 CREATE POLICY "admins_only_email_allowlist_clients" ON public.clients
 FOR ALL TO authenticated
 USING (
-  auth.jwt()->>'email' IN ('info@masteredupath.com','contracts@masteredupath.com')
+  auth.jwt()->>'email' IN ('info@fekrahedu.com','contracts@fekrahedu.com')
 )
 WITH CHECK (
-  auth.jwt()->>'email' IN ('info@masteredupath.com','contracts@masteredupath.com')
+  auth.jwt()->>'email' IN ('info@fekrahedu.com','contracts@fekrahedu.com')
 );
 
 -- إزالة سياسات Storage القديمة واستبدالها بمشددة
@@ -41,32 +41,32 @@ CREATE POLICY "admins_allowlist_select_pdf" ON storage.objects
 FOR SELECT TO authenticated
 USING (
   bucket_id = 'contracts_pdf' 
-  AND auth.jwt()->>'email' IN ('info@masteredupath.com','contracts@masteredupath.com')
+  AND auth.jwt()->>'email' IN ('info@fekrahedu.com','contracts@fekrahedu.com')
 );
 
 CREATE POLICY "admins_allowlist_insert_pdf" ON storage.objects
 FOR INSERT TO authenticated
 WITH CHECK (
   bucket_id = 'contracts_pdf' 
-  AND auth.jwt()->>'email' IN ('info@masteredupath.com','contracts@masteredupath.com')
+  AND auth.jwt()->>'email' IN ('info@fekrahedu.com','contracts@fekrahedu.com')
 );
 
 CREATE POLICY "admins_allowlist_update_pdf" ON storage.objects
 FOR UPDATE TO authenticated
 USING (
   bucket_id = 'contracts_pdf' 
-  AND auth.jwt()->>'email' IN ('info@masteredupath.com','contracts@masteredupath.com')
+  AND auth.jwt()->>'email' IN ('info@fekrahedu.com','contracts@fekrahedu.com')
 )
 WITH CHECK (
   bucket_id = 'contracts_pdf' 
-  AND auth.jwt()->>'email' IN ('info@masteredupath.com','contracts@masteredupath.com')
+  AND auth.jwt()->>'email' IN ('info@fekrahedu.com','contracts@fekrahedu.com')
 );
 
 CREATE POLICY "admins_allowlist_delete_pdf" ON storage.objects
 FOR DELETE TO authenticated
 USING (
   bucket_id = 'contracts_pdf' 
-  AND auth.jwt()->>'email' IN ('info@masteredupath.com','contracts@masteredupath.com')
+  AND auth.jwt()->>'email' IN ('info@fekrahedu.com','contracts@fekrahedu.com')
 );
 
 -- تحسين وظيفة الترقيم لتجاهل RLS

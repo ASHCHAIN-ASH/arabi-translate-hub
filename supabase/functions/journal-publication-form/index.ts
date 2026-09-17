@@ -215,7 +215,7 @@ const handler = async (req: Request): Promise<Response> => {
       <body>
         <div class="container">
           <div class="header">
-            <h1>🎓 Master Edu Path</h1>
+            <h1>🎓 FekrahEdu</h1>
             <p>رفيقك الأكاديمي نحو التميز</p>
           </div>
           
@@ -269,13 +269,13 @@ const handler = async (req: Request): Promise<Response> => {
 
             <div class="contact-info">
               <h3>📞 تواصل معنا</h3>
-              <p><strong>البريد الإلكتروني:</strong> info@masteredupath.com</p>
+              <p><strong>البريد الإلكتروني:</strong> info@fekrahedu.com</p>
               <p><strong>نحن هنا لمساعدتك في رحلتك الأكاديمية</strong></p>
             </div>
           </div>
 
           <div class="footer">
-            <p>&copy; 2024 Master Edu Path. جميع الحقوق محفوظة.</p>
+            <p>&copy; 2024 FekrahEdu. جميع الحقوق محفوظة.</p>
           </div>
         </div>
       </body>
@@ -567,7 +567,7 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
 
           <div class="footer">
-            <p>Master Edu Path - نظام إدارة الطلبات</p>
+            <p>FekrahEdu - نظام إدارة الطلبات</p>
             <p>تاريخ الطلب: ${new Date().toLocaleDateString('ar-SA')}</p>
           </div>
         </div>
@@ -577,16 +577,16 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send client email
     await resend.emails.send({
-      from: "Master Edu Path <info@masteredupath.com>",
+      from: "FekrahEdu <info@fekrahedu.com>",
       to: [formData.email],
-      subject: "تأكيد استلام طلب النشر في المجلات المعتمدة - Master Edu Path",
+      subject: "تأكيد استلام طلب النشر في المجلات المعتمدة - FekrahEdu",
       html: clientEmailHtml,
     });
 
     // Send admin email
     const adminEmailResponse = await resend.emails.send({
-      from: "Master Edu Path <info@masteredupath.com>",
-      to: ["info@masteredupath.com"],
+      from: "FekrahEdu <info@fekrahedu.com>",
+      to: ["info@fekrahedu.com"],
       subject: `طلب جديد للنشر في المجلات المعتمدة من ${formData.fullName}`,
       html: adminEmailHtml,
     });

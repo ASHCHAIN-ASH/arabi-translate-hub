@@ -251,7 +251,7 @@ export default function EmailNotifications() {
 
     switch (smartForm.type) {
       case "invoice":
-        subject = `فاتورة رقم ${smartForm.invoiceNumber} - وكالة ماستر إيدو باث`;
+        subject = `فاتورة رقم ${smartForm.invoiceNumber} - وكالة فكرة إيدو`;
         content = generateInvoiceTemplate(smartForm);
         variables = {
           customerName: smartForm.customerName,
@@ -259,43 +259,43 @@ export default function EmailNotifications() {
           invoiceNumber: smartForm.invoiceNumber,
           dueDate: smartForm.dueDate,
           currency: smartForm.currency,
-          companyName: smartForm.companyName || "وكالة ماستر إيدو باث",
+          companyName: smartForm.companyName || "وكالة فكرة إيدو",
           serviceDescription: smartForm.serviceDescription
         };
         break;
       
       case "paid_invoice":
-        subject = `إشعار سداد الفاتورة رقم ${smartForm.invoiceNumber} - وكالة ماستر إيدو باث`;
+        subject = `إشعار سداد الفاتورة رقم ${smartForm.invoiceNumber} - وكالة فكرة إيدو`;
         content = generatePaidInvoiceTemplate(smartForm);
         variables = {
           customerName: smartForm.customerName,
           amount: smartForm.amount,
           invoiceNumber: smartForm.invoiceNumber,
           currency: smartForm.currency,
-          companyName: smartForm.companyName || "وكالة ماستر إيدو باث"
+          companyName: smartForm.companyName || "وكالة فكرة إيدو"
         };
         break;
 
       case "payment_receipt":
-        subject = `سند دفع رقم ${smartForm.invoiceNumber} - وكالة ماستر إيدو باث`;
+        subject = `سند دفع رقم ${smartForm.invoiceNumber} - وكالة فكرة إيدو`;
         content = generatePaymentReceiptTemplate(smartForm);
         variables = {
           customerName: smartForm.customerName,
           amount: smartForm.amount,
           invoiceNumber: smartForm.invoiceNumber,
           currency: smartForm.currency,
-          companyName: smartForm.companyName || "وكالة ماستر إيدو باث"
+          companyName: smartForm.companyName || "وكالة فكرة إيدو"
         };
         break;
       
       case "activation":
-        subject = `تفعيل حسابك في وكالة ماستر إيدو باث`;
+        subject = `تفعيل حسابك في وكالة فكرة إيدو`;
         content = generateActivationTemplate(smartForm);
         variables = {
           customerName: smartForm.customerName,
           username: smartForm.username,
           activationLink: smartForm.activationLink,
-          companyName: smartForm.companyName || "وكالة ماستر إيدو باث"
+          companyName: smartForm.companyName || "وكالة فكرة إيدو"
         };
         break;
 
@@ -307,12 +307,12 @@ export default function EmailNotifications() {
           promotionTitle: smartForm.promotionTitle,
           promotionDescription: smartForm.promotionDescription,
           discountPercent: smartForm.discountPercent,
-          companyName: smartForm.companyName || "وكالة ماستر إيدو باث"
+          companyName: smartForm.companyName || "وكالة فكرة إيدو"
         };
         break;
 
       case "payment_reminder":
-        subject = `تذكير بدفع الفاتورة رقم ${smartForm.invoiceNumber} - وكالة ماستر إيدو باث`;
+        subject = `تذكير بدفع الفاتورة رقم ${smartForm.invoiceNumber} - وكالة فكرة إيدو`;
         content = generatePaymentReminderTemplate(smartForm);
         variables = {
           customerName: smartForm.customerName,
@@ -320,12 +320,12 @@ export default function EmailNotifications() {
           invoiceNumber: smartForm.invoiceNumber,
           dueDate: smartForm.dueDate,
           currency: smartForm.currency,
-          companyName: smartForm.companyName || "وكالة ماستر إيدو باث"
+          companyName: smartForm.companyName || "وكالة فكرة إيدو"
         };
         break;
 
       case "order_confirmation":
-        subject = `تأكيد الطلب رقم ${smartForm.invoiceNumber} - وكالة ماستر إيدو باث`;
+        subject = `تأكيد الطلب رقم ${smartForm.invoiceNumber} - وكالة فكرة إيدو`;
         content = generateOrderConfirmationTemplate(smartForm);
         variables = {
           customerName: smartForm.customerName,
@@ -333,12 +333,12 @@ export default function EmailNotifications() {
           serviceDescription: smartForm.serviceDescription,
           amount: smartForm.amount,
           currency: smartForm.currency,
-          companyName: smartForm.companyName || "وكالة ماستر إيدو باث"
+          companyName: smartForm.companyName || "وكالة فكرة إيدو"
         };
         break;
 
       case "event_invitation":
-        subject = `دعوة لحضور ${smartForm.promotionTitle} - وكالة ماستر إيدو باث`;
+        subject = `دعوة لحضور ${smartForm.promotionTitle} - وكالة فكرة إيدو`;
         content = generateEventInvitationTemplate(smartForm);
         variables = {
           customerName: smartForm.customerName,
@@ -346,49 +346,49 @@ export default function EmailNotifications() {
           eventDate: smartForm.eventDate,
           eventTime: smartForm.eventTime,
           location: smartForm.location,
-          companyName: smartForm.companyName || "وكالة ماستر إيدو باث"
+          companyName: smartForm.companyName || "وكالة فكرة إيدو"
         };
         break;
 
       case "welcome_message":
-        subject = `مرحباً بك في وكالة ماستر إيدو باث - ${smartForm.customerName}`;
+        subject = `مرحباً بك في وكالة فكرة إيدو - ${smartForm.customerName}`;
         content = generateWelcomeMessageTemplate(smartForm);
         variables = {
           customerName: smartForm.customerName,
           username: smartForm.username,
-          companyName: smartForm.companyName || "وكالة ماستر إيدو باث"
+          companyName: smartForm.companyName || "وكالة فكرة إيدو"
         };
         break;
 
       case "thank_you":
-        subject = `شكراً لتعاملكم معنا - وكالة ماستر إيدو باث`;
+        subject = `شكراً لتعاملكم معنا - وكالة فكرة إيدو`;
         content = generateThankYouTemplate(smartForm);
         variables = {
           customerName: smartForm.customerName,
           serviceDescription: smartForm.serviceDescription,
-          companyName: smartForm.companyName || "وكالة ماستر إيدو باث"
+          companyName: smartForm.companyName || "وكالة فكرة إيدو"
         };
         break;
 
       case "order_status":
-        subject = `تحديث حالة طلبكم رقم ${smartForm.invoiceNumber} - وكالة ماستر إيدو باث`;
+        subject = `تحديث حالة طلبكم رقم ${smartForm.invoiceNumber} - وكالة فكرة إيدو`;
         content = generateOrderStatusTemplate(smartForm);
         variables = {
           customerName: smartForm.customerName,
           invoiceNumber: smartForm.invoiceNumber,
           serviceDescription: smartForm.serviceDescription,
-          companyName: smartForm.companyName || "وكالة ماستر إيدو باث"
+          companyName: smartForm.companyName || "وكالة فكرة إيدو"
         };
         break;
 
       case "new_service":
-        subject = `خدمة جديدة: ${smartForm.promotionTitle} - وكالة ماستر إيدو باث`;
+        subject = `خدمة جديدة: ${smartForm.promotionTitle} - وكالة فكرة إيدو`;
         content = generateNewServiceTemplate(smartForm);
         variables = {
           customerName: smartForm.customerName,
           serviceTitle: smartForm.promotionTitle,
           serviceDescription: smartForm.promotionDescription,
-          companyName: smartForm.companyName || "وكالة ماستر إيدو باث"
+          companyName: smartForm.companyName || "وكالة فكرة إيدو"
         };
         break;
 
@@ -589,14 +589,14 @@ export default function EmailNotifications() {
             
             <!-- Mobile-Optimized Corporate Name -->
             <div class="mobile-card" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(20px); border: 2px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; margin: 0 auto; max-width: 90%; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
-              <h1 class="mobile-header" style="color: white; font-size: 24px; margin: 0 0 10px 0; font-weight: 900; text-shadow: 2px 2px 6px rgba(0,0,0,0.5); direction: rtl; font-family: 'IBM Plex Sans Arabic', 'IBM Plex Sans Arabic'; letter-spacing: 1px; line-height: 1.2;">وكالة ماستر إيدو باث</h1>
+              <h1 class="mobile-header" style="color: white; font-size: 24px; margin: 0 0 10px 0; font-weight: 900; text-shadow: 2px 2px 6px rgba(0,0,0,0.5); direction: rtl; font-family: 'IBM Plex Sans Arabic', 'IBM Plex Sans Arabic'; letter-spacing: 1px; line-height: 1.2;">وكالة فكرة إيدو</h1>
               
               <div style="background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.6), rgba(14, 165, 233, 0.6), transparent); height: 3px; width: 80px; margin: 12px auto; border-radius: 2px; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);"></div>
               
               <h2 class="mobile-subheader" style="color: rgba(255,255,255,0.95); margin: 8px 0 12px 0; font-size: 16px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic'; text-shadow: 1px 1px 4px rgba(0,0,0,0.3);">للخدمات التعليمية والتدريب المتقدم</h2>
               
               <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 10px; margin: 12px 0; border: 1px solid rgba(255,255,255,0.15);">
-                <p class="mobile-text" style="color: rgba(255,255,255,0.9); margin: 0; font-size: 12px; direction: rtl; font-family: 'IBM Plex Sans Arabic'; font-weight: 500;">Master Edu Path Educational Services Agency</p>
+                <p class="mobile-text" style="color: rgba(255,255,255,0.9); margin: 0; font-size: 12px; direction: rtl; font-family: 'IBM Plex Sans Arabic'; font-weight: 500;">FekrahEdu Educational Services Agency</p>
               </div>
             </div>
           </div>
@@ -615,7 +615,7 @@ export default function EmailNotifications() {
           <!-- Mobile-Optimized Contact Info -->
           <div class="mobile-contact" style="background: rgba(255,255,255,0.08); padding: 8px 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(10px); margin: 15px auto 5px auto; text-align: center; max-width: 280px;">
             <div style="display: flex; align-items: center; justify-content: center; gap: 15px; flex-wrap: wrap; direction: rtl;">
-              <span style="color: rgba(255,255,255,0.9); font-size: 10px; font-weight: 700; direction: rtl;">📧 info@masteredupath.com</span>
+              <span style="color: rgba(255,255,255,0.9); font-size: 10px; font-weight: 700; direction: rtl;">📧 info@fekrahedu.com</span>
               <span style="color: rgba(255,255,255,0.9); font-size: 10px; font-weight: 700;">📱 0559600824</span>
             </div>
           </div>
@@ -631,9 +631,9 @@ export default function EmailNotifications() {
             <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 15px; padding: 25px; border: 1px solid #e2e8f0; direction: rtl;">
               <h3 style="color: #1e293b; margin: 0 0 20px 0; font-size: 18px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">🏢 بيانات الشركة</h3>
               <div style="space-y: 12px; direction: rtl;">
-                <p style="margin: 8px 0; color: #334155; line-height: 1.8; text-align: right; direction: rtl; font-size: 15px; font-weight: 600; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">وكالة ماستر إيدو باث</p>
+                <p style="margin: 8px 0; color: #334155; line-height: 1.8; text-align: right; direction: rtl; font-size: 15px; font-weight: 600; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">وكالة فكرة إيدو</p>
                 <p style="margin: 6px 0; color: #64748b; text-align: right; direction: rtl; font-size: 14px; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">🌍 المملكة العربية السعودية</p>
-                <p style="margin: 6px 0; color: #64748b; text-align: right; direction: rtl; font-size: 14px; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">📧 info@masteredupath.com</p>
+                <p style="margin: 6px 0; color: #64748b; text-align: right; direction: rtl; font-size: 14px; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">📧 info@fekrahedu.com</p>
                 <p style="margin: 6px 0; color: #64748b; text-align: right; direction: rtl; font-size: 14px; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">📱 0559600824</p>
               </div>
             </div>
@@ -828,10 +828,10 @@ export default function EmailNotifications() {
                 <span style="color: white; font-size: 24px;">🙏</span>
               </div>
               <p style="color: #475569; margin: 0 0 8px 0; font-size: 16px; font-weight: 600; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">شكراً لثقتك في خدماتنا</p>
-              <p style="color: #64748b; margin: 0; font-size: 14px; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">نحن نقدر اختيارك لوكالة ماستر إيدو باث</p>
+              <p style="color: #64748b; margin: 0; font-size: 14px; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">نحن نقدر اختيارك لوكالة فكرة إيدو</p>
             </div>
             <div style="background: #f1f5f9; border-radius: 8px; padding: 12px; direction: rtl;">
-              <p style="color: #94a3b8; font-size: 12px; margin: 0; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">© ${new Date().getFullYear()} وكالة ماستر إيدو باث - جميع الحقوق محفوظة</p>
+              <p style="color: #94a3b8; font-size: 12px; margin: 0; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">© ${new Date().getFullYear()} وكالة فكرة إيدو - جميع الحقوق محفوظة</p>
             </div>
           </div>
         </div>
@@ -879,7 +879,7 @@ export default function EmailNotifications() {
 
           <div style="margin: 25px 0; direction: rtl; text-align: center;">
             <p style="color: #374151; font-size: 16px; margin: 0 0 15px 0; direction: rtl;" class="mobile-text">🎉 نشكرك على سرعة السداد</p>
-            <p style="color: #6b7280; font-size: 12px; direction: rtl;" class="mobile-text">وكالة ماستر إيدو باث - دائماً في خدمتكم</p>
+            <p style="color: #6b7280; font-size: 12px; direction: rtl;" class="mobile-text">وكالة فكرة إيدو - دائماً في خدمتكم</p>
           </div>
         </div>
       </div>
@@ -961,7 +961,7 @@ export default function EmailNotifications() {
           
           <!-- Mobile-Optimized Corporate Name -->
           <div class="mobile-card" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(20px); border: 2px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 18px; margin: 0 auto; max-width: 90%; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
-            <h1 class="mobile-header" style="margin: 0 0 8px 0; font-size: 22px; font-weight: 900; text-shadow: 2px 2px 6px rgba(0,0,0,0.5); direction: rtl; font-family: 'IBM Plex Sans Arabic';">وكالة ماستر إيدو باث</h1>
+            <h1 class="mobile-header" style="margin: 0 0 8px 0; font-size: 22px; font-weight: 900; text-shadow: 2px 2px 6px rgba(0,0,0,0.5); direction: rtl; font-family: 'IBM Plex Sans Arabic';">وكالة فكرة إيدو</h1>
             
             <div style="background: linear-gradient(90deg, transparent, rgba(22, 163, 74, 0.6), rgba(21, 128, 61, 0.6), transparent); height: 2px; width: 60px; margin: 10px auto; border-radius: 1px; box-shadow: 0 2px 6px rgba(22, 163, 74, 0.3);"></div>
             
@@ -980,7 +980,7 @@ export default function EmailNotifications() {
           <!-- Mobile-Optimized Contact Info -->
           <div class="mobile-contact" style="background: rgba(255,255,255,0.08); padding: 6px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); margin: 12px auto; text-align: center; max-width: 250px;">
             <div style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; direction: rtl;">
-              <span style="color: rgba(255,255,255,0.9); font-size: 9px; font-weight: 700; direction: rtl;">📧 info@masteredupath.com</span>
+              <span style="color: rgba(255,255,255,0.9); font-size: 9px; font-weight: 700; direction: rtl;">📧 info@fekrahedu.com</span>
               <span style="color: rgba(255,255,255,0.9); font-size: 9px; font-weight: 700;">📱 0559600824</span>
             </div>
           </div>
@@ -1049,8 +1049,8 @@ export default function EmailNotifications() {
 
           <!-- Footer -->
           <div style="text-align: center; margin-top: 25px; padding-top: 15px; border-top: 1px solid #e2e8f0; direction: rtl;">
-            <p style="margin: 0; color: #64748b; font-size: 14px; direction: rtl;" class="mobile-text">وكالة ماستر إيدو باث</p>
-            <p style="margin: 5px 0 0 0; color: #94a3b8; font-size: 10px; direction: rtl;" class="mobile-text">المملكة العربية السعودية | info@masteredupath.com</p>
+            <p style="margin: 0; color: #64748b; font-size: 14px; direction: rtl;" class="mobile-text">وكالة فكرة إيدو</p>
+            <p style="margin: 5px 0 0 0; color: #94a3b8; font-size: 10px; direction: rtl;" class="mobile-text">المملكة العربية السعودية | info@fekrahedu.com</p>
           </div>
         </div>
       </div>
@@ -1118,14 +1118,14 @@ export default function EmailNotifications() {
         
         <!-- Mobile-Optimized Corporate Name -->
         <div class="mobile-card" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(20px); border: 2px solid rgba(255,255,255,0.1); border-radius: 18px; padding: 20px; margin: 0 auto; max-width: 90%; box-shadow: 0 8px 25px rgba(0,0,0,0.2);">
-          <h1 class="mobile-header" style="margin: 0 0 10px 0; font-size: 24px; font-weight: 900; text-shadow: 2px 2px 6px rgba(0,0,0,0.5); direction: rtl; font-family: 'IBM Plex Sans Arabic'; letter-spacing: 0.5px;">وكالة ماستر إيدو باث</h1>
+          <h1 class="mobile-header" style="margin: 0 0 10px 0; font-size: 24px; font-weight: 900; text-shadow: 2px 2px 6px rgba(0,0,0,0.5); direction: rtl; font-family: 'IBM Plex Sans Arabic'; letter-spacing: 0.5px;">وكالة فكرة إيدو</h1>
           
           <div style="background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.6), rgba(5, 150, 105, 0.6), transparent); height: 3px; width: 80px; margin: 12px auto; border-radius: 2px; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);"></div>
           
           <h2 class="mobile-subheader" style="color: rgba(255,255,255,0.95); margin: 8px 0 12px 0; font-size: 16px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic'; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">للخدمات التعليمية والتدريب المتقدم</h2>
           
           <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; margin: 12px 0; border: 1px solid rgba(255,255,255,0.15);">
-            <p class="mobile-text" style="color: rgba(255,255,255,0.9); margin: 0; font-size: 13px; direction: rtl; font-family: 'IBM Plex Sans Arabic'; font-weight: 500;">Master Edu Path Educational Services Agency</p>
+            <p class="mobile-text" style="color: rgba(255,255,255,0.9); margin: 0; font-size: 13px; direction: rtl; font-family: 'IBM Plex Sans Arabic'; font-weight: 500;">FekrahEdu Educational Services Agency</p>
           </div>
           
           <!-- Welcome Message -->
@@ -1150,7 +1150,7 @@ export default function EmailNotifications() {
         <!-- Mobile-Optimized Contact Info -->
         <div class="mobile-contact" style="background: rgba(255,255,255,0.08); padding: 6px 12px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.15); margin: 15px auto; text-align: center; max-width: 260px;">
           <div style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; direction: rtl;">
-            <span style="color: rgba(255,255,255,0.9); font-size: 9px; font-weight: 700; direction: rtl;">📧 info@masteredupath.com</span>
+            <span style="color: rgba(255,255,255,0.9); font-size: 9px; font-weight: 700; direction: rtl;">📧 info@fekrahedu.com</span>
             <span style="color: rgba(255,255,255,0.9); font-size: 9px; font-weight: 700;">📱 0559600824</span>
           </div>
         </div>
@@ -1247,14 +1247,14 @@ export default function EmailNotifications() {
           
           <!-- Mobile-Optimized Corporate Name -->
           <div class="mobile-card" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(20px); border: 2px solid rgba(255,255,255,0.1); border-radius: 18px; padding: 20px; margin: 0 auto; max-width: 90%; box-shadow: 0 8px 25px rgba(0,0,0,0.2);">
-            <h1 class="mobile-header" style="margin: 0 0 10px 0; font-size: 22px; font-weight: 900; text-shadow: 2px 2px 6px rgba(0,0,0,0.5); direction: rtl; font-family: 'IBM Plex Sans Arabic';">وكالة ماستر إيدو باث</h1>
+            <h1 class="mobile-header" style="margin: 0 0 10px 0; font-size: 22px; font-weight: 900; text-shadow: 2px 2px 6px rgba(0,0,0,0.5); direction: rtl; font-family: 'IBM Plex Sans Arabic';">وكالة فكرة إيدو</h1>
             
             <div style="background: linear-gradient(90deg, transparent, rgba(255, 107, 107, 0.6), rgba(238, 90, 36, 0.6), transparent); height: 3px; width: 70px; margin: 12px auto; border-radius: 2px; box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);"></div>
             
             <h2 class="mobile-subheader" style="margin: 8px 0 15px 0; font-size: 15px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic'; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">للخدمات التعليمية والتدريب المتقدم</h2>
             
             <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 10px; margin: 12px 0; border: 1px solid rgba(255,255,255,0.15);">
-              <p class="mobile-text" style="margin: 0; font-size: 11px; opacity: 0.9; direction: rtl; font-weight: 500;">Master Edu Path Educational Services Agency</p>
+              <p class="mobile-text" style="margin: 0; font-size: 11px; opacity: 0.9; direction: rtl; font-weight: 500;">FekrahEdu Educational Services Agency</p>
             </div>
             
             <!-- Mobile-Optimized Promotion Banner -->
@@ -1279,7 +1279,7 @@ export default function EmailNotifications() {
           <!-- Mobile-Optimized Contact Info -->
           <div class="mobile-contact" style="background: rgba(255,255,255,0.08); padding: 6px 12px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.15); margin: 15px auto; text-align: center; max-width: 260px;">
             <div style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; direction: rtl;">
-              <span style="color: rgba(255,255,255,0.9); font-size: 9px; font-weight: 700; direction: rtl;">📧 info@masteredupath.com</span>
+              <span style="color: rgba(255,255,255,0.9); font-size: 9px; font-weight: 700; direction: rtl;">📧 info@fekrahedu.com</span>
               <span style="color: rgba(255,255,255,0.9); font-size: 9px; font-weight: 700;">📱 0559600824</span>
             </div>
           </div>
@@ -1321,7 +1321,7 @@ export default function EmailNotifications() {
             <div style="display: inline-flex; align-items: center; justify-content: center; width: 100px; height: 100px; background: linear-gradient(135deg, #f59e0b, #fbbf24); border-radius: 50%; margin-bottom: 20px; position: relative; overflow: hidden; box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);">
               <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #0f172a, #334155); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; font-weight: bold;">⏰</div>
             </div>
-            <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #fbbf24, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">وكالة ماستر إيدو باث</h1>
+            <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #fbbf24, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">وكالة فكرة إيدو</h1>
             <p style="margin: 10px 0 0; font-size: 18px; color: #e2e8f0; font-weight: 500;">للخدمات التعليمية والتدريب المتقدم</p>
             
           </div>
@@ -1361,7 +1361,7 @@ export default function EmailNotifications() {
             <div style="display: inline-flex; align-items: center; justify-content: center; width: 100px; height: 100px; background: linear-gradient(135deg, #10b981, #34d399); border-radius: 50%; margin-bottom: 20px; position: relative; overflow: hidden; box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);">
               <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #0f172a, #334155); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; font-weight: bold;">✅</div>
             </div>
-            <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #34d399, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">وكالة ماستر إيدو باث</h1>
+            <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #34d399, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">وكالة فكرة إيدو</h1>
             <p style="margin: 10px 0 0; font-size: 18px; color: #e2e8f0; font-weight: 500;">للخدمات التعليمية والتدريب المتقدم</p>
             
           </div>
@@ -1401,7 +1401,7 @@ export default function EmailNotifications() {
             <div style="display: inline-flex; align-items: center; justify-content: center; width: 100px; height: 100px; background: linear-gradient(135deg, #8b5cf6, #a78bfa); border-radius: 50%; margin-bottom: 20px; position: relative; overflow: hidden; box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);">
               <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #0f172a, #334155); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; font-weight: bold;">📅</div>
             </div>
-            <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #a78bfa, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">وكالة ماستر إيدو باث</h1>
+            <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #a78bfa, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">وكالة فكرة إيدو</h1>
             <p style="margin: 10px 0 0; font-size: 18px; color: #e2e8f0; font-weight: 500;">للخدمات التعليمية والتدريب المتقدم</p>
             
           </div>
@@ -1442,7 +1442,7 @@ export default function EmailNotifications() {
             <div style="display: inline-flex; align-items: center; justify-content: center; width: 100px; height: 100px; background: linear-gradient(135deg, #06b6d4, #67e8f9); border-radius: 50%; margin-bottom: 20px; position: relative; overflow: hidden; box-shadow: 0 8px 25px rgba(6, 182, 212, 0.4);">
               <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #0f172a, #334155); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; font-weight: bold;">🤝</div>
             </div>
-            <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #67e8f9, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">وكالة ماستر إيدو باث</h1>
+            <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #67e8f9, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">وكالة فكرة إيدو</h1>
             <p style="margin: 10px 0 0; font-size: 18px; color: #e2e8f0; font-weight: 500;">للخدمات التعليمية والتدريب المتقدم</p>
             
           </div>
@@ -1453,7 +1453,7 @@ export default function EmailNotifications() {
           
           <p style="color: #374151; font-size: 18px; line-height: 1.8; margin-bottom: 25px;">
             عزيزي/عزيزتي <strong style="color: #06b6d4;">${data.customerName}</strong>،<br><br>
-            مرحباً بك في عائلة وكالة ماستر إيدو باث! نحن سعداء جداً لانضمامك إلينا.
+            مرحباً بك في عائلة وكالة فكرة إيدو! نحن سعداء جداً لانضمامك إلينا.
           </p>
           
           <div style="background: linear-gradient(135deg, #cffafe, #a5f3fc); border-radius: 15px; padding: 25px; margin: 25px 0; border-left: 5px solid #06b6d4; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.2);">
@@ -1481,7 +1481,7 @@ export default function EmailNotifications() {
             <div style="display: inline-flex; align-items: center; justify-content: center; width: 100px; height: 100px; background: linear-gradient(135deg, #f43f5e, #fb7185); border-radius: 50%; margin-bottom: 20px; position: relative; overflow: hidden; box-shadow: 0 8px 25px rgba(244, 63, 94, 0.4);">
               <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #0f172a, #334155); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; font-weight: bold;">❤️</div>
             </div>
-            <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #fb7185, #f43f5e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">وكالة ماستر إيدو باث</h1>
+            <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #fb7185, #f43f5e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">وكالة فكرة إيدو</h1>
             <p style="margin: 10px 0 0; font-size: 18px; color: #e2e8f0; font-weight: 500;">للخدمات التعليمية والتدريب المتقدم</p>
             
           </div>
@@ -1520,7 +1520,7 @@ export default function EmailNotifications() {
             <div style="display: inline-flex; align-items: center; justify-content: center; width: 100px; height: 100px; background: linear-gradient(135deg, #0ea5e9, #38bdf8); border-radius: 50%; margin-bottom: 20px; position: relative; overflow: hidden; box-shadow: 0 8px 25px rgba(14, 165, 233, 0.4);">
               <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #0f172a, #334155); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; font-weight: bold;">📦</div>
             </div>
-            <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #38bdf8, #0ea5e9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">وكالة ماستر إيدو باث</h1>
+            <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #38bdf8, #0ea5e9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">وكالة فكرة إيدو</h1>
             <p style="margin: 10px 0 0; font-size: 18px; color: #e2e8f0; font-weight: 500;">للخدمات التعليمية والتدريب المتقدم</p>
             
           </div>
@@ -1560,7 +1560,7 @@ export default function EmailNotifications() {
             <div style="display: inline-flex; align-items: center; justify-content: center; width: 100px; height: 100px; background: linear-gradient(135deg, #7c3aed, #a855f7); border-radius: 50%; margin-bottom: 20px; position: relative; overflow: hidden; box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);">
               <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #0f172a, #334155); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; font-weight: bold;">🎉</div>
             </div>
-            <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #a855f7, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">وكالة ماستر إيدو باث</h1>
+            <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #a855f7, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">وكالة فكرة إيدو</h1>
             <p style="margin: 10px 0 0; font-size: 18px; color: #e2e8f0; font-weight: 500;">للخدمات التعليمية والتدريب المتقدم</p>
             
           </div>

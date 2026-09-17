@@ -1,6 +1,6 @@
--- Update admin email to admin@masteredupath.com
+-- Update admin email to admin@fekrahedu.com
 UPDATE public.admin_credentials 
-SET email = 'admin@masteredupath.com'
+SET email = 'admin@fekrahedu.com'
 WHERE role = 'admin' AND is_active = true;
 
 -- Ensure we have the correct admin user
@@ -13,7 +13,7 @@ INSERT INTO public.admin_credentials (
     is_active
 ) VALUES (
     gen_random_uuid(),
-    'admin@masteredupath.com',
+    'admin@fekrahedu.com',
     '$2a$06$Ymdta.TsNIzaoB2c6/WFLeSxLaWOaWhWnCnGDKJxGoKmQ0v54vHE2',
     'مدير النظام',
     'admin',

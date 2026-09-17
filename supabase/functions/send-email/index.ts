@@ -111,10 +111,10 @@ const handler = async (req: Request): Promise<Response> => {
         <!-- Company Header -->
         <div style="text-align: center; margin-bottom: 25px;">
           <h2 style="margin: 0; color: #1a365d; font-size: 24px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">
-            وكالة ماستر إيدو باث
+            وكالة فكرة إيدو
           </h2>
           <p style="margin: 5px 0 0 0; color: #4a5568; font-size: 14px; font-style: italic;">
-            Master Edu Path Agency
+            FekrahEdu Agency
           </p>
           <div style="width: 60px; height: 3px; background: linear-gradient(90deg, #3182ce, #2d3748); margin: 10px auto;"></div>
         </div>
@@ -131,11 +131,11 @@ const handler = async (req: Request): Promise<Response> => {
                   </h4>
                   <p style="margin: 8px 0; color: #4a5568; font-size: 14px;">
                     <strong>البريد الرسمي:</strong><br>
-                    <a href="mailto:info@masteredupath.com" style="color: #3182ce; text-decoration: none; font-weight: 600;">info@masteredupath.com</a>
+                    <a href="mailto:info@fekrahedu.com" style="color: #3182ce; text-decoration: none; font-weight: 600;">info@fekrahedu.com</a>
                   </p>
                   <p style="margin: 8px 0; color: #4a5568; font-size: 14px;">
                     <strong>الدعم الفني:</strong><br>
-                    <a href="mailto:support@masteredupath.com" style="color: #3182ce; text-decoration: none; font-weight: 600;">support@masteredupath.com</a>
+                    <a href="mailto:support@fekrahedu.com" style="color: #3182ce; text-decoration: none; font-weight: 600;">support@fekrahedu.com</a>
                   </p>
                 </div>
               </td>
@@ -176,23 +176,23 @@ const handler = async (req: Request): Promise<Response> => {
         <div style="text-align: center; margin: 25px 0; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
           <h4 style="margin: 0 0 15px 0; color: #1a365d; font-size: 16px;">تابعنا على وسائل التواصل</h4>
           <div style="display: inline-flex; gap: 15px; justify-content: center; align-items: center; flex-wrap: wrap;">
-            <a href="https://twitter.com/masteredupath" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: #1da1f2; color: white; border-radius: 50%; text-decoration: none; font-size: 18px;">🐦</a>
-            <a href="https://linkedin.com/company/masteredupath" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: #0077b5; color: white; border-radius: 50%; text-decoration: none; font-size: 18px;">💼</a>
-            <a href="https://instagram.com/masteredupath" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); color: white; border-radius: 50%; text-decoration: none; font-size: 18px;">📷</a>
-            <a href="https://www.masteredupath.com" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: #2d3748; color: white; border-radius: 50%; text-decoration: none; font-size: 18px;">🌐</a>
+            <a href="https://twitter.com/fekrahedu" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: #1da1f2; color: white; border-radius: 50%; text-decoration: none; font-size: 18px;">🐦</a>
+            <a href="https://linkedin.com/company/fekrahedu" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: #0077b5; color: white; border-radius: 50%; text-decoration: none; font-size: 18px;">💼</a>
+            <a href="https://instagram.com/fekrahedu" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); color: white; border-radius: 50%; text-decoration: none; font-size: 18px;">📷</a>
+            <a href="https://www.fekrahedu.com" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: #2d3748; color: white; border-radius: 50%; text-decoration: none; font-size: 18px;">🌐</a>
           </div>
         </div>
 
         <!-- Legal Footer -->
         <div style="border-top: 1px solid #e2e8f0; padding-top: 20px; text-align: center;">
           <p style="margin: 0 0 10px 0; color: #718096; font-size: 12px; line-height: 1.5;">
-            © ${new Date().getFullYear()} وكالة ماستر إيدو باث. جميع الحقوق محفوظة. | ترخيص وزارة التجارة رقم: 1010123456<br>
-            <strong>Master Edu Path Agency - Licensed Educational Services Provider</strong>
+            © ${new Date().getFullYear()} وكالة فكرة إيدو. جميع الحقوق محفوظة. | ترخيص وزارة التجارة رقم: 1010123456<br>
+            <strong>FekrahEdu Agency - Licensed Educational Services Provider</strong>
           </p>
           <p style="margin: 0; color: #a0aec0; font-size: 11px;">
             هذا البريد الإلكتروني تم إرساله إليك لأنك عميل مسجل لدينا أو طلبت خدماتنا.
-            <a href="mailto:info@masteredupath.com?subject=إلغاء الاشتراك" style="color: #3182ce; text-decoration: none;">إلغاء الاشتراك</a> |
-            <a href="https://www.masteredupath.com/privacy" style="color: #3182ce; text-decoration: none;">سياسة الخصوصية</a>
+            <a href="mailto:info@fekrahedu.com?subject=إلغاء الاشتراك" style="color: #3182ce; text-decoration: none;">إلغاء الاشتراك</a> |
+            <a href="https://www.fekrahedu.com/privacy" style="color: #3182ce; text-decoration: none;">سياسة الخصوصية</a>
           </p>
         </div>
 
@@ -207,7 +207,7 @@ const handler = async (req: Request): Promise<Response> => {
     `;
 
     // إضافة الفوتر إلى نهاية المحتوى
-    if (emailContent && !emailContent.includes('وكالة ماستر إيدو باث')) {
+    if (emailContent && !emailContent.includes('وكالة فكرة إيدو')) {
       emailContent += professionalFooter;
     }
 
@@ -215,7 +215,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Sending email to:", to);
     
     const emailResponse = await resend.emails.send({
-      from: "وكالة ماستر إيدو باث <info@masteredupath.com>",
+      from: "وكالة فكرة إيدو <info@fekrahedu.com>",
       to: Array.isArray(to) ? to : [to],
       subject: emailSubject,
       html: emailContent,
@@ -233,7 +233,7 @@ const handler = async (req: Request): Promise<Response> => {
             .from('email_outbox')
             .insert({
               recipient_email: recipient,
-              sender_email: 'info@masteredupath.com',
+              sender_email: 'info@fekrahedu.com',
               subject: emailSubject,
               content: emailContent,
               template_id: templateUsed,

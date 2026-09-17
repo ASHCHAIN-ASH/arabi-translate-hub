@@ -8,7 +8,7 @@ CREATE TABLE public.blog_posts (
   cover_image TEXT,
   category TEXT NOT NULL DEFAULT 'general',
   tags TEXT[] DEFAULT '{}',
-  author_name TEXT NOT NULL DEFAULT 'MasterEduPath',
+  author_name TEXT NOT NULL DEFAULT 'FekrahEdu',
   author_id UUID,
   status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'published', 'archived')),
   published_at TIMESTAMPTZ,

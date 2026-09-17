@@ -51,7 +51,7 @@ SET
   is_active = true,
   role = 'admin',
   updated_at = now()
-WHERE email = 'admin@masteredupath.com';
+WHERE email = 'admin@fekrahedu.com';
 
 -- 5. التأكد من وجود المستخدم في auth.users
 DO $$
@@ -60,7 +60,7 @@ DECLARE
 BEGIN
     -- الحصول على ID المستخدم الإداري
     SELECT id INTO admin_id FROM public.admin_credentials 
-    WHERE email = 'admin@masteredupath.com' AND is_active = true LIMIT 1;
+    WHERE email = 'admin@fekrahedu.com' AND is_active = true LIMIT 1;
     
     IF admin_id IS NOT NULL THEN
         -- التأكد من وجوده في auth.users
@@ -73,7 +73,7 @@ BEGIN
             '00000000-0000-0000-0000-000000000000',
             'authenticated',
             'authenticated',
-            'admin@masteredupath.com',
+            'admin@fekrahedu.com',
             '$2a$06$Ymdta.TsNIzaoB2c6/WFLeSxLaWOaWhWnCnGDKJxGoKmQ0v54vHE2',
             now(), now(), now(), now(),
             '{"provider": "email", "providers": ["email"]}',
@@ -94,7 +94,7 @@ INSERT INTO public.security_audit_logs (
   metadata
 ) VALUES (
   'users_access_fixed',
-  (SELECT id FROM admin_credentials WHERE email = 'admin@masteredupath.com' LIMIT 1),
+  (SELECT id FROM admin_credentials WHERE email = 'admin@fekrahedu.com' LIMIT 1),
   'simplified_rls_policies_for_users_table',
   'high',
   jsonb_build_object(

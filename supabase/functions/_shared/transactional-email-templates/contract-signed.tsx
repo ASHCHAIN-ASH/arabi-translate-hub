@@ -5,7 +5,7 @@ import {
 } from 'npm:@react-email/components@0.0.22'
 import type { TemplateEntry } from './registry.ts'
 
-const SITE_NAME = 'منصة ماستر إيدو باث'
+const SITE_NAME = 'منصة فكرة إيدو'
 const PARENT = 'شركة علي صالح الشهري القابضة'
 
 interface Props {

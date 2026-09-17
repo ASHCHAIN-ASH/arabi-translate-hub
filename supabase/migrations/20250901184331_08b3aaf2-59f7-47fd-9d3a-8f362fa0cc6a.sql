@@ -16,7 +16,7 @@ CREATE TABLE public.email_templates (
 CREATE TABLE public.email_logs (
   id UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
   recipient_email TEXT NOT NULL,
-  sender_email TEXT NOT NULL DEFAULT 'info@masteredupath.com',
+  sender_email TEXT NOT NULL DEFAULT 'info@fekrahedu.com',
   subject TEXT NOT NULL,
   content TEXT NOT NULL,
   template_id UUID REFERENCES email_templates(id),
@@ -132,7 +132,7 @@ INSERT INTO public.email_templates (name, subject, content, template_type, varia
   <p>إذا كان الأمر عاجلاً، يمكنك التواصل معنا على:</p>
   <ul>
     <li>الهاتف: +966 50 123 4567</li>
-    <li>البريد الإلكتروني: info@masteredupath.com</li>
+    <li>البريد الإلكتروني: info@fekrahedu.com</li>
   </ul>
   <p>مع أطيب التحيات،<br>فريق ماستر التعليمي</p>',
   'contact_auto_reply',

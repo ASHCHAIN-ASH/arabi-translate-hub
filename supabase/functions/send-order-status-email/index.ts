@@ -134,13 +134,13 @@ const createOrderStatusEmailTemplate = (data: OrderStatusEmailRequest): string =
                 </p>
             </div>
             <div class="cta">
-                <a href="https://masteredupath.com/order-tracking" class="btn">📊 تتبع حالة الطلب</a>
+                <a href="https://fekrahedu.com/order-tracking" class="btn">📊 تتبع حالة الطلب</a>
             </div>
         </div>
         <div class="footer">
             <p><strong>مؤسسة علي صالح الشهري التعليمية</strong></p>
-            <p>📧 support@masteredupath.com | 📱 +966 50 123 4567</p>
-            <p>🌐 www.masteredupath.com</p>
+            <p>📧 support@fekrahedu.com | 📱 +966 50 123 4567</p>
+            <p>🌐 www.fekrahedu.com</p>
             <p style="margin-top: 15px; font-size: 12px; color: #9ca3af;">جميع الحقوق محفوظة © ${new Date().getFullYear()}</p>
         </div>
     </div>
@@ -165,7 +165,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const emailHtml = createOrderStatusEmailTemplate(requestData);
-    const fromEmail = Deno.env.get("RESEND_FROM_EMAIL") || "orders@masteredupath.com";
+    const fromEmail = Deno.env.get("RESEND_FROM_EMAIL") || "orders@fekrahedu.com";
 
     const emailResponse = await resend.emails.send({
       from: `مؤسسة علي الشهري التعليمية <${fromEmail}>`,

@@ -75,7 +75,7 @@ const SidebarInner = memo<SidebarInnerProps>(({ displayName, initial, onItemClic
             <GraduationCap className="w-6 h-6" />
           </div>
           <div className="min-w-0">
-            <h2 className="text-base font-black tracking-tight truncate">ماستر إيدو باث</h2>
+            <h2 className="text-base font-black tracking-tight truncate">فكرة إيدو</h2>
             <p className="text-xs text-white/80">لوحة العميل</p>
           </div>
         </div>
@@ -94,7 +94,7 @@ const SidebarInner = memo<SidebarInnerProps>(({ displayName, initial, onItemClic
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-sm font-bold truncate">{displayName}</p>
-            <p className="text-[11px] text-muted-foreground mt-0.5">عميل ماستر إيدو باث</p>
+            <p className="text-[11px] text-muted-foreground mt-0.5">عميل فكرة إيدو</p>
           </div>
         </div>
       </div>
@@ -209,7 +209,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
                       <GraduationCap className="w-5 h-5 text-white" />
                     </div>
                     <h1 className="text-sm sm:text-base font-black hidden xs:block truncate">
-                      ماستر إيدو باث
+                      فكرة إيدو
                     </h1>
                   </Link>
                 </div>

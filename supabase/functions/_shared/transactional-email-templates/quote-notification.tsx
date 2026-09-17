@@ -77,7 +77,7 @@ export const template = {
     serviceName: 'ترجمة أكاديمية',
     trackingId: 'ORD-123456',
     amount: '1,500',
-    ordersUrl: 'https://masteredupath.com/orders',
+    ordersUrl: 'https://fekrahedu.com/orders',
   },
 } satisfies TemplateEntry
 

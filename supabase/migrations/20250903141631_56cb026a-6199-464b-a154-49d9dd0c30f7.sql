@@ -29,7 +29,7 @@ BEGIN
     salt = encrypt_sensitive_admin_data(salt),
     updated_at = now(),
     is_active = true
-  WHERE email = 'admin@masteredupath.com';
+  WHERE email = 'admin@fekrahedu.com';
   
   -- Log the password change
   INSERT INTO public.security_audit_logs (
@@ -40,7 +40,7 @@ BEGIN
     metadata
   ) VALUES (
     'admin_password_reset',
-    (SELECT id FROM admin_credentials WHERE email = 'admin@masteredupath.com'),
+    (SELECT id FROM admin_credentials WHERE email = 'admin@fekrahedu.com'),
     'secure_password_generated',
     'high',
     jsonb_build_object(

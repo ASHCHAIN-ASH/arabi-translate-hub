@@ -105,7 +105,7 @@ const E = ({ customerName, amount, paymentMethod, referenceNumber, requestId, re
         </Section>
 
         <Section style={btnSection}>
-          <Button style={btnPrimary} href={walletUrl || 'https://masteredupath.com/wallet'}>
+          <Button style={btnPrimary} href={walletUrl || 'https://fekrahedu.com/wallet'}>
             متابعة الطلب من المحفظة
           </Button>
         </Section>
@@ -139,7 +139,7 @@ export const template = {
     referenceNumber: 'TRX-2024-001',
     requestId: 'a1b2c3d4',
     requestedAt: new Date().toLocaleDateString('ar-SA'),
-    walletUrl: 'https://masteredupath.com/wallet',
+    walletUrl: 'https://fekrahedu.com/wallet',
   },
 } satisfies TemplateEntry
 

@@ -300,7 +300,7 @@ export default function AdminResearchContractDetails() {
     if (!contract?.verification_token) return;
     // Always use the official production domain for client-facing links,
     // never the lovableproject.com sandbox/preview origin.
-    const PUBLIC_BASE = 'https://masteredupath.com';
+    const PUBLIC_BASE = 'https://fekrahedu.com';
     const url = `${PUBLIC_BASE}/contracts/sign/${contract.verification_token}`;
     await navigator.clipboard.writeText(url);
     toast({ title: '🔗 تم نسخ رابط التوقيع', description: url });
@@ -363,7 +363,7 @@ export default function AdminResearchContractDetails() {
                     {pub?.title || contract.title}
                   </h1>
                   <p className="text-xs mt-1" style={{ color: '#c9a96199' }}>
-                    منصة ماستر إيدو باث للخدمات الأكاديمية — المملكة العربية السعودية
+                    منصة فكرة إيدو للخدمات الأكاديمية — المملكة العربية السعودية
                   </p>
                 </div>
               </div>
@@ -408,7 +408,7 @@ export default function AdminResearchContractDetails() {
               } else if (contract.metadata?.duration_days) {
                 durationText = `${contract.metadata.duration_days} يوم`;
               }
-              const partyOne = 'منصة ماستر إيدو باث';
+              const partyOne = 'منصة فكرة إيدو';
               const partyTwo = pub?.client_name || contract.client_full_name || '—';
               const cellStyle = { background: 'rgba(201,169,97,0.08)', borderColor: 'rgba(201,169,97,0.25)' } as const;
               const labelStyle = { color: '#c9a961' } as const;

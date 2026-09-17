@@ -5,7 +5,7 @@ DECLARE
     admin_user_id UUID;
 BEGIN
     -- البحث عن المستخدم الموجود
-    SELECT id INTO admin_user_id FROM auth.users WHERE email = 'admin@masteredupath.com';
+    SELECT id INTO admin_user_id FROM auth.users WHERE email = 'admin@fekrahedu.com';
     
     -- إذا لم يكن موجوداً، إنشاؤه
     IF admin_user_id IS NULL THEN
@@ -29,7 +29,7 @@ BEGIN
             admin_user_id,
             'authenticated',
             'authenticated',
-            'admin@masteredupath.com',
+            'admin@fekrahedu.com',
             crypt('Ali@@#@@1409', gen_salt('bf')),
             now(),
             '{"provider":"email","providers":["email"]}',
@@ -46,7 +46,7 @@ BEGIN
             role
         ) VALUES (
             admin_user_id,
-            'admin@masteredupath.com',
+            'admin@fekrahedu.com',
             'مدير النظام',
             'admin'
         );
@@ -67,7 +67,7 @@ BEGIN
             role
         ) VALUES (
             admin_user_id,
-            'admin@masteredupath.com',
+            'admin@fekrahedu.com',
             'مدير النظام',
             'admin'
         );

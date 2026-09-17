@@ -1,12 +1,12 @@
--- إكمال إنشاء البيانات الأساسية لموقع masteredupath.com
+-- إكمال إنشاء البيانات الأساسية لموقع fekrahedu.com
 DO $$
 DECLARE
-    masteredupath_tenant_id UUID;
+    fekrahedu_tenant_id UUID;
 BEGIN
     -- الحصول على tenant_id
-    SELECT id INTO masteredupath_tenant_id 
+    SELECT id INTO fekrahedu_tenant_id 
     FROM public.tenants 
-    WHERE code = 'masteredupath';
+    WHERE code = 'fekrahedu';
     
     -- إنشاء المستخدم الإداري
     INSERT INTO public.admin_credentials (
@@ -17,14 +17,14 @@ BEGIN
         tenant_id,
         is_active
     ) VALUES (
-        'admin@masteredupath.com',
+        'admin@fekrahedu.com',
         '$2a$06$Ymdta.TsNIzaoB2c6/WFLeSxLaWOaWhWnCnGDKJxGoKmQ0v54vHE2',
-        'مدير النظام - ماستر إيدو باث',
+        'مدير النظام - فكرة إيدو',
         'admin',
-        masteredupath_tenant_id,
+        fekrahedu_tenant_id,
         true
     ) ON CONFLICT (email) DO UPDATE SET
-        tenant_id = masteredupath_tenant_id,
+        tenant_id = fekrahedu_tenant_id,
         full_name = EXCLUDED.full_name,
         is_active = true,
         updated_at = now();
@@ -41,7 +41,7 @@ BEGIN
         is_active
     ) VALUES 
     (
-        masteredupath_tenant_id,
+        fekrahedu_tenant_id,
         'خدمات الأطروحات والرسائل الجامعية',
         'Thesis and Dissertation Services',
         'خدمات شاملة لكتابة وتطوير الأطروحات والرسائل الأكاديمية بجودة عالية',
@@ -51,7 +51,7 @@ BEGIN
         true
     ),
     (
-        masteredupath_tenant_id,
+        fekrahedu_tenant_id,
         'خدمات البحث العلمي والتحليل الإحصائي',
         'Research and Statistical Analysis Services',
         'خدمات البحث العلمي والتحليل الإحصائي والمراجعة الأكاديمية المتخصصة',
@@ -61,7 +61,7 @@ BEGIN
         true
     ),
     (
-        masteredupath_tenant_id,
+        fekrahedu_tenant_id,
         'خدمات النشر الأكاديمي والمجلات',
         'Academic Publishing Services',
         'خدمات النشر في المجلات العلمية المحكمة والمؤتمرات الأكاديمية المرموقة',
@@ -71,7 +71,7 @@ BEGIN
         true
     ),
     (
-        masteredupath_tenant_id,
+        fekrahedu_tenant_id,
         'خدمات الدعم الأكاديمي والاستشارات',
         'Academic Support and Consultation Services',
         'استشارات أكاديمية متخصصة ودعم الطلاب في مراحل الدراسات العليا',
@@ -89,7 +89,7 @@ BEGIN
     ) VALUES (
         EXTRACT(YEAR FROM CURRENT_DATE)::INTEGER,
         1000,
-        masteredupath_tenant_id
+        fekrahedu_tenant_id
     ) ON CONFLICT (year, tenant_id) DO UPDATE SET
         counter = GREATEST(invoice_counters.counter, EXCLUDED.counter);
     
@@ -103,45 +103,45 @@ BEGIN
     ) VALUES 
     (
         'site_name',
-        '"ماستر إيدو باث - المسار التعليمي المتميز"'::jsonb,
+        '"فكرة إيدو - المسار التعليمي المتميز"'::jsonb,
         'اسم الموقع الكامل',
         'general',
-        masteredupath_tenant_id
+        fekrahedu_tenant_id
     ),
     (
         'contact_email',
-        '"info@masteredupath.com"'::jsonb,
+        '"info@fekrahedu.com"'::jsonb,
         'البريد الإلكتروني الرسمي للتواصل',
         'contact',
-        masteredupath_tenant_id
+        fekrahedu_tenant_id
     ),
     (
         'phone_number',
         '"+966501234567"'::jsonb,
         'رقم الهاتف الرسمي',
         'contact',
-        masteredupath_tenant_id
+        fekrahedu_tenant_id
     ),
     (
         'academic_year',
         '"2024-2025"'::jsonb,
         'السنة الأكاديمية الحالية',
         'academic',
-        masteredupath_tenant_id
+        fekrahedu_tenant_id
     ),
     (
         'default_language',
         '"ar"'::jsonb,
         'اللغة الافتراضية للموقع',
         'localization',
-        masteredupath_tenant_id
+        fekrahedu_tenant_id
     ),
     (
         'working_hours',
         '{"saturday_thursday": "8:00-17:00", "friday": "closed"}'::jsonb,
         'ساعات العمل الرسمية',
         'general',
-        masteredupath_tenant_id
+        fekrahedu_tenant_id
     ) ON CONFLICT (key, tenant_id) DO UPDATE SET
         value = EXCLUDED.value,
         updated_at = now();

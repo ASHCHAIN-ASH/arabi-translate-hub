@@ -42,7 +42,7 @@ const handler = async (req: Request): Promise<Response> => {
         .from("inbox_messages")
         .insert({
           sender_name: orderData.fullName?.slice(0, 200) ?? "زائر",
-          sender_email: orderData.email?.slice(0, 200) ?? "unknown@masteredupath.com",
+          sender_email: orderData.email?.slice(0, 200) ?? "unknown@fekrahedu.com",
           sender_phone: orderData.phone?.slice(0, 50) ?? null,
           subject: `طلب خدمة: ${orderData.serviceTitle}`,
           message: orderData.details?.slice(0, 8000) ||
@@ -234,7 +234,7 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
           
           <div class="header">
-            <h1>🎓 ماستر إيدو باث - طلب خدمة بحثية</h1>
+            <h1>🎓 فكرة إيدو - طلب خدمة بحثية</h1>
             <div class="timestamp">
               📅 ${new Date().toLocaleString('ar-SA', { 
                 weekday: 'long', 
@@ -289,7 +289,7 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
           
           <div class="footer">
-            <p class="company-name">ماستر إيدو باث - نظام الإشعارات</p>
+            <p class="company-name">فكرة إيدو - نظام الإشعارات</p>
             <p>&copy; 2025 جميع الحقوق محفوظة</p>
             <p>هذه رسالة تلقائية من نظام إدارة الطلبات</p>
           </div>
@@ -510,7 +510,7 @@ const handler = async (req: Request): Promise<Response> => {
       <body>
         <div class="email-wrapper">
           <div class="header">
-            <h1>🎯 ماستر إيدو باث</h1>
+            <h1>🎯 فكرة إيدو</h1>
             <h2>تأكيد استلام طلبك</h2>
           </div>
           
@@ -551,13 +551,13 @@ const handler = async (req: Request): Promise<Response> => {
             <div class="contact-section">
               <h3>📞 طرق التواصل معنا</h3>
               <div class="contact-item">
-                📧 البريد الإلكتروني: info@masteredupath.com
+                📧 البريد الإلكتروني: info@fekrahedu.com
               </div>
               <div class="contact-item">
                 📱 جوال/واتساب: 0559600824
               </div>
               <div class="contact-item">
-                🌐 الموقع الإلكتروني: www.masteredupath.com
+                🌐 الموقع الإلكتروني: www.fekrahedu.com
               </div>
               <div class="contact-item">
                 ⏰ أوقات العمل: من الأحد إلى الخميس (9 صباحاً - 6 مساءً)
@@ -566,7 +566,7 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
           
           <div class="footer">
-            <p class="company-name">ماستر إيدو باث</p>
+            <p class="company-name">فكرة إيدو</p>
             <p>&copy; 2025 جميع الحقوق محفوظة</p>
             <p>نحن ملتزمون بتقديم أفضل خدمات البحث العلمي الاحترافية والمعتمدة</p>
             <p>شكراً لثقتكم بنا ونتطلع لخدمتكم</p>
@@ -578,8 +578,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // إرسال الإيميلات
     const adminRes = await resend.emails.send({
-      from: "Master Edu Path System <info@masteredupath.com>",
-      to: ["info@masteredupath.com"],
+      from: "FekrahEdu System <info@fekrahedu.com>",
+      to: ["info@fekrahedu.com"],
       replyTo: orderData.email,
       subject: `🚨 [طلب جديد ${orderId}] ${orderData.serviceTitle} - ${orderData.fullName}`,
       html: adminEmailHtml,
@@ -588,10 +588,10 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Admin email sent:", adminRes);
 
     const clientRes = await resend.emails.send({
-      from: "Master Edu Path <info@masteredupath.com>",
-      replyTo: "info@masteredupath.com",
+      from: "FekrahEdu <info@fekrahedu.com>",
+      replyTo: "info@fekrahedu.com",
       to: [orderData.email],
-      subject: `[MasterEduPath] تأكيد استلام طلبك – ${orderData.serviceTitle}`,
+      subject: `[FekrahEdu] تأكيد استلام طلبك – ${orderData.serviceTitle}`,
       html: clientEmailHtml,
     });
 

@@ -265,7 +265,7 @@ const ClientGuide = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
               >
-                <h2 className="text-4xl font-bold mb-4 font-arabic-title">رحلة العمل مع MasterEduPath</h2>
+                <h2 className="text-4xl font-bold mb-4 font-arabic-title">رحلة العمل مع FekrahEdu</h2>
                 <p className="text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed">
                   اتبع هذه الخطوات المدروسة بعناية لضمان الحصول على أفضل النتائج وأعلى مستويات الجودة لمشروعك
                 </p>

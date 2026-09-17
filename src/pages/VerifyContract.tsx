@@ -39,7 +39,7 @@ const VerifyContract = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    document.title = 'التحقق من صحة العقد | ماستر إيدو باث';
+    document.title = 'التحقق من صحة العقد | فكرة إيدو';
     const verify = async () => {
       if (!token) {
         setError('رابط غير صالح');
@@ -101,7 +101,7 @@ const VerifyContract = () => {
                 </motion.div>
                 <h1 className="text-2xl font-bold text-center mb-1">عقد موثّق وأصلي</h1>
                 <p className="text-center text-muted-foreground text-sm mb-6">
-                  تم التحقق من هذا العقد عبر منصة ماستر إيدو باث
+                  تم التحقق من هذا العقد عبر منصة فكرة إيدو
                 </p>
 
                 <div className="space-y-3 bg-muted/30 rounded-xl p-5">

@@ -505,7 +505,7 @@ export const generateClientEmailTemplate = (
           <div class="logo-container">
             <div class="company-logo">⚖️</div>
           </div>
-          <h1 class="company-title">وكالة ماستر إيدو باث</h1>
+          <h1 class="company-title">وكالة فكرة إيدو</h1>
           <p class="company-subtitle">للحلول التعليمية والملكية الفكرية المتقدمة</p>
         </div>
         
@@ -568,7 +568,7 @@ export const generateClientEmailTemplate = (
           <div class="contact-grid">
             <div class="contact-item">
               <span class="contact-icon">📧</span>
-              <div class="contact-text">legal@masteredupath.com</div>
+              <div class="contact-text">legal@fekrahedu.com</div>
             </div>
             <div class="contact-item">
               <span class="contact-icon">📱</span>
@@ -576,7 +576,7 @@ export const generateClientEmailTemplate = (
             </div>
             <div class="contact-item">
               <span class="contact-icon">🌐</span>
-              <div class="contact-text">www.masteredupath.com</div>
+              <div class="contact-text">www.fekrahedu.com</div>
             </div>
             <div class="contact-item">
               <span class="contact-icon">📍</span>
@@ -587,7 +587,7 @@ export const generateClientEmailTemplate = (
           <div class="footer-content">
             هذا الإيميل تم إرساله تلقائياً من نظام إدارة العمليات.<br>
             للاستفسارات والمتابعة، يرجى التواصل عبر القنوات الرسمية المذكورة أعلاه.<br><br>
-            © 2024 وكالة ماستر إيدو باث للحلول التعليمية المتقدمة<br>
+            © 2024 وكالة فكرة إيدو للحلول التعليمية المتقدمة<br>
             جميع الحقوق محفوظة | المملكة العربية السعودية
           </div>
         </div>
@@ -611,11 +611,11 @@ export const generateClientEmailTemplate = (
     ${data.timelineNotice || ''}
     
     للتواصل:
-    📧 legal@masteredupath.com
+    📧 legal@fekrahedu.com
     📱 0559600824
-    🌐 www.masteredupath.com
+    🌐 www.fekrahedu.com
     
-    © 2024 وكالة ماستر إيدو باث للحلول التعليمية المتقدمة
+    © 2024 وكالة فكرة إيدو للحلول التعليمية المتقدمة
   `;
   
   return {
@@ -663,7 +663,7 @@ export const generateAdminEmailTemplate = (
             <div class="company-logo">⚡</div>
           </div>
           <h1 class="company-title">نظام الإدارة المتقدم</h1>
-          <p class="company-subtitle">وكالة ماستر إيدو باث - لوحة التحكم الإدارية</p>
+          <p class="company-subtitle">وكالة فكرة إيدو - لوحة التحكم الإدارية</p>
         </div>
         
         <!-- المحتوى -->
@@ -745,10 +745,10 @@ export const generateAdminEmailTemplate = (
           </div>
           
           <p style="font-weight: 600; margin-bottom: 10px;">
-            نظام الإدارة المتقدم - وكالة ماستر إيدو باث
+            نظام الإدارة المتقدم - وكالة فكرة إيدو
           </p>
           <p style="font-size: 14px; opacity: 0.8;">
-            📧 legal@masteredupath.com | 📱 0559600824 | 🌐 masteredupath.com
+            📧 legal@fekrahedu.com | 📱 0559600824 | 🌐 fekrahedu.com
           </p>
         </div>
       </div>
@@ -767,8 +767,8 @@ export const generateAdminEmailTemplate = (
     
     ${data.additionalInfo || ''}
     
-    النظام الإداري - وكالة ماستر إيدو باث
-    📧 legal@masteredupath.com | 📱 0559600824
+    النظام الإداري - وكالة فكرة إيدو
+    📧 legal@fekrahedu.com | 📱 0559600824
   `;
   
   return {

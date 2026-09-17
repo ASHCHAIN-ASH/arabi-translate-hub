@@ -8,8 +8,8 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
-const OFFICIAL_EMAIL = "info@masteredupath.com";
-const FROM_LABEL = "نظام التواصل <info@masteredupath.com>";
+const OFFICIAL_EMAIL = "info@fekrahedu.com";
+const FROM_LABEL = "نظام التواصل <info@fekrahedu.com>";
 
 interface InboxPayload {
   name: string;
@@ -110,7 +110,7 @@ serve(async (req) => {
 
       try {
         const clientRes = await sendEmail({
-          from: "وكالة ماستر إيدو باث <info@masteredupath.com>",
+          from: "وكالة فكرة إيدو <info@fekrahedu.com>",
           to: [body.email],
           subject: "✅ تم استلام رسالتك",
           html: `<!DOCTYPE html><html dir="rtl" lang="ar"><body style="font-family:Tahoma,Arial,sans-serif;background:#f6f7fb;padding:24px;color:#1f2937"><div style="max-width:600px;margin:auto;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #e5e7eb"><div style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;padding:22px 24px"><h2 style="margin:0">شكراً لك ${safeName}</h2><p style="margin:6px 0 0;opacity:.9">تم استلام رسالتك بنجاح وسنرد عليك قريباً</p></div><div style="padding:22px 24px;line-height:1.8"><p>الموضوع: <b>${safeSubject}</b></p><p>سنتواصل معك على البريد <b>${escapeHtml(body.email)}</b> خلال 4 ساعات كحد أقصى.</p><p style="margin-top:18px">للتواصل العاجل: واتساب 0559600824</p></div></div></body></html>`,

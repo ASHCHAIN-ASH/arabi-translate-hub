@@ -1,4 +1,4 @@
--- إتمام إنشاء قاعدة بيانات منفصلة لموقع masteredupath.com
+-- إتمام إنشاء قاعدة بيانات منفصلة لموقع fekrahedu.com
 -- بدون استخدام ON CONFLICT للجداول التي لا تحتوي على فهارس فريدة
 
 -- إنشاء الفهرس الفريد لجدول invoice_counters إذا لم يكن موجوداً
@@ -8,7 +8,7 @@ ON public.invoice_counters (year, tenant_id);
 -- إنشاء tenant وبياناته الأساسية
 DO $$
 DECLARE
-    masteredupath_tenant_id UUID;
+    fekrahedu_tenant_id UUID;
     existing_admin UUID;
     existing_settings INTEGER;
 BEGIN
@@ -21,10 +21,10 @@ BEGIN
         settings,
         is_active
     ) VALUES (
-        'Master Edu Path',
-        'masteredupath',
-        'masteredupath.com',
-        'masteredupath_db',
+        'FekrahEdu',
+        'fekrahedu',
+        'fekrahedu.com',
+        'fekrahedu_db',
         jsonb_build_object(
             'theme', 'academic',
             'language', 'ar',
@@ -34,7 +34,7 @@ BEGIN
             'branding', jsonb_build_object(
                 'primary_color', '#2D5AA0',
                 'secondary_color', '#F8B500',
-                'logo_url', '/assets/masteredupath-logo.png'
+                'logo_url', '/assets/fekrahedu-logo.png'
             )
         ),
         true
@@ -43,19 +43,19 @@ BEGIN
         domain = EXCLUDED.domain,
         settings = EXCLUDED.settings,
         updated_at = now()
-    RETURNING id INTO masteredupath_tenant_id;
+    RETURNING id INTO fekrahedu_tenant_id;
     
     -- إذا لم نحصل على ID من INSERT، احصل عليه من SELECT
-    IF masteredupath_tenant_id IS NULL THEN
-        SELECT id INTO masteredupath_tenant_id 
+    IF fekrahedu_tenant_id IS NULL THEN
+        SELECT id INTO fekrahedu_tenant_id 
         FROM public.tenants 
-        WHERE code = 'masteredupath';
+        WHERE code = 'fekrahedu';
     END IF;
     
     -- التحقق من وجود المستخدم الإداري
     SELECT id INTO existing_admin
     FROM public.admin_credentials
-    WHERE email = 'admin@masteredupath.com';
+    WHERE email = 'admin@fekrahedu.com';
     
     -- إنشاء المستخدم الإداري إذا لم يكن موجوداً
     IF existing_admin IS NULL THEN
@@ -67,18 +67,18 @@ BEGIN
             tenant_id,
             is_active
         ) VALUES (
-            'admin@masteredupath.com',
+            'admin@fekrahedu.com',
             '$2a$06$Ymdta.TsNIzaoB2c6/WFLeSxLaWOaWhWnCnGDKJxGoKmQ0v54vHE2',
-            'مدير النظام - ماستر إيدو باث',
+            'مدير النظام - فكرة إيدو',
             'admin',
-            masteredupath_tenant_id,
+            fekrahedu_tenant_id,
             true
         );
     ELSE
         -- تحديث بيانات المستخدم الموجود
         UPDATE public.admin_credentials 
-        SET tenant_id = masteredupath_tenant_id,
-            full_name = 'مدير النظام - ماستر إيدو باث',
+        SET tenant_id = fekrahedu_tenant_id,
+            full_name = 'مدير النظام - فكرة إيدو',
             is_active = true,
             updated_at = now()
         WHERE id = existing_admin;
@@ -96,7 +96,7 @@ BEGIN
         is_active
     ) VALUES 
     (
-        masteredupath_tenant_id,
+        fekrahedu_tenant_id,
         'خدمات الأطروحات والرسائل الجامعية',
         'Thesis and Dissertation Services',
         'خدمات شاملة لكتابة وتطوير الأطروحات والرسائل الأكاديمية',
@@ -106,7 +106,7 @@ BEGIN
         true
     ),
     (
-        masteredupath_tenant_id,
+        fekrahedu_tenant_id,
         'خدمات البحث العلمي والإحصاء',
         'Research and Statistical Analysis',
         'خدمات البحث العلمي والتحليل الإحصائي المتقدم',
@@ -116,7 +116,7 @@ BEGIN
         true
     ),
     (
-        masteredupath_tenant_id,
+        fekrahedu_tenant_id,
         'خدمات النشر الأكاديمي',
         'Academic Publishing Services',
         'دعم النشر في المجلات العلمية والمؤتمرات',
@@ -126,7 +126,7 @@ BEGIN
         true
     ),
     (
-        masteredupath_tenant_id,
+        fekrahedu_tenant_id,
         'الاستشارات الأكاديمية',
         'Academic Consultation',
         'استشارات متخصصة في التعليم العالي والبحث',
@@ -144,14 +144,14 @@ BEGIN
     ) VALUES (
         EXTRACT(YEAR FROM CURRENT_DATE)::INTEGER,
         1000,
-        masteredupath_tenant_id
+        fekrahedu_tenant_id
     ) ON CONFLICT (year, tenant_id) DO UPDATE SET
         counter = GREATEST(invoice_counters.counter, EXCLUDED.counter);
     
     -- التحقق من وجود إعدادات النظام
     SELECT COUNT(*) INTO existing_settings
     FROM public.system_settings
-    WHERE tenant_id = masteredupath_tenant_id;
+    WHERE tenant_id = fekrahedu_tenant_id;
     
     -- إنشاء إعدادات النظام إذا لم تكن موجودة
     IF existing_settings = 0 THEN
@@ -164,38 +164,38 @@ BEGIN
         ) VALUES 
         (
             'site_name',
-            '"ماستر إيدو باث"'::jsonb,
+            '"فكرة إيدو"'::jsonb,
             'اسم الموقع',
             'general',
-            masteredupath_tenant_id
+            fekrahedu_tenant_id
         ),
         (
             'contact_email',
-            '"info@masteredupath.com"'::jsonb,
+            '"info@fekrahedu.com"'::jsonb,
             'البريد الإلكتروني للتواصل',
             'contact',
-            masteredupath_tenant_id
+            fekrahedu_tenant_id
         ),
         (
             'phone_number',
             '"+966501234567"'::jsonb,
             'رقم الهاتف',
             'contact',
-            masteredupath_tenant_id
+            fekrahedu_tenant_id
         ),
         (
             'academic_year',
             '"2024-2025"'::jsonb,
             'السنة الأكاديمية',
             'academic',
-            masteredupath_tenant_id
+            fekrahedu_tenant_id
         ),
         (
             'default_language',
             '"ar"'::jsonb,
             'اللغة الافتراضية',
             'localization',
-            masteredupath_tenant_id
+            fekrahedu_tenant_id
         );
     END IF;
         

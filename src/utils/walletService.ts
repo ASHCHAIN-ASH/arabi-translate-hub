@@ -369,7 +369,7 @@ export const WalletService = {
       ]);
       const recipientEmail = authUser?.user?.email;
       if (recipientEmail) {
-        const origin = typeof window !== 'undefined' ? window.location.origin : 'https://masteredupath.com';
+        const origin = typeof window !== 'undefined' ? window.location.origin : 'https://fekrahedu.com';
         await supabase.functions.invoke('send-transactional-email', {
           body: {
             templateName: 'wallet-invoice-payment',

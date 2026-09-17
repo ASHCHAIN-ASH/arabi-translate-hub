@@ -158,7 +158,7 @@ serve(async (req) => {
     // Send confirmation email to client
     console.log("Sending confirmation email to client...");
     const clientEmailResponse = await resend.emails.send({
-      from: "Master Edu Path <no-reply@masteredupath.com>",
+      from: "FekrahEdu <no-reply@fekrahedu.com>",
       to: [requestData.email],
       subject: "تأكيد استلام بحثك للمراجعة المنهجية",
       html: `
@@ -205,8 +205,8 @@ serve(async (req) => {
     const fileBuffer = Uint8Array.from(atob(requestData.fileContent), c => c.charCodeAt(0));
     
     const adminEmailResponse = await resend.emails.send({
-      from: "نظام المراجعة المنهجية <no-reply@masteredupath.com>",
-      to: ["info@masteredupath.com"],
+      from: "نظام المراجعة المنهجية <no-reply@fekrahedu.com>",
+      to: ["info@fekrahedu.com"],
       subject: `🔔 تنبيه فوري: بحث جديد للمراجعة - ${requestData.fileName}`,
       html: `
         <div dir="rtl" style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
@@ -308,7 +308,7 @@ ${pdfReport}
           <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 2px solid #e5e7eb;">
             <p style="color: #6b7280; font-size: 14px; margin: 0;">
               تم إرسال هذا التنبيه تلقائياً من نظام المراجعة المنهجية بالذكاء الاصطناعي<br>
-              Master Edu Path - نظام إدارة الأبحاث
+              FekrahEdu - نظام إدارة الأبحاث
             </p>
           </div>
         </div>

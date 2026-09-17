@@ -33,7 +33,7 @@ const handler = async (req: Request): Promise<Response> => {
       const data: any = body;
       await supabaseAdmin.from("inbox_messages").insert({
         sender_name: (data.name || "زائر").toString().slice(0, 200),
-        sender_email: (data.email || "unknown@masteredupath.com").toString().slice(0, 200),
+        sender_email: (data.email || "unknown@fekrahedu.com").toString().slice(0, 200),
         sender_phone: null,
         subject: ('تسجيل اهتمام بمراجعة الأقران').toString().slice(0, 300),
         message: ('سجّل المستخدم اهتمامه بخدمة مراجعة الأقران Peer Review.' || "").toString().slice(0, 8000),
@@ -76,7 +76,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send confirmation email to user
     const userEmailResponse = await resend.emails.send({
-      from: "MasterEduPath <noreply@masteredupath.com>",
+      from: "FekrahEdu <noreply@fekrahedu.com>",
       to: [email],
       subject: "تأكيد تسجيل الاهتمام - خدمة المراجعة التعاونية العالمية",
       html: `
@@ -126,8 +126,8 @@ const handler = async (req: Request): Promise<Response> => {
             </div>
             
             <div class="footer">
-              <p><strong>MasterEduPath</strong></p>
-              <p>البريد الإلكتروني: info@masteredupath.com</p>
+              <p><strong>FekrahEdu</strong></p>
+              <p>البريد الإلكتروني: info@fekrahedu.com</p>
               <p>نحن نقدر ثقتك بنا ونتطلع لخدمتك قريباً</p>
             </div>
           </div>
@@ -140,8 +140,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send notification email to admin
     const adminEmailResponse = await resend.emails.send({
-      from: "MasterEduPath <noreply@masteredupath.com>",
-      to: ["info@masteredupath.com"],
+      from: "FekrahEdu <noreply@fekrahedu.com>",
+      to: ["info@fekrahedu.com"],
       subject: "تسجيل اهتمام جديد - خدمة المراجعة التعاونية العالمية",
       html: `
         <!DOCTYPE html>

@@ -1,4 +1,4 @@
-# دليل تطبيق SEO للموقع - MasterEduPath
+# دليل تطبيق SEO للموقع - FekrahEdu
 
 ## ✅ ما تم إنجازه
 
@@ -29,7 +29,7 @@
 ```typescript
 // src/pages/TranslationServices.tsx
 <SEO 
-  title="خدمات الترجمة الاحترافية - MasterEduPath | ترجمة أكاديمية وقانونية"
+  title="خدمات الترجمة الاحترافية - FekrahEdu | ترجمة أكاديمية وقانونية"
   description="خدمات ترجمة احترافية بأكثر من 100 لغة - ترجمة أكاديمية، قانونية، طبية، تقنية. دقة 99% وتسليم سريع"
   keywords="خدمات ترجمة, ترجمة احترافية, ترجمة أكاديمية, ترجمة قانونية, ترجمة معتمدة, ترجمة طبية"
   url="https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/translation-services"
@@ -39,7 +39,7 @@
     "name": "خدمات الترجمة المتخصصة",
     "provider": {
       "@type": "Organization",
-      "name": "MasterEduPath"
+      "name": "FekrahEdu"
     },
     "serviceType": "Translation Services",
     "areaServed": "Saudi Arabia",
@@ -52,7 +52,7 @@
 ```typescript
 // src/pages/ResearchServices.tsx
 <SEO 
-  title="خدمات البحث العلمي - MasterEduPath | نشر ومراجعة وتحليل إحصائي"
+  title="خدمات البحث العلمي - FekrahEdu | نشر ومراجعة وتحليل إحصائي"
   description="خدمات بحثية شاملة - نشر في المجلات العلمية، تحليل إحصائي SPSS، تدقيق لغوي، مراجعة الأقران، فحص الانتحال"
   keywords="بحث علمي, نشر علمي, تحليل إحصائي, SPSS, تدقيق لغوي, مراجعة أبحاث, فحص الانتحال, مجلات علمية"
   url="https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/research-services"
@@ -62,7 +62,7 @@
     "name": "خدمات البحث العلمي المتقدمة",
     "provider": {
       "@type": "Organization",
-      "name": "MasterEduPath"
+      "name": "FekrahEdu"
     },
     "serviceType": "Academic Research Services"
   }}
@@ -73,7 +73,7 @@
 ```typescript
 // src/pages/AcademicTranslation.tsx
 <SEO 
-  title="الترجمة الأكاديمية المتخصصة - MasterEduPath | رسائل وأبحاث علمية"
+  title="الترجمة الأكاديمية المتخصصة - FekrahEdu | رسائل وأبحاث علمية"
   description="ترجمة أكاديمية احترافية لرسائل الماجستير والدكتوراه والأبحاث العلمية بدقة 99.5%. مترجمون أكاديميون معتمدون"
   keywords="ترجمة أكاديمية, ترجمة رسائل ماجستير, ترجمة دكتوراه, ترجمة أبحاث علمية, مترجم أكاديمي, ترجمة علمية"
   url="https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/academic-translation"
@@ -84,7 +84,7 @@
 ```typescript
 // src/pages/LegalTranslation.tsx
 <SEO 
-  title="الترجمة القانونية المعتمدة - MasterEduPath | عقود ووثائق رسمية"
+  title="الترجمة القانونية المعتمدة - FekrahEdu | عقود ووثائق رسمية"
   description="ترجمة قانونية معتمدة للعقود والوثائق الرسمية. مترجمون قانونيون محلفون مع توثيق رسمي من السفارات"
   keywords="ترجمة قانونية, ترجمة معتمدة, ترجمة عقود, ترجمة وثائق, مترجم قانوني محلف, توثيق ترجمة"
   url="https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/legal-translation"
@@ -95,7 +95,7 @@
 ```typescript
 // src/pages/MedicalTranslation.tsx
 <SEO 
-  title="الترجمة الطبية المتخصصة - MasterEduPath | تقارير وأبحاث طبية"
+  title="الترجمة الطبية المتخصصة - FekrahEdu | تقارير وأبحاث طبية"
   description="ترجمة طبية دقيقة للتقارير الطبية، الأبحاث، الدراسات السريرية. مترجمون متخصصون في المجال الطبي"
   keywords="ترجمة طبية, ترجمة تقارير طبية, ترجمة أبحاث طبية, مترجم طبي, ترجمة دراسات سريرية"
   url="https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/medical-translation"
@@ -106,8 +106,8 @@
 ```typescript
 // src/pages/Blog.tsx
 <SEO 
-  title="المدونة - MasterEduPath | مقالات وأخبار أكاديمية وبحثية"
-  description="مدونة MasterEduPath - مقالات ونصائح حول البحث العلمي، النشر الأكاديمي، الترجمة، والخدمات التعليمية"
+  title="المدونة - FekrahEdu | مقالات وأخبار أكاديمية وبحثية"
+  description="مدونة FekrahEdu - مقالات ونصائح حول البحث العلمي، النشر الأكاديمي، الترجمة، والخدمات التعليمية"
   keywords="مدونة أكاديمية, مقالات بحثية, نصائح بحثية, أخبار أكاديمية, نصائح ترجمة"
   url="https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/blog"
   type="Blog"
@@ -118,20 +118,20 @@
 ```typescript
 // src/pages/Pricing.tsx
 <SEO 
-  title="الأسعار والباقات - MasterEduPath | احسب تكلفة خدماتك"
+  title="الأسعار والباقات - FekrahEdu | احسب تكلفة خدماتك"
   description="تعرف على أسعارنا المنافسة لخدمات الترجمة والبحث العلمي. حاسبة تكلفة فورية وخصومات خاصة لطلاب الجامعات"
   keywords="أسعار الترجمة, تكلفة البحث العلمي, حاسبة الأسعار, عروض وخصومات, باقات الخدمات"
   url="https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/pricing"
 />
 ```
 
-### عضوية ماستر
+### عضوية فكرة
 ```typescript
 // src/pages/MasterMembership.tsx
 <SEO 
-  title="عضوية ماستر VIP - MasterEduPath | خصومات وخدمات حصرية"
-  description="انضم لعضوية ماستر VIP واحصل على خصم 25% على جميع الخدمات، أولوية في التنفيذ، ومستشار أكاديمي مخصص"
-  keywords="عضوية ماستر, VIP membership, خصومات حصرية, خدمات متميزة, عضوية أكاديمية"
+  title="عضوية فكرة VIP - FekrahEdu | خصومات وخدمات حصرية"
+  description="انضم لعضوية فكرة VIP واحصل على خصم 25% على جميع الخدمات، أولوية في التنفيذ، ومستشار أكاديمي مخصص"
+  keywords="عضوية فكرة, VIP membership, خصومات حصرية, خدمات متميزة, عضوية أكاديمية"
   url="https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/master-membership"
 />
 ```
@@ -146,9 +146,9 @@
   "serviceType": "Academic Translation",
   "provider": {
     "@type": "Organization",
-    "name": "MasterEduPath Agency",
+    "name": "FekrahEdu Agency",
     "telephone": "+966500776343",
-    "email": "info@masteredupath.com"
+    "email": "info@fekrahedu.com"
   },
   "offers": {
     "@type": "Offer",
@@ -175,7 +175,7 @@
   "datePublished": "2025-01-01",
   "publisher": {
     "@type": "Organization",
-    "name": "MasterEduPath",
+    "name": "FekrahEdu",
     "logo": {
       "@type": "ImageObject",
       "url": "https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/assets/national-day-logo-original.webp"

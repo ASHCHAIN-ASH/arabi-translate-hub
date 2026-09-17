@@ -3,7 +3,7 @@ INSERT INTO public.whatsapp_templates (event_key, title, body_text, variables, i
 VALUES (
   'quote_sent',
   'إرسال عرض السعر',
-  E'🎓 *منصة ماستر إيدو باث الأكاديمية*\n━━━━━━━━━━━━━━━\nمرحباً {{name}} 👋\n\nتم إعداد عرض السعر الخاص بطلبك الأكاديمي ✨\n\n📚 *الخدمة:* {{service}}\n🔖 *رقم الطلب:* {{order_no}}\n💰 *المبلغ الإجمالي:* {{amount}} ر.س\n📅 *الموعد النهائي:* {{deadline}}\n🕐 *تاريخ الإرسال:* {{sent_at}}\n\n📝 *ملاحظات العرض:*\n{{notes}}\n\n✅ للموافقة على العرض والمتابعة:\n{{link}}\n\n— فريق MasterEduPath الأكاديمي',
+  E'🎓 *منصة فكرة إيدو الأكاديمية*\n━━━━━━━━━━━━━━━\nمرحباً {{name}} 👋\n\nتم إعداد عرض السعر الخاص بطلبك الأكاديمي ✨\n\n📚 *الخدمة:* {{service}}\n🔖 *رقم الطلب:* {{order_no}}\n💰 *المبلغ الإجمالي:* {{amount}} ر.س\n📅 *الموعد النهائي:* {{deadline}}\n🕐 *تاريخ الإرسال:* {{sent_at}}\n\n📝 *ملاحظات العرض:*\n{{notes}}\n\n✅ للموافقة على العرض والمتابعة:\n{{link}}\n\n— فريق FekrahEdu الأكاديمي',
   '["name","service","order_no","amount","deadline","sent_at","notes","link"]'::jsonb,
   true
 )
@@ -38,7 +38,7 @@ BEGIN
         'order_number', COALESCE(NEW.tracking_id, NEW.id::text),
         'service', COALESCE(NEW.service_name, 'خدمة أكاديمية'),
         'delivered_at', to_char(timezone('Asia/Riyadh', now()), 'YYYY-MM-DD HH24:MI'),
-        'link', 'https://masteredupath.com/orders/' || NEW.id::text
+        'link', 'https://fekrahedu.com/orders/' || NEW.id::text
       ),
       'service_order', NEW.id::text, NEW.user_id
     );
@@ -53,7 +53,7 @@ BEGIN
         'deadline', COALESCE(to_char(NEW.deadline, 'YYYY-MM-DD'), 'يُحدَّد لاحقاً'),
         'sent_at', to_char(timezone('Asia/Riyadh', now()), 'YYYY-MM-DD HH24:MI'),
         'notes', COALESCE(NULLIF(NEW.quote_notes, ''), 'لا توجد ملاحظات إضافية'),
-        'link', 'https://masteredupath.com/orders/' || NEW.id::text
+        'link', 'https://fekrahedu.com/orders/' || NEW.id::text
       ),
       'service_order', NEW.id::text, NEW.user_id
     );
@@ -67,7 +67,7 @@ BEGIN
         'service', COALESCE(NEW.service_name, 'خدمة أكاديمية'),
         'status', public.lifecycle_status_ar(NEW.lifecycle_status::text),
         'updated_at', to_char(timezone('Asia/Riyadh', now()), 'YYYY-MM-DD HH24:MI'),
-        'link', 'https://masteredupath.com/orders/' || NEW.id::text
+        'link', 'https://fekrahedu.com/orders/' || NEW.id::text
       ),
       'service_order', NEW.id::text, NEW.user_id
     );

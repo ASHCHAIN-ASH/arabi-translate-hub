@@ -111,8 +111,8 @@ const handler = async (req: Request): Promise<Response> => {
     `;
 
     const result = await resend.emails.send({
-      from: "MasterEduPath <info@masteredupath.com>",
-      to: ["admin@masteredupath.com"],
+      from: "FekrahEdu <info@fekrahedu.com>",
+      to: ["admin@fekrahedu.com"],
       subject: `💰 طلب شحن جديد #${shortId} — ${amountFmt} (${paymentMethodAr(payment_method)})`,
       html,
     });

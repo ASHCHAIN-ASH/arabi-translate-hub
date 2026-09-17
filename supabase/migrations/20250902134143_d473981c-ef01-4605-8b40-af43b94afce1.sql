@@ -7,7 +7,7 @@ INSERT INTO public.email_templates (
   is_active
 ) VALUES (
   'invoice_pdf',
-  'فاتورة ضريبية رقم {{invoice_number}} - وكالة ماستر إيدو باث',
+  'فاتورة ضريبية رقم {{invoice_number}} - وكالة فكرة إيدو',
   '<!DOCTYPE html>
   <html lang="ar" dir="rtl">
   <head>
@@ -20,8 +20,8 @@ INSERT INTO public.email_templates (
       
       <!-- Header -->
       <div style="text-align: center; margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, #1a365d, #3182ce); color: white; border-radius: 8px;">
-        <h1 style="margin: 0; font-size: 28px;">وكالة ماستر إيدو باث</h1>
-        <p style="margin: 5px 0 0 0; font-size: 16px; opacity: 0.9;">Master Edu Path Agency</p>
+        <h1 style="margin: 0; font-size: 28px;">وكالة فكرة إيدو</h1>
+        <p style="margin: 5px 0 0 0; font-size: 16px; opacity: 0.9;">FekrahEdu Agency</p>
       </div>
       
       <!-- Main Content -->
@@ -66,7 +66,7 @@ INSERT INTO public.email_templates (
           </div>
           <div>
             <p style="margin: 5px 0;"><strong>✉️ البريد الإلكتروني:</strong></p>
-            <p style="margin: 0; color: #3182ce; font-weight: bold;">info@masteredupath.com</p>
+            <p style="margin: 0; color: #3182ce; font-weight: bold;">info@fekrahedu.com</p>
           </div>
         </div>
       </div>
@@ -74,10 +74,10 @@ INSERT INTO public.email_templates (
       <!-- Company Information -->
       <div style="background: linear-gradient(135deg, #edf2f7, #e2e8f0); padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 20px;">
         <p style="font-weight: bold; color: #1a365d; font-size: 16px; margin: 5px 0;">
-          وكالة ماستر إيدو باث تتبع لشركة علي صالح الشهري القابضة
+          وكالة فكرة إيدو تتبع لشركة علي صالح الشهري القابضة
         </p>
         <p style="color: #666; font-size: 14px; margin: 5px 0; font-style: italic;">
-          Master Edu Path Agency - Subsidiary of Ali Saleh Al-Shehri Holding Company
+          FekrahEdu Agency - Subsidiary of Ali Saleh Al-Shehri Holding Company
         </p>
         <div style="margin-top: 15px;">
           <p style="font-size: 12px; color: #718096; margin: 0;">

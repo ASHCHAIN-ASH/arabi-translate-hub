@@ -115,11 +115,11 @@ const E = ({ customerName, invoiceNumber, amount, newBalance, paidAt, transactio
         </Section>
 
         <Section style={btnSection}>
-          <Button style={btnPrimary} href={invoiceUrl || 'https://masteredupath.com/invoices'}>
+          <Button style={btnPrimary} href={invoiceUrl || 'https://fekrahedu.com/invoices'}>
             عرض الفاتورة المدفوعة
           </Button>
           <Text style={{ margin: '12px 0 0', fontSize: '12px' }}>
-            <a href={walletUrl || 'https://masteredupath.com/wallet'} style={linkSecondary}>
+            <a href={walletUrl || 'https://fekrahedu.com/wallet'} style={linkSecondary}>
               💼 عرض حركة المحفظة
             </a>
           </Text>
@@ -147,8 +147,8 @@ export const template = {
     newBalance: '2,250.00',
     paidAt: new Date().toLocaleString('ar-SA'),
     transactionId: 'a1b2c3d4',
-    invoiceUrl: 'https://masteredupath.com/invoices',
-    walletUrl: 'https://masteredupath.com/wallet',
+    invoiceUrl: 'https://fekrahedu.com/invoices',
+    walletUrl: 'https://fekrahedu.com/wallet',
   },
 } satisfies TemplateEntry
 

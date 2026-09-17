@@ -16,39 +16,39 @@ interface SEOProps {
 const SEO = ({
   title,
   description,
-  keywords = "MasterEduPath, خدمات بحثية, ترجمة أكاديمية, نشر علمي, تدقيق لغوي, تحليل إحصائي, SPSS, جامعات سعودية, بحث علمي",
-  image = "https://masteredupath.com/assets/national-day-logo-original.webp",
-  url = "https://masteredupath.com",
+  keywords = "FekrahEdu, خدمات بحثية, ترجمة أكاديمية, نشر علمي, تدقيق لغوي, تحليل إحصائي, SPSS, جامعات سعودية, بحث علمي",
+  image = "https://fekrahedu.com/assets/national-day-logo-original.webp",
+  url = "https://fekrahedu.com",
   type = "website",
-  author = "MasterEduPath Agency",
+  author = "FekrahEdu Agency",
   publishedTime,
   schema,
   noIndex = false
 }: SEOProps) => {
-  const siteName = "MasterEduPath - وكالة الحلول التعليمية المتقدمة";
-  const twitterHandle = "@MasterEduPath";
+  const siteName = "FekrahEdu - وكالة الحلول التعليمية المتقدمة";
+  const twitterHandle = "@FekrahEdu";
 
   // Organization Schema
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "MasterEduPath Agency",
-    "alternateName": "وكالة ماستر إيدو باث",
-    "url": "https://masteredupath.com",
-    "logo": "https://masteredupath.com/assets/national-day-logo-original.webp",
+    "name": "FekrahEdu Agency",
+    "alternateName": "وكالة فكرة إيدو",
+    "url": "https://fekrahedu.com",
+    "logo": "https://fekrahedu.com/assets/national-day-logo-original.webp",
     "contactPoint": {
       "@type": "ContactPoint",
       "telephone": "+966559600824",
       "contactType": "customer service",
-      "email": "info@masteredupath.com",
+      "email": "info@fekrahedu.com",
       "areaServed": "SA",
       "availableLanguage": ["ar", "en"]
     },
     "sameAs": [
-      "https://www.facebook.com/MasterEduPath",
-      "https://twitter.com/MasterEduPath",
-      "https://www.linkedin.com/company/masteredupath",
-      "https://www.instagram.com/masteredupath"
+      "https://www.facebook.com/FekrahEdu",
+      "https://twitter.com/FekrahEdu",
+      "https://www.linkedin.com/company/fekrahedu",
+      "https://www.instagram.com/fekrahedu"
     ],
     "address": {
       "@type": "PostalAddress",

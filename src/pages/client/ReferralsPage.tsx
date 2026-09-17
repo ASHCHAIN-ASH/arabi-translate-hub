@@ -140,17 +140,17 @@ export default function ReferralsPage() {
   };
 
   const shareText = encodeURIComponent(
-    `🎓 انضم إلى منصة Master Edu Path للخدمات الأكاديمية واحصل على مزايا حصرية!\n\nاستخدم رمز الإحالة: ${code || ''}\n${shareUrl}`
+    `🎓 انضم إلى منصة FekrahEdu للخدمات الأكاديمية واحصل على مزايا حصرية!\n\nاستخدم رمز الإحالة: ${code || ''}\n${shareUrl}`
   );
 
   const shareWhatsapp = () => window.open(`https://wa.me/?text=${shareText}`, '_blank');
   const shareTelegram = () => window.open(`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${shareText}`, '_blank');
   const shareTwitter = () => window.open(`https://twitter.com/intent/tweet?text=${shareText}`, '_blank');
-  const shareEmail = () => window.location.href = `mailto:?subject=${encodeURIComponent('انضم إلى Master Edu Path')}&body=${shareText}`;
+  const shareEmail = () => window.location.href = `mailto:?subject=${encodeURIComponent('انضم إلى FekrahEdu')}&body=${shareText}`;
   const nativeShare = async () => {
     if (navigator.share) {
       try {
-        await navigator.share({ title: 'Master Edu Path', text: decodeURIComponent(shareText), url: shareUrl });
+        await navigator.share({ title: 'FekrahEdu', text: decodeURIComponent(shareText), url: shareUrl });
       } catch {}
     } else {
       handleCopy(shareUrl, 'link');

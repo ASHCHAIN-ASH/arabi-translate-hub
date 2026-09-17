@@ -394,7 +394,7 @@ const handler = async (req: Request): Promise<Response> => {
         <div class="email-wrapper">
           <div class="header">
             <h1>🎉 مرحباً بك في برنامج التسويق بالعمولة</h1>
-            <p>وكالة ماستر إيدو باث للحلول التعليمية المتقدمة</p>
+            <p>وكالة فكرة إيدو للحلول التعليمية المتقدمة</p>
           </div>
           
           <div class="content">
@@ -404,7 +404,7 @@ const handler = async (req: Request): Promise<Response> => {
             </div>
             
             <div class="intro-text">
-              نرحب بك بحرارة في برنامج التسويق بالعمولة الخاص بوكالة ماستر إيدو باث! 
+              نرحب بك بحرارة في برنامج التسويق بالعمولة الخاص بوكالة فكرة إيدو! 
               تم قبول طلبك وتسجيلك بنجاح في البرنامج. نحن متحمسون للعمل معك وتحقيق النجاح المشترك.
             </div>
             
@@ -466,10 +466,10 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
           
           <div class="footer">
-            <p class="company-name">🎯 وكالة ماستر إيدو باث</p>
+            <p class="company-name">🎯 وكالة فكرة إيدو</p>
             <p>للحلول التعليمية والأكاديمية المتقدمة</p>
-            <p>📞 0559600824 | 📧 legal@masteredupath.com</p>
-            <p>🌐 www.masteredupath.com</p>
+            <p>📞 0559600824 | 📧 legal@fekrahedu.com</p>
+            <p>🌐 www.fekrahedu.com</p>
             <p style="margin-top: 15px; font-size: 12px; opacity: 0.8;">
               &copy; 2024 جميع الحقوق محفوظة
             </p>
@@ -494,8 +494,8 @@ const handler = async (req: Request): Promise<Response> => {
 
 شكراً لانضمامك إلى فريقنا!
 
-وكالة ماستر إيدو باث
-📞 0559600824 | 📧 legal@masteredupath.com
+وكالة فكرة إيدو
+📞 0559600824 | 📧 legal@fekrahedu.com
     `;
 
     // إرسال بريد العميل بشكل متزامن والتبليغ عن أي خطأ
@@ -509,11 +509,11 @@ const handler = async (req: Request): Promise<Response> => {
 
     try {
       console.log("Sending client email to:", email);
-      const fromEmail = Deno.env.get("RESEND_FROM_EMAIL") || "وكالة ماستر إيدو باث <info@masteredupath.com>";
+      const fromEmail = Deno.env.get("RESEND_FROM_EMAIL") || "وكالة فكرة إيدو <info@fekrahedu.com>";
       const clientEmailResult = await resend.emails.send({
         from: fromEmail,
         to: [email],
-        subject: "🎉 مرحباً بك في برنامج التسويق بالعمولة - وكالة ماستر إيدو باث",
+        subject: "🎉 مرحباً بك في برنامج التسويق بالعمولة - وكالة فكرة إيدو",
         html: clientEmailHtml,
         text: clientEmailText,
       });
@@ -853,8 +853,8 @@ const handler = async (req: Request): Promise<Response> => {
           
           <div class="footer">
             <p><strong>نظام إدارة التسويق بالعمولة</strong></p>
-            <p>وكالة ماستر إيدو باث للحلول التعليمية المتقدمة</p>
-            <p>📞 0559600824 | 📧 legal@masteredupath.com</p>
+            <p>وكالة فكرة إيدو للحلول التعليمية المتقدمة</p>
+            <p>📞 0559600824 | 📧 legal@fekrahedu.com</p>
             <p style="margin-top: 15px; font-size: 12px; opacity: 0.8;">
               تم إرسال هذا التنبيه تلقائياً من نظام إدارة الشركاء
             </p>
@@ -867,8 +867,8 @@ const handler = async (req: Request): Promise<Response> => {
     if (Deno.env.get("RESEND_API_KEY")) {
       try {
         console.log("Sending admin notification email...");
-        const fromEmail = Deno.env.get("RESEND_FROM_EMAIL") || "نظام التسويق بالعمولة <info@masteredupath.com>";
-        const adminEmail = Deno.env.get("ADMIN_NOTIFICATION_EMAIL") || "legal@masteredupath.com";
+        const fromEmail = Deno.env.get("RESEND_FROM_EMAIL") || "نظام التسويق بالعمولة <info@fekrahedu.com>";
+        const adminEmail = Deno.env.get("ADMIN_NOTIFICATION_EMAIL") || "legal@fekrahedu.com";
         const adminEmailResult = await resend.emails.send({
           from: fromEmail,
           to: [adminEmail],

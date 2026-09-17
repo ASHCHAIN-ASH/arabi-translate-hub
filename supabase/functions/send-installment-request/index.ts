@@ -44,7 +44,7 @@ const handler = async (req: Request): Promise<Response> => {
       const data: any = body;
       await supabaseAdmin.from("inbox_messages").insert({
         sender_name: (data.fullName || "زائر").toString().slice(0, 200),
-        sender_email: (data.email || "unknown@masteredupath.com").toString().slice(0, 200),
+        sender_email: (data.email || "unknown@fekrahedu.com").toString().slice(0, 200),
         sender_phone: (data.phone || null) ? data.phone.toString().slice(0, 50) : null,
         subject: (`طلب تقسيط - ${data.serviceType || ''} - ${data.serviceAmount || ''} ر.س`).toString().slice(0, 300),
         message: (data.notes || `طلب تقسيط لخدمة ${data.serviceType} بمبلغ ${data.serviceAmount} على ${data.installmentPeriod}` || "").toString().slice(0, 8000),
@@ -72,7 +72,7 @@ const handler = async (req: Request): Promise<Response> => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: "خدمات الترجمة المتقدمة <noreply@masteredupath.com>",
+        from: "خدمات الترجمة المتقدمة <noreply@fekrahedu.com>",
         to: [requestData.email],
         subject: "تأكيد استلام طلب الدفع بالتقسيط",
         html: `
@@ -149,8 +149,8 @@ const handler = async (req: Request): Promise<Response> => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: "نظام الإشعارات <system@masteredupath.com>",
-        to: ["admin@masteredupath.com"],
+        from: "نظام الإشعارات <system@fekrahedu.com>",
+        to: ["admin@fekrahedu.com"],
         subject: "🔔 طلب دفع بالتقسيط جديد - يتطلب مراجعة",
         html: `
           <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 700px; margin: 0 auto;">

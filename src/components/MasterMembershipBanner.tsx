@@ -112,7 +112,7 @@ const MasterMembershipBanner = () => {
                     }}
                     className="bg-gradient-to-r from-yellow-200 via-white to-amber-200 bg-clip-text text-transparent bg-[length:300%_100%]"
                   >
-                    عضوية ماستر
+                    عضوية فكرة
                   </motion.span>
                   <br />
                   <span className="text-white/95">

@@ -56,7 +56,7 @@ BEGIN
     END IF;
 END $$;
 
--- الآن إنشاء البيانات الأساسية لموقع masteredupath.com
+-- الآن إنشاء البيانات الأساسية لموقع fekrahedu.com
 INSERT INTO public.tenants (
     name,
     code,
@@ -65,10 +65,10 @@ INSERT INTO public.tenants (
     settings,
     is_active
 ) VALUES (
-    'Master Edu Path',
-    'masteredupath',
-    'masteredupath.com',
-    'masteredupath_db',
+    'FekrahEdu',
+    'fekrahedu',
+    'fekrahedu.com',
+    'fekrahedu_db',
     jsonb_build_object(
         'theme', 'academic',
         'language', 'ar',
@@ -78,7 +78,7 @@ INSERT INTO public.tenants (
         'branding', jsonb_build_object(
             'primary_color', '#2D5AA0',
             'secondary_color', '#F8B500',
-            'logo_url', '/assets/masteredupath-logo.png'
+            'logo_url', '/assets/fekrahedu-logo.png'
         )
     ),
     true

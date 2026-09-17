@@ -423,14 +423,14 @@ export default function ResearchPublication() {
   </div>
 
   <div class="canvas"><div class="page">
-    <div class="watermark"><span>MASTEREDUPATH</span></div>
+    <div class="watermark"><span>fekrahedu</span></div>
 
     <div class="doc-head">
       <div class="brand">
         <div class="seal"><span>م</span></div>
         <div class="brand-text">
-          <div class="name">منصّة ماستر إيدو باث</div>
-          <div class="tagline">MASTEREDUPATH · ACADEMIC SERVICES</div>
+          <div class="name">منصّة فكرة إيدو</div>
+          <div class="tagline">fekrahedu · ACADEMIC SERVICES</div>
         </div>
       </div>
       <div class="doc-meta">
@@ -512,16 +512,16 @@ export default function ResearchPublication() {
           <div class="stamp">
             <div class="ring-out"><div class="core-icon">${SVG_STAR}</div></div>
             <div class="ring-mid">
-              <div class="core-text" data-en="MasterEduPath · Verified Authority">ماستر إيدو باث</div>
+              <div class="core-text" data-en="FekrahEdu · Verified Authority">فكرة إيدو</div>
             </div>
             <div class="ring-in"><div class="core-tag">معتمد</div></div>
           </div>
         </div>
         <div class="info">
           <div class="label"><span class="dot"></span>ختم المنصّة الرسمي</div>
-          <div class="who">إدارة ماستر إيدو باث</div>
+          <div class="who">إدارة فكرة إيدو</div>
           <div class="meta">
-            <div><b>المُصدِر:</b> MasterEduPath Platform</div>
+            <div><b>المُصدِر:</b> FekrahEdu Platform</div>
             <div><b>رمز التحقق:</b> <code>${verifyId}</code></div>
             <div><b>الإصدار:</b> ${esc(docDate)} — ${esc(docTime)}</div>
           </div>
@@ -554,12 +554,12 @@ export default function ResearchPublication() {
 
     <div class="verify-bar">
       <span class="v-tick">${SVG_CHECK} مستند معتمد رقمياً وصادر إلكترونياً من نظام المنصّة</span>
-      <span>تحقّق عبر: <b style="color:#fff">masteredupath.com/verify</b> — <span class="v-id">${verifyId}</span></span>
+      <span>تحقّق عبر: <b style="color:#fff">fekrahedu.com/verify</b> — <span class="v-id">${verifyId}</span></span>
     </div>
 
     <div class="footer">
-      <div class="org">منصّة ماستر إيدو باث · MASTEREDUPATH</div>
-      <div>وثيقة مُنشأة إلكترونياً · masteredupath.com · هذا المستند صادر من نظام المنصّة الرسمي ولا يحتاج إلى توقيع يدوي</div>
+      <div class="org">منصّة فكرة إيدو · fekrahedu</div>
+      <div>وثيقة مُنشأة إلكترونياً · fekrahedu.com · هذا المستند صادر من نظام المنصّة الرسمي ولا يحتاج إلى توقيع يدوي</div>
       <div class="legal">جميع الحقوق محفوظة © ${new Date().getFullYear()} · مرجع الوثيقة: ${esc(item.request_number)} · ختم زمني: ${esc(issuedIso)}</div>
     </div>
   </div></div>
@@ -808,9 +808,9 @@ export default function ResearchPublication() {
 <style>${sharedDocStyles}</style></head><body>
 <div class="actbar"><button onclick="window.print()">⬇ تنزيل PDF</button><button class="close" onclick="window.close()">✕ إغلاق</button></div>
 <div class="canvas"><div class="page">
-  <div class="watermark"><span>MASTEREDUPATH</span></div>
+  <div class="watermark"><span>fekrahedu</span></div>
   <div class="doc-head">
-    <div class="brand"><div class="seal"><span>م</span></div><div class="brand-text"><div class="name">منصّة ماستر إيدو باث</div><div class="tagline">MASTEREDUPATH · OFFICIAL CONTRACT</div></div></div>
+    <div class="brand"><div class="seal"><span>م</span></div><div class="brand-text"><div class="name">منصّة فكرة إيدو</div><div class="tagline">fekrahedu · OFFICIAL CONTRACT</div></div></div>
     <div class="doc-meta">
       <div><b>رقم العقد:</b> ${esc(docNumber)}</div>
       <div><b>تاريخ الإصدار:</b> ${esc(docDate)} — ${esc(docTime)}</div>
@@ -826,7 +826,7 @@ export default function ResearchPublication() {
   <div class="section">
     <h2>أولاً · أطراف العقد</h2>
     <div class="body">
-      <div class="clause"><b>الطرف الأول (مُقدّم الخدمة):</b> منصّة ماستر إيدو باث للخدمات الأكاديمية — masteredupath.com</div>
+      <div class="clause"><b>الطرف الأول (مُقدّم الخدمة):</b> منصّة فكرة إيدو للخدمات الأكاديمية — fekrahedu.com</div>
       <div class="clause"><b>الطرف الثاني (المستفيد):</b> ${esc(clientName)}${clientPhone !== '—' ? ` — رقم التواصل: ${esc(clientPhone)}` : ''}${clientEmail ? ` — البريد: ${esc(clientEmail)}` : ''}${realContract.client_id_number ? ` — الهوية: ${esc(realContract.client_id_number)}` : ''}</div>
     </div>
   </div>
@@ -862,16 +862,16 @@ export default function ResearchPublication() {
         <div class="stamp">
           <div class="ring-out"><div class="core-icon">${SVG_STAR}</div></div>
           <div class="ring-mid">
-            <div class="core-text" data-en="MasterEduPath · Verified Authority">ماستر إيدو باث</div>
+            <div class="core-text" data-en="FekrahEdu · Verified Authority">فكرة إيدو</div>
           </div>
           <div class="ring-in"><div class="core-tag">معتمد</div></div>
         </div>
       </div>
       <div class="info">
         <div class="label"><span class="dot"></span>ختم المنصّة الرسمي</div>
-        <div class="who">إدارة ماستر إيدو باث</div>
+        <div class="who">إدارة فكرة إيدو</div>
         <div class="meta">
-          <div><b>المُصدِر:</b> MasterEduPath Platform</div>
+          <div><b>المُصدِر:</b> FekrahEdu Platform</div>
           <div><b>رمز التحقق:</b> <code>${verifyId}</code></div>
           <div><b>الإصدار:</b> ${esc(docDate)} — ${esc(docTime)}</div>
         </div>
@@ -904,11 +904,11 @@ export default function ResearchPublication() {
   </div>
   <div class="verify-bar">
     <span class="v-tick">${SVG_CHECK} ${sig ? 'عقد موقّع ومعتمد رقمياً وموثّق إلكترونياً من نظام المنصّة' : 'عقد رسمي صادر من نظام المنصّة (بانتظار التوقيع)'}</span>
-    <span>تحقّق عبر: <b style="color:#fff">masteredupath.com/verify</b> — <span class="v-id">${verifyId}</span></span>
+    <span>تحقّق عبر: <b style="color:#fff">fekrahedu.com/verify</b> — <span class="v-id">${verifyId}</span></span>
   </div>
   <div class="footer">
-    <div class="org">منصّة ماستر إيدو باث · MASTEREDUPATH</div>
-    <div>هذا العقد مُستخرج مباشرةً من النظام الرسمي للمنصّة · masteredupath.com</div>
+    <div class="org">منصّة فكرة إيدو · fekrahedu</div>
+    <div>هذا العقد مُستخرج مباشرةً من النظام الرسمي للمنصّة · fekrahedu.com</div>
     <div class="legal">جميع الحقوق محفوظة © ${new Date().getFullYear()} · مرجع العقد: ${esc(docNumber)} · ختم زمني: ${esc(issuedIso)}</div>
   </div>
 </div></div>${triggerPrintScript}</body></html>`;
@@ -934,9 +934,9 @@ export default function ResearchPublication() {
 <style>${sharedDocStyles}</style></head><body>
 <div class="actbar"><button onclick="window.print()">⬇ تنزيل PDF</button><button class="close" onclick="window.close()">✕ إغلاق</button></div>
 <div class="canvas"><div class="page">
-  <div class="watermark"><span>MASTEREDUPATH</span></div>
+  <div class="watermark"><span>fekrahedu</span></div>
   <div class="doc-head">
-    <div class="brand"><div class="seal"><span>م</span></div><div class="brand-text"><div class="name">منصّة ماستر إيدو باث</div><div class="tagline">MASTEREDUPATH · TAX INVOICE</div></div></div>
+    <div class="brand"><div class="seal"><span>م</span></div><div class="brand-text"><div class="name">منصّة فكرة إيدو</div><div class="tagline">fekrahedu · TAX INVOICE</div></div></div>
     <div class="doc-meta"><div><b>رقم الفاتورة:</b> ${esc(docNumber)}</div><div><b>تاريخ الإصدار:</b> ${esc(docDate)} — ${esc(docTime)}</div><div><b>نوع المستند:</b> فاتورة ضريبية</div></div>
   </div>
   <div class="title-block">
@@ -947,9 +947,9 @@ export default function ResearchPublication() {
   <div class="section">
     <h2>أولاً · بيانات المُصدِر والعميل</h2>
     <div class="body"><div class="grid">
-      <div class="row"><span class="k">المُصدِر</span><span class="v">منصّة ماستر إيدو باث</span></div>
+      <div class="row"><span class="k">المُصدِر</span><span class="v">منصّة فكرة إيدو</span></div>
       <div class="row"><span class="k">العميل</span><span class="v">${esc(item.client_name)}</span></div>
-      <div class="row"><span class="k">الموقع</span><span class="v">masteredupath.com</span></div>
+      <div class="row"><span class="k">الموقع</span><span class="v">fekrahedu.com</span></div>
       <div class="row"><span class="k">رقم العميل</span><span class="v">${esc(item.client_phone)}</span></div>
       <div class="row"><span class="k">مرجع الطلب</span><span class="v">${esc(item.request_number)}</span></div>
       ${item.client_email ? `<div class="row"><span class="k">البريد الإلكتروني</span><span class="v">${esc(item.client_email)}</span></div>` : ''}
@@ -986,16 +986,16 @@ export default function ResearchPublication() {
         <div class="stamp">
           <div class="ring-out"><div class="core-icon">${SVG_STAR}</div></div>
           <div class="ring-mid">
-            <div class="core-text" data-en="MasterEduPath · Tax Invoice Authority">ماستر إيدو باث</div>
+            <div class="core-text" data-en="FekrahEdu · Tax Invoice Authority">فكرة إيدو</div>
           </div>
           <div class="ring-in"><div class="core-tag">معتمد</div></div>
         </div>
       </div>
       <div class="info">
         <div class="label"><span class="dot"></span>ختم المنصّة الرسمي</div>
-        <div class="who">إدارة ماستر إيدو باث</div>
+        <div class="who">إدارة فكرة إيدو</div>
         <div class="meta">
-          <div><b>المُصدِر:</b> MasterEduPath Platform</div>
+          <div><b>المُصدِر:</b> FekrahEdu Platform</div>
           <div><b>رمز التحقق:</b> <code>${verifyId}</code></div>
           <div><b>الإصدار:</b> ${esc(docDate)} — ${esc(docTime)}</div>
         </div>
@@ -1027,11 +1027,11 @@ export default function ResearchPublication() {
   </div>
   <div class="verify-bar">
     <span class="v-tick">${SVG_CHECK} فاتورة معتمدة رقمياً وموثّقة إلكترونياً</span>
-    <span>تحقّق عبر: <b style="color:#fff">masteredupath.com/verify</b> — <span class="v-id">${verifyId}</span></span>
+    <span>تحقّق عبر: <b style="color:#fff">fekrahedu.com/verify</b> — <span class="v-id">${verifyId}</span></span>
   </div>
   <div class="footer">
-    <div class="org">منصّة ماستر إيدو باث · MASTEREDUPATH</div>
-    <div>فاتورة مُنشأة إلكترونياً · masteredupath.com · هذه الفاتورة صادرة من نظام المنصّة الرسمي</div>
+    <div class="org">منصّة فكرة إيدو · fekrahedu</div>
+    <div>فاتورة مُنشأة إلكترونياً · fekrahedu.com · هذه الفاتورة صادرة من نظام المنصّة الرسمي</div>
     <div class="legal">جميع الحقوق محفوظة © ${new Date().getFullYear()} · مرجع الفاتورة: ${esc(docNumber)} · ختم زمني: ${esc(issuedIso)}</div>
   </div>
 </div></div>${triggerPrintScript}</body></html>`;

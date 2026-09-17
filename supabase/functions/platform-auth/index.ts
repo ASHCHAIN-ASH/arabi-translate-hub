@@ -307,7 +307,7 @@ async function handleForgotPassword(req: Request, supabase: any, resend: any): P
   
   try {
     await resend.emails.send({
-      from: 'نظام إدارة المشاريع <no-reply@masteredupath.com>',
+      from: 'نظام إدارة المشاريع <no-reply@fekrahedu.com>',
       to: [user.email],
       subject: 'إعادة تعيين كلمة المرور',
       html: `

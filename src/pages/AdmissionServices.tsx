@@ -384,7 +384,7 @@ const AdmissionServices = () => {
                 icon: Mail,
                 title: "راسلنا",
                 description: "نرد على رسائلك خلال ساعات",
-                contact: "info@masteredupath.com",
+                contact: "info@fekrahedu.com",
                 color: "text-blue-500",
                 bgColor: "bg-blue-50"
               },

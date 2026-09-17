@@ -56,7 +56,7 @@ const Footer = () => {
             <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-white/10 rounded-full mb-4 md:mb-6">
               <Building2 className="h-8 w-8 md:h-10 md:w-10 text-white" />
             </div>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4 font-arabic-title">وكالة MasterEduPath للحلول التعليمية المتقدمة</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4 font-arabic-title">وكالة FekrahEdu للحلول التعليمية المتقدمة</h2>
             <p className="text-base md:text-lg lg:text-xl opacity-90 max-w-3xl mx-auto leading-relaxed">شريكك الموثوق للحصول على أفضل الحلول التعليمية والتقنية المتقدمة في المملكة العربية السعودية</p>
           </motion.div>
           
@@ -117,7 +117,7 @@ const Footer = () => {
                 <Globe className="h-6 w-6 text-white" />
               </div>
               <div className="text-right">
-                <h3 className="text-lg font-bold font-arabic-title">MasterEduPath</h3>
+                <h3 className="text-lg font-bold font-arabic-title">FekrahEdu</h3>
                 <p className="text-sm text-white/70">وكالة الحلول التعليمية المتقدمة</p>
               </div>
             </div>
@@ -130,10 +130,10 @@ const Footer = () => {
             {/* Social Media */}
             <div className="flex gap-3 justify-start">
               {[
-                { Icon: Facebook, color: "hover:text-blue-400", href: "https://facebook.com/masteredupath", label: "فيسبوك" },
-                { Icon: Twitter, color: "hover:text-sky-400", href: "https://twitter.com/masteredupath", label: "تويتر" },
-                { Icon: Instagram, color: "hover:text-pink-400", href: "https://instagram.com/masteredupath", label: "انستغرام" },
-                { Icon: Linkedin, color: "hover:text-blue-600", href: "https://linkedin.com/company/masteredupath", label: "لينكدإن" }
+                { Icon: Facebook, color: "hover:text-blue-400", href: "https://facebook.com/fekrahedu", label: "فيسبوك" },
+                { Icon: Twitter, color: "hover:text-sky-400", href: "https://twitter.com/fekrahedu", label: "تويتر" },
+                { Icon: Instagram, color: "hover:text-pink-400", href: "https://instagram.com/fekrahedu", label: "انستغرام" },
+                { Icon: Linkedin, color: "hover:text-blue-600", href: "https://linkedin.com/company/fekrahedu", label: "لينكدإن" }
               ].map(({ Icon, color, href, label }, index) => (
                 <a
                   key={index}
@@ -195,7 +195,7 @@ const Footer = () => {
               {[
                 { name: 'عن الشركة', href: '/about-us' },
                 { name: 'الأسعار', href: '/pricing' },
-                { name: 'عضوية ماستر', href: '/master-membership' },
+                { name: 'عضوية فكرة', href: '/master-membership' },
                 { name: 'المسابقات', href: '/academic-competitions' },
                 { name: 'الأسئلة الشائعة', href: '/faq' },
                 { name: 'اتصل بنا', href: '/contact-us' }
@@ -356,7 +356,7 @@ const Footer = () => {
               <div className="space-y-2">
                 <p className="text-white/60 text-sm text-center lg:text-right flex items-center gap-2 flex-wrap">
                   <Globe className="h-4 w-4 flex-shrink-0" />
-                  <span>© {currentYear} وكالة ماستر إيدو باث - للحلول التعليمية المتقدمة. جميع الحقوق محفوظة.</span>
+                  <span>© {currentYear} وكالة فكرة إيدو - للحلول التعليمية المتقدمة. جميع الحقوق محفوظة.</span>
                 </p>
                 <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-2 md:p-3">
                   <p className="text-xs md:text-sm text-red-400 font-semibold flex items-center gap-2 mb-1">
@@ -420,7 +420,7 @@ const Footer = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-4xl mx-auto">
               {[
                 { Icon: Phone, text: "0559600824", subtext: "اتصل بنا الآن", color: "text-green-400", bgColor: "bg-green-400/10", borderColor: "border-green-400/20" },
-                { Icon: Mail, text: "info@masteredupath.com", subtext: "راسلنا عبر البريد", color: "text-blue-400", bgColor: "bg-blue-400/10", borderColor: "border-blue-400/20" },
+                { Icon: Mail, text: "info@fekrahedu.com", subtext: "راسلنا عبر البريد", color: "text-blue-400", bgColor: "bg-blue-400/10", borderColor: "border-blue-400/20" },
                 { Icon: MapPin, text: "جدة، المملكة العربية السعودية", subtext: "موقعنا الرئيسي", color: "text-red-400", bgColor: "bg-red-400/10", borderColor: "border-red-400/20" }
               ].map(({ Icon, text, subtext, color, bgColor, borderColor }, index) => (
                 <div 
