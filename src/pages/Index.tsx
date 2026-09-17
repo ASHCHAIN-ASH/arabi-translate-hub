@@ -287,9 +287,10 @@ const Index = () => {
                <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-deep-violet-foreground" />
              </motion.div>
              <div className="flex-1">
-               <p className="text-xs sm:text-sm md:text-base font-semibold mb-0.5 text-deep-violet-foreground">
-                 🎁 بمناسبة تجديد الموقع وانطلاقته التجريبية — هدية مجانية عبر عجلة الجوائز
-               </p>
+                <p className="text-xs sm:text-sm md:text-base font-semibold mb-0.5 text-deep-violet-foreground">
+                  <TwinklingStars />
+                  بمناسبة تجديد الموقع وانطلاقته التجريبية — هدية مجانية عبر عجلة الجوائز
+                </p>
                <p className="text-xs sm:text-sm text-deep-violet-foreground/80 hidden sm:block">
                  مزايا وخدمات تدعم رحلتك الأكاديمية — جرّب حظك الآن واكتشف جائزتك!
                </p>
