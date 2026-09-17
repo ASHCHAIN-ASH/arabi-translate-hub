@@ -227,9 +227,9 @@ export default function TranslationServices() {
               transition={{ delay: 0.8, duration: 0.8 }}
               className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto mb-12 leading-relaxed"
             >
-              نقدم حلول ترجمة متكاملة لجميع التخصصات والمجالات
+              نقدّم حلول ترجمة متخصصة تلبي احتياجات مختلف القطاعات
               <br />
-              <span className="text-lg text-primary font-semibold">بأعلى معايير الجودة العالمية</span>
+              <span className="text-lg text-primary font-semibold">مع الالتزام بالدقة اللغوية، وسلامة المعنى، وأعلى معايير الجودة المهنية.</span>
             </motion.p>
 
             {/* Stats */}
