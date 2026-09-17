@@ -168,12 +168,12 @@ export const SpinWheelBanner = () => {
                 >
                   <Link to="/spin-the-wheel">
                     <Gift className="w-5 h-5" />
-                    أدر العجلة واربح الآن
+                    جرّب حظّك الآن
                     <ArrowLeft className="w-5 h-5" />
                   </Link>
                 </Button>
               </motion.div>
-              <span className="text-sm text-slate-400">تستغرق أقل من 10 ثوانٍ</span>
+              <span className="text-sm text-slate-400">دورة واحدة يوميًا… وجائزة مؤكدة</span>
             </motion.div>
           </div>
 
