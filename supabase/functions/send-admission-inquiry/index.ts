@@ -596,7 +596,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email to client
     const clientEmailResult = await resend.emails.send({
-      from: "مسار الخبراء للتعليم <info@fekrahedu.com>",
+      from: "FekrahEdu <info@fekrahedu.com>",
       to: [inquiryData.email],
       subject: `✅ تأكيد استلام طلب القبول الجامعي - رقم الطلب: ${applicationNumber}`,
       html: clientEmailHtml,

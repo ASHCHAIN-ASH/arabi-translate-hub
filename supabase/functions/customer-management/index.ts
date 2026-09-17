@@ -105,7 +105,7 @@ async function updateCustomerPassword(supabase: any, customerId: string, newPass
     // إرسال إيميل للعميل بكلمة المرور الجديدة
     try {
       await resend.emails.send({
-        from: 'إدارة النظام <noreply@alialshehriholding.com>',
+        from: 'إدارة النظام <noreply@fekrahedu.com>',
         to: [customer.email],
         subject: 'تم تحديث كلمة المرور الخاصة بك',
         html: `
@@ -141,7 +141,7 @@ async function updateCustomerPassword(supabase: any, customerId: string, newPass
             </p>
             
             <div style="text-align: center; margin: 30px 0;">
-              <a href="https://alialshehriholding.com/login" 
+              <a href="https://fekrahedu.com/login" 
                  style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: bold;">
                 تسجيل الدخول الآن
               </a>

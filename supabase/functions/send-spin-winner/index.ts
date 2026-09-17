@@ -81,7 +81,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // إرسال إيميل للإدارة
     await resend.emails.send({
-      from: "مسار الخبراء للتعليم <onboarding@resend.dev>",
+      from: "FekrahEdu <noreply@fekrahedu.com>",
       to: ["info@fekrahedu.com"],
       subject: "🎊 فائز جديد في مسابقة دوران العجلة - يتطلب إجراء",
       html: adminHtml,
@@ -89,7 +89,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // إرسال إيميل للعميل الفائز
     await resend.emails.send({
-      from: "مسار الخبراء للتعليم <onboarding@resend.dev>",
+      from: "FekrahEdu <noreply@fekrahedu.com>",
       to: [email],
       subject: "🎉 مبروك! لقد فزت في مسابقة دوران العجلة",
       html: clientHtml,

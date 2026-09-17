@@ -30,7 +30,7 @@ export const AdmissionClientEmail = ({
       <Container style={container}>
         {/* Header */}
         <Section style={header}>
-          <Heading style={h1}>مسار الخبراء للتعليم</Heading>
+          <Heading style={h1}>FekrahEdu</Heading>
           <Text style={headerSubtitle}>
             شريكك المتخصص للحصول على القبول الجامعي
           </Text>
@@ -41,7 +41,7 @@ export const AdmissionClientEmail = ({
           <Heading style={h2}>عزيزي/عزيزتي {fullName}</Heading>
           
           <Text style={text}>
-            نشكركم على تقديم طلب الحصول على خدمات القبول الجامعي من خلال مسار الخبراء للتعليم.
+            نشكركم على تقديم طلب الحصول على خدمات القبول الجامعي من خلال FekrahEdu.
           </Text>
 
           <Section style={applicationBox}>
@@ -78,7 +78,7 @@ export const AdmissionClientEmail = ({
         {/* Footer */}
         <Section style={footer}>
           <Text style={footerText}>
-            مع تحيات فريق مسار الخبراء للتعليم
+            مع تحيات فريق FekrahEdu
           </Text>
           <Text style={footerSubtext}>
             نحن معكم لتحقيق أحلامكم الأكاديمية

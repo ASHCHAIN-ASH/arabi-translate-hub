@@ -45,12 +45,12 @@ export const AdmissionAdminEmail = ({
 }: AdmissionAdminEmailProps) => (
   <Html dir="rtl">
     <Head />
-    <Preview>طلب قبول جامعي جديد - مسار الخبراء للتعليم</Preview>
+    <Preview>طلب قبول جامعي جديد - FekrahEdu</Preview>
     <Body style={main}>
       <Container style={container}>
         {/* Header */}
         <Section style={header}>
-          <Heading style={h1}>مسار الخبراء للتعليم</Heading>
+          <Heading style={h1}>FekrahEdu</Heading>
           <Text style={headerSubtitle}>
             طلب قبول جامعي جديد
           </Text>
@@ -143,7 +143,7 @@ export const AdmissionAdminEmail = ({
         {/* Footer */}
         <Section style={footer}>
           <Text style={footerText}>
-            نظام إدارة طلبات القبول - مسار الخبراء للتعليم
+            نظام إدارة طلبات القبول - FekrahEdu
           </Text>
           <Text style={footerSubtext}>
             تم إرسال هذا الإشعار تلقائياً من النظام
