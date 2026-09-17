@@ -29,6 +29,11 @@ const SEGMENTS: Segment[] = [
   { text: "تجهيز ملفات IRB مجانًا",             short: "ملفات IRB",  color: "hsl(220 38% 26%)", accent: "hsl(220 45% 15%)" },
 ];
 
+/** فترة التهدئة الموثّقة: محاولة واحدة لكل مشارك كل 30 يومًا */
+const COOLDOWN_DAYS = 30;
+
+const pad = (n: number) => String(n).padStart(2, "0");
+
 const SpinTheWheel = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -36,13 +41,18 @@ const SpinTheWheel = () => {
   const [isSpinning, setIsSpinning] = useState(false);
   const [showResult, setShowResult] = useState(false);
   const [wonPrize, setWonPrize] = useState("");
+  const [claimCode, setClaimCode] = useState("");
+  const [emailSent, setEmailSent] = useState(false);
   const [startAngle, setStartAngle] = useState(0);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [hasSpunToday, setHasSpunToday] = useState(false);
+  const [nextEligibleAt, setNextEligibleAt] = useState<string | null>(null);
+  const [remaining, setRemaining] = useState<{ d: number; h: number; m: number; s: number } | null>(null);
   const [isChecking, setIsChecking] = useState(true);
   const { toast } = useToast();
+
+  const isLocked = !!nextEligibleAt && !!remaining;
 
   // Responsive canvas size — based on viewport, not just container
   useEffect(() => {
@@ -60,7 +70,25 @@ const SpinTheWheel = () => {
     return () => window.removeEventListener("resize", update);
   }, []);
 
-  useEffect(() => { checkDailyAttempt(); }, []);
+  useEffect(() => { checkEligibility(); }, []);
+
+  // العدّ التنازلي الحيّ حتى موعد المحاولة القادمة
+  useEffect(() => {
+    if (!nextEligibleAt) { setRemaining(null); return; }
+    const tick = () => {
+      const diff = new Date(nextEligibleAt).getTime() - Date.now();
+      if (diff <= 0) { setNextEligibleAt(null); setRemaining(null); return; }
+      setRemaining({
+        d: Math.floor(diff / 86400000),
+        h: Math.floor((diff / 3600000) % 24),
+        m: Math.floor((diff / 60000) % 60),
+        s: Math.floor((diff / 1000) % 60),
+      });
+    };
+    tick();
+    const t = setInterval(tick, 1000);
+    return () => clearInterval(t);
+  }, [nextEligibleAt]);
 
   const getUserIdentifier = () => {
     let id = localStorage.getItem("spin_user_id");
@@ -71,20 +99,27 @@ const SpinTheWheel = () => {
     return id;
   };
 
-  const checkDailyAttempt = async () => {
+  const checkEligibility = async () => {
     try {
-      const userIdentifier = getUserIdentifier();
-      const today = new Date().toISOString().split("T")[0];
-      const { data, error } = await (supabase.from("spin_attempts") as any)
-        .select("*")
-        .eq("email", userIdentifier)
-        .gte("created_at", today)
-        .maybeSingle();
-      if (error && error.code !== "PGRST116") console.error(error);
-      setHasSpunToday(!!data);
+      const { data, error } = await supabase.functions.invoke("send-spin-winner", {
+        body: { action: "check", userIdentifier: getUserIdentifier() },
+      });
+      if (error) throw error;
+      if (data && data.eligible === false && data.nextEligibleAt) {
+        setNextEligibleAt(data.nextEligibleAt);
+      } else {
+        setNextEligibleAt(null);
+      }
     } catch (e) { console.error(e); }
     finally { setIsChecking(false); }
   };
+
+  const nextDateLabel = nextEligibleAt
+    ? new Date(nextEligibleAt).toLocaleDateString("ar-SA-u-ca-gregory", {
+        year: "numeric", month: "long", day: "numeric",
+      })
+    : "";
+
 
   const drawWheel = useCallback((angle: number) => {
     const canvas = canvasRef.current;
