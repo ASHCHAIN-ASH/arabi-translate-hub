@@ -170,24 +170,42 @@ const SpinTheWheel = () => {
       ctx.stroke();
       ctx.restore();
 
-      // Text — radial, always readable. Rotate so the baseline points to center,
-      // and place text from outer edge inward so Arabic reads naturally regardless of slice angle.
+      // Text — tangential, short label, wrapped to 2 lines and shrunk to fit the slice
       ctx.save();
       ctx.translate(cx, cy);
       const mid = a0 + arc / 2;
-      // Rotate so text reads from outer rim toward center (top of letters faces outward)
       ctx.rotate(mid + Math.PI / 2);
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      const fontSize = Math.max(12, Math.round(size * 0.036));
-      ctx.font = `700 ${fontSize}px "IBM Plex Sans Arabic", "Tajawal", system-ui, sans-serif`;
       ctx.fillStyle = "#fff";
       ctx.shadowColor = "rgba(0,0,0,0.55)";
       ctx.shadowBlur = 4;
       ctx.shadowOffsetY = 1;
-      // Draw at distance from center along the now-vertical axis (negative Y = outward)
-      ctx.fillText(seg.text, 0, -(radius * 0.62));
+
+      const label = seg.short || seg.text;
+      const words = label.split(" ");
+      const lines: string[] =
+        words.length > 1
+          ? [words.slice(0, Math.ceil(words.length / 2)).join(" "), words.slice(Math.ceil(words.length / 2)).join(" ")]
+          : [label];
+
+      // Available tangential width at the text radius (chord of the slice), with padding
+      const textRadius = radius * 0.66;
+      const maxWidth = 2 * textRadius * Math.sin(arc / 2) * 0.82;
+
+      let fontSize = Math.max(11, Math.round(size * 0.042));
+      const fits = () => {
+        ctx.font = `700 ${fontSize}px "IBM Plex Sans Arabic", "Tajawal", system-ui, sans-serif`;
+        return lines.every((l) => ctx.measureText(l).width <= maxWidth);
+      };
+      while (fontSize > 9 && !fits()) fontSize -= 1;
+      ctx.font = `700 ${fontSize}px "IBM Plex Sans Arabic", "Tajawal", system-ui, sans-serif`;
+
+      const lineHeight = fontSize * 1.25;
+      const startY = -textRadius - ((lines.length - 1) * lineHeight) / 2;
+      lines.forEach((line, li) => ctx.fillText(line, 0, startY + li * lineHeight));
       ctx.restore();
+
     });
 
     // Inner hub
