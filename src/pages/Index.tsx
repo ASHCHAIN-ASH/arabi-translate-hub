@@ -6,14 +6,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/Header";
 import SEO from "@/components/SEO";
 import { WorkingHoursBannerRTL } from "@/components/WorkingHoursBannerRTL";
-import AnimatedCounter from "@/components/AnimatedCounter";
 import { 
   Bot, Bell, GraduationCap, BookOpen, Users, Award, 
   ArrowRight, PlayCircle, Building2, Globe, CheckCircle,
   Star, TrendingUp, Shield, Clock, Languages, Target,
   Sparkles, ChevronRight, Zap, Heart, Brain, MessageCircle, Quote
 } from "lucide-react";
-import { UNIFIED_STATS, STATS_LABELS } from "@/constants/academicStats";
+import { UNIFIED_STATS } from "@/constants/academicStats";
 import { InstitutionalPartnershipBanner } from "@/components/InstitutionalPartnershipBanner";
 import { FloatingWhatsAppButton } from "@/components/FloatingWhatsAppButton";
 import Footer from "@/components/Footer";
@@ -40,7 +39,6 @@ import inquiryTeamImg from "@/assets/home-inquiry-team.jpg";
 const ServicesShowcase = lazy(() => import("@/components/ServicesShowcase"));
 const FekrahEduMembershipBanner = lazy(() => import("@/components/FekrahEduMembershipBanner"));
 const ServiceSteps = lazy(() => import("@/components/ServiceSteps"));
-const ModernStatsSection = lazy(() => import("@/components/ModernStatsSection"));
 const HomeFinancingSection = lazy(() => import("@/components/home/HomeFinancingSection"));
 const SuccessStoriesCarousel = lazy(() => import("@/components/home/SuccessStoriesCarousel"));
 const SpinWheelBanner = lazy(() => import("@/components/home/SpinWheelBanner"));
@@ -57,13 +55,6 @@ LoadingSpinner.displayName = "LoadingSpinner";
 const Index = () => {
   const navigate = useNavigate();
   
-  // إحصائيات أكاديمية موحدة
-  const academicStats = [
-    { icon: Users, number: UNIFIED_STATS.studentsServed, suffix: "+", title: STATS_LABELS.studentsServed, color: "from-blue-500 to-indigo-600" },
-    { icon: BookOpen, number: UNIFIED_STATS.researchCompleted, suffix: "+", title: STATS_LABELS.researchCompleted, color: "from-emerald-500 to-teal-600" },
-    { icon: Globe, number: UNIFIED_STATS.countriesServed, suffix: "+", title: STATS_LABELS.countriesServed, color: "from-purple-500 to-pink-600" },
-    { icon: Award, number: UNIFIED_STATS.satisfactionRate, suffix: "%", title: STATS_LABELS.satisfactionRate, color: "from-amber-500 to-orange-600" }
-  ];
 
   // شركاء أكاديميون عالميون
   const academicPartners = [
@@ -467,10 +458,6 @@ const Index = () => {
       </Suspense>
 
 
-      {/* قسم الإحصائيات - مكون محسّن */}
-      <Suspense fallback={<LoadingSpinner />}>
-        <ModernStatsSection />
-      </Suspense>
 
 
       {/* قسم الخدمات الأكاديمية */}
