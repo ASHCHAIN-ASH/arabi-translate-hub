@@ -21,7 +21,7 @@ type CertifiedTranslationComingSoonProps = {
 };
 
 const CERTIFIED_FEATURES = [
-  { icon: BadgeCheck, label: 'مترجمون محَلَّفون بختم رسمي' },
+  { icon: BadgeCheck, label: 'مترجمون مرخّصون بختم رسمي' },
   { icon: Landmark, label: 'تصديق وزارة الخارجية والسفارات' },
   { icon: Scale, label: 'مقبول لدى المحاكم والجهات الرسمية' },
   { icon: GraduationCap, label: 'معادلة الشهادات والوثائق الدراسية' },
@@ -33,7 +33,7 @@ const CERTIFIED_FEATURES = [
  */
 export default function CertifiedTranslationComingSoon({
   title = 'الترجمة المعتمدة',
-  description = 'نُطلق حاليًا خدمة الترجمة المعتمدة والمحَلَّفة، بختم المترجم الرسمي وتصديق الجهات المختصة، لتكون وثائقك جاهزة للتقديم أمام السفارات والمحاكم والجامعات.',
+  description = 'نُطلق حاليًا خدمة الترجمة المعتمدة، بختم المترجم الرسمي وتصديق الجهات المختصة، لتكون وثائقك جاهزة للتقديم أمام السفارات والمحاكم والجامعات.',
   readiness = 78,
 }: CertifiedTranslationComingSoonProps) {
   const navigate = useNavigate();
@@ -212,7 +212,7 @@ export default function CertifiedTranslationComingSoon({
                 <div className="grid place-items-center gap-1 text-center">
                   <FileBadge className="h-10 w-10" />
                   <span className="text-base font-extrabold tracking-wide">ترجمة معتمدة</span>
-                  <span className="text-[10px] font-bold opacity-80">ختم المترجم المحلّف</span>
+                  <span className="text-[10px] font-bold opacity-80">ختم المترجم الرسمي</span>
                 </div>
               </motion.div>
 
