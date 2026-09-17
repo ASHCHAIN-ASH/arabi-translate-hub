@@ -10,10 +10,12 @@ import {
   Crown,
   Gift,
   Medal,
+  Pencil,
   RefreshCw,
   Search,
   Sparkles,
   Target,
+  Trash2,
   Trophy,
   UserPlus,
   Users,
@@ -24,10 +26,24 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/data/legacy/client';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 
 type ReferralRow = {
   id: string;
@@ -38,6 +54,8 @@ type ReferralRow = {
   status: 'pending' | 'rewarded' | 'cancelled' | string;
   commission_amount: number;
   commission_paid_at: string | null;
+  wallet_transaction_id: string | null;
+  notes: string | null;
   created_at: string;
   referrer_name?: string;
   referrer_email?: string;
@@ -77,6 +95,12 @@ export default function AdminReferrals() {
   const [rows, setRows] = useState<ReferralRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [editing, setEditing] = useState<ReferralRow | null>(null);
+  const [deleting, setDeleting] = useState<ReferralRow | null>(null);
+  const [editStatus, setEditStatus] = useState('pending');
+  const [editCommission, setEditCommission] = useState('0');
+  const [editNotes, setEditNotes] = useState('');
+  const [saving, setSaving] = useState(false);
   const reduceMotion = useReducedMotion();
 
   const load = useCallback(async () => {
@@ -121,6 +145,60 @@ export default function AdminReferrals() {
   useEffect(() => {
     load();
   }, [load]);
+
+  const openEdit = (row: ReferralRow) => {
+    setEditing(row);
+    setEditStatus(row.status);
+    setEditCommission(String(Number(row.commission_amount || 0)));
+    setEditNotes(row.notes || '');
+  };
+
+  const saveEdit = async () => {
+    if (!editing) return;
+    const commission = Number(editCommission);
+    if (!Number.isFinite(commission) || commission < 0) {
+      toast.error('أدخل قيمة عمولة صحيحة');
+      return;
+    }
+    setSaving(true);
+    const { error } = await supabase
+      .from('member_referrals' as any)
+      .update({
+        status: editStatus,
+        commission_amount: commission,
+        commission_paid_at: editStatus === 'rewarded'
+          ? (editing.commission_paid_at || new Date().toISOString())
+          : null,
+        notes: editNotes.trim() || null,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', editing.id);
+    setSaving(false);
+    if (error) {
+      toast.error('تعذر حفظ التعديلات');
+      return;
+    }
+    toast.success('تم تحديث الإحالة بنجاح');
+    setEditing(null);
+    await load();
+  };
+
+  const confirmDelete = async () => {
+    if (!deleting) return;
+    setSaving(true);
+    const { error } = await supabase
+      .from('member_referrals' as any)
+      .delete()
+      .eq('id', deleting.id);
+    setSaving(false);
+    if (error) {
+      toast.error('تعذر حذف الإحالة');
+      return;
+    }
+    toast.success('تم حذف الإحالة');
+    setDeleting(null);
+    await load();
+  };
 
   const stats = useMemo(() => {
     const total = rows.length;
@@ -283,18 +361,19 @@ export default function AdminReferrals() {
                               <TableHead className="text-right">العمولة</TableHead>
                               <TableHead className="text-right">الحالة</TableHead>
                               <TableHead className="text-right">التاريخ</TableHead>
+                              <TableHead className="text-center">الإجراءات</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
                             {filtered.map((row, index) => (
-                              <ReferralTableRow key={row.id} row={row} index={index} reduceMotion={Boolean(reduceMotion)} />
+                              <ReferralTableRow key={row.id} row={row} index={index} reduceMotion={Boolean(reduceMotion)} onEdit={openEdit} onDelete={setDeleting} />
                             ))}
                           </TableBody>
                         </Table>
                       </div>
                       <div className="divide-y divide-border lg:hidden">
                         {filtered.map((row, index) => (
-                          <ReferralMobileCard key={row.id} row={row} index={index} reduceMotion={Boolean(reduceMotion)} />
+                          <ReferralMobileCard key={row.id} row={row} index={index} reduceMotion={Boolean(reduceMotion)} onEdit={openEdit} onDelete={setDeleting} />
                         ))}
                       </div>
                     </>
@@ -325,6 +404,56 @@ export default function AdminReferrals() {
             </Tabs>
           </motion.section>
         </div>
+
+        <Dialog open={Boolean(editing)} onOpenChange={(open) => !open && !saving && setEditing(null)}>
+          <DialogContent dir="rtl" className="sm:max-w-md">
+            <DialogHeader className="text-right sm:text-right">
+              <DialogTitle className="flex items-center gap-2"><Pencil className="h-5 w-5 text-primary" /> تعديل الإحالة</DialogTitle>
+              <DialogDescription>تحديث حالة الإحالة وقيمة العمولة والملاحظات الإدارية.</DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-5 py-2">
+              <div className="grid gap-2">
+                <Label htmlFor="referral-status">حالة الإحالة</Label>
+                <Select value={editStatus} onValueChange={setEditStatus} dir="rtl">
+                  <SelectTrigger id="referral-status"><SelectValue /></SelectTrigger>
+                  <SelectContent dir="rtl">
+                    <SelectItem value="pending">بانتظار التفعيل</SelectItem>
+                    <SelectItem value="rewarded">تمت المكافأة</SelectItem>
+                    <SelectItem value="cancelled">ملغاة</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="referral-commission">قيمة العمولة (ر.س)</Label>
+                <Input id="referral-commission" type="number" min="0" step="0.01" value={editCommission} onChange={(event) => setEditCommission(event.target.value)} dir="ltr" className="text-right" disabled={Boolean(editing?.wallet_transaction_id)} />
+                {editing?.wallet_transaction_id && <p className="text-xs text-warning">لا يمكن تغيير قيمة عمولة أُضيفت بالفعل إلى المحفظة.</p>}
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="referral-notes">ملاحظات إدارية</Label>
+                <Input id="referral-notes" value={editNotes} onChange={(event) => setEditNotes(event.target.value)} placeholder="سبب التعديل أو ملاحظة داخلية" />
+              </div>
+            </div>
+            <DialogFooter className="gap-2 sm:justify-start sm:space-x-0">
+              <Button onClick={saveEdit} disabled={saving}>{saving ? 'جارٍ الحفظ…' : 'حفظ التعديلات'}</Button>
+              <Button variant="outline" onClick={() => setEditing(null)} disabled={saving}>إلغاء</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        <AlertDialog open={Boolean(deleting)} onOpenChange={(open) => !open && !saving && setDeleting(null)}>
+          <AlertDialogContent dir="rtl">
+            <AlertDialogHeader className="text-right sm:text-right">
+              <AlertDialogTitle className="flex items-center gap-2 text-destructive"><Trash2 className="h-5 w-5" /> حذف الإحالة؟</AlertDialogTitle>
+              <AlertDialogDescription>
+                سيُحذف سجل الإحالة نهائيًا. لا يؤدي الحذف إلى استرجاع عمولة سبق تحويلها إلى المحفظة.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter className="gap-2 sm:justify-start sm:space-x-0">
+              <AlertDialogAction onClick={confirmDelete} disabled={saving} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">{saving ? 'جارٍ الحذف…' : 'حذف نهائي'}</AlertDialogAction>
+              <AlertDialogCancel disabled={saving}>تراجع</AlertDialogCancel>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </main>
     </AdminLayout>
   );
@@ -382,7 +511,7 @@ function StatCard({ icon: Icon, label, value, hint, tone, delay, reduceMotion }:
   );
 }
 
-function ReferralTableRow({ row, index, reduceMotion }: { row: ReferralRow; index: number; reduceMotion: boolean }) {
+function ReferralTableRow({ row, index, reduceMotion, onEdit, onDelete }: { row: ReferralRow; index: number; reduceMotion: boolean; onEdit: (row: ReferralRow) => void; onDelete: (row: ReferralRow) => void }) {
   const status = getStatusDetails(row.status);
   const StatusIcon = status.icon;
   return (
@@ -405,11 +534,17 @@ function ReferralTableRow({ row, index, reduceMotion }: { row: ReferralRow; inde
         <Badge variant="outline" className={cn('gap-1 whitespace-nowrap', status.className)}><StatusIcon className="h-3 w-3" />{status.label}</Badge>
       </TableCell>
       <TableCell className="whitespace-nowrap text-xs text-muted-foreground">{formatDate(row.created_at)}</TableCell>
+      <TableCell>
+        <div className="flex items-center justify-center gap-1">
+          <Button variant="ghost" size="icon" onClick={() => onEdit(row)} aria-label="تعديل الإحالة" title="تعديل الإحالة"><Pencil className="h-4 w-4" /></Button>
+          <Button variant="ghost" size="icon" onClick={() => onDelete(row)} aria-label="حذف الإحالة" title="حذف الإحالة" className="text-destructive hover:bg-destructive/10 hover:text-destructive"><Trash2 className="h-4 w-4" /></Button>
+        </div>
+      </TableCell>
     </motion.tr>
   );
 }
 
-function ReferralMobileCard({ row, index, reduceMotion }: { row: ReferralRow; index: number; reduceMotion: boolean }) {
+function ReferralMobileCard({ row, index, reduceMotion, onEdit, onDelete }: { row: ReferralRow; index: number; reduceMotion: boolean; onEdit: (row: ReferralRow) => void; onDelete: (row: ReferralRow) => void }) {
   const status = getStatusDetails(row.status);
   const StatusIcon = status.icon;
   return (
@@ -429,11 +564,12 @@ function ReferralMobileCard({ row, index, reduceMotion }: { row: ReferralRow; in
         <div><span className="block text-muted-foreground">رمز الإحالة</span><code dir="ltr" className="mt-1 block w-fit font-semibold">{row.referral_code}</code></div>
         <div><span className="block text-muted-foreground">التاريخ</span><strong className="mt-1 block">{formatDate(row.created_at)}</strong></div>
       </div>
-      <div className="flex items-center justify-between border-t border-border pt-3 text-sm">
-        <span className="text-muted-foreground">العمولة</span>
-        <strong className={row.status === 'rewarded' ? 'text-success' : 'text-muted-foreground'}>
-          {row.status === 'rewarded' ? `+${formatMoney(Number(row.commission_amount))}` : 'لم تُصرف بعد'}
-        </strong>
+      <div className="flex items-center justify-between gap-3 border-t border-border pt-3 text-sm">
+        <div><span className="text-muted-foreground">العمولة</span><strong className={cn('mr-2', row.status === 'rewarded' ? 'text-success' : 'text-muted-foreground')}>{row.status === 'rewarded' ? `+${formatMoney(Number(row.commission_amount))}` : 'لم تُصرف بعد'}</strong></div>
+        <div className="flex items-center gap-1">
+          <Button variant="outline" size="icon" onClick={() => onEdit(row)} aria-label="تعديل الإحالة"><Pencil className="h-4 w-4" /></Button>
+          <Button variant="outline" size="icon" onClick={() => onDelete(row)} aria-label="حذف الإحالة" className="border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive"><Trash2 className="h-4 w-4" /></Button>
+        </div>
       </div>
     </motion.article>
   );
