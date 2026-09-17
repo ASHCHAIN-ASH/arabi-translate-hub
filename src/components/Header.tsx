@@ -11,7 +11,6 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { motion } from "framer-motion";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,10 +34,7 @@ const Header = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <motion.header 
-      initial={{ y: -20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
+    <header 
       className="sticky top-0 z-50 w-full glass border-b border-border/40" 
       dir="rtl"
     >
@@ -259,7 +255,7 @@ const Header = () => {
           </div>
         </div>
       </div>
-    </motion.header>
+    </header>
   );
 };
 

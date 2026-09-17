@@ -257,7 +257,7 @@ const AcademicFeatures = () => {
                 key={index}
                 initial={{ opacity: 0, y: 30, scale: 0.9 }}
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ delay: index * 0.15, duration: 0.8, type: "spring", stiffness: 100 }}
+                transition={{ delay: index * 0.15, duration: 0.55, type: "tween", ease: "easeOut" }}
                 viewport={{ once: true }}
                 whileHover={{ y: -8, scale: 1.02 }}
                 className="h-full"
