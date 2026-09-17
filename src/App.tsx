@@ -146,6 +146,7 @@ import AdminResearchContractDetails from "./pages/admin/AdminResearchContractDet
 import AdminResearchPublicationDetails from "./pages/admin/AdminResearchPublicationDetails";
 import ClientContractView from "./pages/ClientContractView";
 import FinancingHome from "./pages/client/FinancingHome";
+import FinancingComingSoon from "./pages/FinancingComingSoon";
 import FekrahEduPayLater from "./pages/FekrahEduPayLater";
 import FinancingNew from "./pages/client/FinancingNew";
 import FinancingDetails from "./pages/client/FinancingDetails";
@@ -479,11 +480,7 @@ const App = () => (
             } />
             <Route path="/fekrahedu-paylater" element={<FekrahEduPayLater />} />
             <Route path="/master-paylater" element={<Navigate to="/fekrahedu-paylater" replace />} />
-            <Route path="/financing" element={
-              <SimpleProtectedRoute requiredRole="client">
-                <FinancingHome />
-              </SimpleProtectedRoute>
-            } />
+            <Route path="/financing" element={<FinancingComingSoon />} />
             <Route path="/financing/new" element={
               <SimpleProtectedRoute requiredRole="client">
                 <FinancingNew />
