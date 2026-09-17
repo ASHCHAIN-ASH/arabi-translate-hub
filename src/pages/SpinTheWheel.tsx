@@ -311,12 +311,21 @@ const SpinTheWheel = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isAuthed) {
+      toast({
+        title: "التسجيل شرط أساسي",
+        description: "سجّل دخولك أو أنشئ حسابًا لاستلام الجائزة",
+        variant: "destructive",
+      });
+      return;
+    }
     setIsSubmitting(true);
     try {
       const userIdentifier = getUserIdentifier();
       const { data, error } = await supabase.functions.invoke("send-spin-winner", {
-        body: { name, email, prize: wonPrize, userIdentifier },
+        body: { name, email: user?.email ?? email, prize: wonPrize, userIdentifier, userId: user?.id },
       });
+
 
       // الدالة ترجع 429 عند استهلاك المحاولة الشهرية — نقرأ التفاصيل من جسم الرد
       let payload: any = data;
