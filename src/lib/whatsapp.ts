@@ -10,7 +10,24 @@ export type WhatsAppEventKey =
   | "invoice_paid"
   | "contract_invite"
   | "contract_signed"
-  | "otp_login";
+  | "otp_login"
+  | "wallet_topup_requested"
+  | "wallet_topup_approved"
+  | "wallet_topup_rejected"
+  | "wallet_credited"
+  | "wallet_debited"
+  | "wallet_payment_made"
+  | "wallet_refund"
+  | "wallet_low_balance"
+  | "membership_subscribed"
+  | "membership_activated"
+  | "membership_renewed"
+  | "membership_upgraded"
+  | "membership_expiring"
+  | "membership_expired"
+  | "membership_cashback"
+  | "account_verified"
+  | "installment_due";
 
 export async function sendWhatsApp(params: {
   to: string;
