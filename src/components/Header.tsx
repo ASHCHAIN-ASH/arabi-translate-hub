@@ -11,7 +11,6 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { motion } from "framer-motion";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,10 +34,7 @@ const Header = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <motion.header 
-      initial={{ y: -20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
+    <header 
       className="sticky top-0 z-50 w-full glass border-b border-border/40" 
       dir="rtl"
     >
@@ -55,9 +51,9 @@ const Header = () => {
               />
             </div>
             <div className="text-right">
-              <h1 className="text-sm lg:text-base font-bold text-foreground leading-tight tracking-tight">
+              <div className="text-sm lg:text-base font-bold text-foreground leading-tight tracking-tight">
                 FekrahEdu
-              </h1>
+              </div>
               <p className="text-[10px] lg:text-xs text-muted-foreground font-medium hidden sm:block">
                 Shaping Your Academic and Career Success
               </p>
@@ -259,7 +255,7 @@ const Header = () => {
           </div>
         </div>
       </div>
-    </motion.header>
+    </header>
   );
 };
 
