@@ -23,8 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
-# Environment files
-.env
+# Environment files (.env is committed: it holds only publishable keys)
 .env.local
 .env.production
 .env.*.local
