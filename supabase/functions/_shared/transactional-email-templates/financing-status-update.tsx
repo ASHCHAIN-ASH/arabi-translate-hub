@@ -69,47 +69,47 @@ const FinancingStatusEmail = (props: FinancingStatusEmailProps) => {
             <Section style={card}>
               <Row>
                 <Column><Text style={label}>رقم الطلب</Text></Column>
-                <Column align="left"><Text style={value}>#{props.ref}</Text></Column>
+                <Column align="right"><Text style={value}>#{props.ref}</Text></Column>
               </Row>
               {props.totalAmount && (
                 <Row><Column><Text style={label}>إجمالي التمويل</Text></Column>
-                <Column align="left"><Text style={value}>{props.totalAmount} ر.س</Text></Column></Row>
+                <Column align="right"><Text style={value}>{props.totalAmount} ر.س</Text></Column></Row>
               )}
               {props.downPayment && (
                 <Row><Column><Text style={label}>الدفعة الأولى</Text></Column>
-                <Column align="left"><Text style={value}>{props.downPayment} ر.س</Text></Column></Row>
+                <Column align="right"><Text style={value}>{props.downPayment} ر.س</Text></Column></Row>
               )}
               {props.monthlyInstallment && (
                 <Row><Column><Text style={label}>القسط الشهري</Text></Column>
-                <Column align="left"><Text style={value}>{props.monthlyInstallment} ر.س</Text></Column></Row>
+                <Column align="right"><Text style={value}>{props.monthlyInstallment} ر.س</Text></Column></Row>
               )}
               {props.durationMonths && (
                 <Row><Column><Text style={label}>مدة التمويل</Text></Column>
-                <Column align="left"><Text style={value}>{props.durationMonths} شهر</Text></Column></Row>
+                <Column align="right"><Text style={value}>{props.durationMonths} شهر</Text></Column></Row>
               )}
               {props.remainingAmount && (
                 <Row><Column><Text style={label}>المتبقي للسداد</Text></Column>
-                <Column align="left"><Text style={value}>{props.remainingAmount} ر.س</Text></Column></Row>
+                <Column align="right"><Text style={value}>{props.remainingAmount} ر.س</Text></Column></Row>
               )}
               {props.installmentNumber && (
                 <Row><Column><Text style={label}>رقم القسط</Text></Column>
-                <Column align="left"><Text style={value}>{props.installmentNumber}</Text></Column></Row>
+                <Column align="right"><Text style={value}>{props.installmentNumber}</Text></Column></Row>
               )}
               {props.installmentAmount && (
                 <Row><Column><Text style={label}>قيمة القسط</Text></Column>
-                <Column align="left"><Text style={value}>{props.installmentAmount} ر.س</Text></Column></Row>
+                <Column align="right"><Text style={value}>{props.installmentAmount} ر.س</Text></Column></Row>
               )}
               {props.installmentDueDate && (
                 <Row><Column><Text style={label}>تاريخ الاستحقاق</Text></Column>
-                <Column align="left"><Text style={value}>{props.installmentDueDate}</Text></Column></Row>
+                <Column align="right"><Text style={value}>{props.installmentDueDate}</Text></Column></Row>
               )}
               {props.daysOverdue && (
                 <Row><Column><Text style={label}>أيام التأخير</Text></Column>
-                <Column align="left"><Text style={{ ...value, color: '#dc3545' }}>{props.daysOverdue} يوم</Text></Column></Row>
+                <Column align="right"><Text style={{ ...value, color: '#dc3545' }}>{props.daysOverdue} يوم</Text></Column></Row>
               )}
               {props.receiptAmount && (
                 <Row><Column><Text style={label}>المبلغ المستلم</Text></Column>
-                <Column align="left"><Text style={value}>{props.receiptAmount} ر.س</Text></Column></Row>
+                <Column align="right"><Text style={value}>{props.receiptAmount} ر.س</Text></Column></Row>
               )}
             </Section>
           )}
@@ -156,7 +156,7 @@ export const template = {
 } satisfies TemplateEntry
 
 const main = { direction: 'rtl' as const, textAlign: 'right' as const, backgroundColor: '#ffffff', fontFamily: '"IBM Plex Sans Arabic", Arial, sans-serif', margin: 0, padding: 0 }
-const container = { direction: 'rtl' as const, textAlign: 'right' as const, maxWidth: '560px', margin: '0 auto', padding: '0' }
+const container = { direction: 'rtl' as const, textAlign: 'right' as const, maxWidth: '560px', margin: '0 auto', padding: '0', border: '1px solid #cbd5e1', borderRadius: '14px', overflow: 'hidden' as const, boxSizing: 'border-box' as const }
 const header = { backgroundColor: BRAND_COLOR, padding: '24px', textAlign: 'center' as const }
 const brand = { color: '#ffffff', fontSize: '20px', fontWeight: 'bold', margin: 0 }
 const hero = { padding: '32px 24px 16px', textAlign: 'center' as const }

@@ -29,7 +29,7 @@ const E = ({ customerName, amount, paymentMethod, referenceNumber, requestId, re
               <Text style={bankBrand}>🏦 {SITE_NAME}</Text>
               <Text style={bankTagline}>المحفظة الرقمية</Text>
             </Column>
-            <Column align="left">
+            <Column align="right">
               <Text style={bankBadge}>إشعار رسمي</Text>
             </Column>
           </Row>
@@ -145,7 +145,7 @@ export const template = {
 
 // ===== Bank-inspired styles =====
 const main = { direction: 'rtl' as const, textAlign: 'right' as const, backgroundColor: '#f1f5f9', fontFamily: "'IBM Plex Sans Arabic', Arial, sans-serif", margin: 0, padding: '20px 0' }
-const container = { direction: 'rtl' as const, textAlign: 'right' as const, padding: '0', maxWidth: '620px', margin: '0 auto', backgroundColor: '#ffffff', borderRadius: '16px', overflow: 'hidden' as const, boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }
+const container = { direction: 'rtl' as const, textAlign: 'right' as const, padding: '0', maxWidth: '620px', margin: '0 auto', backgroundColor: '#ffffff', borderRadius: '16px', overflow: 'hidden' as const, boxShadow: '0 4px 24px rgba(0,0,0,0.06)', border: '1px solid #cbd5e1', borderRadius: '14px', overflow: 'hidden' as const, boxSizing: 'border-box' as const }
 
 const bankHeader = { background: 'linear-gradient(135deg, #1e3a8a 0%, #3730a3 100%)', padding: '24px 28px', color: '#fff' }
 const bankBrand = { fontSize: '20px', fontWeight: '800' as const, color: '#fff', margin: 0 }
@@ -167,9 +167,9 @@ const tbl = { width: '100%', borderCollapse: 'collapse' as const }
 const trAlt = { backgroundColor: '#ffffff' }
 const trTotal = { background: 'linear-gradient(135deg, #1e40af 0%, #3730a3 100%)' }
 const tdLabel = { padding: '10px 12px', fontSize: '13px', color: '#64748b', textAlign: 'right' as const, borderBottom: '1px solid #e2e8f0', fontWeight: '600' as const }
-const tdValue = { padding: '10px 12px', fontSize: '13px', color: '#0f172a', textAlign: 'left' as const, borderBottom: '1px solid #e2e8f0', fontWeight: '700' as const }
+const tdValue = { padding: '10px 12px', fontSize: '13px', color: '#0f172a', textAlign: 'right' as const, borderBottom: '1px solid #e2e8f0', fontWeight: '700' as const }
 const tdTotalLabel = { padding: '14px 12px', fontSize: '14px', color: '#fff', textAlign: 'right' as const, fontWeight: '700' as const }
-const tdTotalValue = { padding: '14px 12px', fontSize: '18px', color: '#fff', textAlign: 'left' as const, fontWeight: '900' as const }
+const tdTotalValue = { padding: '14px 12px', fontSize: '18px', color: '#fff', textAlign: 'right' as const, fontWeight: '900' as const }
 
 const timelineBox = { margin: '16px 28px', padding: '16px', backgroundColor: '#eff6ff', borderRadius: '10px', border: '1px solid #bfdbfe' }
 const timelineTitle = { fontSize: '13px', fontWeight: '700' as const, color: '#1e40af', margin: '0 0 10px', textAlign: 'right' as const }

@@ -96,7 +96,7 @@ export const template = {
 } satisfies TemplateEntry
 
 const main = { direction: 'rtl' as const, textAlign: 'right' as const, backgroundColor: '#ffffff', fontFamily: '"IBM Plex Sans Arabic", Arial, sans-serif' }
-const container = { direction: 'rtl' as const, textAlign: 'right' as const, padding: '24px', maxWidth: '560px', margin: '0 auto' }
+const container = { direction: 'rtl' as const, textAlign: 'right' as const, padding: '24px', maxWidth: '560px', margin: '0 auto', border: '1px solid #cbd5e1', borderRadius: '14px', overflow: 'hidden' as const, boxSizing: 'border-box' as const }
 const h1 = { fontSize: '22px', fontWeight: 'bold', color: '#0f172a', margin: '0 0 16px', textAlign: 'right' as const }
 const text = { fontSize: '15px', color: '#334155', lineHeight: '1.7', margin: '0 0 12px', textAlign: 'right' as const }
 const infoBox = { background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '16px', margin: '16px 0' }

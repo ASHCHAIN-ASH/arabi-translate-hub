@@ -14,11 +14,11 @@ export const SignupEmail = ({ recipient, confirmationUrl }: Props) => (
       <style>{renderHeadCss(P)}</style>
     </Head>
     <Preview>تأكيد تسجيلك في {BRAND.name} — خطوة واحدة تفصلك عن منصّتك الأكاديمية</Preview>
-    <Body style={s.main}>
-      <Container style={s.shell} className="container">
+    <Body dir="rtl" style={s.main}>
+      <Container dir="rtl" style={s.shell} className="container">
         <Section style={s.hero}>
           <div style={s.brandRow} className="anim-fade">
-            <span style={s.brandMark}>M</span>
+            <img src={BRAND.logoUrl} width="44" height="44" alt={BRAND.name} style={s.brandMark} />
             <Text style={s.brandName}>{BRAND.name}</Text>
           </div>
           <span style={s.badge} className="anim-fade-1">✦ {P.label}</span>

@@ -43,7 +43,7 @@ const E = ({
                 <Text style={S.brand}>🏦 {S.SITE_NAME}</Text>
                 <Text style={S.tagline}>إشعار استلام دفعة</Text>
               </Column>
-              <Column align="left">
+              <Column align="right">
                 <Text style={S.badge}>✓ مستلمة</Text>
               </Column>
             </Row>
