@@ -431,7 +431,7 @@ const SpinTheWheel = () => {
               {/* Center spin button */}
               <button
                 onClick={spinWheel}
-                disabled={isSpinning || isLocked || isChecking}
+                disabled={isSpinning || isLocked || isChecking || !isAuthed}
                 aria-label="ابدأ الدوران"
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full font-bold text-white shadow-2xl transition-transform active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
                 style={{
