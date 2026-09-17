@@ -25,6 +25,14 @@ import { template as invoiceIssued } from './invoice-issued.tsx'
 import { template as invoicePaymentReceived } from './invoice-payment-received.tsx'
 import { template as invoicePaid } from './invoice-paid.tsx'
 import { template as invoiceOverdue } from './invoice-overdue.tsx'
+import { template as emailVerification } from './email-verification.tsx'
+import { template as passwordReset } from './password-reset.tsx'
+import { template as orderReceived } from './order-received.tsx'
+import { template as ticketCreated } from './ticket-created.tsx'
+import { template as ticketReply } from './ticket-reply.tsx'
+import { template as complaintReceived } from './complaint-received.tsx'
+import { template as supportReply } from './support-reply.tsx'
+import { template as financeNotice } from './finance-notice.tsx'
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'financing-status-update': financingStatusUpdate,
@@ -43,4 +51,12 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   'invoice-payment-received': invoicePaymentReceived,
   'invoice-paid': invoicePaid,
   'invoice-overdue': invoiceOverdue,
+  'email-verification': emailVerification,
+  'password-reset': passwordReset,
+  'order-received': orderReceived,
+  'ticket-created': ticketCreated,
+  'ticket-reply': ticketReply,
+  'complaint-received': complaintReceived,
+  'support-reply': supportReply,
+  'finance-notice': financeNotice,
 }
