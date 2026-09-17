@@ -45,17 +45,20 @@ const Header = () => {
         <div className="flex items-center justify-between h-16 lg:h-[72px]">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="relative w-10 h-10 lg:w-11 lg:h-11 flex-shrink-0">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary to-secondary rounded-xl shadow-primary/20 shadow-lg flex items-center justify-center group-hover:shadow-primary/30 transition-shadow duration-300">
-                <GraduationCap className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
-              </div>
+            <div className="relative w-10 h-10 lg:w-11 lg:h-11 flex-shrink-0 rounded-xl overflow-hidden bg-white shadow-lg shadow-primary/10 group-hover:shadow-primary/30 transition-shadow duration-300">
+              <img
+                src={fekrahLogo.url}
+                alt="شعار FekrahEdu"
+                className="w-full h-full object-contain"
+                loading="eager"
+              />
             </div>
             <div className="text-right">
               <h1 className="text-sm lg:text-base font-bold text-foreground leading-tight tracking-tight">
                 FekrahEdu
               </h1>
               <p className="text-[10px] lg:text-xs text-muted-foreground font-medium hidden sm:block">
-                FekrahEdu
+                Shaping Your Academic and Career Success
               </p>
             </div>
           </Link>
