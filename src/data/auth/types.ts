@@ -31,6 +31,8 @@ export interface AuthProvider {
   signInWithPassword(email: string, password: string): Promise<AuthResult>;
   signUp(email: string, password: string, metadata?: Record<string, unknown>, redirectTo?: string): Promise<AuthResult>;
   resendSignupConfirmation(email: string, redirectTo?: string): Promise<{ error?: string }>;
+  /** تأكيد رابط بريد (تفعيل الحساب أو استرجاع كلمة المرور) عبر رمز الرابط */
+  verifyEmailToken(tokenHash: string, type: 'magiclink' | 'recovery' | 'signup' | 'email_change'): Promise<{ error?: string }>;
   signInWithOAuth(provider: 'google', redirectTo?: string): Promise<{ error?: string }>;
   signOut(): Promise<void>;
   requestPasswordReset(email: string, redirectTo?: string): Promise<{ error?: string }>;

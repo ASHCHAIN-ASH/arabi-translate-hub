@@ -101,6 +101,15 @@ export const selfHostedAuthProvider: AuthProvider = {
     }
   },
 
+  async verifyEmailToken(tokenHash, type) {
+    try {
+      await authApi('/verify-email-token', { tokenHash, type });
+      return {};
+    } catch (error) {
+      return { error: (error as Error).message };
+    }
+  },
+
   async signInWithOAuth(provider, redirectTo) {
     assertSelfHostedConfig();
     const target = new URL(`${dataConfig.apiBaseUrl}/auth/oauth/${provider}`);
