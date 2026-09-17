@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Copy, Gift, Sparkles, Trophy, Clock, ShieldCheck } from "lucide-react";
+import { Copy, Gift, Sparkles, Trophy, Clock, ShieldCheck, Mail } from "lucide-react";
 import { supabase } from "@/data/legacy/client";
 
 interface Segment {
@@ -29,6 +29,11 @@ const SEGMENTS: Segment[] = [
   { text: "تجهيز ملفات IRB مجانًا",             short: "ملفات IRB",  color: "hsl(220 38% 26%)", accent: "hsl(220 45% 15%)" },
 ];
 
+/** فترة التهدئة الموثّقة: محاولة واحدة لكل مشارك كل 30 يومًا */
+const COOLDOWN_DAYS = 30;
+
+const pad = (n: number) => String(n).padStart(2, "0");
+
 const SpinTheWheel = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -36,13 +41,18 @@ const SpinTheWheel = () => {
   const [isSpinning, setIsSpinning] = useState(false);
   const [showResult, setShowResult] = useState(false);
   const [wonPrize, setWonPrize] = useState("");
+  const [claimCode, setClaimCode] = useState("");
+  const [emailSent, setEmailSent] = useState(false);
   const [startAngle, setStartAngle] = useState(0);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [hasSpunToday, setHasSpunToday] = useState(false);
+  const [nextEligibleAt, setNextEligibleAt] = useState<string | null>(null);
+  const [remaining, setRemaining] = useState<{ d: number; h: number; m: number; s: number } | null>(null);
   const [isChecking, setIsChecking] = useState(true);
   const { toast } = useToast();
+
+  const isLocked = !!nextEligibleAt && !!remaining;
 
   // Responsive canvas size — based on viewport, not just container
   useEffect(() => {
@@ -60,7 +70,25 @@ const SpinTheWheel = () => {
     return () => window.removeEventListener("resize", update);
   }, []);
 
-  useEffect(() => { checkDailyAttempt(); }, []);
+  useEffect(() => { checkEligibility(); }, []);
+
+  // العدّ التنازلي الحيّ حتى موعد المحاولة القادمة
+  useEffect(() => {
+    if (!nextEligibleAt) { setRemaining(null); return; }
+    const tick = () => {
+      const diff = new Date(nextEligibleAt).getTime() - Date.now();
+      if (diff <= 0) { setNextEligibleAt(null); setRemaining(null); return; }
+      setRemaining({
+        d: Math.floor(diff / 86400000),
+        h: Math.floor((diff / 3600000) % 24),
+        m: Math.floor((diff / 60000) % 60),
+        s: Math.floor((diff / 1000) % 60),
+      });
+    };
+    tick();
+    const t = setInterval(tick, 1000);
+    return () => clearInterval(t);
+  }, [nextEligibleAt]);
 
   const getUserIdentifier = () => {
     let id = localStorage.getItem("spin_user_id");
@@ -71,20 +99,27 @@ const SpinTheWheel = () => {
     return id;
   };
 
-  const checkDailyAttempt = async () => {
+  const checkEligibility = async () => {
     try {
-      const userIdentifier = getUserIdentifier();
-      const today = new Date().toISOString().split("T")[0];
-      const { data, error } = await (supabase.from("spin_attempts") as any)
-        .select("*")
-        .eq("email", userIdentifier)
-        .gte("created_at", today)
-        .maybeSingle();
-      if (error && error.code !== "PGRST116") console.error(error);
-      setHasSpunToday(!!data);
+      const { data, error } = await supabase.functions.invoke("send-spin-winner", {
+        body: { action: "check", userIdentifier: getUserIdentifier() },
+      });
+      if (error) throw error;
+      if (data && data.eligible === false && data.nextEligibleAt) {
+        setNextEligibleAt(data.nextEligibleAt);
+      } else {
+        setNextEligibleAt(null);
+      }
     } catch (e) { console.error(e); }
     finally { setIsChecking(false); }
   };
+
+  const nextDateLabel = nextEligibleAt
+    ? new Date(nextEligibleAt).toLocaleDateString("ar-SA-u-ca-gregory", {
+        year: "numeric", month: "long", day: "numeric",
+      })
+    : "";
+
 
   const drawWheel = useCallback((angle: number) => {
     const canvas = canvasRef.current;
@@ -178,14 +213,15 @@ const SpinTheWheel = () => {
 
   const spinWheel = () => {
     if (isSpinning) return;
-    if (hasSpunToday) {
+    if (isLocked) {
       toast({
-        title: "تم استخدام المحاولة اليومية",
-        description: "يمكنك المحاولة مرة أخرى غداً",
+        title: "محاولتك الشهرية مُستخدمة",
+        description: `يمكنك اللف مرة أخرى في ${nextDateLabel}`,
         variant: "destructive",
       });
       return;
     }
+
     setIsSpinning(true);
     const spinRotations = Math.random() * 5 + 10;
     const totalAngle = spinRotations * 2 * Math.PI;
@@ -211,7 +247,10 @@ const SpinTheWheel = () => {
     const idx = Math.floor(norm / arc) % SEGMENTS.length;
     const prize = SEGMENTS[idx].text;
     setWonPrize(prize);
+    setClaimCode("");
+    setEmailSent(false);
     setShowResult(true);
+
     setIsSpinning(false);
     try {
       const audio = new Audio("https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3");
@@ -221,8 +260,8 @@ const SpinTheWheel = () => {
   };
 
   const copyCoupon = () => {
-    navigator.clipboard.writeText(wonPrize);
-    toast({ title: "تم النسخ!", description: "تم نسخ الكوبون إلى الحافظة" });
+    navigator.clipboard.writeText(claimCode || wonPrize);
+    toast({ title: "تم النسخ!", description: "تم نسخ رمز المطالبة إلى الحافظة" });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -230,19 +269,28 @@ const SpinTheWheel = () => {
     setIsSubmitting(true);
     try {
       const userIdentifier = getUserIdentifier();
-      const { error } = await supabase.functions.invoke("send-spin-winner", {
+      const { data, error } = await supabase.functions.invoke("send-spin-winner", {
         body: { name, email, prize: wonPrize, userIdentifier },
       });
       if (error) throw error;
-      setHasSpunToday(true);
-      toast({ title: "تم الإرسال بنجاح!", description: "تحقق من بريدك الإلكتروني للحصول على الكوبون" });
-      setShowResult(false);
-      setName(""); setEmail("");
+      if (data?.error) {
+        if (data.nextEligibleAt) setNextEligibleAt(data.nextEligibleAt);
+        toast({ title: "تعذّر تسجيل الفوز", description: data.error, variant: "destructive" });
+        return;
+      }
+      if (data?.nextEligibleAt) setNextEligibleAt(data.nextEligibleAt);
+      if (data?.claimCode) setClaimCode(data.claimCode);
+      setEmailSent(true);
+      toast({
+        title: "وصلت جائزتك إلى بريدك ✉️",
+        description: "افتح بريدك الإلكتروني (وصندوق الرسائل غير المرغوبة) لمشاهدة رمز المطالبة",
+      });
     } catch (e) {
       console.error(e);
       toast({ title: "حدث خطأ", description: "حاول مرة أخرى لاحقاً", variant: "destructive" });
     } finally { setIsSubmitting(false); }
   };
+
 
   return (
     <div
@@ -266,7 +314,7 @@ const SpinTheWheel = () => {
           >
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[hsl(220_40%_20%)] text-[hsl(45_90%_70%)] text-xs sm:text-sm font-semibold mb-4 shadow-md">
               <Sparkles className="w-4 h-4" />
-              عرض حصري · مرة واحدة يومياً
+              عرض حصري · محاولة واحدة كل 30 يومًا
             </div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-3 leading-[1.45] sm:leading-[1.4]"
                 style={{ color: "hsl(220 45% 18%)" }}>
@@ -314,13 +362,13 @@ const SpinTheWheel = () => {
               {/* Center spin button */}
               <button
                 onClick={spinWheel}
-                disabled={isSpinning || hasSpunToday || isChecking}
+                disabled={isSpinning || isLocked || isChecking}
                 aria-label="ابدأ الدوران"
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full font-bold text-white shadow-2xl transition-transform active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
                 style={{
                   width: size * 0.18,
                   height: size * 0.18,
-                  background: hasSpunToday
+                  background: isLocked
                     ? "linear-gradient(135deg, hsl(220 10% 50%), hsl(220 10% 35%))"
                     : "linear-gradient(135deg, hsl(43 74% 50%), hsl(38 80% 40%))",
                   fontSize: Math.max(11, size * 0.032),
@@ -330,8 +378,9 @@ const SpinTheWheel = () => {
                   <motion.span animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }}>
                     <Sparkles className="w-5 h-5" />
                   </motion.span>
-                ) : hasSpunToday ? "غداً" : "SPIN"}
+                ) : isLocked ? `${remaining!.d}ي` : "SPIN"}
               </button>
+
             </motion.div>
 
             {/* Side panel */}
@@ -366,13 +415,49 @@ const SpinTheWheel = () => {
                 </div>
               </div>
 
+              {/* العدّ التنازلي الموثّق حتى المحاولة القادمة */}
+              {isLocked && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="rounded-2xl p-5 border-2 shadow-lg"
+                  style={{
+                    background: "linear-gradient(135deg, hsl(45 80% 96%), hsl(45 60% 90%))",
+                    borderColor: "hsl(43 74% 55%)",
+                  }}
+                >
+                  <div className="flex items-center justify-center gap-2 mb-3 text-sm font-bold"
+                       style={{ color: "hsl(220 45% 18%)" }}>
+                    <Clock className="w-4 h-4" /> محاولتك القادمة بعد
+                  </div>
+                  <div className="grid grid-cols-4 gap-2" dir="ltr">
+                    {[
+                      { v: remaining!.d, l: "يوم" },
+                      { v: remaining!.h, l: "ساعة" },
+                      { v: remaining!.m, l: "دقيقة" },
+                      { v: remaining!.s, l: "ثانية" },
+                    ].map((u, i) => (
+                      <div key={i} className="rounded-xl py-2 text-center border shadow-sm"
+                           style={{ background: "hsl(220 45% 18%)", borderColor: "hsl(43 74% 55% / 0.5)" }}>
+                        <div className="text-xl sm:text-2xl font-extrabold tabular-nums"
+                             style={{ color: "hsl(45 90% 70%)" }}>{pad(u.v)}</div>
+                        <div className="text-[10px] sm:text-xs text-white/70">{u.l}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-center text-xs mt-3" style={{ color: "hsl(220 30% 35%)" }}>
+                    تاريخ الاستحقاق: <span className="font-bold">{nextDateLabel}</span>
+                  </p>
+                </motion.div>
+              )}
+
               <Button
                 onClick={spinWheel}
-                disabled={isSpinning || hasSpunToday || isChecking}
+                disabled={isSpinning || isLocked || isChecking}
                 size="lg"
                 className="w-full text-base sm:text-lg py-6 font-bold shadow-lg hover:shadow-xl transition-all"
                 style={{
-                  background: hasSpunToday
+                  background: isLocked
                     ? "hsl(220 10% 60%)"
                     : "linear-gradient(135deg, hsl(43 74% 50%), hsl(38 85% 55%))",
                   color: "hsl(220 50% 12%)",
@@ -380,14 +465,17 @@ const SpinTheWheel = () => {
               >
                 {isChecking ? "جاري التحميل..."
                   : isSpinning ? <><Sparkles className="w-5 h-5 ml-2 animate-spin" /> جاري الدوران...</>
-                  : hasSpunToday ? <><Clock className="w-5 h-5 ml-2" /> عد غداً للمحاولة</>
+                  : isLocked ? <><Clock className="w-5 h-5 ml-2" /> محاولتك القادمة بعد {remaining!.d} يومًا</>
                   : <><Gift className="w-5 h-5 ml-2" /> ابدأ الدوران الآن</>}
               </Button>
 
-              <div className="flex items-center justify-center gap-2 text-xs sm:text-sm text-muted-foreground">
-                <ShieldCheck className="w-4 h-4" />
-                محاولة واحدة مجانية يومياً · بدون تسجيل
+              <div className="flex items-start justify-center gap-2 text-xs sm:text-sm text-muted-foreground text-center">
+                <ShieldCheck className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                <span>
+                  محاولة مجانية واحدة لكل مشارك كل {COOLDOWN_DAYS} يومًا · تصلك الجائزة على بريدك الإلكتروني فورًا
+                </span>
               </div>
+
             </motion.div>
           </div>
 
@@ -460,31 +548,69 @@ const SpinTheWheel = () => {
                 <p className="text-2xl sm:text-3xl font-extrabold break-words" style={{ color: "hsl(220 45% 18%)" }}>{wonPrize}</p>
               </div>
 
-              <Button onClick={copyCoupon} variant="outline" className="w-full">
-                <Copy className="w-4 h-4 ml-2" /> نسخ الكوبون
-              </Button>
-
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <Label htmlFor="name">الاسم</Label>
-                  <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="أدخل اسمك" required />
-                </div>
-                <div>
-                  <Label htmlFor="email">البريد الإلكتروني</Label>
-                  <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="أدخل بريدك الإلكتروني" required />
-                </div>
-                <Button
-                  type="submit"
-                  className="w-full font-bold"
-                  style={{
-                    background: "linear-gradient(135deg, hsl(43 74% 50%), hsl(38 85% 55%))",
-                    color: "hsl(220 50% 12%)",
-                  }}
-                  disabled={isSubmitting}
+              {emailSent ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="space-y-4"
                 >
-                  {isSubmitting ? "جاري الإرسال..." : "إرسال البيانات والمطالبة بالجائزة"}
-                </Button>
-              </form>
+                  <div className="rounded-xl p-4 text-center border-2"
+                       style={{ background: "hsl(150 60% 96%)", borderColor: "hsl(150 50% 45%)" }}>
+                    <div className="flex items-center justify-center gap-2 font-bold mb-1"
+                         style={{ color: "hsl(150 60% 24%)" }}>
+                      <Mail className="w-5 h-5" /> أُرسلت جائزتك إلى بريدك
+                    </div>
+                    <p className="text-xs text-muted-foreground break-all">{email}</p>
+                  </div>
+
+                  {claimCode && (
+                    <div className="rounded-xl p-4 text-center border-2 border-dashed"
+                         style={{ borderColor: "hsl(43 74% 55%)", background: "hsl(45 80% 97%)" }}>
+                      <p className="text-xs text-muted-foreground mb-1">رمز المطالبة</p>
+                      <p className="text-xl font-extrabold tracking-widest" dir="ltr"
+                         style={{ color: "hsl(220 45% 18%)" }}>{claimCode}</p>
+                    </div>
+                  )}
+
+                  <Button onClick={copyCoupon} variant="outline" className="w-full">
+                    <Copy className="w-4 h-4 ml-2" /> نسخ رمز المطالبة
+                  </Button>
+
+                  {nextEligibleAt && (
+                    <p className="text-center text-xs text-muted-foreground">
+                      محاولتك القادمة متاحة في <span className="font-bold">{nextDateLabel}</span> (بعد {COOLDOWN_DAYS} يومًا)
+                    </p>
+                  )}
+
+                  <Button className="w-full" onClick={() => setShowResult(false)}>إغلاق</Button>
+                </motion.div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <p className="text-xs text-muted-foreground text-center">
+                    أدخل بياناتك لتصلك الجائزة ورمز المطالبة على بريدك الإلكتروني.
+                  </p>
+                  <div>
+                    <Label htmlFor="name">الاسم</Label>
+                    <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="أدخل اسمك" required />
+                  </div>
+                  <div>
+                    <Label htmlFor="email">البريد الإلكتروني</Label>
+                    <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="أدخل بريدك الإلكتروني" required />
+                  </div>
+                  <Button
+                    type="submit"
+                    className="w-full font-bold"
+                    style={{
+                      background: "linear-gradient(135deg, hsl(43 74% 50%), hsl(38 85% 55%))",
+                      color: "hsl(220 50% 12%)",
+                    }}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "جاري الإرسال..." : <><Mail className="w-4 h-4 ml-2" /> أرسل الجائزة إلى بريدي</>}
+                  </Button>
+                </form>
+              )}
+
             </motion.div>
           </AnimatePresence>
         </DialogContent>

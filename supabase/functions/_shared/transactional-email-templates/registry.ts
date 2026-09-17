@@ -33,6 +33,8 @@ import { template as ticketReply } from './ticket-reply.tsx'
 import { template as complaintReceived } from './complaint-received.tsx'
 import { template as supportReply } from './support-reply.tsx'
 import { template as financeNotice } from './finance-notice.tsx'
+import { template as spinPrizeWon } from './spin-prize-won.tsx'
+import { template as spinPrizeAdmin } from './spin-prize-admin.tsx'
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'financing-status-update': financingStatusUpdate,
@@ -59,4 +61,6 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   'complaint-received': complaintReceived,
   'support-reply': supportReply,
   'finance-notice': financeNotice,
+  'spin-prize-won': spinPrizeWon,
+  'spin-prize-admin': spinPrizeAdmin,
 }

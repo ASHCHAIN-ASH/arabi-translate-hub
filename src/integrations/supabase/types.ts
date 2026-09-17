@@ -4768,31 +4768,49 @@ export type Database = {
       }
       spin_attempts: {
         Row: {
+          attempt_date: string
           claimed: boolean | null
           created_at: string
           email: string | null
+          email_sent_at: string | null
           id: string
+          name: string | null
+          next_eligible_at: string
           phone: string | null
           prize: string | null
+          source: string | null
           user_id: string | null
+          user_identifier: string | null
         }
         Insert: {
+          attempt_date?: string
           claimed?: boolean | null
           created_at?: string
           email?: string | null
+          email_sent_at?: string | null
           id?: string
+          name?: string | null
+          next_eligible_at?: string
           phone?: string | null
           prize?: string | null
+          source?: string | null
           user_id?: string | null
+          user_identifier?: string | null
         }
         Update: {
+          attempt_date?: string
           claimed?: boolean | null
           created_at?: string
           email?: string | null
+          email_sent_at?: string | null
           id?: string
+          name?: string | null
+          next_eligible_at?: string
           phone?: string | null
           prize?: string | null
+          source?: string | null
           user_id?: string | null
+          user_identifier?: string | null
         }
         Relationships: []
       }
