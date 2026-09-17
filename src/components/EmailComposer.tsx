@@ -151,13 +151,13 @@ export default function EmailComposer({ defaultTo = "", defaultTemplateKey = "",
       <tr><td align="center">
         <table role="presentation" class="container" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;">
           <tr><td class="header">
-            <p class="brand">منصة فكرة إيدو</p>
+            <p class="brand">FekrahEdu</p>
             <p class="tagline">للخدمات الأكاديمية والترجمة المتخصصة</p>
           </td></tr>
           <tr><td class="subject-bar"><strong>الموضوع:</strong> ${subject}</td></tr>
           <tr><td class="content">${bodyHtml}</td></tr>
           <tr><td class="footer">
-            © ${new Date().getFullYear()} منصة فكرة إيدو - جميع الحقوق محفوظة<br/>
+            © ${new Date().getFullYear()} FekrahEdu - جميع الحقوق محفوظة<br/>
             للتواصل: <a href="mailto:info@fekrahedu.com">info@fekrahedu.com</a> · واتساب: 0559600824
             <div class="links">
               <a href="https://fekrahedu.com">الموقع</a> ·

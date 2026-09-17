@@ -234,7 +234,7 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
           
           <div class="header">
-            <h1>🎓 فكرة إيدو - طلب خدمة بحثية</h1>
+            <h1>🎓 FekrahEdu - طلب خدمة بحثية</h1>
             <div class="timestamp">
               📅 ${new Date().toLocaleString('ar-SA', { 
                 weekday: 'long', 
@@ -289,7 +289,7 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
           
           <div class="footer">
-            <p class="company-name">فكرة إيدو - نظام الإشعارات</p>
+            <p class="company-name">FekrahEdu - نظام الإشعارات</p>
             <p>&copy; 2025 جميع الحقوق محفوظة</p>
             <p>هذه رسالة تلقائية من نظام إدارة الطلبات</p>
           </div>
@@ -510,7 +510,7 @@ const handler = async (req: Request): Promise<Response> => {
       <body>
         <div class="email-wrapper">
           <div class="header">
-            <h1>🎯 فكرة إيدو</h1>
+            <h1>🎯 FekrahEdu</h1>
             <h2>تأكيد استلام طلبك</h2>
           </div>
           
@@ -566,7 +566,7 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
           
           <div class="footer">
-            <p class="company-name">فكرة إيدو</p>
+            <p class="company-name">FekrahEdu</p>
             <p>&copy; 2025 جميع الحقوق محفوظة</p>
             <p>نحن ملتزمون بتقديم أفضل خدمات البحث العلمي الاحترافية والمعتمدة</p>
             <p>شكراً لثقتكم بنا ونتطلع لخدمتكم</p>

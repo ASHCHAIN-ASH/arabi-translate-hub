@@ -108,7 +108,7 @@ const IntellectualProperty = () => {
             
             <div className="bg-red-50 border border-red-200 rounded-xl p-4 md:p-6">
               <p className="text-red-800 text-base md:text-lg leading-relaxed mb-4">
-                <strong>يُمنع منعاً باتاً</strong> نسخ أو استخدام أو توزيع أي من محتويات هذا الموقع أو خدماته دون الحصول على إذن كتابي مسبق من إدارة وكالة فكرة إيدو.
+                <strong>يُمنع منعاً باتاً</strong> نسخ أو استخدام أو توزيع أي من محتويات هذا الموقع أو خدماته دون الحصول على إذن كتابي مسبق من إدارة FekrahEdu.
               </p>
               <p className="text-red-700 text-sm md:text-base">
                 أي انتهاك لحقوق الملكية الفكرية يعرض المخالف للمساءلة القانونية والمطالبة بالتعويضات وفقاً للقوانين السعودية والدولية.
@@ -497,7 +497,7 @@ const IntellectualProperty = () => {
                 <Copyright className="h-6 w-6 text-white" />
               </div>
               <h4 className="text-xl font-bold text-slate-800 mb-2">
-                © 2024 وكالة فكرة إيدو للحلول التعليمية المتقدمة
+                © 2024 FekrahEdu للحلول التعليمية المتقدمة
               </h4>
               <p className="text-slate-600 mb-4">
                 جميع الحقوق محفوظة. هذا الموقع ومحتوياته محمية بموجب قوانين الملكية الفكرية السعودية والدولية.

@@ -44,7 +44,7 @@ const ContractReminderEmail = ({
         <Text style={footer}>
           إذا واجهتك أي مشكلة في التوقيع، يرجى التواصل معنا.
           <br />
-          فريق فكرة إيدو
+          فريق FekrahEdu
         </Text>
       </Container>
     </Body>

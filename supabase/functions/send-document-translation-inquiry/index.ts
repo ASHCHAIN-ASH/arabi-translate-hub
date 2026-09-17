@@ -83,7 +83,7 @@ const handler = async (req: Request): Promise<Response> => {
     const customerEmailResponse = await resend.emails.send({
       from: "FekrahEdu <info@fekrahedu.com>",
       to: [inquiry.email],
-      subject: "✅ تأكيد استلام طلبك - فكرة إيدو",
+      subject: "✅ تأكيد استلام طلبك - FekrahEdu",
       html: `
         <!DOCTYPE html>
         <html dir="rtl" lang="ar">
@@ -339,7 +339,7 @@ const handler = async (req: Request): Promise<Response> => {
         <body>
           <div class="email-wrapper">
             <div class="header">
-              <h1>🎯 فكرة إيدو</h1>
+              <h1>🎯 FekrahEdu</h1>
               <h2>تأكيد استلام طلب ترجمة المستندات</h2>
             </div>
             
@@ -396,7 +396,7 @@ const handler = async (req: Request): Promise<Response> => {
             </div>
             
             <div class="footer">
-              <p class="company-name">فكرة إيدو</p>
+              <p class="company-name">FekrahEdu</p>
               <p>&copy; 2024 جميع الحقوق محفوظة</p>
               <p>نحن ملتزمون بتقديم أفضل خدمات الترجمة الاحترافية والمعتمدة</p>
               <p>شكراً لثقتكم بنا ونتطلع لخدمتكم</p>
@@ -835,7 +835,7 @@ const handler = async (req: Request): Promise<Response> => {
             </div>
             
             <div class="footer">
-              <p><strong>فكرة إيدو - نظام إدارة الطلبات</strong></p>
+              <p><strong>FekrahEdu - نظام إدارة الطلبات</strong></p>
               <p>هذا تنبيه تلقائي من نظام إدارة طلبات الترجمة</p>
               <p>&copy; 2024 جميع الحقوق محفوظة</p>
             </div>

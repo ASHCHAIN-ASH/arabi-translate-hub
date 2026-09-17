@@ -72,7 +72,7 @@ const DeadlineReminderEmail = ({
             <Text style={upsellText}>{c.upsell}</Text>
             <Button href="https://fekrahedu.com/services" style={buttonOutline}>استعراض الخدمات</Button>
           </Section>
-          <Text style={footer}>منصة فكرة إيدو — شريكك في التميز الأكاديمي</Text>
+          <Text style={footer}>FekrahEdu — شريكك في التميز الأكاديمي</Text>
         </Container>
       </Body>
     </Html>

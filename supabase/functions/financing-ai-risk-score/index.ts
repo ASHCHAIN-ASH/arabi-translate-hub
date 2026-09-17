@@ -1,4 +1,4 @@
-// Fekrah PayLater — AI Risk Scoring for financing applications
+// FekrahEdu PayLater — AI Risk Scoring for financing applications
 // Computes a risk score (0-100) + analysis using Lovable AI Gateway
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
 

@@ -39,7 +39,7 @@ const CREAM = "#fdfbf5";
 const PLATFORM = {
   name: "Master U Path",
   nameAr: "فكرة يو المسار",
-  legal: "منصة فكرة إيدو للخدمات الأكاديمية",
+  legal: "FekrahEdu للخدمات الأكاديمية",
   domain: "fekrahedu.com",
   jurisdiction: "المملكة العربية السعودية",
 };

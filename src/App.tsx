@@ -54,7 +54,7 @@ import AcademicCompetitions from "./pages/AcademicCompetitions";
 import SpinTheWheel from "./pages/SpinTheWheel";
 import StudyToEarn from "./pages/StudyToEarn";
 import Unauthorized from "./pages/Unauthorized";
-import FekrahMembership from "./pages/FekrahMembership";
+import FekrahEduMembership from "./pages/FekrahEduMembership";
 import FAQ from "./pages/FAQ";
 import SuccessStories from "./pages/SuccessStories";
 import ClientGuide from "./pages/ClientGuide";
@@ -145,7 +145,7 @@ import AdminResearchContractDetails from "./pages/admin/AdminResearchContractDet
 import AdminResearchPublicationDetails from "./pages/admin/AdminResearchPublicationDetails";
 import ClientContractView from "./pages/ClientContractView";
 import FinancingHome from "./pages/client/FinancingHome";
-import FekrahPayLater from "./pages/FekrahPayLater";
+import FekrahEduPayLater from "./pages/FekrahEduPayLater";
 import FinancingNew from "./pages/client/FinancingNew";
 import FinancingDetails from "./pages/client/FinancingDetails";
 import FinancingAcknowledgments from "./pages/client/FinancingAcknowledgments";
@@ -301,7 +301,7 @@ const App = () => (
             <Route path="/about-us" element={<AboutUs />} />
              <Route path="/terms-of-service" element={<TermsOfService />} />
              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-              <Route path="/master-membership" element={<FekrahMembership />} />
+              <Route path="/fekrahedu-membership" element={<FekrahEduMembership />} />
              <Route path="/faq" element={<FAQ />} />
              <Route path="/academic-competitions" element={<AcademicCompetitions />} />
              <Route path="/spin-the-wheel" element={<SpinTheWheel />} />
@@ -464,7 +464,7 @@ const App = () => (
                 <ClientContracts />
               </SimpleProtectedRoute>
             } />
-            <Route path="/master-paylater" element={<FekrahPayLater />} />
+            <Route path="/fekrahedu-paylater" element={<FekrahEduPayLater />} />
             <Route path="/financing" element={
               <SimpleProtectedRoute requiredRole="client">
                 <FinancingHome />

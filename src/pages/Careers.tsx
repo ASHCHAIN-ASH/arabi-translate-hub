@@ -572,7 +572,7 @@ const Careers = () => {
                   transition={{ duration: 5, repeat: Infinity }}
                   className="block bg-gradient-to-r from-yellow-400 via-pink-400 to-blue-400 bg-clip-text text-transparent bg-[length:200%_auto]"
                 >
-                  فكرة إيدو ✨
+                  FekrahEdu ✨
                 </motion.span>
               </h1>
               
@@ -769,7 +769,7 @@ const Careers = () => {
           >
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-slate-800 mb-6">
-                لماذا فكرة إيدو؟ 🌟
+                لماذا FekrahEdu؟ 🌟
               </h2>
               <p className="text-xl text-slate-600 max-w-3xl mx-auto">
                 انضم لبيئة عمل استثنائية تقدر إبداعك وتدعم نموك المهني

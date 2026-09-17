@@ -70,7 +70,7 @@ const AcademicHeroSection = () => {
             >
               <span className="text-slate-800 dark:text-white">وكالة </span>
               <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                فكرة إيدو
+                FekrahEdu
               </span>
             </motion.h1>
             
@@ -143,7 +143,7 @@ const AcademicHeroSection = () => {
               >
                 <div className="text-center text-white">
                   <GraduationCap className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 mx-auto mb-1 sm:mb-2" />
-                  <div className="text-sm sm:text-base lg:text-lg font-bold mb-0.5 sm:mb-1">فكرة إيدو</div>
+                  <div className="text-sm sm:text-base lg:text-lg font-bold mb-0.5 sm:mb-1">FekrahEdu</div>
                   <div className="text-xs sm:text-sm lg:text-base opacity-90">للتميز الأكاديمي</div>
                 </div>
               </motion.div>

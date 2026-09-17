@@ -202,7 +202,7 @@ const AboutUs = () => {
             "@context": "https://schema.org",
             "@type": "Organization",
             "name": "FekrahEdu Agency",
-            "alternateName": "وكالة فكرة إيدو",
+            "alternateName": "FekrahEdu",
             "url": "https://fekrahedu.com",
             "logo": "https://fekrahedu.com/assets/national-day-logo-original.webp",
             "foundingDate": "2014",
@@ -326,7 +326,7 @@ const AboutUs = () => {
               transition={{ duration: 0.8, delay: 0.3 }}
             >
               <span className="bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-                فكرة إيدو
+                FekrahEdu
               </span>
               <br />
               <span className="text-foreground text-4xl sm:text-5xl lg:text-6xl">

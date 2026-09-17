@@ -56,7 +56,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email to customer
     const customerEmailResponse = await resend.emails.send({
-      from: "عضوية فكرة <info@fekrahedu.com>",
+      from: "عضوية FekrahEdu <info@fekrahedu.com>",
       to: [email],
       subject: `تأكيد طلب الاشتراك في ${membershipNameAr} - ${name}`,
       html: `
@@ -86,7 +86,7 @@ const handler = async (req: Request): Promise<Response> => {
           <div class="container">
             <div class="header">
               <h1>🎉 شكراً لك ${name}</h1>
-              <p>تم استلام طلب اشتراكك في عضوية فكرة بنجاح</p>
+              <p>تم استلام طلب اشتراكك في عضوية FekrahEdu بنجاح</p>
             </div>
             
             <div class="content">
@@ -126,7 +126,7 @@ const handler = async (req: Request): Promise<Response> => {
             </div>
 
             <div class="footer">
-              <h3>وكالة فكرة إيدو</h3>
+              <h3>FekrahEdu</h3>
               <p>شريكك الموثوق في رحلة التعلم والتطوير المهني</p>
               <p>FEKRAH EDU AGENCY</p>
             </div>
@@ -159,7 +159,7 @@ const handler = async (req: Request): Promise<Response> => {
           <div class="container">
             <div class="header">
               <h2>🔔 طلب اشتراك جديد</h2>
-              <p>تم استلام طلب اشتراك جديد في عضوية فكرة</p>
+              <p>تم استلام طلب اشتراك جديد في عضوية FekrahEdu</p>
             </div>
             
             <div class="details">

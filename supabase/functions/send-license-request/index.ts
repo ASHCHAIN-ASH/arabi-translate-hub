@@ -384,7 +384,7 @@ const getClientEmailTemplate = (data: LicenseRequestData, requestNumber: string)
             <div class="logo-container">
                 <div class="logo-icon">⚖️</div>
             </div>
-            <h1 class="company-name">وكالة فكرة إيدو</h1>
+            <h1 class="company-name">FekrahEdu</h1>
             <p class="company-tagline">للحلول التعليمية والملكية الفكرية المتقدمة</p>
         </div>
         
@@ -514,7 +514,7 @@ const getClientEmailTemplate = (data: LicenseRequestData, requestNumber: string)
             <div class="footer-copyright">
                 هذا الإيميل تم إرساله تلقائياً من نظام إدارة التراخيص.<br>
                 للاستفسارات والمتابعة، يرجى التواصل عبر القنوات الرسمية المذكورة أعلاه.<br><br>
-                © 2024 وكالة فكرة إيدو للحلول التعليمية المتقدمة<br>
+                © 2024 FekrahEdu للحلول التعليمية المتقدمة<br>
                 جميع الحقوق محفوظة | المملكة العربية السعودية
             </div>
         </div>
@@ -654,7 +654,7 @@ serve(async (req: Request) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "وكالة فكرة إيدو <noreply@fekrahedu.com>",
+        from: "FekrahEdu <noreply@fekrahedu.com>",
         to: [requestData.email],
         subject: clientEmail.subject,
         html: clientEmail.html,

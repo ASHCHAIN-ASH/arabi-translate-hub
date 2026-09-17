@@ -195,7 +195,7 @@ const Footer = () => {
               {[
                 { name: 'عن الشركة', href: '/about-us' },
                 { name: 'الأسعار', href: '/pricing' },
-                { name: 'عضوية فكرة', href: '/master-membership' },
+                { name: 'عضوية FekrahEdu', href: '/fekrahedu-membership' },
                 { name: 'المسابقات', href: '/academic-competitions' },
                 { name: 'الأسئلة الشائعة', href: '/faq' },
                 { name: 'اتصل بنا', href: '/contact-us' }
@@ -356,7 +356,7 @@ const Footer = () => {
               <div className="space-y-2">
                 <p className="text-white/60 text-sm text-center lg:text-right flex items-center gap-2 flex-wrap">
                   <Globe className="h-4 w-4 flex-shrink-0" />
-                  <span>© {currentYear} وكالة فكرة إيدو - للحلول التعليمية المتقدمة. جميع الحقوق محفوظة.</span>
+                  <span>© {currentYear} FekrahEdu - للحلول التعليمية المتقدمة. جميع الحقوق محفوظة.</span>
                 </p>
                 <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-2 md:p-3">
                   <p className="text-xs md:text-sm text-red-400 font-semibold flex items-center gap-2 mb-1">

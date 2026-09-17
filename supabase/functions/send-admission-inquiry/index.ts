@@ -228,7 +228,7 @@ const createClientEmailHtml = (
     
     <div class="footer">
       <div class="footer-text">وكالة FekrahEdu للحلول التعليمية المتقدمة</div>
-      <div class="footer-subtext">© 2024 وكالة فكرة إيدو. جميع الحقوق محفوظة.</div>
+      <div class="footer-subtext">© 2024 FekrahEdu. جميع الحقوق محفوظة.</div>
     </div>
   </div>
 </body>

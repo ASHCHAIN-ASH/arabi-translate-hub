@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Crown, Sparkles, ArrowRight, Gift, Star, Zap, Award, Shield, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const FekrahMembershipBanner = () => {
+const FekrahEduMembershipBanner = () => {
   const membershipTiers = [
     {
       name: 'الفضية',
@@ -112,7 +112,7 @@ const FekrahMembershipBanner = () => {
                     }}
                     className="bg-gradient-to-r from-yellow-200 via-white to-amber-200 bg-clip-text text-transparent bg-[length:300%_100%]"
                   >
-                    عضوية فكرة
+                    عضوية FekrahEdu
                   </motion.span>
                   <br />
                   <span className="text-white/95">
@@ -158,7 +158,7 @@ const FekrahMembershipBanner = () => {
                       size="lg"
                       className="bg-white text-blue-700 hover:bg-gray-50 font-bold px-8 shadow-xl hover:shadow-2xl transition-all duration-300 w-full sm:w-auto"
                     >
-                      <Link to="/master-membership">
+                      <Link to="/fekrahedu-membership">
                         <Sparkles className="h-5 w-5 ml-2" />
                         اشترك الآن
                         <ArrowRight className="h-5 w-5 mr-2" />
@@ -176,7 +176,7 @@ const FekrahMembershipBanner = () => {
                       variant="outline"
                       className="bg-white/10 backdrop-blur-md text-white hover:bg-white/20 border-2 border-white/40 font-bold px-8 w-full sm:w-auto"
                     >
-                      <Link to="/master-membership">
+                      <Link to="/fekrahedu-membership">
                         <Gift className="h-5 w-5 ml-2" />
                         تفاصيل العضوية
                       </Link>
@@ -310,4 +310,4 @@ const FekrahMembershipBanner = () => {
   );
 };
 
-export default FekrahMembershipBanner;
+export default FekrahEduMembershipBanner;

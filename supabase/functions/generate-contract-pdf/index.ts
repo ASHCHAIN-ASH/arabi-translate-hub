@@ -12,8 +12,8 @@ const corsHeaders = {
 
 const PLATFORM = {
   name: "FekrahEdu",
-  nameAr: "فكرة إيدو",
-  legal: "منصة فكرة إيدو للخدمات الأكاديمية",
+  nameAr: "FekrahEdu",
+  legal: "FekrahEdu للخدمات الأكاديمية",
   domain: "fekrahedu.com",
   jurisdiction: "المملكة العربية السعودية",
 };

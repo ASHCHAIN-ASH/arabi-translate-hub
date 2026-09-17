@@ -125,14 +125,14 @@
 />
 ```
 
-### عضوية فكرة
+### عضوية FekrahEdu
 ```typescript
-// src/pages/FekrahMembership.tsx
+// src/pages/FekrahEduMembership.tsx
 <SEO 
-  title="عضوية فكرة VIP - FekrahEdu | خصومات وخدمات حصرية"
-  description="انضم لعضوية فكرة VIP واحصل على خصم 25% على جميع الخدمات، أولوية في التنفيذ، ومستشار أكاديمي مخصص"
-  keywords="عضوية فكرة, VIP membership, خصومات حصرية, خدمات متميزة, عضوية أكاديمية"
-  url="https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/master-membership"
+  title="عضوية FekrahEdu VIP - FekrahEdu | خصومات وخدمات حصرية"
+  description="انضم لعضوية FekrahEdu VIP واحصل على خصم 25% على جميع الخدمات، أولوية في التنفيذ، ومستشار أكاديمي مخصص"
+  keywords="عضوية FekrahEdu, VIP membership, خصومات حصرية, خدمات متميزة, عضوية أكاديمية"
+  url="https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/fekrahedu-membership"
 />
 ```
 

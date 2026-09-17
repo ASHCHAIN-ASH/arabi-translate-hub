@@ -27,9 +27,9 @@ const handler = async (req: Request): Promise<Response> => {
     console.log(`Sending welcome email to: ${user_email}`);
 
     const emailResponse = await resend.emails.send({
-      from: "منصة فكرة إيدو <info@fekrahedu.com>",
+      from: "FekrahEdu <info@fekrahedu.com>",
       to: [user_email],
-      subject: "مرحباً بك في منصة فكرة إيدو!",
+      subject: "مرحباً بك في FekrahEdu!",
       html: `
         <!DOCTYPE html>
         <html dir="rtl" lang="ar">
@@ -128,7 +128,7 @@ const handler = async (req: Request): Promise<Response> => {
         <body>
           <div class="container">
             <div class="header">
-              <h1>🎓 مرحباً بك في منصة فكرة إيدو</h1>
+              <h1>🎓 مرحباً بك في FekrahEdu</h1>
               <p>أهلاً وسهلاً ${user_name}</p>
             </div>
             
@@ -138,7 +138,7 @@ const handler = async (req: Request): Promise<Response> => {
               </div>
               
               <p>
-                نحن سعداء لانضمامك إلى منصة فكرة إيدو، المنصة الرائدة في تقديم خدمات الترجمة والبحث الأكاديمي عالية الجودة.
+                نحن سعداء لانضمامك إلى FekrahEdu، المنصة الرائدة في تقديم خدمات الترجمة والبحث الأكاديمي عالية الجودة.
               </p>
               
               <div class="features">
@@ -181,16 +181,16 @@ const handler = async (req: Request): Promise<Response> => {
               
               <p style="margin-bottom: 0;">
                 مع أطيب التحيات،<br>
-                <strong>فريق منصة فكرة إيدو</strong>
+                <strong>فريق FekrahEdu</strong>
               </p>
             </div>
             
             <div class="footer">
               <p>
-                هذا البريد الإلكتروني تم إرساله إليك لأنك قمت بإنشاء حساب في منصة فكرة إيدو.
+                هذا البريد الإلكتروني تم إرساله إليك لأنك قمت بإنشاء حساب في FekrahEdu.
               </p>
               <p>
-                © 2024 منصة فكرة إيدو. جميع الحقوق محفوظة.
+                © 2024 FekrahEdu. جميع الحقوق محفوظة.
               </p>
             </div>
           </div>

@@ -32,7 +32,7 @@ const sendEmail = async (to: string, subject: string, html: string) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "فكرة إيدو <noreply@fekrahedu.com>",
+        from: "FekrahEdu <noreply@fekrahedu.com>",
         to: [to],
         subject: subject,
         html: html,
@@ -124,7 +124,7 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
           
           <div style="text-align: center; margin-top: 30px;">
-            <p>وكالة فكرة إيدو - info@fekrahedu.com</p>
+            <p>FekrahEdu - info@fekrahedu.com</p>
           </div>
         </div>
       </div>

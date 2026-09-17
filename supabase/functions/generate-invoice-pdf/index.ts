@@ -9,7 +9,7 @@ const corsHeaders = {
 
 // === بيانات المنصة الرسمية ===
 const PLATFORM = {
-  nameAr: "وكالة فكرة إيدو",
+  nameAr: "FekrahEdu",
   nameEn: "FekrahEdu Agency",
   legal: "تتبع لشركة علي صالح الشهري القابضة",
   domain: "fekrahedu.com",

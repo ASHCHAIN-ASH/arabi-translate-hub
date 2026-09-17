@@ -111,7 +111,7 @@ const handler = async (req: Request): Promise<Response> => {
         <!-- Company Header -->
         <div style="text-align: center; margin-bottom: 25px;">
           <h2 style="margin: 0; color: #1a365d; font-size: 24px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">
-            وكالة فكرة إيدو
+            FekrahEdu
           </h2>
           <p style="margin: 5px 0 0 0; color: #4a5568; font-size: 14px; font-style: italic;">
             FekrahEdu Agency
@@ -186,7 +186,7 @@ const handler = async (req: Request): Promise<Response> => {
         <!-- Legal Footer -->
         <div style="border-top: 1px solid #e2e8f0; padding-top: 20px; text-align: center;">
           <p style="margin: 0 0 10px 0; color: #718096; font-size: 12px; line-height: 1.5;">
-            © ${new Date().getFullYear()} وكالة فكرة إيدو. جميع الحقوق محفوظة. | ترخيص وزارة التجارة رقم: 1010123456<br>
+            © ${new Date().getFullYear()} FekrahEdu. جميع الحقوق محفوظة. | ترخيص وزارة التجارة رقم: 1010123456<br>
             <strong>FekrahEdu Agency - Licensed Educational Services Provider</strong>
           </p>
           <p style="margin: 0; color: #a0aec0; font-size: 11px;">
@@ -207,7 +207,7 @@ const handler = async (req: Request): Promise<Response> => {
     `;
 
     // إضافة الفوتر إلى نهاية المحتوى
-    if (emailContent && !emailContent.includes('وكالة فكرة إيدو')) {
+    if (emailContent && !emailContent.includes('FekrahEdu')) {
       emailContent += professionalFooter;
     }
 
@@ -215,7 +215,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Sending email to:", to);
     
     const emailResponse = await resend.emails.send({
-      from: "وكالة فكرة إيدو <info@fekrahedu.com>",
+      from: "FekrahEdu <info@fekrahedu.com>",
       to: Array.isArray(to) ? to : [to],
       subject: emailSubject,
       html: emailContent,

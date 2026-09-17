@@ -81,7 +81,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         { name: 'بوابة المدفوعات', href: '/adminfekrah/payments', icon: CreditCard },
         { name: 'المحافظ الرقمية', href: '/adminfekrah/wallets', icon: Wallet },
         { name: 'طلبات السحب', href: '/adminfekrah/withdrawals', icon: Banknote },
-        { name: 'Fekrah PayLater', href: '/adminfekrah/financing', icon: Wallet },
+        { name: 'FekrahEdu PayLater', href: '/adminfekrah/financing', icon: Wallet },
       ]
     },
     // 5. التسويق والولاء
@@ -339,7 +339,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                   <Shield className="w-5 h-5 text-primary-foreground" />
                 </div>
                 <div className="hidden sm:block">
-                  <h1 className="text-sm font-bold text-foreground leading-tight">منصة فكرة إيدو</h1>
+                  <h1 className="text-sm font-bold text-foreground leading-tight">FekrahEdu</h1>
                   <p className="text-[11px] text-muted-foreground leading-tight">لوحة الإدارة</p>
                 </div>
               </Link>

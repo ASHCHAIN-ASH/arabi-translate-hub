@@ -1,4 +1,4 @@
-// Fekrah PayLater — Shared financing constants & helpers
+// FekrahEdu PayLater — Shared financing constants & helpers
 // نظام تمويل مستقل صارم بمعايير شركات التمويل العالمية المرخّصة
 export const FINANCING_MIN_AMOUNT = 2500;
 export const FINANCING_DEFAULT_DOWN_PAYMENT_PCT = 0.25;
@@ -119,7 +119,7 @@ export const FINANCING_DOC_LABELS_AR: Record<string, string> = {
 };
 
 export const FINANCING_DISCLAIMER_AR =
-  'التمويل في Fekrah PayLater ليس تمويلًا نقديًا، وإنما رصيد داخلي يُضاف إلى محفظتك داخل المنصة بعد الموافقة، ويُستخدم فقط في سداد خدمات المنصة.';
+  'التمويل في FekrahEdu PayLater ليس تمويلًا نقديًا، وإنما رصيد داخلي يُضاف إلى محفظتك داخل المنصة بعد الموافقة، ويُستخدم فقط في سداد خدمات المنصة.';
 
 // رسالة إنسانية تُذكّر العميل بأن التمويل وسيلة دعم لرحلته التعليمية
 export const FINANCING_MISSION_AR =

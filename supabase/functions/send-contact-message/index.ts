@@ -179,7 +179,7 @@ const handler = async (req: Request): Promise<Response> => {
             
             <div class="footer">
               <p>تم إرسال هذه الرسالة تلقائياً من نظام إدارة التواصل</p>
-              <p>© 2024 وكالة فكرة إيدو. جميع الحقوق محفوظة.</p>
+              <p>© 2024 FekrahEdu. جميع الحقوق محفوظة.</p>
             </div>
           </div>
         </body>
@@ -189,9 +189,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send confirmation email to customer
     const customerEmailResponse = await resend.emails.send({
-      from: "وكالة فكرة إيدو <info@fekrahedu.com>",
+      from: "FekrahEdu <info@fekrahedu.com>",
       to: [email],
-      subject: "تأكيد استلام رسالتك - وكالة فكرة إيدو",
+      subject: "تأكيد استلام رسالتك - FekrahEdu",
       html: `
         <!DOCTYPE html>
         <html dir="rtl" lang="ar">
@@ -314,7 +314,7 @@ const handler = async (req: Request): Promise<Response> => {
               
               <p style="margin-bottom: 0;">
                 مع أطيب التحيات،<br>
-                <strong>فريق وكالة فكرة إيدو</strong>
+                <strong>فريق FekrahEdu</strong>
               </p>
             </div>
             
@@ -323,7 +323,7 @@ const handler = async (req: Request): Promise<Response> => {
                 هذا البريد الإلكتروني تم إرساله تلقائياً لتأكيد استلام رسالتك.
               </p>
               <p>
-                © 2024 وكالة فكرة إيدو. جميع الحقوق محفوظة.
+                © 2024 FekrahEdu. جميع الحقوق محفوظة.
               </p>
             </div>
           </div>

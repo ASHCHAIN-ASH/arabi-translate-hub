@@ -82,7 +82,7 @@ serve(async (req) => {
         body: new URLSearchParams({
           To: `whatsapp:${to}`,
           From: TWILIO_WHATSAPP_FROM || 'whatsapp:+14155238886',
-          Body: messageBody || 'رسالة من منصة فكرة إيدو',
+          Body: messageBody || 'رسالة من FekrahEdu',
         }),
       });
 
@@ -105,7 +105,7 @@ serve(async (req) => {
         body: new URLSearchParams({
           To: `whatsapp:${to}`,
           From: TWILIO_WHATSAPP_FROM || 'whatsapp:+14155238886',
-          Body: messageBody || 'رسالة من منصة فكرة إيدو',
+          Body: messageBody || 'رسالة من FekrahEdu',
         }),
       });
 

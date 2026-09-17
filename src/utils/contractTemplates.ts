@@ -1,18 +1,18 @@
 // =============================================================
-// قوالب العقود الموحدة - منصة فكرة إيدو
+// قوالب العقود الموحدة - FekrahEdu
 // 4 أنواع رسمية وفق الأنظمة السعودية:
 //   - academic    (أكاديمي/بحثي)
 //   - translation (ترجمة معتمدة)
 //   - consulting  (استشارات مهنية)
 //   - corporate   (شراكة/توريد للشركات)
-//   - financing   (عقد تمويل داخلي لمنتج Fekrah PayLater)
+//   - financing   (عقد تمويل داخلي لمنتج FekrahEdu PayLater)
 // =============================================================
 
 export const PARENT_COMPANY = {
   name: "شركة علي صالح الشهري القابضة",
-  platformName: "منصة فكرة إيدو",
+  platformName: "FekrahEdu",
   shortDescription:
-    "منصة فكرة إيدو (fekrahedu) هي إحدى مشاريع شركة علي صالح الشهري القابضة، متخصصة في الخدمات الأكاديمية والاستشارية والترجمة والتدقيق والنشر العلمي.",
+    "FekrahEdu (fekrahedu) هي إحدى مشاريع شركة علي صالح الشهري القابضة، متخصصة في الخدمات الأكاديمية والاستشارية والترجمة والتدقيق والنشر العلمي.",
   legalEntity: "شركة علي صالح الشهري القابضة",
   jurisdiction: "المملكة العربية السعودية",
   governingLaw:
@@ -30,7 +30,7 @@ export const TEMPLATE_TYPE_LABELS: Record<ContractTemplateType, string> = {
   translation: "ترجمة معتمدة",
   consulting: "استشارات مهنية",
   corporate: "شراكة/توريد للشركات",
-  financing: "تمويل Fekrah PayLater",
+  financing: "تمويل FekrahEdu PayLater",
 };
 
 export const TEMPLATE_TYPE_DESCRIPTIONS: Record<ContractTemplateType, string> = {
@@ -533,7 +533,7 @@ export function buildLegalAcademicContract(ctx: LegalTemplateContext): string {
 }
 
 // ============================================================
-// (5) قالب التمويل الداخلي — Fekrah PayLater
+// (5) قالب التمويل الداخلي — FekrahEdu PayLater
 // ============================================================
 function buildFinancingContract(ctx: LegalTemplateContext): string {
   const f = ctx.financing ?? {
@@ -546,15 +546,15 @@ function buildFinancingContract(ctx: LegalTemplateContext): string {
   const totalRepayable = (f.monthlyInstallment || 0) * (f.durationMonths || 0) + (f.downPayment || 0);
   const fmtN = (n: number) => fmtMoney(n, ctx.currency || "SAR");
 
-  const intro = `حيث إن **${PARENT_COMPANY.platformName}** التابعة لـ **${PARENT_COMPANY.legalEntity}** تُقدّم منتجاً تمويلياً داخلياً تحت اسم **"Fekrah PayLater"** يهدف إلى تمكين المستفيد من شراء الخدمات الأكاديمية والاستشارية والترجمة المتاحة على المنصة عبر **رصيد محفظة رقمية** يُضاف إلى حسابه فور اعتماد الدفعة الأولى، على أن يُسدَّد المبلغ المتبقي على شكل **أقساط شهرية ثابتة**؛ ورغبةً من العميل في الحصول على هذا التمويل، فقد اتفق الطرفان — وهما بكامل الأهلية الشرعية والنظامية — على إبرام هذا العقد المُلزِم وفق البنود الآتية:`;
+  const intro = `حيث إن **${PARENT_COMPANY.platformName}** التابعة لـ **${PARENT_COMPANY.legalEntity}** تُقدّم منتجاً تمويلياً داخلياً تحت اسم **"FekrahEdu PayLater"** يهدف إلى تمكين المستفيد من شراء الخدمات الأكاديمية والاستشارية والترجمة المتاحة على المنصة عبر **رصيد محفظة رقمية** يُضاف إلى حسابه فور اعتماد الدفعة الأولى، على أن يُسدَّد المبلغ المتبقي على شكل **أقساط شهرية ثابتة**؛ ورغبةً من العميل في الحصول على هذا التمويل، فقد اتفق الطرفان — وهما بكامل الأهلية الشرعية والنظامية — على إبرام هذا العقد المُلزِم وفق البنود الآتية:`;
 
   return `
-# عقد تمويل داخلي — Fekrah PayLater
+# عقد تمويل داخلي — FekrahEdu PayLater
 ### رقم العقد: ${ctx.contractNumber}
 ### تاريخ التحرير: ${fmtDate(ctx.issueDate)}
 ### نوع العقد: تمويل داخلي للمنتجات والخدمات (Internal Financing Agreement)
 ### مكان الإبرام: ${PARENT_COMPANY.jurisdiction}
-### المنتج التمويلي: **Fekrah PayLater** — تمويل سداد الخدمات الأكاديمية على أقساط
+### المنتج التمويلي: **FekrahEdu PayLater** — تمويل سداد الخدمات الأكاديمية على أقساط
 
 ---
 
@@ -591,7 +591,7 @@ ${f.firstInstallmentDate ? `| تاريخ أول قسط | ${fmtDate(f.firstInstal
 
 ## البند الرابع: آلية إضافة الرصيد للمحفظة
 1. فور توقيع العميل على هذا العقد إلكترونياً واعتماد **الدفعة الأولى** من قبل **القسم المالي** بالمنصة، يُضاف **مبلغ التمويل كاملاً (${fmtN(f.financedAmount)})** إلى **المحفظة الرقمية** للعميل بشكل **فوري وآلي**.
-2. تُسجَّل عملية الإضافة باسم: «تمويل Fekrah PayLater — إضافة رصيد بعد اعتماد الدفعة الأولى» مع رقم مرجعي فريد قابل للتدقيق.
+2. تُسجَّل عملية الإضافة باسم: «تمويل FekrahEdu PayLater — إضافة رصيد بعد اعتماد الدفعة الأولى» مع رقم مرجعي فريد قابل للتدقيق.
 3. يُصدِر النظام **إيصال إيداع رقمي** يحمل: رقم العملية، التاريخ والوقت، اسم العميل، المبلغ، طريقة الدفع، وختماً رقمياً (QR + SHA-256) قابلاً للتحقق.
 4. يحقّ للعميل استخدام رصيد المحفظة فوراً لشراء أي خدمة معروضة على المنصة.
 

@@ -122,7 +122,7 @@ const ProfessionalHeroSection: React.FC = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
             >
               <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
-                وكالة فكرة إيدو
+                FekrahEdu
               </span>
             </motion.h1>
             

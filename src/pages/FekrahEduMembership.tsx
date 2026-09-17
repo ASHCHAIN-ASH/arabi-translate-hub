@@ -24,7 +24,7 @@ import { WorkingHoursBannerRTL } from "@/components/WorkingHoursBannerRTL";
 import MembershipSubscriptionForm from "@/components/MembershipSubscriptionForm";
 
 import Footer from '@/components/Footer';
-const FekrahMembership = () => {
+const FekrahEduMembership = () => {
   const [selectedPlan, setSelectedPlan] = useState<any>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
@@ -251,7 +251,7 @@ const FekrahMembership = () => {
               className="mb-8"
             >
               <h1 className="text-4xl md:text-6xl lg:text-8xl font-bold mb-6 bg-gradient-to-l from-white via-blue-100 to-indigo-200 bg-clip-text text-transparent leading-tight">
-                عضوية فكرة
+                عضوية FekrahEdu
               </h1>
               <div className="w-40 h-1.5 bg-gradient-to-l from-blue-500 to-indigo-500 mx-auto rounded-full mb-8"></div>
               <h2 className="text-xl md:text-3xl font-semibold text-blue-200 mb-4">
@@ -432,7 +432,7 @@ const FekrahMembership = () => {
 
                       {/* Corporate Header */}
                       <div className="absolute top-6 right-6 text-white text-sm font-bold opacity-95 z-20">
-                        فكرة إيدو الأكاديمية
+                        FekrahEdu
                       </div>
                       
                       <div className="absolute top-6 left-6 z-20">
@@ -947,7 +947,7 @@ const FekrahMembership = () => {
                   >
                     <Crown className="w-20 h-20 md:w-24 md:h-24 mx-auto mb-6 text-yellow-300" />
                   </motion.div>
-                  <h3 className="text-3xl md:text-4xl font-bold mb-4">وكالة فكرة إيدو الأكاديمية</h3>
+                  <h3 className="text-3xl md:text-4xl font-bold mb-4">FekrahEdu</h3>
                   <p className="text-xl md:text-2xl mb-8">شريكك الموثوق في رحلة التميز الأكاديمي والتطوير المهني العالمي</p>
                   <div className="text-base md:text-lg text-blue-200 font-medium">
                     معتمدة دولياً • ISO 9001 • أكثر من 75,000 عضو حول العالم
@@ -976,4 +976,4 @@ const FekrahMembership = () => {
   );
 };
 
-export default FekrahMembership;
+export default FekrahEduMembership;

@@ -363,7 +363,7 @@ export default function AdminResearchContractDetails() {
                     {pub?.title || contract.title}
                   </h1>
                   <p className="text-xs mt-1" style={{ color: '#c9a96199' }}>
-                    منصة فكرة إيدو للخدمات الأكاديمية — المملكة العربية السعودية
+                    FekrahEdu للخدمات الأكاديمية — المملكة العربية السعودية
                   </p>
                 </div>
               </div>
@@ -408,7 +408,7 @@ export default function AdminResearchContractDetails() {
               } else if (contract.metadata?.duration_days) {
                 durationText = `${contract.metadata.duration_days} يوم`;
               }
-              const partyOne = 'منصة فكرة إيدو';
+              const partyOne = 'FekrahEdu';
               const partyTwo = pub?.client_name || contract.client_full_name || '—';
               const cellStyle = { background: 'rgba(201,169,97,0.08)', borderColor: 'rgba(201,169,97,0.25)' } as const;
               const labelStyle = { color: '#c9a961' } as const;

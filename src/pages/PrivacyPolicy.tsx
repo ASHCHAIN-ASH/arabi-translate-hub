@@ -63,7 +63,7 @@ const PrivacyPolicy = () => {
               سياسة الخصوصية والحماية
             </h1>
             <p className="text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              التزام وكالة فكرة إيدو الصارم بحماية خصوصيتكم وضمان أمان معلوماتكم الشخصية والأكاديمية
+              التزام FekrahEdu الصارم بحماية خصوصيتكم وضمان أمان معلوماتكم الشخصية والأكاديمية
             </p>
             <Button 
               onClick={downloadPrivacyPolicy}
@@ -79,7 +79,7 @@ const PrivacyPolicy = () => {
             <Card className="shadow-2xl border-0 bg-card/90 backdrop-blur-sm">
               <CardHeader className="text-center pb-6 bg-gradient-to-r from-primary/5 to-primary/10">
                 <CardTitle className="text-2xl lg:text-3xl text-primary font-bold">
-                  وكالة فكرة إيدو - سياسة الخصوصية الشاملة
+                  FekrahEdu - سياسة الخصوصية الشاملة
                 </CardTitle>
                 <p className="text-muted-foreground mt-2">
                   نسخة محدثة اعتباراً من: {new Date().toLocaleDateString('ar-SA')}
@@ -95,7 +95,7 @@ const PrivacyPolicy = () => {
                   </h3>
                   <div className="space-y-4 text-muted-foreground leading-relaxed">
                     <p className="font-semibold text-foreground text-lg">
-                      في وكالة فكرة إيدو، نؤمن بأن حماية خصوصيتكم ليست مجرد التزام قانوني، بل قيمة أساسية في علاقتنا المهنية.
+                      في FekrahEdu، نؤمن بأن حماية خصوصيتكم ليست مجرد التزام قانوني، بل قيمة أساسية في علاقتنا المهنية.
                     </p>
                     <div className="grid lg:grid-cols-3 gap-4">
                       <div className="bg-blue-50 dark:bg-blue-950/20 p-4 rounded-lg text-center">

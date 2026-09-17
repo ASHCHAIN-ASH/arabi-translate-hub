@@ -58,7 +58,7 @@ Deno.serve(async (req) => {
 
     let systemPrompt = "";
     if (mode === "insights") {
-      systemPrompt = `أنت محلل بيانات ذكي لمنصة "فكرة إيدو" للخدمات الأكاديمية.
+      systemPrompt = `أنت محلل بيانات ذكي لمنصة "FekrahEdu" للخدمات الأكاديمية.
 ${platformContext}
 
 مهمتك: أعطِ 3-5 رؤى ذكية قصيرة جداً عن حالة المنصة الآن. كل رؤية:
@@ -69,7 +69,7 @@ ${platformContext}
 
 أرجع فقط القائمة بدون مقدمة أو خاتمة.`;
     } else {
-      systemPrompt = `أنت مساعد ذكي للأدمن في منصة "فكرة إيدو" للخدمات الأكاديمية.
+      systemPrompt = `أنت مساعد ذكي للأدمن في منصة "FekrahEdu" للخدمات الأكاديمية.
 لديك وصول كامل لبيانات المنصة الحية:
 ${platformContext}
 

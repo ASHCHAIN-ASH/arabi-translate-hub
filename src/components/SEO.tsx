@@ -33,7 +33,7 @@ const SEO = ({
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "FekrahEdu Agency",
-    "alternateName": "وكالة فكرة إيدو",
+    "alternateName": "FekrahEdu",
     "url": "https://fekrahedu.com",
     "logo": "https://fekrahedu.com/assets/national-day-logo-original.webp",
     "contactPoint": {

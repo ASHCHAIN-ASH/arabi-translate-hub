@@ -1,6 +1,6 @@
-// Fekrah PayLater — Bank account for manual transfers
+// FekrahEdu PayLater — Bank account for manual transfers
 // IBAN ثابت للتحويلات اليدوية (الدفعة الأولى)
-export const MASTER_PAYLATER_BANK = {
+export const FEKRAHEDU_PAYLATER_BANK = {
   bankName: 'البنك الأهلي السعودي (SNB)',
   beneficiaryName: 'منصة فكرة للخدمات التعليمية',
   iban: 'SA0000000000000000000000',

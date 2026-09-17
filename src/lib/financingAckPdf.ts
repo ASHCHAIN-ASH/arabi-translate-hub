@@ -73,7 +73,7 @@ function buildHtml(rec: AckRecord, applicationCode?: string): HTMLElement {
     <div style="background:#1e3a8a; padding:24px 48px; color:#ffffff;">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <div>
-          <div style="font-size:11px; color:#bfdbfe; letter-spacing:2px; margin-bottom:4px;">FEKRAH PAYLATER</div>
+          <div style="font-size:11px; color:#bfdbfe; letter-spacing:2px; margin-bottom:4px;">FEKRAHEDU PAYLATER</div>
           <div style="font-size:22px; font-weight:700;">فكرة باي ليتر</div>
         </div>
         <div style="text-align:left;">

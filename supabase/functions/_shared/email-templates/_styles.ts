@@ -3,7 +3,7 @@
 
 export const BRAND = {
   name: 'FekrahEdu',
-  nameAr: 'فكرة إيدو',
+  nameAr: 'FekrahEdu',
   tagline: 'منصّتك الأكاديمية الموثوقة',
   url: 'https://fekrahedu.com',
   supportEmail: 'support@fekrahedu.com',

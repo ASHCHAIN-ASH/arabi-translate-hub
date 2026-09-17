@@ -119,7 +119,7 @@ const SimpleLogin = () => {
               </div>
             </div>
             <div>
-              <h1 className="text-2xl xl:text-3xl font-academic-title font-bold">وكالة فكرة إيدو</h1>
+              <h1 className="text-2xl xl:text-3xl font-academic-title font-bold">FekrahEdu</h1>
               <p className="text-white/90 text-base xl:text-lg font-medium">للحلول التعليمية والأكاديمية المتقدمة</p>
             </div>
           </div>
@@ -217,10 +217,10 @@ const SimpleLogin = () => {
               </div>
             </motion.div>
             <h1 className="text-2xl sm:text-3xl font-academic-title font-bold text-foreground mb-2 sm:mb-3">
-              وكالة فكرة إيدو
+              FekrahEdu
             </h1>
             <p className="text-muted-foreground text-base sm:text-lg">
-              منصة فكرة إيدو
+              FekrahEdu
             </p>
           </div>
 

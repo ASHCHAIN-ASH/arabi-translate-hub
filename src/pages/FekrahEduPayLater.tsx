@@ -39,8 +39,8 @@ import {
   FINANCING_MIN_AMOUNT,
   FINANCING_TIERS,
 } from '@/lib/financing';
-import heroImg from '@/assets/master-paylater-hero.jpg';
-import cardImg from '@/assets/master-paylater-card.jpg';
+import heroImg from '@/assets/fekrahedu-paylater-hero.jpg';
+import cardImg from '@/assets/fekrahedu-paylater-card.jpg';
 
 const fmt = (n: number) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(n);
 
@@ -99,13 +99,13 @@ const TERMS = [
   { icon: ShieldCheck, title: 'الأهلية', text: 'سعودي/مقيم نظامي · دخل ثابت قابل للإثبات · سجل ائتماني سليم.' },
 ];
 
-const FekrahPayLater: React.FC = () => {
+const FekrahEduPayLater: React.FC = () => {
   const [calcAmount, setCalcAmount] = useState<number>(15000);
   const preview = useMemo(() => computeFinancingPreview(calcAmount), [calcAmount]);
 
   useEffect(() => {
     const prevTitle = document.title;
-    document.title = 'Fekrah PayLater — تمويل بدون فوائد حتى 100,000 ر.س';
+    document.title = 'FekrahEdu PayLater — تمويل بدون فوائد حتى 100,000 ر.س';
     const setMeta = (name: string, content: string) => {
       let el = document.querySelector(`meta[name="${name}"]`) as HTMLMetaElement | null;
       if (!el) { el = document.createElement('meta'); el.name = name; document.head.appendChild(el); }
@@ -114,7 +114,7 @@ const FekrahPayLater: React.FC = () => {
     setMeta('description', 'تمويل ذكي بصفر فوائد حتى 100,000 ر.س. تقييم ائتماني فوري، عقد رقمي موثّق، وأقساط مرنة من 6 إلى 36 شهر — متوافق شرعاً.');
     let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
     if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.appendChild(canonical); }
-    canonical.href = `${window.location.origin}/master-paylater`;
+    canonical.href = `${window.location.origin}/fekrahedu-paylater`;
     return () => { document.title = prevTitle; };
   }, []);
 
@@ -148,7 +148,7 @@ const FekrahPayLater: React.FC = () => {
             <div>
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-xl ring-1 ring-white/20 px-4 py-2 mb-6">
                 <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-xs font-bold tracking-wide">Fekrah PayLater · بدون فوائد</span>
+                <span className="text-xs font-bold tracking-wide">FekrahEdu PayLater · بدون فوائد</span>
               </motion.div>
 
               <motion.h1
@@ -223,7 +223,7 @@ const FekrahPayLater: React.FC = () => {
               >
                 <img
                   src={cardImg}
-                  alt="بطاقة Fekrah PayLater"
+                  alt="بطاقة FekrahEdu PayLater"
                   className="w-full h-auto rounded-3xl shadow-2xl ring-1 ring-white/20"
                   loading="eager"
                   width={1280}
@@ -260,7 +260,7 @@ const FekrahPayLater: React.FC = () => {
       <section className="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
           <Badge className="mb-4 bg-primary/10 text-primary border-primary/20 hover:bg-primary/15">
-            <Sparkles className="h-3 w-3 ml-1" /> لماذا Fekrah PayLater
+            <Sparkles className="h-3 w-3 ml-1" /> لماذا FekrahEdu PayLater
           </Badge>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-3">تجربة بنكية بمعايير عالمية</h2>
           <p className="text-base text-muted-foreground max-w-2xl mx-auto">
@@ -449,7 +449,7 @@ const FekrahPayLater: React.FC = () => {
               <Banknote className="h-3 w-3 ml-1" /> مقارنة شفّافة
             </Badge>
             <h2 className="text-3xl sm:text-4xl font-extrabold mb-3">لماذا نحن الخيار الأذكى؟</h2>
-            <p className="text-muted-foreground">قارن بنفسك بين Fekrah PayLater والبنوك التقليدية وشركات التقسيط.</p>
+            <p className="text-muted-foreground">قارن بنفسك بين FekrahEdu PayLater والبنوك التقليدية وشركات التقسيط.</p>
           </motion.div>
 
           <Card className="overflow-hidden shadow-2xl border-primary/20">
@@ -461,7 +461,7 @@ const FekrahPayLater: React.FC = () => {
                     <th className="p-4 font-bold text-center">
                       <div className="flex items-center justify-center gap-1.5">
                         <Sparkles className="h-4 w-4" />
-                        Fekrah PayLater
+                        FekrahEdu PayLater
                       </div>
                     </th>
                     <th className="p-4 font-bold text-center">
@@ -673,4 +673,4 @@ const FekrahPayLater: React.FC = () => {
   );
 };
 
-export default FekrahPayLater;
+export default FekrahEduPayLater;

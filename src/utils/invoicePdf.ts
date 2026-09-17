@@ -9,7 +9,7 @@ import type { Invoice, InvoiceItem, InvoicePayment } from './invoiceService';
 import { InvoiceService } from './invoiceService';
 
 const COMPANY = {
-  name: 'فكرة إيدو',
+  name: 'FekrahEdu',
   nameEn: 'FekrahEdu',
   address: 'المملكة العربية السعودية — الرياض',
   email: 'info@fekrahedu.com',

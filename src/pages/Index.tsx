@@ -39,7 +39,7 @@ import inquiryTeamImg from "@/assets/home-inquiry-team.jpg";
 
 // Lazy loading للمكونات الثقيلة لتحسين الأداء
 const ServicesShowcase = lazy(() => import("@/components/ServicesShowcase"));
-const FekrahMembershipBanner = lazy(() => import("@/components/FekrahMembershipBanner"));
+const FekrahEduMembershipBanner = lazy(() => import("@/components/FekrahEduMembershipBanner"));
 const ServiceSteps = lazy(() => import("@/components/ServiceSteps"));
 const ModernStatsSection = lazy(() => import("@/components/ModernStatsSection"));
 const HomeFinancingSection = lazy(() => import("@/components/home/HomeFinancingSection"));
@@ -130,7 +130,7 @@ const Index = () => {
       <SEO
         title="FekrahEdu | خدمات بحثية وأكاديمية متقدمة — ترجمة، نشر علمي، تحليل SPSS"
         description="وكالة FekrahEdu الأكاديمية: ترجمة بحثية احترافية، نشر علمي في مجلات Scopus وISI، تحليل إحصائي SPSS، تدقيق لغوي، ودعم رسائل الماجستير والدكتوراه. أكثر من 15,000 باحث في 25+ دولة. استشارة مجانية خلال ساعة."
-        keywords="FekrahEdu, فكرة إيدو, خدمات بحثية, ترجمة أكاديمية, نشر علمي, Scopus, ISI, تدقيق لغوي, تحليل إحصائي, SPSS, AMOS, جامعات سعودية, بحث علمي, رسائل ماجستير, رسائل دكتوراه, خدمات أكاديمية السعودية"
+        keywords="FekrahEdu, FekrahEdu, خدمات بحثية, ترجمة أكاديمية, نشر علمي, Scopus, ISI, تدقيق لغوي, تحليل إحصائي, SPSS, AMOS, جامعات سعودية, بحث علمي, رسائل ماجستير, رسائل دكتوراه, خدمات أكاديمية السعودية"
         url="https://fekrahedu.com/"
         image="https://fekrahedu.com/assets/national-day-logo-original.webp"
         schema={[
@@ -138,7 +138,7 @@ const Index = () => {
             "@context": "https://schema.org",
             "@type": "WebSite",
             "name": "FekrahEdu",
-            "alternateName": "فكرة إيدو",
+            "alternateName": "FekrahEdu",
             "url": "https://fekrahedu.com/",
             "inLanguage": "ar-SA",
             "potentialAction": {
@@ -154,7 +154,7 @@ const Index = () => {
             "@context": "https://schema.org",
             "@type": "EducationalOrganization",
             "name": "FekrahEdu Agency",
-            "alternateName": "وكالة فكرة إيدو",
+            "alternateName": "FekrahEdu",
             "description": "وكالة متخصصة في تقديم الخدمات الأكاديمية والبحثية للطلاب والباحثين",
             "url": "https://fekrahedu.com/",
             "logo": "https://fekrahedu.com/assets/national-day-logo-original.webp",
@@ -1014,7 +1014,7 @@ const Index = () => {
               <div className="aspect-[16/7] sm:aspect-[16/6] relative">
                 <motion.img
                   src={partnershipHandshakeImg}
-                  alt="شراكة بين فكرة إيدو ومؤسسات أكاديمية - مصافحة نجاح"
+                  alt="شراكة بين FekrahEdu ومؤسسات أكاديمية - مصافحة نجاح"
                   className="absolute inset-0 w-full h-full object-cover"
                   loading="lazy"
                   whileHover={{ scale: 1.05 }}
@@ -1243,7 +1243,7 @@ const Index = () => {
 
       {/* Suspense Sections مع Lazy Loading */}
       <Suspense fallback={<LoadingSpinner />}>
-        <FekrahMembershipBanner />
+        <FekrahEduMembershipBanner />
       </Suspense>
 
       <Suspense fallback={<LoadingSpinner />}>
@@ -1259,7 +1259,7 @@ const Index = () => {
         <SuccessStoriesCarousel />
       </Suspense>
 
-      {/* قسم Fekrah PayLater — تمويل أكاديمي تفاعلي */}
+      {/* قسم FekrahEdu PayLater — تمويل أكاديمي تفاعلي */}
       <Suspense fallback={<LoadingSpinner />}>
         <HomeFinancingSection />
       </Suspense>

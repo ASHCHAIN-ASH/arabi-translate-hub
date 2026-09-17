@@ -349,7 +349,7 @@ export default function AdminResearchPublicationDetails() {
     setCreatingContract(true);
     try {
       const amount = Number(item.final_amount || item.estimated_amount || 0);
-      const contractContent = `عقد نشر بحث علمي\n\nالعميل: ${item.client_name || ''}\nالبريد: ${item.client_email || ''}\nالجوال: ${item.client_phone || ''}\n\nعنوان البحث: ${item.title || ''}\nالتخصص: ${item.field_of_study || item.specialization || '—'}\nاللغة: ${item.language || '—'}\nالمجلة المستهدفة: ${item.target_journal || '—'}\n\nالقيمة الإجمالية: ${amount.toLocaleString('ar-SA')} ر.س (شاملة الضريبة)\n\nيلتزم الطرف الثاني (فكرة إيدو) بتقديم خدمة نشر البحث وفق المعايير الأكاديمية المتفق عليها، ويلتزم الطرف الأول (العميل) بسداد القيمة المتفق عليها.`;
+      const contractContent = `عقد نشر بحث علمي\n\nالعميل: ${item.client_name || ''}\nالبريد: ${item.client_email || ''}\nالجوال: ${item.client_phone || ''}\n\nعنوان البحث: ${item.title || ''}\nالتخصص: ${item.field_of_study || item.specialization || '—'}\nاللغة: ${item.language || '—'}\nالمجلة المستهدفة: ${item.target_journal || '—'}\n\nالقيمة الإجمالية: ${amount.toLocaleString('ar-SA')} ر.س (شاملة الضريبة)\n\nيلتزم الطرف الثاني (FekrahEdu) بتقديم خدمة نشر البحث وفق المعايير الأكاديمية المتفق عليها، ويلتزم الطرف الأول (العميل) بسداد القيمة المتفق عليها.`;
 
       // إيجاد أو إنشاء customer مرتبط بمالك الطلب (customers.id ≠ auth.users.id)
       let customerId: string | null = null;

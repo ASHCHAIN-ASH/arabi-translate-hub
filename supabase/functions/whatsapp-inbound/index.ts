@@ -170,7 +170,7 @@ serve(async (req) => {
     // طلب موظف
     if (HUMAN_KEYWORDS.some((k) => lower.includes(k.toLowerCase()))) {
       await activateHumanTakeover(supabase, session, phone, messageBody, customerName, "user_request");
-      const reply = `تم تحويل محادثتك إلى موظف بشري 👨‍💼\nسيتواصل معك أحد أعضاء فريق فكرة إيدو في أقرب وقت.\n\nشكراً لصبرك 🌹`;
+      const reply = `تم تحويل محادثتك إلى موظف بشري 👨‍💼\nسيتواصل معك أحد أعضاء فريق FekrahEdu في أقرب وقت.\n\nشكراً لصبرك 🌹`;
       await sendWhatsAppMessage(phone, reply);
       await logBotReply(supabase, inboundLog?.id, reply, true, phone);
       return jsonRes({ success: true, action: "human_handoff" });
@@ -234,7 +234,7 @@ async function askAI(params: {
     return { reply: "عذراً، الخدمة الذكية غير مفعّلة حالياً. أرسل *موظف* للتحدث مع فريقنا." };
   }
 
-  const systemPrompt = `أنت "مساعد فكرة إيدو" — مساعد ذكي للرد على عملاء منصة فكرة إيدو على واتساب.
+  const systemPrompt = `أنت "مساعد FekrahEdu" — مساعد ذكي للرد على عملاء FekrahEdu على واتساب.
 
 # هويتك
 - تتحدث العربية الفصحى المبسطة بنبرة ودودة ومهنية.
@@ -316,7 +316,7 @@ async function buildPlatformContext(
 
   // [معلومات المنصة]
   parts.push(`[معلومات المنصة]
-- فكرة إيدو: منصة سعودية متخصصة في الخدمات الأكاديمية (الترجمة، السيرة الذاتية، خرائط ذهنية، الاستشارات، صياغة الأبحاث).
+- FekrahEdu: منصة سعودية متخصصة في الخدمات الأكاديمية (الترجمة، السيرة الذاتية، خرائط ذهنية، الاستشارات، صياغة الأبحاث).
 - الموقع: ${SITE_URL}
 - التسجيل: ${REGISTER_URL}
 - لوحة الطلبات: ${SITE_URL}/dashboard/orders

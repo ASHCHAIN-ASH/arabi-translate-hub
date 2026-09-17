@@ -386,7 +386,7 @@ const FinancingAdmin: React.FC = () => {
                   <Sparkles className="w-4 h-4 text-primary animate-pulse" />
                 </h1>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  إدارة طلبات Fekrah PayLater • مزامنة لحظية مع لوحة العميل والواتساب
+                  إدارة طلبات FekrahEdu PayLater • مزامنة لحظية مع لوحة العميل والواتساب
                 </p>
                 <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                   <span className="inline-flex items-center gap-1.5 text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">

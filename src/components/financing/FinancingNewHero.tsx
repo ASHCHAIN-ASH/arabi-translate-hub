@@ -56,7 +56,7 @@ const FinancingNewHero: React.FC<FinancingNewHeroProps> = ({ step = 1, totalStep
             </div>
             <div>
               <div className="text-[10px] uppercase tracking-[0.25em] text-white/70">
-                Fekrah PayLater
+                FekrahEdu PayLater
               </div>
               <div className="text-xs font-bold text-white/95">طلب تمويل جديد</div>
             </div>
