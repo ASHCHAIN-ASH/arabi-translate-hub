@@ -399,9 +399,9 @@ const SpinTheWheel = () => {
             className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mt-12 sm:mt-16 max-w-4xl mx-auto"
           >
             {[
-              { icon: Trophy, title: "جوائز قيمة", desc: "خصومات تصل إلى 20%" },
-              { icon: Gift, title: "خدمات مجانية", desc: "بحث أو استشارة مجانية" },
-              { icon: Sparkles, title: "مفاجآت يومية", desc: "جوائز خاصة للفائزين" },
+              { icon: Trophy, title: "جوائز حقيقية", desc: "سيرة ATS · بوستر بحثي · تصميم شعار" },
+              { icon: Gift, title: "خدمات مجانية", desc: "مراجعة بحثك وفحص الاستبيان بالذكاء الاصطناعي" },
+              { icon: Sparkles, title: "دعم مستمر", desc: "متابعة النشر وتجهيز ملفات IRB" },
             ].map((item, i) => (
               <motion.div
                 key={i}
