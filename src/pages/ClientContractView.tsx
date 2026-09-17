@@ -178,7 +178,7 @@ const ClientContractView: React.FC = () => {
                 contract.created_at;
               let dueDateAr = "—";
               try {
-                dueDateAr = new Date(dueDateRaw).toLocaleDateString("ar-SA-u-ca-gregory", {
+                dueDateAr = new Date(dueDateRaw).toLocaleDateString("ar-SA", {
                   weekday: "long",
                   day: "numeric",
                   month: "long",
