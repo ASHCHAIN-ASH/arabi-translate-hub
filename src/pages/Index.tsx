@@ -449,7 +449,7 @@ const Index = () => {
               transition={{ duration: 0.7, delay: 0.3 }}
               className="group relative flex justify-center mt-8 lg:mt-0"
             >
-              <div className="relative w-[min(88vw,360px)] sm:w-full sm:max-w-[430px] lg:max-w-w-[520px] aspect-[4/5] lg:aspect-[5/6]">
+              <div className="relative w-[min(88vw,360px)] sm:w-full sm:max-w-[430px] lg:max-w-[520px] aspect-[4/5] lg:aspect-[5/6]">
                 {/* وهج خلفي */}
                 <div className="absolute -inset-6 bg-gradient-to-br from-blue-400/30 via-indigo-400/20 to-purple-400/30 dark:from-blue-500/20 dark:via-indigo-500/15 dark:to-purple-500/20 rounded-[2rem] blur-3xl" />
 
