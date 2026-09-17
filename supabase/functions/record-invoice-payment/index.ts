@@ -1,4 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
+import { getUserPhone, notifyWhatsApp } from '../_shared/whatsapp-notify.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
