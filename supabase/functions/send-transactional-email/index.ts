@@ -81,6 +81,9 @@ Deno.serve(async (req) => {
   let idempotencyKey: string
   let messageId: string
   let templateData: Record<string, any> = {}
+  let metadata: Record<string, any> | null = null
+  let subjectOverride: string | null = null
+  let ccList: string[] = []
   try {
     const body = await req.json()
     templateName = body.templateName || body.template_name
@@ -89,6 +92,15 @@ Deno.serve(async (req) => {
     idempotencyKey = body.idempotencyKey || body.idempotency_key || messageId
     if (body.templateData && typeof body.templateData === 'object') {
       templateData = body.templateData
+    }
+    if (body.metadata && typeof body.metadata === 'object') {
+      metadata = body.metadata
+    }
+    if (typeof body.subjectOverride === 'string' && body.subjectOverride.trim()) {
+      subjectOverride = body.subjectOverride.trim()
+    }
+    if (Array.isArray(body.cc)) {
+      ccList = body.cc.filter((e: unknown) => typeof e === 'string' && e.includes('@'))
     }
   } catch {
     return new Response(
@@ -173,6 +185,7 @@ Deno.serve(async (req) => {
       message_id: messageId,
       template_name: templateName,
       recipient_email: effectiveRecipient,
+      metadata,
       status: 'suppressed',
     })
 
@@ -206,6 +219,7 @@ Deno.serve(async (req) => {
       message_id: messageId,
       template_name: templateName,
       recipient_email: effectiveRecipient,
+      metadata,
       status: 'failed',
       error_message: 'Failed to look up unsubscribe token',
     })
@@ -290,6 +304,7 @@ Deno.serve(async (req) => {
       message_id: messageId,
       template_name: templateName,
       recipient_email: effectiveRecipient,
+      metadata,
       status: 'suppressed',
       error_message:
         'Unsubscribe token used but email missing from suppressed list',
@@ -314,9 +329,10 @@ Deno.serve(async (req) => {
 
   // Resolve subject — supports static string or dynamic function
   const resolvedSubject =
-    typeof template.subject === 'function'
+    subjectOverride ??
+    (typeof template.subject === 'function'
       ? template.subject(templateData)
-      : template.subject
+      : template.subject)
 
   // 5. Enqueue the pre-rendered email for async processing by the dispatcher.
   // The dispatcher (process-email-queue) handles sending, retries, and rate-limit backoff.
@@ -326,6 +342,7 @@ Deno.serve(async (req) => {
     message_id: messageId,
     template_name: templateName,
     recipient_email: effectiveRecipient,
+    metadata,
     status: 'pending',
   })
 
@@ -337,6 +354,7 @@ Deno.serve(async (req) => {
       from: `${SITE_NAME} <noreply@${FROM_DOMAIN}>`,
       sender_domain: SENDER_DOMAIN,
       subject: resolvedSubject,
+      cc: ccList.length ? ccList : undefined,
       html,
       text: plainText,
       purpose: 'transactional',
@@ -358,6 +376,7 @@ Deno.serve(async (req) => {
       message_id: messageId,
       template_name: templateName,
       recipient_email: effectiveRecipient,
+      metadata,
       status: 'failed',
       error_message: 'Failed to enqueue email',
     })
