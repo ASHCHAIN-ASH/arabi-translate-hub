@@ -53,8 +53,20 @@ const SpinTheWheel = () => {
   const [remaining, setRemaining] = useState<{ d: number; h: number; m: number; s: number } | null>(null);
   const [isChecking, setIsChecking] = useState(true);
   const { toast } = useToast();
+  const { user, loading: authLoading } = useAuth();
+
+  /** التسجيل شرط أساسي للحصول على الجائزة */
+  const isAuthed = !!user;
 
   const isLocked = !!nextEligibleAt && !!remaining;
+
+  // تعبئة بيانات الحساب تلقائيًا
+  useEffect(() => {
+    if (!user) return;
+    setEmail((prev) => prev || (user.email ?? ""));
+    setName((prev) => prev || (user.user_metadata?.name ?? user.user_metadata?.full_name ?? ""));
+  }, [user]);
+
 
   // Responsive canvas size — based on viewport, not just container
   useEffect(() => {
