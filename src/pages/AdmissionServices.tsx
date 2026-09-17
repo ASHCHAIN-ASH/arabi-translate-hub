@@ -18,7 +18,7 @@ import admissionDesk from "@/assets/admission-acceptance-desk.jpg";
 import universityCampus from "@/assets/admission-university-campus.jpg";
 
 const ADMISSION_URL = "https://fekrah-global.com/ar/auth/register";
-const COUNTDOWN_SECONDS = 6;
+const COUNTDOWN_SECONDS = 12;
 
 const HEADLINE = "رحلتك الدراسية تبدأ من هنا";
 const PARAGRAPH =
@@ -51,7 +51,11 @@ const useTypewriter = (
     }
     if (!start) return;
     if (typed >= text.length) return;
-    const t = window.setTimeout(() => setTyped((p) => p + 1), speed);
+    // إيقاف أطول قليلًا بعد علامات الترقيم حتى تُقرأ الجملة براحة
+    const prevChar = text[typed - 1];
+    const pause =
+      prevChar === "." ? speed * 6 : prevChar === "،" ? speed * 3 : 0;
+    const t = window.setTimeout(() => setTyped((p) => p + 1), speed + pause);
     return () => window.clearTimeout(t);
   }, [typed, start, text, speed, reduceMotion]);
 
@@ -76,10 +80,10 @@ const AdmissionServices = () => {
   const countdownStarted = useRef(false);
 
   // مراحل الكتابة: العنوان ثم الفقرة
-  const headline = useTypewriter(HEADLINE, { start: true, speed: 70, reduceMotion });
+  const headline = useTypewriter(HEADLINE, { start: true, speed: 110, reduceMotion });
   const paragraph = useTypewriter(PARAGRAPH, {
     start: headline.done,
-    speed: 26,
+    speed: 55,
     reduceMotion,
   });
 
