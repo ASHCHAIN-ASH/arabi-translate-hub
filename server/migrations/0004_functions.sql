@@ -3883,7 +3883,7 @@ BEGIN
                '👤 العضو: ' || v_referred_name || E'\n' ||
                '💰 المبلغ: ' || NEW.commission_amount || ' ر.س' || E'\n\n' ||
                'يمكنك سحب رصيدك أو استخدامه في أي خدمة من المنصة.' || E'\n' ||
-               'شكراً لثقتك بمنصة ماستر إيدو باث 🌟';
+               'شكراً لثقتك بمنصة FekrahEdu 🌟';
 
   SELECT decrypted_secret INTO v_supabase_url
   FROM vault.decrypted_secrets WHERE name = 'project_url' LIMIT 1;
@@ -5939,7 +5939,7 @@ BEGIN
       'contract_number', NEW.contract_number,
       'title', COALESCE(NEW.title, 'عقد خدمة أكاديمية'),
       'sent_at', to_char(timezone('Asia/Riyadh', COALESCE(NEW.sent_at, now())), 'YYYY-MM-DD HH24:MI'),
-      'link', 'https://masteredupath.com/contracts/sign/' || NEW.verification_token,
+      'link', 'https://fekrahedu.com/contracts/sign/' || NEW.verification_token,
       'verification_code', substring(NEW.verification_token from 1 for 8)
     ),
     'contract', NEW.id::text, NEW.user_id
@@ -5965,7 +5965,7 @@ BEGIN
       'contract_number', v_contract.contract_number,
       'title', COALESCE(v_contract.title, 'العقد'),
       'signed_at', to_char(timezone('Asia/Riyadh', NEW.signed_at), 'YYYY-MM-DD HH24:MI'),
-      'link', 'https://masteredupath.com/contracts/view/' || v_contract.id::text
+      'link', 'https://fekrahedu.com/contracts/view/' || v_contract.id::text
     ),
     'contract', v_contract.id::text, v_contract.user_id
   );
@@ -6035,7 +6035,7 @@ BEGIN
       'order_number', COALESCE(NEW.tracking_id, NEW.id::text),
       'service', COALESCE(NEW.service_name, 'خدمة أكاديمية'),
       'created_at', to_char(timezone('Asia/Riyadh', NEW.created_at), 'YYYY-MM-DD HH24:MI'),
-      'link', 'https://masteredupath.com/orders/' || NEW.id::text
+      'link', 'https://fekrahedu.com/orders/' || NEW.id::text
     ),
     'service_order', NEW.id::text, NEW.user_id
   );
@@ -6063,7 +6063,7 @@ BEGIN
         'order_number', COALESCE(NEW.tracking_id, NEW.id::text),
         'service', COALESCE(NEW.service_name, 'خدمة أكاديمية'),
         'delivered_at', to_char(timezone('Asia/Riyadh', now()), 'YYYY-MM-DD HH24:MI'),
-        'link', 'https://masteredupath.com/orders/' || NEW.id::text
+        'link', 'https://fekrahedu.com/orders/' || NEW.id::text
       ),
       'service_order', NEW.id::text, NEW.user_id
     );
@@ -6078,7 +6078,7 @@ BEGIN
         'deadline', COALESCE(to_char(NEW.deadline, 'YYYY-MM-DD'), 'يُحدَّد لاحقاً'),
         'sent_at', to_char(timezone('Asia/Riyadh', now()), 'YYYY-MM-DD HH24:MI'),
         'notes', COALESCE(NULLIF(NEW.quote_notes, ''), 'لا توجد ملاحظات إضافية'),
-        'link', 'https://masteredupath.com/orders/' || NEW.id::text
+        'link', 'https://fekrahedu.com/orders/' || NEW.id::text
       ),
       'service_order', NEW.id::text, NEW.user_id
     );
@@ -6092,7 +6092,7 @@ BEGIN
         'service', COALESCE(NEW.service_name, 'خدمة أكاديمية'),
         'status', public.lifecycle_status_ar(NEW.lifecycle_status::text),
         'updated_at', to_char(timezone('Asia/Riyadh', now()), 'YYYY-MM-DD HH24:MI'),
-        'link', 'https://masteredupath.com/orders/' || NEW.id::text
+        'link', 'https://fekrahedu.com/orders/' || NEW.id::text
       ),
       'service_order', NEW.id::text, NEW.user_id
     );

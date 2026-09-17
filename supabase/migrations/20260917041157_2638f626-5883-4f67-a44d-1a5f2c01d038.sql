@@ -1,0 +1,10 @@
+REVOKE EXECUTE ON FUNCTION public.notify_referrer_via_whatsapp() FROM PUBLIC, anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.trg_whatsapp_contract_invite() FROM PUBLIC, anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.trg_whatsapp_contract_signed() FROM PUBLIC, anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.trg_whatsapp_order_created() FROM PUBLIC, anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.trg_whatsapp_order_status_changed() FROM PUBLIC, anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.notify_referrer_via_whatsapp() TO service_role;
+GRANT EXECUTE ON FUNCTION public.trg_whatsapp_contract_invite() TO service_role;
+GRANT EXECUTE ON FUNCTION public.trg_whatsapp_contract_signed() TO service_role;
+GRANT EXECUTE ON FUNCTION public.trg_whatsapp_order_created() TO service_role;
+GRANT EXECUTE ON FUNCTION public.trg_whatsapp_order_status_changed() TO service_role;
