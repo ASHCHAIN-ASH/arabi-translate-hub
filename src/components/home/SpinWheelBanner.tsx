@@ -84,7 +84,7 @@ export const SpinWheelBanner = () => {
               className="inline-flex items-center gap-2 rounded-full bg-amber-400/10 border border-amber-300/30 px-4 py-1.5 text-sm font-bold text-amber-300 mb-5 backdrop-blur"
             >
               <Trophy className="w-4 h-4" />
-              عرض محدود · كل دورة تربح
+              تجربة حظ استثنائية · الفوز مضمون
             </motion.span>
 
             <motion.h2
@@ -92,12 +92,12 @@ export const SpinWheelBanner = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-[1.25] mb-5"
+              className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-[1.3] mb-5"
             >
-              دورة واحدة تفصلك عن
+              أدر العجلة… ودَع الحظ
               <br />
               <span className="relative inline-block text-transparent bg-clip-text bg-gradient-to-l from-amber-200 via-yellow-400 to-orange-500">
-                خصم حقيقي على خدمتك
+                يكافئ طموحك الأكاديمي
                 <motion.span
                   aria-hidden="true"
                   className="absolute inset-0 bg-gradient-to-l from-transparent via-white/50 to-transparent"
