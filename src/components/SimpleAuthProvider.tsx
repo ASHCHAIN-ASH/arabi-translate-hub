@@ -1,15 +1,22 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/data/legacy/client';
-import { User, Session } from '@supabase/supabase-js';
+import { authService, db, userRolesRepository, type AuthSession, type AuthUser } from '@/data';
 
 // IMPORTANT: 'client' is a UI alias for the DB role 'user'.
 // DB enum app_role is: 'admin' | 'moderator' | 'user'.
 // We map DB 'user' → UI 'client'. Anything else that is NOT 'admin' is treated as 'client'.
 type AppRole = 'admin' | 'client';
 
+/** مستخدم الواجهة — نحتفظ بحقل user_metadata للتوافق مع الشاشات الحالية. */
+export type SessionUser = AuthUser & { user_metadata: Record<string, any> };
+
+function toSessionUser(user: AuthUser | null): SessionUser | null {
+  if (!user) return null;
+  return { ...user, user_metadata: (user.metadata ?? {}) as Record<string, any> };
+}
+
 interface AuthContextType {
-  user: User | null;
-  session: Session | null;
+  user: SessionUser | null;
+  session: AuthSession | null;
   userRole: AppRole | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
@@ -18,6 +25,7 @@ interface AuthContextType {
   forgotPassword: (email: string) => Promise<{ error?: string }>;
   resetPassword: (token: string, password: string) => Promise<{ error?: string }>;
 }
+
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
