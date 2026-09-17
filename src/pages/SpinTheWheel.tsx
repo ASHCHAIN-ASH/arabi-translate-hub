@@ -19,12 +19,14 @@ interface Segment {
 }
 
 const SEGMENTS: Segment[] = [
-  { text: "خصم 10%",          short: "10%",  color: "hsl(43 74% 52%)", accent: "hsl(43 74% 38%)" },
-  { text: "بحث مجاني",        short: "بحث",  color: "hsl(220 40% 22%)", accent: "hsl(220 40% 14%)" },
-  { text: "خصم 15%",          short: "15%",  color: "hsl(38 85% 58%)", accent: "hsl(38 85% 42%)" },
-  { text: "خصم 20%",          short: "20%",  color: "hsl(220 35% 30%)", accent: "hsl(220 40% 18%)" },
-  { text: "جائزة مفاجأة",     short: "🎁",   color: "hsl(45 90% 60%)", accent: "hsl(45 90% 45%)" },
-  { text: "استشارة مجانية",   short: "استشارة", color: "hsl(220 45% 18%)", accent: "hsl(220 50% 10%)" },
+  { text: "سيرة ذاتية ATS مجانًا",            short: "سيرة ATS",   color: "hsl(43 74% 52%)", accent: "hsl(43 74% 38%)" },
+  { text: "بوستر بحثي مجانًا",                 short: "بوستر بحثي", color: "hsl(220 40% 22%)", accent: "hsl(220 40% 14%)" },
+  { text: "تصميم شعار خاص بك مجانًا",          short: "تصميم شعار", color: "hsl(38 85% 58%)", accent: "hsl(38 85% 42%)" },
+  { text: "شرح تفاعلي لبحثك بالذكاء الاصطناعي", short: "شرح تفاعلي", color: "hsl(220 35% 30%)", accent: "hsl(220 40% 18%)" },
+  { text: "مراجعة بحثك بالذكاء الاصطناعي مجانًا", short: "مراجعة ذكية", color: "hsl(45 90% 60%)", accent: "hsl(45 90% 45%)" },
+  { text: "فحص صلاحية الاستبيان مجانًا",        short: "فحص استبيان", color: "hsl(220 45% 18%)", accent: "hsl(220 50% 10%)" },
+  { text: "متابعة نشر بحثك مع فكرة مجانًا",     short: "متابعة نشر", color: "hsl(40 80% 55%)", accent: "hsl(40 80% 40%)" },
+  { text: "تجهيز ملفات IRB مجانًا",             short: "ملفات IRB",  color: "hsl(220 38% 26%)", accent: "hsl(220 45% 15%)" },
 ];
 
 const SpinTheWheel = () => {
