@@ -415,13 +415,49 @@ const SpinTheWheel = () => {
                 </div>
               </div>
 
+              {/* العدّ التنازلي الموثّق حتى المحاولة القادمة */}
+              {isLocked && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="rounded-2xl p-5 border-2 shadow-lg"
+                  style={{
+                    background: "linear-gradient(135deg, hsl(45 80% 96%), hsl(45 60% 90%))",
+                    borderColor: "hsl(43 74% 55%)",
+                  }}
+                >
+                  <div className="flex items-center justify-center gap-2 mb-3 text-sm font-bold"
+                       style={{ color: "hsl(220 45% 18%)" }}>
+                    <Clock className="w-4 h-4" /> محاولتك القادمة بعد
+                  </div>
+                  <div className="grid grid-cols-4 gap-2" dir="ltr">
+                    {[
+                      { v: remaining!.d, l: "يوم" },
+                      { v: remaining!.h, l: "ساعة" },
+                      { v: remaining!.m, l: "دقيقة" },
+                      { v: remaining!.s, l: "ثانية" },
+                    ].map((u, i) => (
+                      <div key={i} className="rounded-xl py-2 text-center border shadow-sm"
+                           style={{ background: "hsl(220 45% 18%)", borderColor: "hsl(43 74% 55% / 0.5)" }}>
+                        <div className="text-xl sm:text-2xl font-extrabold tabular-nums"
+                             style={{ color: "hsl(45 90% 70%)" }}>{pad(u.v)}</div>
+                        <div className="text-[10px] sm:text-xs text-white/70">{u.l}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-center text-xs mt-3" style={{ color: "hsl(220 30% 35%)" }}>
+                    تاريخ الاستحقاق: <span className="font-bold">{nextDateLabel}</span>
+                  </p>
+                </motion.div>
+              )}
+
               <Button
                 onClick={spinWheel}
-                disabled={isSpinning || hasSpunToday || isChecking}
+                disabled={isSpinning || isLocked || isChecking}
                 size="lg"
                 className="w-full text-base sm:text-lg py-6 font-bold shadow-lg hover:shadow-xl transition-all"
                 style={{
-                  background: hasSpunToday
+                  background: isLocked
                     ? "hsl(220 10% 60%)"
                     : "linear-gradient(135deg, hsl(43 74% 50%), hsl(38 85% 55%))",
                   color: "hsl(220 50% 12%)",
@@ -429,14 +465,17 @@ const SpinTheWheel = () => {
               >
                 {isChecking ? "جاري التحميل..."
                   : isSpinning ? <><Sparkles className="w-5 h-5 ml-2 animate-spin" /> جاري الدوران...</>
-                  : hasSpunToday ? <><Clock className="w-5 h-5 ml-2" /> عد غداً للمحاولة</>
+                  : isLocked ? <><Clock className="w-5 h-5 ml-2" /> محاولتك القادمة بعد {remaining!.d} يومًا</>
                   : <><Gift className="w-5 h-5 ml-2" /> ابدأ الدوران الآن</>}
               </Button>
 
-              <div className="flex items-center justify-center gap-2 text-xs sm:text-sm text-muted-foreground">
-                <ShieldCheck className="w-4 h-4" />
-                محاولة واحدة مجانية يومياً · بدون تسجيل
+              <div className="flex items-start justify-center gap-2 text-xs sm:text-sm text-muted-foreground text-center">
+                <ShieldCheck className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                <span>
+                  محاولة مجانية واحدة لكل مشارك كل {COOLDOWN_DAYS} يومًا · تصلك الجائزة على بريدك الإلكتروني فورًا
+                </span>
               </div>
+
             </motion.div>
           </div>
 
