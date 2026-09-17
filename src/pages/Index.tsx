@@ -17,6 +17,7 @@ import { UNIFIED_STATS, STATS_LABELS } from "@/constants/academicStats";
 import { InstitutionalPartnershipBanner } from "@/components/InstitutionalPartnershipBanner";
 import { FloatingWhatsAppButton } from "@/components/FloatingWhatsAppButton";
 import Footer from "@/components/Footer";
+import { InteractiveAcademicSystems } from "@/components/home/InteractiveAcademicSystems";
 
 // Import academic service images
 import academicTranslationImg from "@/assets/academic-service-translation.jpg";
@@ -24,8 +25,7 @@ import academicResearchImg from "@/assets/academic-service-research.jpg";
 import academicEditingImg from "@/assets/academic-service-editing.jpg";
 import academicPublishingImg from "@/assets/academic-service-publishing.jpg";
 
-// Real photography for hero & testimonials
-import heroResearcherImg from "@/assets/fekrahedu-academic-interactive-hero.jpg";
+// Real photography for supporting sections and testimonials
 import heroCampusImg from "@/assets/home-saudi-campus.jpg";
 import heroCollabImg from "@/assets/home-students-collaboration.jpg";
 import testimonialProfessorImg from "@/assets/home-testimonial-professor.jpg";
@@ -442,7 +442,7 @@ const Index = () => {
               </motion.div>
             </motion.div>
 
-            {/* الجانب البصري — صور حقيقية بإطار مشرّف */}
+            {/* الجانب البصري — منظومة أكاديمية تفاعلية */}
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
@@ -453,44 +453,7 @@ const Index = () => {
                 {/* وهج خلفي */}
                 <div className="absolute -inset-6 bg-gradient-to-br from-blue-400/30 via-indigo-400/20 to-purple-400/30 dark:from-blue-500/20 dark:via-indigo-500/15 dark:to-purple-500/20 rounded-[2rem] blur-3xl" />
 
-                {/* الصورة الرئيسية — باحثة */}
-                <motion.div
-                  className="absolute inset-0 rounded-2xl sm:rounded-[2rem] overflow-hidden shadow-2xl border-4 border-background z-10"
-                  whileHover={{ scale: 1.025, rotate: -0.7, y: -6 }}
-                  transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                >
-                  <motion.img
-                    src={heroResearcherImg}
-                    alt="مساحة بحث أكاديمية تفاعلية تضم تحليلات علمية ومراجع ومجهرًا"
-                    className="w-full h-full object-cover object-[52%_45%] transition-transform duration-700 ease-out group-hover:scale-[1.06]"
-                    initial={{ scale: 1.1 }}
-                    animate={{ scale: 1.02 }}
-                    transition={{ duration: 1.25, ease: "easeOut" }}
-                    width={1280}
-                    height={1536}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-blue-900/40 via-transparent to-transparent" />
-
-                  {/* شارة عائمة سفلية */}
-                  <motion.div
-                    className="absolute bottom-3 right-3 left-3 sm:bottom-6 sm:right-6 sm:left-6 px-3 sm:px-4 py-2.5 sm:py-3 bg-background/95 backdrop-blur-md rounded-xl sm:rounded-2xl shadow-xl flex items-center gap-3"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1.2, duration: 0.6 }}
-                  >
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shrink-0">
-                      <CheckCircle className="h-5 w-5 text-white" />
-                    </div>
-                    <div className="text-right flex-1 min-w-0">
-                      <p className="text-xs sm:text-sm font-bold text-slate-800 dark:text-white">
-                        أكثر من 15,000 باحث وثق بنا
-                      </p>
-                      <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 truncate">
-                        منذ 2018 — في 25+ دولة
-                      </p>
-                    </div>
-                  </motion.div>
-                </motion.div>
+                <InteractiveAcademicSystems />
 
                 {/* بطاقة عائمة علوية يمين — تقييم */}
                 <motion.div
