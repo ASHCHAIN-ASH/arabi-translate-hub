@@ -13,7 +13,7 @@ const PrivacyPolicy = () => {
     const element = document.createElement('a');
     const file = new Blob([document.getElementById('privacy-content')?.innerText || ''], {type: 'text/plain'});
     element.href = URL.createObjectURL(file);
-    element.download = 'سياسة-الخصوصية-وكالة-ماستر-ايدو-باث.txt';
+    element.download = 'سياسة-الخصوصية-FekrahEdu.txt';
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);

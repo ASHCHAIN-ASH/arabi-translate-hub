@@ -13,7 +13,7 @@ const TermsOfService = () => {
     const element = document.createElement('a');
     const file = new Blob([document.getElementById('terms-content')?.innerText || ''], {type: 'text/plain'});
     element.href = URL.createObjectURL(file);
-    element.download = 'شروط-الاستخدام-وكالة-ماستر-ايدو-باث.txt';
+    element.download = 'شروط-الاستخدام-FekrahEdu.txt';
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);

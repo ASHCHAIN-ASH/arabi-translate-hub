@@ -37,7 +37,7 @@ const GOLD = "#c9a961";
 const CREAM = "#fdfbf5";
 
 const PLATFORM = {
-  name: "Master U Path",
+  name: "FekrahEdu",
   nameAr: "فكرة يو المسار",
   legal: "FekrahEdu للخدمات الأكاديمية",
   domain: "fekrahedu.com",
@@ -149,7 +149,7 @@ export const ContractDocument: React.FC<Props> = ({ contract, signature, signatu
         <div className="text-left">
           <h1 className="font-bold text-xl m-0" style={{ color: NAVY }}>{PLATFORM.nameAr}</h1>
           <p className="text-[11px] tracking-[0.2em] mt-1 mb-2" style={{ color: GOLD }}>
-            MASTER U PATH — ACADEMIC SERVICES
+            FEKRAHEDU — ACADEMIC SERVICES
           </p>
           <div
             className="inline-flex items-center justify-center font-bold text-base"
