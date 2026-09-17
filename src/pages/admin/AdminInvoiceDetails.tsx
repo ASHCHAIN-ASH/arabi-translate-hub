@@ -14,6 +14,8 @@ import { openInvoicePrintWindow, downloadInvoiceAsPDF } from '@/utils/invoicePdf
 import InvoiceFormDialog from '@/components/admin/invoices/InvoiceFormDialog';
 import PaymentDialog from '@/components/admin/invoices/PaymentDialog';
 import SendInvoiceDialog from '@/components/admin/invoices/SendInvoiceDialog';
+import EmailHistoryPanel from '@/components/admin/email/EmailHistoryPanel';
+import { InvoiceEmailService } from '@/utils/invoiceEmailService';
 
 const ORDER_STATUS_AR: Record<string, string> = {
   pending: 'قيد الانتظار',
@@ -77,6 +79,18 @@ export default function AdminInvoiceDetails() {
   }, [id]);
 
   const handleSend = () => setSendOpen(true);
+  const [sendingReminder, setSendingReminder] = useState(false);
+  const sendReminder = async () => {
+    if (!invoice) return;
+    setSendingReminder(true);
+    try {
+      await InvoiceEmailService.send({ invoiceId: invoice.id, event: 'overdue' });
+      toast.success('تم إرسال تذكير بالسداد للعميل');
+      load();
+    } catch (e: any) {
+      toast.error('تعذّر إرسال التذكير', { description: e?.message });
+    } finally { setSendingReminder(false); }
+  };
   const [sendingWa, setSendingWa] = useState(false);
   const sendPdfWhatsapp = async () => {
     if (!invoice) return;
@@ -127,6 +141,12 @@ export default function AdminInvoiceDetails() {
               <Send className="w-4 h-4 ml-1" />
               إرسال بالبريد
             </Button>
+            {invoice.remaining_amount > 0 && invoice.customer_email && (
+              <Button size="sm" variant="outline" onClick={sendReminder} disabled={sendingReminder}>
+                <Clock className={`w-4 h-4 ml-1 ${sendingReminder ? 'animate-pulse' : ''}`} />
+                تذكير بالسداد
+              </Button>
+            )}
             {invoice.customer_phone && (
               <Button size="sm" onClick={sendPdfWhatsapp} disabled={sendingWa}
                 className="bg-green-600 hover:bg-green-700 text-white">
@@ -238,7 +258,20 @@ export default function AdminInvoiceDetails() {
           </div>
 
           {/* Sidebar timeline */}
-          <div>
+          <div className="space-y-6">
+            <EmailHistoryPanel
+              invoiceId={invoice.id}
+              title="رسائل البريد لهذه الفاتورة"
+              className="border-0 shadow-md"
+              onResend={invoice.customer_email ? async () => {
+                try {
+                  await InvoiceEmailService.send({ invoiceId: invoice.id, event: 'issued' });
+                  toast.success('تمت إعادة إرسال الفاتورة');
+                } catch (e: any) {
+                  toast.error('تعذّر الإرسال', { description: e?.message });
+                }
+              } : undefined}
+            />
             <Card className="border-0 shadow-md sticky top-4">
               <CardHeader><CardTitle className="text-base flex items-center gap-2"><Clock className="w-4 h-4" />سجل العمليات</CardTitle></CardHeader>
               <CardContent>
