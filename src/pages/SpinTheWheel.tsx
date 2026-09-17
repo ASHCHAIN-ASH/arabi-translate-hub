@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Copy, Gift, Sparkles, Trophy, Clock, ShieldCheck } from "lucide-react";
+import { Copy, Gift, Sparkles, Trophy, Clock, ShieldCheck, Mail } from "lucide-react";
 import { supabase } from "@/data/legacy/client";
 
 interface Segment {
