@@ -11,9 +11,9 @@ import { Button } from "@/components/ui/button";
 
 const SEGMENTS = [
   { label: "خصم 50%", fill: "#f59e0b", text: "#3b2200" },
-  { label: "هدية مجانية", fill: "#6d28d9", text: "#ffffff" },
+  { label: "هدية فورية", fill: "#6d28d9", text: "#ffffff" },
   { label: "خصم 25%", fill: "#fbbf24", text: "#3b2200" },
-  { label: "استشارة مجانية", fill: "#be185d", text: "#ffffff" },
+  { label: "استشارة", fill: "#be185d", text: "#ffffff" },
   { label: "خصم 15%", fill: "#f59e0b", text: "#3b2200" },
   { label: "ترجمة صفحة", fill: "#1d4ed8", text: "#ffffff" },
   { label: "خصم 10%", fill: "#fbbf24", text: "#3b2200" },
