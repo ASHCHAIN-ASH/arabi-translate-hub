@@ -3,6 +3,8 @@ import { Resend } from "npm:resend@2.0.0";
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+const PUBLICATION_EMAIL = "publishing@fekrahedu.com";
+const PUBLICATION_FROM = `قسم النشر العلمي في FekrahEdu <${PUBLICATION_EMAIL}>`;
 const supabaseAdmin = createClient(
   Deno.env.get("SUPABASE_URL")!,
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
@@ -32,6 +34,13 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     const orderData: ServiceRequest = await req.json();
     const orderId = `SRV${Date.now()}`;
+    const isPublicationRequest = /publication|publishing|journal|نشر/i.test(
+      `${orderData.serviceType} ${orderData.serviceTitle}`,
+    );
+    const departmentEmail = isPublicationRequest ? PUBLICATION_EMAIL : "info@fekrahedu.com";
+    const sender = isPublicationRequest
+      ? PUBLICATION_FROM
+      : "FekrahEdu <info@fekrahedu.com>";
     
     console.log("Processing service request:", orderId);
 
@@ -551,7 +560,7 @@ const handler = async (req: Request): Promise<Response> => {
             <div class="contact-section">
               <h3>📞 طرق التواصل معنا</h3>
               <div class="contact-item">
-                📧 البريد الإلكتروني: info@fekrahedu.com
+                 📧 البريد الإلكتروني: ${departmentEmail}
               </div>
               <div class="contact-item">
                 📱 جوال/واتساب: 0559600824
@@ -578,8 +587,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // إرسال الإيميلات
     const adminRes = await resend.emails.send({
-      from: "FekrahEdu System <info@fekrahedu.com>",
-      to: ["info@fekrahedu.com"],
+      from: sender,
+      to: [departmentEmail],
       replyTo: orderData.email,
       subject: `🚨 [طلب جديد ${orderId}] ${orderData.serviceTitle} - ${orderData.fullName}`,
       html: adminEmailHtml,
@@ -588,8 +597,8 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Admin email sent:", adminRes);
 
     const clientRes = await resend.emails.send({
-      from: "FekrahEdu <info@fekrahedu.com>",
-      replyTo: "info@fekrahedu.com",
+      from: sender,
+      replyTo: departmentEmail,
       to: [orderData.email],
       subject: `[FekrahEdu] تأكيد استلام طلبك – ${orderData.serviceTitle}`,
       html: clientEmailHtml,

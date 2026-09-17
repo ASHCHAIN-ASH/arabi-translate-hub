@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@4.0.0";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+const PUBLICATION_EMAIL = "publishing@fekrahedu.com";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -16,6 +17,7 @@ interface OrderStatusEmailRequest {
   clientEmail: string;
   trackingId?: string;
   estimatedDelivery?: string;
+  serviceType?: string;
 }
 
 const getStatusNameArabic = (status: string): string => {
@@ -165,11 +167,18 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const emailHtml = createOrderStatusEmailTemplate(requestData);
-    const fromEmail = Deno.env.get("RESEND_FROM_EMAIL") || "orders@fekrahedu.com";
+    const isPublicationOrder = /research-publication|journal-publication|publishing|نشر/i.test(
+      `${requestData.serviceType ?? ""} ${requestData.orderTitle}`,
+    );
+    const fromEmail = isPublicationOrder
+      ? PUBLICATION_EMAIL
+      : Deno.env.get("RESEND_FROM_EMAIL") || "orders@fekrahedu.com";
+    const fromName = isPublicationOrder ? "قسم النشر العلمي في FekrahEdu" : "FekrahEdu";
 
     const emailResponse = await resend.emails.send({
-      from: `مؤسسة علي الشهري التعليمية <${fromEmail}>`,
+      from: `${fromName} <${fromEmail}>`,
       to: [requestData.clientEmail],
+      replyTo: fromEmail,
       subject: `تحديث حالة طلبكم: ${getStatusNameArabic(requestData.newStatus)} - ${requestData.orderTitle}`,
       html: emailHtml,
     });
