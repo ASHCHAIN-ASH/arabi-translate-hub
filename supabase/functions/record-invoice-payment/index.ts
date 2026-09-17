@@ -127,6 +127,38 @@ Deno.serve(async (req) => {
 
     if (insertError) throw insertError;
 
+    // Invoice lifecycle email (non-blocking): receipt for a completed wallet payment,
+    // acknowledgement for a bank transfer awaiting review.
+    try {
+      const { data: refreshed } = await admin
+        .from('invoices')
+        .select('customer_email, remaining_amount, status')
+        .eq('id', body.invoice_id)
+        .maybeSingle();
+
+      if (refreshed?.customer_email) {
+        const paymentDate = body.payment_date || new Date().toISOString().split('T')[0];
+        await admin.functions.invoke('send-invoice-email', {
+          body: {
+            invoice_id: body.invoice_id,
+            event: 'payment_received',
+            amount_paid: Number(payment.amount || remaining),
+            payment_method: body.payment_method,
+            payment_date: paymentDate,
+            reference_number: body.reference_number?.trim() || null,
+          },
+        });
+
+        if (paymentStatus === 'completed' && Number(refreshed.remaining_amount ?? 0) <= 0) {
+          await admin.functions.invoke('send-invoice-email', {
+            body: { invoice_id: body.invoice_id, event: 'paid' },
+          });
+        }
+      }
+    } catch (emailError) {
+      console.warn('invoice payment email skipped', emailError);
+    }
+
     return jsonResponse({
       ok: true,
       payment_id: payment.id,

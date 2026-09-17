@@ -1,131 +1,186 @@
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
-import { Resend } from "https://esm.sh/resend@4.0.0";
-
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
-const RAW_FROM = Deno.env.get("RESEND_FROM_EMAIL") || "";
-const FROM = /^[^<>@]+@[^<>@]+\.[^<>@]+$/.test(RAW_FROM) || /<[^<>@]+@[^<>@]+\.[^<>@]+>/.test(RAW_FROM)
-  ? RAW_FROM
-  : "FekrahEdu <onboarding@resend.dev>";
+// Unified invoice email dispatcher for FekrahEdu.
+// All invoice-related email now flows through `send-transactional-email`
+// (pgmq queue + email_send_log + retries + suppression), so every message
+// is traceable from the admin dashboards.
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const fmt = (n: number | null | undefined, c = "SAR") =>
-  `${Number(n ?? 0).toLocaleString("ar-SA", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${c === "SAR" ? "ر.س" : c}`;
+const SITE_URL = "https://fekrahedu.com";
 
-const escapeHtml = (s: string) =>
-  s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
+type InvoiceEvent = "issued" | "payment_received" | "paid" | "overdue";
 
-serve(async (req) => {
+const TEMPLATE_BY_EVENT: Record<InvoiceEvent, string> = {
+  issued: "invoice-issued",
+  payment_received: "invoice-payment-received",
+  paid: "invoice-paid",
+  overdue: "invoice-overdue",
+};
+
+interface Body {
+  invoice_id?: string;
+  event?: InvoiceEvent;
+  to?: string;
+  cc?: string[];
+  subject?: string;
+  custom_message?: string;
+  // payment_received extras
+  amount_paid?: number;
+  payment_method?: string;
+  payment_date?: string;
+  reference_number?: string | null;
+}
+
+const json = (payload: unknown, status = 200) =>
+  new Response(JSON.stringify(payload), {
+    status,
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
+
+Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
-  try {
-    const { invoice_id, to, cc, subject, custom_message, attachment } = await req.json();
-    if (!invoice_id) throw new Error("invoice_id required");
 
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+  try {
+    const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
+    const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const admin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
+
+    const body = (await req.json().catch(() => ({}))) as Body;
+    if (!body.invoice_id) return json({ error: "invoice_id required" }, 400);
+
+    const event: InvoiceEvent = body.event ?? "issued";
+    const templateName = TEMPLATE_BY_EVENT[event];
+    if (!templateName) return json({ error: `unknown event: ${event}` }, 400);
+
+    const { data: invoice, error: invErr } = await admin
+      .from("invoices")
+      .select("*")
+      .eq("id", body.invoice_id)
+      .maybeSingle();
+
+    if (invErr) throw invErr;
+    if (!invoice) return json({ error: "الفاتورة غير موجودة" }, 404);
+
+    const recipient = (body.to || invoice.customer_email || "").trim();
+    if (!recipient) return json({ error: "لا يوجد بريد إلكتروني للعميل" }, 400);
+
+    const { data: items } = await admin
+      .from("invoice_items")
+      .select("item_name, quantity, unit_price, total_price")
+      .eq("invoice_id", invoice.id);
+
+    const invoiceUrl = `${SITE_URL}/invoices/${invoice.id}/pay`;
+    const currency = invoice.currency || "SAR";
+    const remaining = Number(
+      invoice.remaining_amount ??
+        Math.max(Number(invoice.total_amount || 0) - Number(invoice.paid_amount || 0), 0),
     );
 
-    const { data: invoice, error: invErr } = await supabase
-      .from("invoices").select("*").eq("id", invoice_id).maybeSingle();
-    if (invErr || !invoice) throw new Error("الفاتورة غير موجودة");
-
-    const recipient = to || invoice.customer_email;
-    if (!recipient) throw new Error("لا يوجد بريد إلكتروني للعميل");
-
-    const { data: items } = await supabase
-      .from("invoice_items").select("*").eq("invoice_id", invoice_id);
-
-    const c = invoice.currency || "SAR";
-    const itemsRows = (items ?? []).map((it: any) => `
-      <tr>
-        <td style="padding:8px;border-bottom:1px solid #eee">${escapeHtml(it.item_name)}</td>
-        <td style="padding:8px;border-bottom:1px solid #eee;text-align:center">${it.quantity}</td>
-        <td style="padding:8px;border-bottom:1px solid #eee;text-align:left">${fmt(it.unit_price, c)}</td>
-        <td style="padding:8px;border-bottom:1px solid #eee;text-align:left;font-weight:bold">${fmt(it.total_price, c)}</td>
-      </tr>`).join("");
-
-    const customMessageBlock = custom_message
-      ? `<div style="background:#f0f9ff;border-right:4px solid #1e40af;padding:14px 16px;border-radius:8px;margin-bottom:16px;white-space:pre-wrap;line-height:1.7">${escapeHtml(custom_message)}</div>`
-      : `<p>عزيزنا <strong>${escapeHtml(invoice.customer_name ?? "")}</strong>،</p><p>نرفق لكم فاتورتكم بالتفاصيل التالية:</p>`;
-
-    const html = `
-    <div dir="rtl" style="font-family:Tahoma,Arial;max-width:680px;margin:0 auto;background:#f8fafc;padding:24px">
-      <div style="background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff;padding:24px;border-radius:12px;text-align:center">
-        <h1 style="margin:0;font-size:22px">فاتورة ${escapeHtml(invoice.invoice_number)}</h1>
-        <p style="margin:8px 0 0">FekrahEdu — FekrahEdu</p>
-      </div>
-      <div style="background:#fff;border-radius:12px;padding:24px;margin-top:16px">
-        ${customMessageBlock}
-        <table style="width:100%;border-collapse:collapse;margin:16px 0">
-          <thead><tr style="background:#f1f5f9">
-            <th style="padding:8px;text-align:right">البند</th>
-            <th style="padding:8px">الكمية</th>
-            <th style="padding:8px;text-align:left">السعر</th>
-            <th style="padding:8px;text-align:left">الإجمالي</th>
-          </tr></thead>
-          <tbody>${itemsRows}</tbody>
-        </table>
-        <div style="border-top:2px solid #e5e7eb;padding-top:12px">
-          <div style="display:flex;justify-content:space-between;padding:4px 0"><span>المجموع الفرعي</span><span>${fmt(invoice.subtotal, c)}</span></div>
-          ${invoice.tax_amount ? `<div style="display:flex;justify-content:space-between;padding:4px 0"><span>ضريبة القيمة المضافة</span><span>${fmt(invoice.tax_amount, c)}</span></div>` : ""}
-          ${invoice.discount_amount ? `<div style="display:flex;justify-content:space-between;padding:4px 0"><span>الخصم</span><span>-${fmt(invoice.discount_amount, c)}</span></div>` : ""}
-          <div style="display:flex;justify-content:space-between;padding:8px 0;font-weight:bold;font-size:18px;color:#1e40af"><span>الإجمالي</span><span>${fmt(invoice.total_amount, c)}</span></div>
-          <div style="display:flex;justify-content:space-between;padding:4px 0;color:#dc2626"><span>المتبقي</span><span>${fmt(invoice.remaining_amount, c)}</span></div>
-        </div>
-        ${invoice.due_date ? `<p style="margin-top:16px;color:#64748b">تاريخ الاستحقاق: ${invoice.due_date}</p>` : ""}
-        ${invoice.notes ? `<div style="background:#f8fafc;padding:12px;border-radius:8px;margin-top:12px"><strong>ملاحظات:</strong> ${escapeHtml(invoice.notes)}</div>` : ""}
-        ${attachment ? `<p style="margin-top:16px;color:#64748b;font-size:13px">📎 تجدون نسخة كاملة من الفاتورة كمرفق مع هذا البريد.</p>` : ""}
-        <p style="color:#64748b;font-size:13px;margin-top:24px">شكراً لثقتكم — FekrahEdu</p>
-      </div>
-    </div>`;
-
-    const emailPayload: any = {
-      from: FROM,
-      to: [recipient],
-      subject: subject || `فاتورة ${invoice.invoice_number} — FekrahEdu`,
-      html,
-    };
-
-    const ccList = Array.isArray(cc) ? cc.filter((x: any) => typeof x === "string" && x.trim()) : [];
-    if (ccList.length) emailPayload.cc = ccList;
-
-    if (attachment && attachment.filename && attachment.content) {
-      emailPayload.attachments = [{
-        filename: attachment.filename,
-        content: attachment.content, // base64
-      }];
+    let daysOverdue = 0;
+    if (invoice.due_date) {
+      const diff = Date.now() - new Date(invoice.due_date).getTime();
+      daysOverdue = Math.max(Math.floor(diff / 86_400_000), 0);
     }
 
-    const { error: sendErr } = await resend.emails.send(emailPayload);
+    const base = {
+      customerName: invoice.customer_name ?? "",
+      invoiceNumber: invoice.invoice_number,
+      currency,
+      invoiceUrl,
+    };
+
+    const templateData: Record<string, unknown> =
+      event === "issued"
+        ? {
+            ...base,
+            issueDate: invoice.issue_date,
+            dueDate: invoice.due_date,
+            subtotal: invoice.subtotal,
+            taxAmount: invoice.tax_amount,
+            discountAmount: invoice.discount_amount,
+            totalAmount: invoice.total_amount,
+            remainingAmount: remaining,
+            items: items ?? [],
+            customMessage: body.custom_message || undefined,
+          }
+        : event === "payment_received"
+        ? {
+            ...base,
+            amountPaid: body.amount_paid ?? invoice.paid_amount,
+            remainingAmount: remaining,
+            totalAmount: invoice.total_amount,
+            paymentMethod: body.payment_method,
+            paymentDate: body.payment_date ?? new Date().toISOString().slice(0, 10),
+            referenceNumber: body.reference_number ?? undefined,
+          }
+        : event === "paid"
+        ? {
+            ...base,
+            totalAmount: invoice.total_amount,
+            paidAt: (invoice.paid_at ?? new Date().toISOString()).slice(0, 10),
+          }
+        : {
+            ...base,
+            remainingAmount: remaining,
+            dueDate: invoice.due_date,
+            daysOverdue,
+          };
+
+    const idempotencyKey =
+      event === "issued" || event === "overdue"
+        ? `invoice-${event}-${invoice.id}-${new Date().toISOString().slice(0, 10)}`
+        : `invoice-${event}-${invoice.id}-${body.reference_number ?? body.amount_paid ?? remaining}`;
+
+    const { data: result, error: sendErr } = await admin.functions.invoke(
+      "send-transactional-email",
+      {
+        body: {
+          templateName,
+          recipientEmail: recipient,
+          idempotencyKey,
+          subjectOverride: body.subject?.trim() || undefined,
+          cc: body.cc ?? [],
+          templateData,
+          metadata: {
+            source: "invoice",
+            event,
+            invoice_id: invoice.id,
+            invoice_number: invoice.invoice_number,
+            customer_id: invoice.customer_id,
+            user_id: invoice.user_id,
+            customer_name: invoice.customer_name,
+            amount: invoice.total_amount,
+          },
+        },
+      },
+    );
+
     if (sendErr) throw sendErr;
 
-    await supabase.from("invoices").update({
-      status: invoice.status === "paid" ? invoice.status : "sent",
-      sent_at: new Date().toISOString(),
-    }).eq("id", invoice_id);
+    // Record the send on the invoice timeline so admins see it inline.
+    await admin.from("invoice_timeline").insert({
+      invoice_id: invoice.id,
+      action_type: "email_sent",
+      action_label: "إرسال بريد إلكتروني",
+      action_description: `تم إرسال بريد (${event}) إلى ${recipient}`,
+      metadata: { event, recipient, template: templateName },
+    }).then(() => {}, () => {});
 
-    const tlDesc = `تم إرسال الفاتورة إلى ${recipient}${ccList.length ? ` (نسخة: ${ccList.join(", ")})` : ""}${attachment ? " مع مرفق" : ""}`;
-    await supabase.from("invoice_timeline").insert({
-      invoice_id,
-      action_type: "emailed",
-      action_label: "إرسال بالبريد الإلكتروني",
-      action_description: tlDesc,
-      metadata: { to: recipient, cc: ccList, has_attachment: !!attachment, custom_message: !!custom_message },
-    });
+    if (event === "issued") {
+      await admin
+        .from("invoices")
+        .update({ sent_at: new Date().toISOString() })
+        .eq("id", invoice.id)
+        .then(() => {}, () => {});
+    }
 
-    return new Response(JSON.stringify({ success: true }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
-  } catch (e: any) {
-    console.error("send-invoice-email error", e);
-    return new Response(JSON.stringify({ error: e.message }), {
-      status: 400,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return json({ ok: true, queued: true, template: templateName, recipient, result });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "تعذر إرسال البريد";
+    console.error("send-invoice-email failed", message);
+    return json({ error: message }, 500);
   }
 });

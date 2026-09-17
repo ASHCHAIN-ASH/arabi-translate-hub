@@ -21,6 +21,10 @@ import { template as walletTopupRejected } from './wallet-topup-rejected.tsx'
 import { template as walletInvoicePayment } from './wallet-invoice-payment.tsx'
 import { template as deadlineReminder } from './deadline-reminder.tsx'
 import { template as financingStatusUpdate } from './financing-status-update.tsx'
+import { template as invoiceIssued } from './invoice-issued.tsx'
+import { template as invoicePaymentReceived } from './invoice-payment-received.tsx'
+import { template as invoicePaid } from './invoice-paid.tsx'
+import { template as invoiceOverdue } from './invoice-overdue.tsx'
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'financing-status-update': financingStatusUpdate,
@@ -35,4 +39,8 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   'wallet-topup-rejected': walletTopupRejected,
   'wallet-invoice-payment': walletInvoicePayment,
   'deadline-reminder': deadlineReminder,
+  'invoice-issued': invoiceIssued,
+  'invoice-payment-received': invoicePaymentReceived,
+  'invoice-paid': invoicePaid,
+  'invoice-overdue': invoiceOverdue,
 }

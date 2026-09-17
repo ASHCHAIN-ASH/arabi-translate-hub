@@ -144,8 +144,36 @@ Deno.serve(async (req) => {
       }
     }
 
+    // Overdue invoice reminders (one per invoice per day; send-invoice-email dedupes by date).
+    let invoiceReminders = 0;
+    try {
+      const today = new Date().toISOString().split("T")[0];
+      const { data: overdueInvoices } = await supabase
+        .from("invoices")
+        .select("id, customer_email, remaining_amount, due_date, status")
+        .not("customer_email", "is", null)
+        .not("due_date", "is", null)
+        .lt("due_date", today)
+        .gt("remaining_amount", 0)
+        .not("status", "in", "(paid,cancelled,draft)")
+        .limit(200);
+
+      for (const inv of overdueInvoices || []) {
+        try {
+          await supabase.functions.invoke("send-invoice-email", {
+            body: { invoice_id: (inv as any).id, event: "overdue" },
+          });
+          invoiceReminders++;
+        } catch (e) {
+          console.warn("[invoice-overdue] failed:", (inv as any).id, e);
+        }
+      }
+    } catch (e) {
+      console.warn("[invoice-overdue] scan failed:", e);
+    }
+
     return new Response(
-      JSON.stringify({ ok: true, processed, failed, total: reminders.length, startedAt }),
+      JSON.stringify({ ok: true, processed, failed, invoiceReminders, total: reminders.length, startedAt }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (e: any) {

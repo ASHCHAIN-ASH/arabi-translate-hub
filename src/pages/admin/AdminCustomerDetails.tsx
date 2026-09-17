@@ -8,6 +8,7 @@ import {
   History, UserPlus, CreditCard,
 } from 'lucide-react';
 import { supabase } from '@/data/legacy/client';
+import EmailHistoryPanel from '@/components/admin/email/EmailHistoryPanel';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -400,6 +401,15 @@ const AdminCustomerDetails: React.FC = () => {
               )}
             </CardContent>
           </Card>
+
+          {customer.email && (
+            <EmailHistoryPanel
+              recipientEmail={customer.email}
+              title="رسائل البريد المرسلة للعميل"
+              className="lg:col-span-3"
+            />
+          )}
+
 
           {/* Actions */}
           <Card className="lg:col-span-2">

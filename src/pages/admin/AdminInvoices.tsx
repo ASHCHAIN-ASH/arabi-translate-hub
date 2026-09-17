@@ -16,6 +16,7 @@ import { openInvoicePrintWindow, downloadInvoiceAsPDF } from '@/utils/invoicePdf
 import InvoiceFormDialog from '@/components/admin/invoices/InvoiceFormDialog';
 import PaymentDialog from '@/components/admin/invoices/PaymentDialog';
 import SendInvoiceDialog from '@/components/admin/invoices/SendInvoiceDialog';
+import { InvoiceEmailService, EMAIL_STATUS_AR, type EmailLogEntry } from '@/utils/invoiceEmailService';
 
 export default function AdminInvoices() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -27,6 +28,7 @@ export default function AdminInvoices() {
   const [editing, setEditing] = useState<Invoice | null>(null);
   const [paymentFor, setPaymentFor] = useState<Invoice | null>(null);
   const [sendFor, setSendFor] = useState<Invoice | null>(null);
+  const [emailLogs, setEmailLogs] = useState<Record<string, EmailLogEntry>>({});
 
   const load = async () => {
     setLoading(true);
@@ -42,6 +44,9 @@ export default function AdminInvoices() {
       } else {
         setCustomerCodes({});
       }
+      try {
+        setEmailLogs(await InvoiceEmailService.latestByInvoice(list.map(i => i.id)));
+      } catch { setEmailLogs({}); }
     }
     catch (e: any) { toast.error('فشل التحميل', { description: e.message }); }
     finally { setLoading(false); }
@@ -52,6 +57,7 @@ export default function AdminInvoices() {
     const ch = supabase.channel('admin-invoices')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'invoices' }, () => load())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'invoice_payments' }, () => load())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'email_send_log' }, () => load())
       .subscribe();
     return () => { supabase.removeChannel(ch); };
   }, []);
@@ -154,6 +160,7 @@ export default function AdminInvoices() {
                     <TableHead className="text-right">المدفوع</TableHead>
                     <TableHead className="text-right">المتبقي</TableHead>
                     <TableHead className="text-right">الحالة</TableHead>
+                    <TableHead className="text-right">آخر إرسال بريد</TableHead>
                     <TableHead className="text-right">إجراءات</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -177,6 +184,7 @@ export default function AdminInvoices() {
                       <TableCell className="text-emerald-600">{InvoiceService.formatCurrency(inv.paid_amount, inv.currency)}</TableCell>
                       <TableCell className="text-red-600 font-medium">{InvoiceService.formatCurrency(inv.remaining_amount, inv.currency)}</TableCell>
                       <TableCell><Badge className={InvoiceService.statusColor(inv.status)}>{InvoiceService.statusLabel(inv.status)}</Badge></TableCell>
+                      <TableCell><EmailCell log={emailLogs[inv.id]} /></TableCell>
                       <TableCell>
                         <div className="flex items-center gap-1">
                           <Button size="sm" variant="outline" onClick={() => handleSend(inv)} title="إرسال بالبريد">
@@ -214,6 +222,7 @@ export default function AdminInvoices() {
                     )}
                   </div>
                   <div className="text-xs text-muted-foreground">{inv.issue_date}</div>
+                  <div className="mt-1"><EmailCell log={emailLogs[inv.id]} /></div>
                 </div>
                 <div className="grid grid-cols-3 gap-2 text-xs bg-muted/40 rounded-md p-2">
                   <div><div className="text-muted-foreground">الإجمالي</div><div className="font-bold">{InvoiceService.formatCurrency(inv.total_amount, inv.currency)}</div></div>
@@ -241,6 +250,22 @@ export default function AdminInvoices() {
   );
 }
 
+function EmailCell({ log }: { log?: EmailLogEntry }) {
+  if (!log) {
+    return <span className="text-xs text-muted-foreground flex items-center gap-1"><Mail className="w-3 h-3" />لم تُرسل</span>;
+  }
+  const tone = log.status === 'sent'
+    ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'
+    : log.status === 'pending'
+      ? 'bg-amber-500/10 text-amber-600 border-amber-500/20'
+      : 'bg-destructive/10 text-destructive border-destructive/20';
+  return (
+    <div className="flex flex-col gap-0.5">
+      <Badge variant="outline" className={`w-fit text-[11px] ${tone}`}>{EMAIL_STATUS_AR[log.status] ?? log.status}</Badge>
+      <span className="text-[11px] text-muted-foreground">{new Date(log.created_at).toLocaleDateString('ar-SA')}</span>
+    </div>
+  );
+}
 function StatCard({ icon: Icon, label, value, color, bg, small }: any) {
   return (
     <Card className="border-0 shadow-md">

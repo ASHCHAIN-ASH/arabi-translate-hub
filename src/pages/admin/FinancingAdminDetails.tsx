@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import EmailHistoryPanel from '@/components/admin/email/EmailHistoryPanel';
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
@@ -435,6 +436,10 @@ const FinancingAdminDetails: React.FC = () => {
                         <InfoRow icon={AlertCircle} label="الالتزامات" value={`${fmt(app.monthly_commitments || 0)} ر.س`} />
                       </CardContent>
                     </Card>
+
+                    {app.applicant_email && (
+                      <EmailHistoryPanel recipientEmail={app.applicant_email} title="رسائل البريد لمقدّم الطلب" />
+                    )}
 
                     {app.notes && (
                       <Card className="bg-amber-500/5 border-amber-500/20">

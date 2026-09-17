@@ -18,10 +18,11 @@ import { useAuth } from '@/components/SimpleAuthProvider';
 import {
   FileText, Eye, Download, Printer, RefreshCw, CheckCircle2, Clock, AlertCircle,
   LifeBuoy, Zap, Search, HelpCircle, Sparkles, TrendingUp, Wallet, Calendar,
-  ChevronLeft, ChevronRight, Info, Receipt, ShieldCheck, CircleDollarSign,
+  ChevronLeft, ChevronRight, Info, Receipt, ShieldCheck, CircleDollarSign, Mail,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/data/legacy/client';
+import { InvoiceEmailService, type EmailLogEntry } from '@/utils/invoiceEmailService';
 import { InvoiceService, type Invoice } from '@/utils/invoiceService';
 import { openInvoicePrintWindow, downloadInvoiceAsPDF } from '@/utils/invoicePdf';
 
@@ -41,12 +42,17 @@ export default function ClientInvoices() {
   const openSupportTicket = (inv: Invoice) =>
     navigate(`/support/tickets?new=1&invoice_id=${inv.id}&invoice_number=${encodeURIComponent(inv.invoice_number)}`);
 
+  const [emailLogs, setEmailLogs] = useState<Record<string, EmailLogEntry>>({});
+
   const load = async () => {
     if (!user?.id) return;
     setLoading(true);
     try {
       const data = await InvoiceService.listForUser(user.id);
       setInvoices(data);
+      try {
+        setEmailLogs(await InvoiceEmailService.latestByInvoice(data.map(i => i.id)));
+      } catch { setEmailLogs({}); }
     } catch (e: any) { toast.error('فشل التحميل', { description: e.message }); }
     finally { setLoading(false); }
   };
@@ -298,6 +304,7 @@ export default function ClientInvoices() {
                               </TableCell>
                               <TableCell>
                                 <Badge className={InvoiceService.statusColor(inv.status)}>{InvoiceService.statusLabel(inv.status)}</Badge>
+                                <EmailSentNote log={emailLogs[inv.id]} />
                               </TableCell>
                               <TableCell>
                                 <div className="flex gap-1 items-center">
@@ -350,6 +357,7 @@ export default function ClientInvoices() {
                               <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
                                 <Calendar className="w-3 h-3" /> {inv.issue_date}
                               </div>
+                              <EmailSentNote log={emailLogs[inv.id]} />
                               <div className="grid grid-cols-3 gap-1.5 text-[11px] bg-muted/40 rounded-lg p-2">
                                 <div><div className="text-muted-foreground text-[10px]">الإجمالي</div><div className="font-bold truncate">{InvoiceService.formatCurrency(inv.total_amount, inv.currency)}</div></div>
                                 <div><div className="text-muted-foreground text-[10px]">المدفوع</div><div className="font-bold text-emerald-600 truncate">{InvoiceService.formatCurrency(inv.paid_amount, inv.currency)}</div></div>
@@ -419,6 +427,16 @@ export default function ClientInvoices() {
   );
 }
 
+function EmailSentNote({ log }: { log?: EmailLogEntry }) {
+  if (!log || (log.status !== 'sent' && log.status !== 'pending')) return null;
+  const date = new Date(log.created_at).toLocaleDateString('ar-SA');
+  return (
+    <p className="mt-1 flex items-center gap-1 text-[10px] text-muted-foreground">
+      <Mail className="w-3 h-3 text-primary" />
+      {log.status === 'sent' ? `أُرسلت إلى بريدك بتاريخ ${date}` : 'جارٍ إرسالها إلى بريدك'}
+    </p>
+  );
+}
 function statusHint(s: string) {
   const map: Record<string, string> = {
     draft: 'لم تُرسل بعد',

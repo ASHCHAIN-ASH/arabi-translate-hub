@@ -1,4 +1,5 @@
 import { supabase } from '@/data/legacy/client';
+import { InvoiceEmailService } from '@/utils/invoiceEmailService';
 
 export type InvoiceStatus = 'draft' | 'pending' | 'sent' | 'partially_paid' | 'paid' | 'overdue' | 'cancelled';
 
@@ -185,7 +186,14 @@ export const InvoiceService = {
       if (itemsErr) throw itemsErr;
     }
 
-    return inv as unknown as Invoice;
+    const created = inv as unknown as Invoice;
+
+    // Automatic lifecycle email: notify the customer that an invoice was issued.
+    if (created.customer_email && created.status !== 'draft') {
+      InvoiceEmailService.sendQuietly({ invoiceId: created.id, event: 'issued' });
+    }
+
+    return created;
   },
 
   async update(id: string, patch: Partial<Invoice> & { items?: Omit<InvoiceItem, 'id' | 'invoice_id' | 'total_price'>[] }): Promise<void> {
@@ -224,6 +232,26 @@ export const InvoiceService = {
       created_by: user?.id ?? null,
     });
     if (error) throw error;
+
+    // Automatic lifecycle email: payment receipt (and a final receipt when settled).
+    try {
+      const invoice = await this.get(input.invoice_id);
+      if (invoice.customer_email) {
+        InvoiceEmailService.sendQuietly({
+          invoiceId: invoice.id,
+          event: 'payment_received',
+          amountPaid: input.amount,
+          paymentMethod: input.payment_method,
+          paymentDate: input.payment_date,
+          referenceNumber: input.reference_number ?? null,
+        });
+        if (Number(invoice.remaining_amount ?? 0) <= 0 || invoice.status === 'paid') {
+          InvoiceEmailService.sendQuietly({ invoiceId: invoice.id, event: 'paid' });
+        }
+      }
+    } catch (e) {
+      console.warn('invoice payment email skipped', e);
+    }
   },
 
   async markSent(id: string): Promise<void> {
