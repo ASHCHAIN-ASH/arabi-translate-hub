@@ -110,15 +110,27 @@ serve(async (req: Request): Promise<Response> => {
       return json(eligibilityPayload(await findActiveAttempt(userIdentifier, email)));
     }
 
+    // التسجيل في الموقع شرط أساسي للحصول على الجائزة
+    const authHeader = req.headers.get("Authorization") ?? "";
+    const jwt = authHeader.replace(/^Bearer\s+/i, "").trim();
+    const { data: authData } = jwt
+      ? await supabase.auth.getUser(jwt)
+      : { data: { user: null } } as any;
+    const authedUser = authData?.user ?? null;
+    if (!authedUser?.email) {
+      return json({ error: "التسجيل في الموقع شرط أساسي للحصول على الجائزة. سجّل دخولك ثم أعد المحاولة." }, 401);
+    }
+    const accountEmail = authedUser.email.trim().toLowerCase();
+
     const name: string = (body.name ?? "").trim();
     const prize: string = (body.prize ?? "").trim();
-    if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+    if (!accountEmail || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(accountEmail)) {
       return json({ error: "بريد إلكتروني غير صالح" }, 400);
     }
     if (!name || !prize) return json({ error: "الاسم والجائزة مطلوبان" }, 400);
 
     // فرض قاعدة الـ 30 يومًا على الخادم (لا يمكن تجاوزها من المتصفح)
-    const active = await findActiveAttempt(userIdentifier, email);
+    const active = await findActiveAttempt(authedUser.id, accountEmail);
     const eligibility = eligibilityPayload(active);
     if (!eligibility.eligible) {
       return json({ error: "لديك محاولة مسجّلة خلال آخر 30 يومًا", ...eligibility }, 429);
@@ -131,9 +143,9 @@ serve(async (req: Request): Promise<Response> => {
     const { data: inserted, error: insertError } = await supabase
       .from("spin_attempts")
       .insert({
-        user_identifier: userIdentifier ?? null,
+        user_identifier: authedUser.id,
         name,
-        email,
+        email: accountEmail,
         prize,
         attempt_date: now.toISOString().split("T")[0],
         next_eligible_at: nextEligible.toISOString(),
