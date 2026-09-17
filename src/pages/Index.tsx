@@ -43,6 +43,7 @@ const ServiceSteps = lazy(() => import("@/components/ServiceSteps"));
 const ModernStatsSection = lazy(() => import("@/components/ModernStatsSection"));
 const HomeFinancingSection = lazy(() => import("@/components/home/HomeFinancingSection"));
 const SuccessStoriesCarousel = lazy(() => import("@/components/home/SuccessStoriesCarousel"));
+const SpinWheelBanner = lazy(() => import("@/components/home/SpinWheelBanner"));
 
 
 // مكون Loading محسّن
@@ -458,6 +459,12 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+
+      {/* بانر عجلة الحظ */}
+      <Suspense fallback={<LoadingSpinner />}>
+        <SpinWheelBanner />
+      </Suspense>
 
 
       {/* قسم الإحصائيات - مكون محسّن */}
