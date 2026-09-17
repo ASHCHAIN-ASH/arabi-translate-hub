@@ -124,7 +124,7 @@ export default function CertifiedTranslationComingSoon({
                     className="flex items-center gap-3 rounded-xl border border-border/60 bg-muted/40 px-3.5 py-3"
                   >
                     <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-primary/15 to-secondary/15">
-                      <feature.icon className="h-4.5 w-4.5 h-5 w-5 text-primary" />
+                      <feature.icon className="h-5 w-5 text-primary" />
                     </span>
                     <span className="text-sm font-semibold text-foreground">{feature.label}</span>
                   </motion.li>
