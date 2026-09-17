@@ -115,10 +115,11 @@ const SpinTheWheel = () => {
   };
 
   const nextDateLabel = nextEligibleAt
-    ? new Date(nextEligibleAt).toLocaleDateString("ar-SA-u-ca-gregory", {
+    ? new Date(nextEligibleAt).toLocaleDateString("ar", {
         year: "numeric", month: "long", day: "numeric",
       })
     : "";
+
 
 
   const drawWheel = useCallback((angle: number) => {
