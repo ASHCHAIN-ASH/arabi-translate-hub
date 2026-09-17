@@ -18,6 +18,7 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
+import AuthConfirm from "./pages/auth/AuthConfirm";
 import AdminLogin from "./pages/auth/AdminLogin";
 import JournalPublication from "./pages/research/JournalPublication";
 import AcademicExpertise from "./pages/academic/AcademicExpertise";
@@ -340,6 +341,7 @@ const App = () => (
             <Route path="/auth/register" element={<Register />} />
             <Route path="/auth/forgot-password" element={<ForgotPassword />} />
             <Route path="/auth/reset-password" element={<ResetPassword />} />
+            <Route path="/auth/confirm" element={<AuthConfirm />} />
             <Route path="/adminfekrah/login" element={<AdminLogin />} />
             <Route path="/adminmaster/*" element={<LegacyAdminPathRedirect />} />
             <Route path="/unauthorized" element={<Unauthorized />} />

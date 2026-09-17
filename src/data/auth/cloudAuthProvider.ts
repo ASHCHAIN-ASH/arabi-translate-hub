@@ -51,22 +51,45 @@ export const cloudAuthProvider: AuthProvider = {
     return { session: mapSession(data.session), user: mapUser(data.user) };
   },
 
-  async signUp(email, password, metadata = {}, redirectTo): Promise<AuthResult> {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { data: metadata, emailRedirectTo: redirectTo },
+  async signUp(email, password, metadata = {}): Promise<AuthResult> {
+    const { data, error } = await supabase.functions.invoke('fekrah-auth-email', {
+      body: {
+        action: 'signup',
+        email,
+        password,
+        name: (metadata as { full_name?: string }).full_name,
+        metadata,
+        origin: window.location.origin,
+      },
     });
     if (error) return { session: null, user: null, error: error.message };
-    return { session: mapSession(data.session), user: mapUser(data.user) };
+    if (data?.error === 'already_registered') {
+      return { session: null, user: null, error: 'already registered' };
+    }
+    if (data?.error) return { session: null, user: null, error: String(data.error) };
+    return {
+      session: null,
+      user: {
+        id: data?.user_id ?? '',
+        email,
+        phone: null,
+        metadata: metadata as Record<string, unknown>,
+        createdAt: null,
+      },
+    };
   },
 
-  async resendSignupConfirmation(email, redirectTo) {
-    const { error } = await supabase.auth.resend({
-      type: 'signup',
-      email,
-      options: { emailRedirectTo: redirectTo ?? window.location.origin },
+  async resendSignupConfirmation(email) {
+    const { data, error } = await supabase.functions.invoke('fekrah-auth-email', {
+      body: { action: 'verify', email, origin: window.location.origin },
     });
+    if (error) return { error: error.message };
+    if (data?.error) return { error: String(data.error) };
+    return {};
+  },
+
+  async verifyEmailToken(tokenHash, type) {
+    const { error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type });
     return { error: error?.message };
   },
 
@@ -82,9 +105,13 @@ export const cloudAuthProvider: AuthProvider = {
     await supabase.auth.signOut();
   },
 
-  async requestPasswordReset(email, redirectTo) {
-    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
-    return { error: error?.message };
+  async requestPasswordReset(email) {
+    const { data, error } = await supabase.functions.invoke('fekrah-auth-email', {
+      body: { action: 'recovery', email, origin: window.location.origin },
+    });
+    if (error) return { error: error.message };
+    if (data?.error) return { error: String(data.error) };
+    return {};
   },
 
   async updatePassword(password) {

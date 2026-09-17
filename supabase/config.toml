@@ -5,6 +5,8 @@ project_id = "kziujhdqogqeehtxgpax"
     verify_jwt = false
   [functions.auth-email-hook]
     verify_jwt = false
+  [functions.fekrah-auth-email]
+    verify_jwt = false
   [functions.process-email-queue]
     verify_jwt = true
   [functions.send-transactional-email]
