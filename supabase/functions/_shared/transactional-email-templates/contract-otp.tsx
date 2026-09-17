@@ -1,9 +1,8 @@
 /// <reference types="npm:@types/react@18.3.1" />
 import * as React from 'npm:react@18.3.1'
-import {
-  Body, Container, Head, Heading, Html, Preview, Section, Text, Hr,
-} from 'npm:@react-email/components@0.0.22'
+import { Heading, Section, Text } from 'npm:@react-email/components@0.0.22'
 import type { TemplateEntry } from './registry.ts'
+import { BrandEmail, S, heroBox, heroLabel, SITE_NAME } from './_brand.tsx'
 
 interface Props {
   clientName?: string
@@ -20,33 +19,29 @@ const ContractOtpEmail = ({
   otpCode = '------',
   expiresInMinutes = 10,
 }: Props) => (
-  <Html lang="ar" dir="rtl">
-    <Head />
-    <Preview>رمز التحقق لتوقيع العقد {contractNumber}</Preview>
-    <Body dir="rtl" style={main}>
-      <Container dir="rtl" style={container}>
-        <Heading style={h1}>رمز التحقق لتوقيع العقد</Heading>
-        <Text style={text}>مرحباً {clientName}،</Text>
-        <Text style={text}>
+  <BrandEmail
+    preview={`رمز التحقق لتوقيع العقد ${contractNumber}`}
+    accent="violet"
+    tagline="إدارة العقود الأكاديمية"
+    badge={contractNumber ? `عقد ${contractNumber}` : 'تحقق آمن'}
+    footerNote="إذا لم تطلب هذا الرمز فتجاهل الرسالة؛ لن يتم توقيع العقد دون إدخاله."
+  >
+        <Heading style={S.title}>رمز التحقق لتوقيع العقد</Heading>
+        <Text style={S.greeting}>مرحباً {clientName}،</Text>
+        <Text style={S.text}>
           لإتمام توقيع العقد رقم <strong>{contractNumber}</strong>
           {contractTitle ? <> — {contractTitle}</> : null}، استخدم رمز التحقق التالي:
         </Text>
 
-        <Section style={otpBox}>
+        <Section style={heroBox('violet')}>
+          <Text style={heroLabel('violet')}>رمز التحقق الخاص بك</Text>
           <Text style={otp}>{otpCode}</Text>
         </Section>
 
-        <Text style={text}>
+        <Text style={S.text}>
           الرمز صالح لمدة <strong>{expiresInMinutes} دقائق</strong> فقط ولا يجوز مشاركته مع أي شخص آخر.
         </Text>
-
-        <Hr style={hr} />
-        <Text style={muted}>
-          إذا لم تطلب هذا الرمز، يرجى تجاهل هذه الرسالة. لن يتم توقيع العقد دون إدخال الرمز.
-        </Text>
-      </Container>
-    </Body>
-  </Html>
+  </BrandEmail>
 )
 
 export const template = {
@@ -62,11 +57,4 @@ export const template = {
   },
 } satisfies TemplateEntry
 
-const main = { backgroundColor: '#ffffff', fontFamily: "'IBM Plex Sans Arabic','Tajawal',Arial,sans-serif", direction: 'rtl' as const, textAlign: 'right' as const }
-const container = { direction: 'rtl' as const, textAlign: 'right' as const, padding: '32px 28px', maxWidth: '560px', margin: '0 auto' }
-const h1 = { fontSize: '22px', fontWeight: 700, color: '#0f172a', margin: '0 0 18px', textAlign: 'right' as const }
-const text = { fontSize: '15px', color: '#334155', lineHeight: '1.9', margin: '0 0 14px', textAlign: 'right' as const }
-const otpBox = { background: '#f1f5f9', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '20px', margin: '20px 0', textAlign: 'center' as const }
-const otp = { fontSize: '34px', fontWeight: 700, letterSpacing: '10px', color: '#0f172a', margin: 0, fontFamily: 'monospace' }
-const hr = { border: 'none', borderTop: '1px solid #e2e8f0', margin: '24px 0' }
-const muted = { fontSize: '12px', color: '#94a3b8', textAlign: 'right' as const, margin: 0 }
+const otp = { direction: 'ltr' as const, textAlign: 'center' as const, fontSize: '34px', fontWeight: 700, letterSpacing: '8px', color: '#4c1d95', margin: 0, fontFamily: 'monospace' }
