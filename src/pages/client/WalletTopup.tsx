@@ -291,7 +291,7 @@ const WalletTopup: React.FC = () => {
 
                 <div className="grid grid-cols-2 gap-2">
                   {([
-                    { id: 'instant' as const, title: 'بطاقة فورية', pct: CASHBACK_RATES.instant, color: 'from-primary/15 to-primary/5', accent: 'text-primary' },
+                    { id: 'instant' as const, title: 'الدفع الإلكتروني', pct: CASHBACK_RATES.instant, color: 'from-primary/15 to-primary/5', accent: 'text-primary' },
                     { id: 'manual' as const, title: 'تحويل بنكي', pct: CASHBACK_RATES.manual, color: 'from-emerald-500/15 to-emerald-500/5', accent: 'text-emerald-600 dark:text-emerald-400' },
                   ]).map((r) => {
                     const active = method === r.id;
@@ -399,7 +399,7 @@ const WalletTopup: React.FC = () => {
                 {
                   id: 'instant' as const,
                   icon: Zap,
-                  title: 'دفع فوري بالبطاقة',
+                  title: 'الدفع الإلكتروني',
                   sub: 'مدى • فيزا • ماستر • Apple Pay',
                   badge: 'فوري ⚡',
                   gradient: 'from-primary/10 to-primary/0',
@@ -979,7 +979,7 @@ const WalletTopup: React.FC = () => {
                             طريقة الدفع
                           </div>
                           <div className="text-[12px] font-black text-foreground truncate">
-                            {method === 'instant' ? 'بطاقة فورية' : 'تحويل بنكي'}
+                            {method === 'instant' ? 'الدفع الإلكتروني' : 'تحويل بنكي'}
                           </div>
                         </div>
 
