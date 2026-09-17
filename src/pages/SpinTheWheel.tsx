@@ -115,10 +115,11 @@ const SpinTheWheel = () => {
   };
 
   const nextDateLabel = nextEligibleAt
-    ? new Date(nextEligibleAt).toLocaleDateString("ar-SA-u-ca-gregory", {
+    ? new Date(nextEligibleAt).toLocaleDateString("ar", {
         year: "numeric", month: "long", day: "numeric",
       })
     : "";
+
 
 
   const drawWheel = useCallback((angle: number) => {
@@ -290,14 +291,28 @@ const SpinTheWheel = () => {
       const { data, error } = await supabase.functions.invoke("send-spin-winner", {
         body: { name, email, prize: wonPrize, userIdentifier },
       });
-      if (error) throw error;
-      if (data?.error) {
-        if (data.nextEligibleAt) setNextEligibleAt(data.nextEligibleAt);
-        toast({ title: "تعذّر تسجيل الفوز", description: data.error, variant: "destructive" });
+
+      // الدالة ترجع 429 عند استهلاك المحاولة الشهرية — نقرأ التفاصيل من جسم الرد
+      let payload: any = data;
+      if (error) {
+        const ctx = (error as any)?.context;
+        if (ctx && typeof ctx.text === "function") {
+          try { payload = JSON.parse(await ctx.text()); } catch { payload = null; }
+        }
+        if (!payload?.error) {
+          toast({ title: "تعذّر الإرسال", description: "حاول مرة أخرى بعد لحظات", variant: "destructive" });
+          return;
+        }
+      }
+
+      if (payload?.error) {
+        if (payload.nextEligibleAt) setNextEligibleAt(payload.nextEligibleAt);
+        toast({ title: "تعذّر تسجيل الفوز", description: payload.error, variant: "destructive" });
         return;
       }
-      if (data?.nextEligibleAt) setNextEligibleAt(data.nextEligibleAt);
-      if (data?.claimCode) setClaimCode(data.claimCode);
+
+      if (payload?.nextEligibleAt) setNextEligibleAt(payload.nextEligibleAt);
+      if (payload?.claimCode) setClaimCode(payload.claimCode);
       setEmailSent(true);
       toast({
         title: "وصلت جائزتك إلى بريدك ✉️",
@@ -308,6 +323,7 @@ const SpinTheWheel = () => {
       toast({ title: "حدث خطأ", description: "حاول مرة أخرى لاحقاً", variant: "destructive" });
     } finally { setIsSubmitting(false); }
   };
+
 
 
   return (
