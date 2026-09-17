@@ -213,14 +213,15 @@ const SpinTheWheel = () => {
 
   const spinWheel = () => {
     if (isSpinning) return;
-    if (hasSpunToday) {
+    if (isLocked) {
       toast({
-        title: "تم استخدام المحاولة اليومية",
-        description: "يمكنك المحاولة مرة أخرى غداً",
+        title: "محاولتك الشهرية مُستخدمة",
+        description: `يمكنك اللف مرة أخرى في ${nextDateLabel}`,
         variant: "destructive",
       });
       return;
     }
+
     setIsSpinning(true);
     const spinRotations = Math.random() * 5 + 10;
     const totalAngle = spinRotations * 2 * Math.PI;
