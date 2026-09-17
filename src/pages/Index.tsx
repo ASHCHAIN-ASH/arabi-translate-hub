@@ -7,7 +7,7 @@ import Header from "@/components/Header";
 import SEO from "@/components/SEO";
 import { WorkingHoursBannerRTL } from "@/components/WorkingHoursBannerRTL";
 import { 
-  Bot, Bell, GraduationCap, BookOpen, Users, Award, 
+  GraduationCap, BookOpen, Users, Award, 
   ArrowRight, PlayCircle, Building2, Globe, CheckCircle,
   Star, TrendingUp, Shield, Clock, Languages, Target,
   Sparkles, ChevronRight, Zap, Heart, Brain, MessageCircle, Quote
@@ -41,7 +41,7 @@ const FekrahEduMembershipBanner = lazy(() => import("@/components/FekrahEduMembe
 const ServiceSteps = lazy(() => import("@/components/ServiceSteps"));
 const HomeFinancingSection = lazy(() => import("@/components/home/HomeFinancingSection"));
 const SuccessStoriesCarousel = lazy(() => import("@/components/home/SuccessStoriesCarousel"));
-const SpinWheelBanner = lazy(() => import("@/components/home/SpinWheelBanner"));
+
 
 
 // مكون Loading محسّن
@@ -269,35 +269,35 @@ const Index = () => {
       />
       <WorkingHoursBannerRTL />
       
-      {/* Alert Banner - AI Service */}
+      {/* Alert Banner - عجلة الجوائز */}
       <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="bg-gradient-to-l from-blue-600 to-purple-600 text-white py-2 sm:py-3 px-3 sm:px-4 relative overflow-hidden"
+         initial={{ opacity: 0, y: -20 }}
+         animate={{ opacity: 1, y: 0 }}
+         transition={{ duration: 0.5 }}
+         className="bg-gradient-to-l from-amber-500 via-yellow-500 to-amber-600 text-white py-2 sm:py-3 px-3 sm:px-4 relative overflow-hidden"
       >
-        <div className="absolute inset-0 bg-gradient-to-l from-blue-600/90 to-purple-600/90" />
+        <div className="absolute inset-0 bg-gradient-to-l from-amber-600/90 to-yellow-600/90" />
         <div className="container mx-auto relative">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-center">
-            <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 2, repeat: Infinity }}>
-              <Bell className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-300" />
+            <motion.div animate={{ rotate: [0, 15, -15, 0] }} transition={{ duration: 2, repeat: Infinity }}>
+              <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
             </motion.div>
             <div className="flex-1">
               <p className="text-xs sm:text-sm md:text-base font-semibold mb-0.5">
-                🤖 خدمة جديدة: المراجعة المنهجية بالذكاء الاصطناعي
+                🎁 بمناسبة تجديد الموقع وانطلاقته التجريبية — هدية مجانية عبر عجلة الجوائز
               </p>
               <p className="text-xs sm:text-sm opacity-90 hidden sm:block">
-                قم برفع بحثك واحصل على مراجعة شاملة فورية
+                مزايا وخدمات تدعم رحلتك الأكاديمية — جرّب حظك الآن واكتشف جائزتك!
               </p>
             </div>
             <Button 
               variant="secondary" 
               size="sm"
               className="bg-white/20 hover:bg-white/30 text-white border-white/30 text-xs sm:text-sm px-3 py-1.5 sm:px-4 sm:py-2"
-              onClick={() => navigate('/research/ai-methodology-review')}
+              onClick={() => navigate('/spin-the-wheel')}
             >
-              <Bot className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
-              جرب الآن
+              <Sparkles className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
+              جرّب حظك الآن
             </Button>
           </div>
         </div>
@@ -452,10 +452,7 @@ const Index = () => {
       </section>
 
 
-      {/* بانر عجلة الحظ */}
-      <Suspense fallback={<LoadingSpinner />}>
-        <SpinWheelBanner />
-      </Suspense>
+
 
 
 
