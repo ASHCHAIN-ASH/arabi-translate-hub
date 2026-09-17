@@ -10,7 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { supabase } from "@/data/legacy/client";
-import { Mail, Plus, Edit, Trash2, Send, Eye, Settings } from "lucide-react";
+import { Mail, Plus, Edit, Trash2, Send, Eye, Settings, CheckCircle2, Clock, AlertTriangle, BanIcon, Receipt } from "lucide-react";
+import { InvoiceEmailService, EMAIL_STATUS_AR, EMAIL_TEMPLATE_AR, INVOICE_TEMPLATES, type EmailLogEntry } from "@/utils/invoiceEmailService";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import AdminLayout from "@/components/admin/AdminLayout";
 
@@ -58,10 +59,40 @@ export default function EmailManagement() {
     variables: "{}"
   });
 
+  const [invoiceStats, setInvoiceStats] = useState({ sent: 0, pending: 0, failed: 0, suppressed: 0 });
+  const [systemLogs, setSystemLogs] = useState<EmailLogEntry[]>([]);
+  const [logFilter, setLogFilter] = useState<'all' | 'invoices'>('all');
+
+  const fetchSystemLogs = async () => {
+    try {
+      let q = (supabase.from('email_send_log' as any) as any)
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(100);
+      if (logFilter === 'invoices') q = q.in('template_name', INVOICE_TEMPLATES);
+      const { data } = await q;
+      setSystemLogs((data || []) as EmailLogEntry[]);
+    } catch { setSystemLogs([]); }
+  };
+
   useEffect(() => {
     fetchTemplates();
     fetchEmailLogs();
+    InvoiceEmailService.invoiceEmailStats().then(setInvoiceStats).catch(() => {});
   }, []);
+
+  useEffect(() => { fetchSystemLogs(); }, [logFilter]);
+
+  useEffect(() => {
+    const ch = supabase
+      .channel('admin-email-send-log')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'email_send_log' }, () => {
+        fetchSystemLogs();
+        InvoiceEmailService.invoiceEmailStats().then(setInvoiceStats).catch(() => {});
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [logFilter]);
 
   const fetchTemplates = async () => {
     const { data, error } = await supabase
@@ -335,8 +366,56 @@ export default function EmailManagement() {
         <Tabs defaultValue="templates" className="space-y-4">
           <TabsList>
             <TabsTrigger value="templates">القوالب</TabsTrigger>
+            <TabsTrigger value="system">رسائل النظام والفواتير</TabsTrigger>
             <TabsTrigger value="logs">سجل البريد</TabsTrigger>
           </TabsList>
+
+          <TabsContent value="system" className="space-y-4">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+              <KpiCard icon={CheckCircle2} label="رسائل فواتير مُرسلة" value={invoiceStats.sent} tone="text-emerald-600" bg="bg-emerald-500/10" />
+              <KpiCard icon={Clock} label="قيد الإرسال" value={invoiceStats.pending} tone="text-amber-600" bg="bg-amber-500/10" />
+              <KpiCard icon={AlertTriangle} label="فشل الإرسال" value={invoiceStats.failed} tone="text-destructive" bg="bg-destructive/10" />
+              <KpiCard icon={BanIcon} label="موقوفة (إلغاء اشتراك)" value={invoiceStats.suppressed} tone="text-muted-foreground" bg="bg-muted" />
+            </div>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0">
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Receipt className="h-4 w-4" /> آخر 100 رسالة
+                </CardTitle>
+                <Select value={logFilter} onValueChange={(v) => setLogFilter(v as 'all' | 'invoices')}>
+                  <SelectTrigger className="w-48"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">كل الرسائل</SelectItem>
+                    <SelectItem value="invoices">رسائل الفواتير فقط</SelectItem>
+                  </SelectContent>
+                </Select>
+              </CardHeader>
+              <CardContent>
+                {systemLogs.length === 0 ? (
+                  <p className="py-6 text-center text-sm text-muted-foreground">لا توجد رسائل مسجّلة بعد.</p>
+                ) : (
+                  <div className="space-y-2">
+                    {systemLogs.map((log) => (
+                      <div key={log.id} className="flex items-center justify-between gap-3 rounded-lg border p-3">
+                        <div className="min-w-0">
+                          <div className="text-sm font-semibold">{EMAIL_TEMPLATE_AR[log.template_name] ?? log.template_name}</div>
+                          <div className="truncate text-xs text-muted-foreground" dir="ltr">{log.recipient_email}</div>
+                          {log.error_message && <div className="text-xs text-destructive">{log.error_message}</div>}
+                        </div>
+                        <div className="shrink-0 text-left">
+                          <Badge variant="outline" className="text-[11px]">{EMAIL_STATUS_AR[log.status] ?? log.status}</Badge>
+                          <div className="mt-1 text-[11px] text-muted-foreground">
+                            {new Date(log.created_at).toLocaleString('ar-SA')}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
 
           <TabsContent value="templates" className="space-y-4">
             <div className="grid gap-4">
@@ -420,5 +499,21 @@ export default function EmailManagement() {
         </Tabs>
       </div>
     </AdminLayout>
+  );
+}
+
+function KpiCard({ icon: Icon, label, value, tone, bg }: any) {
+  return (
+    <Card>
+      <CardContent className="flex items-center gap-3 p-4">
+        <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${bg}`}>
+          <Icon className={`h-5 w-5 ${tone}`} />
+        </div>
+        <div className="min-w-0">
+          <div className="text-xs text-muted-foreground">{label}</div>
+          <div className={`text-2xl font-bold ${tone}`}>{value}</div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
