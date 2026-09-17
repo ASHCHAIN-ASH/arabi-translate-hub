@@ -158,7 +158,7 @@ BEGIN
          '💰 طلب شحن محفظة جديد',
          'طلب شحن بمبلغ ' || NEW.amount || ' ر.س بانتظار المراجعة',
          'wallet',
-         '/adminmaster/wallets'
+         '/adminfekrah/wallets'
   FROM public.user_roles ur WHERE ur.role = 'admin';
   RETURN NEW;
 END;

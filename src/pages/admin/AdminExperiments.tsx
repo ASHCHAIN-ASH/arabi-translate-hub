@@ -91,7 +91,7 @@ export default function AdminExperiments() {
           {filtered.map((e) => {
             const s = statusVariant[e.status];
             return (
-              <Card key={e.id} className="cursor-pointer hover:border-primary/50 transition-colors" onClick={() => navigate(`/adminmaster/experiments/${e.id}`)}>
+              <Card key={e.id} className="cursor-pointer hover:border-primary/50 transition-colors" onClick={() => navigate(`/adminfekrah/experiments/${e.id}`)}>
                 <CardHeader className="flex-row items-start justify-between gap-4 space-y-0">
                   <div className="space-y-1">
                     <div className="flex items-center gap-3 flex-wrap">

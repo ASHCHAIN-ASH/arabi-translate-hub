@@ -54,7 +54,7 @@ import AcademicCompetitions from "./pages/AcademicCompetitions";
 import SpinTheWheel from "./pages/SpinTheWheel";
 import StudyToEarn from "./pages/StudyToEarn";
 import Unauthorized from "./pages/Unauthorized";
-import MasterMembership from "./pages/MasterMembership";
+import FekrahMembership from "./pages/FekrahMembership";
 import FAQ from "./pages/FAQ";
 import SuccessStories from "./pages/SuccessStories";
 import ClientGuide from "./pages/ClientGuide";
@@ -145,7 +145,7 @@ import AdminResearchContractDetails from "./pages/admin/AdminResearchContractDet
 import AdminResearchPublicationDetails from "./pages/admin/AdminResearchPublicationDetails";
 import ClientContractView from "./pages/ClientContractView";
 import FinancingHome from "./pages/client/FinancingHome";
-import MasterPayLater from "./pages/MasterPayLater";
+import FekrahPayLater from "./pages/FekrahPayLater";
 import FinancingNew from "./pages/client/FinancingNew";
 import FinancingDetails from "./pages/client/FinancingDetails";
 import FinancingAcknowledgments from "./pages/client/FinancingAcknowledgments";
@@ -301,7 +301,7 @@ const App = () => (
             <Route path="/about-us" element={<AboutUs />} />
              <Route path="/terms-of-service" element={<TermsOfService />} />
              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-              <Route path="/master-membership" element={<MasterMembership />} />
+              <Route path="/master-membership" element={<FekrahMembership />} />
              <Route path="/faq" element={<FAQ />} />
              <Route path="/academic-competitions" element={<AcademicCompetitions />} />
              <Route path="/spin-the-wheel" element={<SpinTheWheel />} />
@@ -330,7 +330,7 @@ const App = () => (
             <Route path="/auth/register" element={<Register />} />
             <Route path="/auth/forgot-password" element={<ForgotPassword />} />
             <Route path="/auth/reset-password" element={<ResetPassword />} />
-            <Route path="/adminmaster/login" element={<AdminLogin />} />
+            <Route path="/adminfekrah/login" element={<AdminLogin />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
             
             {/* Client Dashboard Routes */}
@@ -421,37 +421,37 @@ const App = () => (
             } />
             
             {/* Admin Dashboard Routes - Hidden Path */}
-            <Route path="/adminmaster" element={
+            <Route path="/adminfekrah" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminDashboard />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/financing" element={
+            <Route path="/adminfekrah/financing" element={
               <SimpleProtectedRoute adminOnly>
                 <FinancingAdmin />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/financing/audit" element={
+            <Route path="/adminfekrah/financing/audit" element={
               <SimpleProtectedRoute adminOnly>
                 <FinancingAuditTrail />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/financing/:id" element={
+            <Route path="/adminfekrah/financing/:id" element={
               <SimpleProtectedRoute adminOnly>
                 <FinancingAdminDetails />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/contracts" element={
+            <Route path="/adminfekrah/contracts" element={
               <SimpleProtectedRoute adminOnly>
                 <ContractsSystem />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/contracts/analytics" element={
+            <Route path="/adminfekrah/contracts/analytics" element={
               <SimpleProtectedRoute adminOnly>
                 <ContractsAnalytics />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/contracts/:id" element={
+            <Route path="/adminfekrah/contracts/:id" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminContractDetails />
               </SimpleProtectedRoute>
@@ -464,7 +464,7 @@ const App = () => (
                 <ClientContracts />
               </SimpleProtectedRoute>
             } />
-            <Route path="/master-paylater" element={<MasterPayLater />} />
+            <Route path="/master-paylater" element={<FekrahPayLater />} />
             <Route path="/financing" element={
               <SimpleProtectedRoute requiredRole="client">
                 <FinancingHome />
@@ -504,182 +504,182 @@ const App = () => (
                 <ClientResearchPublication />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/research" element={
+            <Route path="/adminfekrah/research" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminResearchPublications />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/research/contracts" element={
+            <Route path="/adminfekrah/research/contracts" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminResearchContracts />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/research/contracts/:id" element={
+            <Route path="/adminfekrah/research/contracts/:id" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminResearchContractDetails />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/research/:id" element={
+            <Route path="/adminfekrah/research/:id" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminResearchPublicationDetails />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/services" element={
+            <Route path="/adminfekrah/services" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminServices />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/service-orders" element={
+            <Route path="/adminfekrah/service-orders" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminServiceOrders />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/service-orders/:id" element={
+            <Route path="/adminfekrah/service-orders/:id" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminServiceOrderDetails />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/orders" element={
+            <Route path="/adminfekrah/orders" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminOrders />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/invoices" element={
+            <Route path="/adminfekrah/invoices" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminInvoices />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/invoices/:id" element={
+            <Route path="/adminfekrah/invoices/:id" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminInvoiceDetails />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/transactions" element={
+            <Route path="/adminfekrah/transactions" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminTransactions />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/financial" element={
+            <Route path="/adminfekrah/financial" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminFinancial />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/users" element={
+            <Route path="/adminfekrah/users" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminUsers />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/customers" element={
+            <Route path="/adminfekrah/customers" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminCustomers />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/customers/:id" element={
+            <Route path="/adminfekrah/customers/:id" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminCustomerDetails />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/customers/:id/email" element={
+            <Route path="/adminfekrah/customers/:id/email" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminCustomerEmail />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/add-user" element={
+            <Route path="/adminfekrah/add-user" element={
               <SimpleProtectedRoute adminOnly>
                 <AddUser />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/tickets" element={
+            <Route path="/adminfekrah/tickets" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminTickets />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/tickets/:id" element={
+            <Route path="/adminfekrah/tickets/:id" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminTicketDetails />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/inbox" element={
+            <Route path="/adminfekrah/inbox" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminInbox />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/email-notifications" element={
+            <Route path="/adminfekrah/email-notifications" element={
               <SimpleProtectedRoute adminOnly>
                 <EmailNotifications />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/chat" element={
+            <Route path="/adminfekrah/chat" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminChat />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/working-hours" element={
+            <Route path="/adminfekrah/working-hours" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminWorkingHours />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/changelog" element={
+            <Route path="/adminfekrah/changelog" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminChangelog />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/wallets" element={
+            <Route path="/adminfekrah/wallets" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminWallets />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/withdrawals" element={
+            <Route path="/adminfekrah/withdrawals" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminWithdrawals />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/payments" element={
+            <Route path="/adminfekrah/payments" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminPayments />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/memberships" element={
+            <Route path="/adminfekrah/memberships" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminMemberships />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/blog" element={
+            <Route path="/adminfekrah/blog" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminBlog />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/referrals" element={
+            <Route path="/adminfekrah/referrals" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminReferrals />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/growth" element={
+            <Route path="/adminfekrah/growth" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminGrowthAnalytics />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/growth/automation" element={
+            <Route path="/adminfekrah/growth/automation" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminGrowthAutomation />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/growth/automation/rules" element={
+            <Route path="/adminfekrah/growth/automation/rules" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminGrowthAutomationRules />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/experiments" element={
+            <Route path="/adminfekrah/experiments" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminExperiments />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/experiments/:id" element={
+            <Route path="/adminfekrah/experiments/:id" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminExperimentDetail />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/assessments" element={
+            <Route path="/adminfekrah/assessments" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminAssessments />
               </SimpleProtectedRoute>
@@ -687,14 +687,14 @@ const App = () => (
             <Route path="/assessments" element={<AssessmentsList />} />
             <Route path="/assessments/:id/start" element={<AssessmentStart />} />
             <Route path="/assessments/:id/result" element={<AssessmentResult />} />
-            <Route path="/adminmaster/whatsapp" element={<Navigate to="/adminmaster/whatsapp/inbox" replace />} />
-            <Route path="/adminmaster/whatsapp/inbox" element={
+            <Route path="/adminfekrah/whatsapp" element={<Navigate to="/adminfekrah/whatsapp/inbox" replace />} />
+            <Route path="/adminfekrah/whatsapp/inbox" element={
               <SimpleProtectedRoute adminOnly><WhatsappInboxPage /></SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/whatsapp/campaigns" element={
+            <Route path="/adminfekrah/whatsapp/campaigns" element={
               <SimpleProtectedRoute adminOnly><WhatsappCampaignsPage /></SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/whatsapp/analytics" element={
+            <Route path="/adminfekrah/whatsapp/analytics" element={
               <SimpleProtectedRoute adminOnly><WhatsappAnalyticsPage /></SimpleProtectedRoute>
             } />
             <Route path="/membership" element={
@@ -740,10 +740,10 @@ const App = () => (
         {/* Legacy: قسم الطالب القديم (محذوف) — إعادة توجيه ذكية مع إشعار */}
         <Route path="/student" element={<LegacyStudentRedirect />} />
         <Route path="/student/*" element={<LegacyStudentRedirect />} />
-        <Route path="/adminmaster/student-activity" element={<LegacyStudentRedirect />} />
-        <Route path="/adminmaster/student-wallets" element={<LegacyStudentRedirect />} />
-        <Route path="/adminmaster/reward-redemptions" element={<LegacyStudentRedirect />} />
-        <Route path="/adminmaster/reward-rules" element={<LegacyStudentRedirect />} />
+        <Route path="/adminfekrah/student-activity" element={<LegacyStudentRedirect />} />
+        <Route path="/adminfekrah/student-wallets" element={<LegacyStudentRedirect />} />
+        <Route path="/adminfekrah/reward-redemptions" element={<LegacyStudentRedirect />} />
+        <Route path="/adminfekrah/reward-rules" element={<LegacyStudentRedirect />} />
         {/* النسخة القديمة للمحرر الذكي (احتياطي) */}
         <Route path="/research/smart-editor-legacy" element={<SmartEditor />} />
         <Route path="/research/annotated-publishing" element={<AnnotatedPublishing />} />

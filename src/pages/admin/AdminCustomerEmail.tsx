@@ -49,7 +49,7 @@ const AdminCustomerEmail: React.FC = () => {
       <AdminLayout>
         <div className="text-center py-20">
           <p className="text-muted-foreground mb-4">العميل غير موجود</p>
-          <Button onClick={() => navigate('/adminmaster/customers')}>العودة</Button>
+          <Button onClick={() => navigate('/adminfekrah/customers')}>العودة</Button>
         </div>
       </AdminLayout>
     );
@@ -60,7 +60,7 @@ const AdminCustomerEmail: React.FC = () => {
       <AdminLayout>
         <div className="space-y-6" dir="rtl">
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" onClick={() => navigate(`/adminmaster/customers/${customer.id}`)}>
+            <Button variant="ghost" size="icon" onClick={() => navigate(`/adminfekrah/customers/${customer.id}`)}>
               <ArrowRight className="w-5 h-5" />
             </Button>
             <h1 className="text-2xl font-bold">إرسال بريد إلكتروني</h1>
@@ -87,7 +87,7 @@ const AdminCustomerEmail: React.FC = () => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate(`/adminmaster/customers/${customer.id}`)}
+            onClick={() => navigate(`/adminfekrah/customers/${customer.id}`)}
           >
             <ArrowRight className="w-5 h-5" />
           </Button>
@@ -128,7 +128,7 @@ const AdminCustomerEmail: React.FC = () => {
           defaultTo={customer.email}
           onSent={() => {
             toast.success('تم إرسال البريد بنجاح');
-            navigate(`/adminmaster/customers/${customer.id}`);
+            navigate(`/adminfekrah/customers/${customer.id}`);
           }}
         />
       </div>

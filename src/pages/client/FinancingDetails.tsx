@@ -205,7 +205,7 @@ const FinancingDetails: React.FC = () => {
   }, [id, user]);
 
   useEffect(() => {
-    document.title = 'تفاصيل طلب التمويل — Master PayLater';
+    document.title = 'تفاصيل طلب التمويل — Fekrah PayLater';
     load();
   }, [load]);
 
@@ -326,12 +326,12 @@ const FinancingDetails: React.FC = () => {
         .eq('id', user.id)
         .maybeSingle();
 
-      const title = `عقد تمويل Master PayLater — ${app.id.slice(0, 8).toUpperCase()}`;
+      const title = `عقد تمويل Fekrah PayLater — ${app.id.slice(0, 8).toUpperCase()}`;
       // Compute first installment date = today + 30 days
       const firstInstallment = new Date();
       firstInstallment.setDate(firstInstallment.getDate() + 30);
       const firstInstallmentDate = firstInstallment.toISOString().slice(0, 10);
-      const content = `عقد تمويل داخلي — Master PayLater — مبلغ التمويل ${fmt(Number(app.total_amount))} ر.س يُضاف للمحفظة الرقمية لشراء خدمات منصة فكرة، يُسدَّد على ${app.duration_months} قسط شهري بقيمة ${fmt(Number(app.monthly_installment))} ر.س. (سيتم توليد العقد التفصيلي تلقائياً)`;
+      const content = `عقد تمويل داخلي — Fekrah PayLater — مبلغ التمويل ${fmt(Number(app.total_amount))} ر.س يُضاف للمحفظة الرقمية لشراء خدمات منصة فكرة، يُسدَّد على ${app.duration_months} قسط شهري بقيمة ${fmt(Number(app.monthly_installment))} ر.س. (سيتم توليد العقد التفصيلي تلقائياً)`;
 
       const { data: created, error } = await supabase
         .from('contracts')

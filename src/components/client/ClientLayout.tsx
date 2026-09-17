@@ -50,7 +50,7 @@ const navItems: NavItem[] = [
   { name: 'فواتيري', href: '/invoices', icon: FileText },
   { name: 'عقودي', href: '/client/contracts', icon: ScrollText },
   { name: 'محفظتي', href: '/wallet', icon: Wallet },
-  { name: 'التمويل (Master PayLater)', href: '/financing', icon: CreditCard },
+  { name: 'التمويل (Fekrah PayLater)', href: '/financing', icon: CreditCard },
   { name: 'حالة الدفعة الأولى', href: '/financing/down-payments', icon: Receipt },
   { name: 'عضويتي', href: '/membership', icon: Crown },
   { name: 'الإحالات والعمولات', href: '/referrals', icon: Gift },

@@ -51,7 +51,7 @@ const AddUser = () => {
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
       toast.success(`تم إنشاء حساب ${form.full_name} بنجاح`, { duration: 4000 });
-      setTimeout(() => navigate('/adminmaster/users'), 800);
+      setTimeout(() => navigate('/adminfekrah/users'), 800);
     } catch (err: any) {
       toast.error(err.message || 'فشل إنشاء المستخدم');
     } finally {
@@ -73,7 +73,7 @@ const AddUser = () => {
                 <p className="text-sm text-muted-foreground">إنشاء حساب فعلي مع توثيق فوري ودور قابل للتحديد</p>
               </div>
             </div>
-            <Button variant="outline" onClick={() => navigate('/adminmaster/users')}>
+            <Button variant="outline" onClick={() => navigate('/adminfekrah/users')}>
               <ArrowRight className="w-4 h-4 ml-2" /> رجوع
             </Button>
           </CardHeader>

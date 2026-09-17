@@ -566,7 +566,7 @@ export default function TicketDetailView({ ticketId, currentUserId, isAdmin, bac
                   <span className="text-muted-foreground">الحالة</span>
                   <Badge variant="outline" className="text-[10px]">{linked.invoice.status}</Badge>
                 </div>
-                <Button variant="outline" size="sm" className="w-full gap-2" onClick={() => navigate(isAdmin ? `/adminmaster/invoices/${linked.invoice.id}` : `/invoices`)}>
+                <Button variant="outline" size="sm" className="w-full gap-2" onClick={() => navigate(isAdmin ? `/adminfekrah/invoices/${linked.invoice.id}` : `/invoices`)}>
                   <ExternalLink className="w-3 h-3" /> عرض الفاتورة
                 </Button>
               </CardContent>
@@ -582,7 +582,7 @@ export default function TicketDetailView({ ticketId, currentUserId, isAdmin, bac
                   <span className="font-mono text-xs">{linked.order.tracking_id}</span>
                 </div>
                 {linked.order.service_name && <div className="text-xs">{linked.order.service_name}</div>}
-                <Button variant="outline" size="sm" className="w-full gap-2" onClick={() => navigate(isAdmin ? `/adminmaster/service-orders/${linked.order.id}` : `/orders/${linked.order.id}`)}>
+                <Button variant="outline" size="sm" className="w-full gap-2" onClick={() => navigate(isAdmin ? `/adminfekrah/service-orders/${linked.order.id}` : `/orders/${linked.order.id}`)}>
                   <ExternalLink className="w-3 h-3" /> عرض الطلب
                 </Button>
               </CardContent>

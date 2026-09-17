@@ -177,7 +177,7 @@ export default function AdminResearchPublications() {
                     const amount = item.final_amount || item.estimated_amount;
                     const StIcon = st.icon;
                     return (
-                      <TableRow key={item.id} className="hover:bg-muted/40 cursor-pointer" onClick={() => navigate(`/adminmaster/research/${item.id}`)}>
+                      <TableRow key={item.id} className="hover:bg-muted/40 cursor-pointer" onClick={() => navigate(`/adminfekrah/research/${item.id}`)}>
                         <TableCell className="font-mono text-xs">{item.request_number}</TableCell>
                         <TableCell className="font-bold max-w-[260px] truncate">{item.title}</TableCell>
                         <TableCell>
@@ -200,7 +200,7 @@ export default function AdminResearchPublications() {
                           {new Date(item.created_at).toLocaleDateString('ar-SA')}
                         </TableCell>
                         <TableCell onClick={e => e.stopPropagation()}>
-                          <Button size="sm" variant="outline" onClick={() => navigate(`/adminmaster/research/${item.id}`)}>
+                          <Button size="sm" variant="outline" onClick={() => navigate(`/adminfekrah/research/${item.id}`)}>
                             <Eye className="w-4 h-4 ml-1" /> فتح
                           </Button>
                         </TableCell>

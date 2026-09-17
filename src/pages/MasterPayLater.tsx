@@ -99,13 +99,13 @@ const TERMS = [
   { icon: ShieldCheck, title: 'الأهلية', text: 'سعودي/مقيم نظامي · دخل ثابت قابل للإثبات · سجل ائتماني سليم.' },
 ];
 
-const MasterPayLater: React.FC = () => {
+const FekrahPayLater: React.FC = () => {
   const [calcAmount, setCalcAmount] = useState<number>(15000);
   const preview = useMemo(() => computeFinancingPreview(calcAmount), [calcAmount]);
 
   useEffect(() => {
     const prevTitle = document.title;
-    document.title = 'Master PayLater — تمويل بدون فوائد حتى 100,000 ر.س';
+    document.title = 'Fekrah PayLater — تمويل بدون فوائد حتى 100,000 ر.س';
     const setMeta = (name: string, content: string) => {
       let el = document.querySelector(`meta[name="${name}"]`) as HTMLMetaElement | null;
       if (!el) { el = document.createElement('meta'); el.name = name; document.head.appendChild(el); }
@@ -148,7 +148,7 @@ const MasterPayLater: React.FC = () => {
             <div>
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-xl ring-1 ring-white/20 px-4 py-2 mb-6">
                 <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-xs font-bold tracking-wide">Master PayLater · بدون فوائد</span>
+                <span className="text-xs font-bold tracking-wide">Fekrah PayLater · بدون فوائد</span>
               </motion.div>
 
               <motion.h1
@@ -223,7 +223,7 @@ const MasterPayLater: React.FC = () => {
               >
                 <img
                   src={cardImg}
-                  alt="بطاقة Master PayLater"
+                  alt="بطاقة Fekrah PayLater"
                   className="w-full h-auto rounded-3xl shadow-2xl ring-1 ring-white/20"
                   loading="eager"
                   width={1280}
@@ -260,7 +260,7 @@ const MasterPayLater: React.FC = () => {
       <section className="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
           <Badge className="mb-4 bg-primary/10 text-primary border-primary/20 hover:bg-primary/15">
-            <Sparkles className="h-3 w-3 ml-1" /> لماذا Master PayLater
+            <Sparkles className="h-3 w-3 ml-1" /> لماذا Fekrah PayLater
           </Badge>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-3">تجربة بنكية بمعايير عالمية</h2>
           <p className="text-base text-muted-foreground max-w-2xl mx-auto">
@@ -449,7 +449,7 @@ const MasterPayLater: React.FC = () => {
               <Banknote className="h-3 w-3 ml-1" /> مقارنة شفّافة
             </Badge>
             <h2 className="text-3xl sm:text-4xl font-extrabold mb-3">لماذا نحن الخيار الأذكى؟</h2>
-            <p className="text-muted-foreground">قارن بنفسك بين Master PayLater والبنوك التقليدية وشركات التقسيط.</p>
+            <p className="text-muted-foreground">قارن بنفسك بين Fekrah PayLater والبنوك التقليدية وشركات التقسيط.</p>
           </motion.div>
 
           <Card className="overflow-hidden shadow-2xl border-primary/20">
@@ -461,7 +461,7 @@ const MasterPayLater: React.FC = () => {
                     <th className="p-4 font-bold text-center">
                       <div className="flex items-center justify-center gap-1.5">
                         <Sparkles className="h-4 w-4" />
-                        Master PayLater
+                        Fekrah PayLater
                       </div>
                     </th>
                     <th className="p-4 font-bold text-center">
@@ -673,4 +673,4 @@ const MasterPayLater: React.FC = () => {
   );
 };
 
-export default MasterPayLater;
+export default FekrahPayLater;

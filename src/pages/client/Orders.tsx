@@ -47,7 +47,7 @@ const QuoteAction = ({
             title: '✅ تم قبول عرض السعر',
             message: `قبل العميل عرض السعر للطلب ${order.orderNumber} بقيمة ${order.total.toLocaleString()} ر.س`,
             type: 'quote_accepted',
-            link: '/adminmaster/orders',
+            link: '/adminfekrah/orders',
           }))
         );
       }
@@ -79,7 +79,7 @@ const QuoteAction = ({
             title: '❌ تم رفض عرض السعر',
             message: `رفض العميل عرض السعر للطلب ${order.orderNumber}${rejectionReason ? '\nالسبب: ' + rejectionReason : ''}`,
             type: 'quote_rejected',
-            link: '/adminmaster/orders',
+            link: '/adminfekrah/orders',
           }))
         );
       }

@@ -68,7 +68,7 @@ const FinancingFeatures: React.FC = () => {
       <div className="space-y-3 text-center max-w-2xl mx-auto px-2">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 ring-1 ring-primary/20 text-[11px] sm:text-xs font-bold text-primary uppercase tracking-widest">
           <Sparkles className="h-3 w-3" />
-          لماذا Master PayLater؟
+          لماذا Fekrah PayLater؟
         </div>
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-black leading-tight">
           تمويل تعليمي بمعايير{' '}

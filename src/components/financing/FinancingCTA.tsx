@@ -49,7 +49,7 @@ const FinancingCTA: React.FC<FinancingCTAProps> = ({ amount, orderId, invoiceId,
           </div>
           <div>
             <div className="text-xs opacity-80 flex items-center gap-1">
-              <Sparkles className="h-3 w-3" /> Master PayLater
+              <Sparkles className="h-3 w-3" /> Fekrah PayLater
             </div>
             <h3 className="text-lg md:text-xl font-bold">فعّل التمويل الآن</h3>
           </div>

@@ -157,10 +157,10 @@ const AdminDashboard = () => {
   ];
 
   const quickLinks = [
-    { label: 'طلبات الخدمات', href: '/adminmaster/service-orders', icon: Package, count: stats.newOrders, color: 'from-violet-500 to-purple-500' },
-    { label: 'العملاء', href: '/adminmaster/customers', icon: Users, count: stats.totalUsers, color: 'from-cyan-500 to-blue-500' },
-    { label: 'الفواتير', href: '/adminmaster/invoices', icon: FileText, count: stats.overdueInvoices, color: 'from-orange-500 to-pink-500' },
-    { label: 'تذاكر الدعم', href: '/adminmaster/tickets', icon: HelpCircle, count: highPriorityTickets.length, color: 'from-emerald-500 to-teal-500' },
+    { label: 'طلبات الخدمات', href: '/adminfekrah/service-orders', icon: Package, count: stats.newOrders, color: 'from-violet-500 to-purple-500' },
+    { label: 'العملاء', href: '/adminfekrah/customers', icon: Users, count: stats.totalUsers, color: 'from-cyan-500 to-blue-500' },
+    { label: 'الفواتير', href: '/adminfekrah/invoices', icon: FileText, count: stats.overdueInvoices, color: 'from-orange-500 to-pink-500' },
+    { label: 'تذاكر الدعم', href: '/adminfekrah/tickets', icon: HelpCircle, count: highPriorityTickets.length, color: 'from-emerald-500 to-teal-500' },
   ];
 
   const hasRevenueData = monthlyRevenue.some(m => m.revenue > 0);
@@ -405,7 +405,7 @@ const AdminDashboard = () => {
                   </div>
                   أحدث الطلبات
                 </CardTitle>
-                <Link to="/adminmaster/service-orders">
+                <Link to="/adminfekrah/service-orders">
                   <Button variant="ghost" size="sm" className="text-xs h-7 gap-1">
                     <Eye className="w-3 h-3" /> عرض الكل
                   </Button>

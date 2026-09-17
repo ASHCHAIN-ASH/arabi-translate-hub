@@ -127,7 +127,7 @@
 
 ### عضوية فكرة
 ```typescript
-// src/pages/MasterMembership.tsx
+// src/pages/FekrahMembership.tsx
 <SEO 
   title="عضوية فكرة VIP - FekrahEdu | خصومات وخدمات حصرية"
   description="انضم لعضوية فكرة VIP واحصل على خصم 25% على جميع الخدمات، أولوية في التنفيذ، ومستشار أكاديمي مخصص"

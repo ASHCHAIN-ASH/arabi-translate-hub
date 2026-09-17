@@ -1,4 +1,4 @@
-// Master PayLater — OCR for financing documents (national ID, salary certificate)
+// Fekrah PayLater — OCR for financing documents (national ID, salary certificate)
 // Uses Lovable AI Gateway with vision-capable models to extract structured data
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
 

@@ -120,7 +120,7 @@ const FinancingAcknowledgments: React.FC = () => {
   const [profileName, setProfileName] = useState<string>('');
 
   useEffect(() => {
-    document.title = 'الإقرارات الرقمية — Master PayLater';
+    document.title = 'الإقرارات الرقمية — Fekrah PayLater';
   }, []);
 
   // فتح الإقرار المطلوب فقط إذا لم يكن موقّعاً مسبقاً

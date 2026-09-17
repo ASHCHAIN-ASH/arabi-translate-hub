@@ -48,48 +48,48 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     {
       label: 'نظرة عامة',
       items: [
-        { name: 'لوحة التحكم', href: '/adminmaster', icon: LayoutDashboard },
-        { name: 'اللوحة المالية', href: '/adminmaster/financial', icon: BarChart3 },
+        { name: 'لوحة التحكم', href: '/adminfekrah', icon: LayoutDashboard },
+        { name: 'اللوحة المالية', href: '/adminfekrah/financial', icon: BarChart3 },
       ]
     },
     // 2. العمل اليومي - أكثر الأقسام استخدامًا
     {
       label: 'العمل اليومي',
       items: [
-        { name: 'صندوق الوارد', href: '/adminmaster/inbox', icon: Inbox },
-        { name: 'طلبات الخدمات', href: '/adminmaster/service-orders', icon: Package, badge: counts.orders > 0 ? counts.orders.toString() : null },
-        { name: 'الطلبات العامة', href: '/adminmaster/orders', icon: ShoppingCart },
-        { name: 'خدمة العملاء', href: '/adminmaster/tickets', icon: Ticket, badge: counts.tickets > 0 ? counts.tickets.toString() : null },
-        { name: 'المحادثات', href: '/adminmaster/chat', icon: Activity },
+        { name: 'صندوق الوارد', href: '/adminfekrah/inbox', icon: Inbox },
+        { name: 'طلبات الخدمات', href: '/adminfekrah/service-orders', icon: Package, badge: counts.orders > 0 ? counts.orders.toString() : null },
+        { name: 'الطلبات العامة', href: '/adminfekrah/orders', icon: ShoppingCart },
+        { name: 'خدمة العملاء', href: '/adminfekrah/tickets', icon: Ticket, badge: counts.tickets > 0 ? counts.tickets.toString() : null },
+        { name: 'المحادثات', href: '/adminfekrah/chat', icon: Activity },
       ]
     },
     // 3. العملاء والمستخدمين
     {
       label: 'العملاء والمستخدمين',
       items: [
-        { name: 'العملاء', href: '/adminmaster/customers', icon: Users },
-        { name: 'المستخدمين', href: '/adminmaster/users', icon: Settings },
-        { name: 'إضافة مستخدم', href: '/adminmaster/add-user', icon: UserPlus },
+        { name: 'العملاء', href: '/adminfekrah/customers', icon: Users },
+        { name: 'المستخدمين', href: '/adminfekrah/users', icon: Settings },
+        { name: 'إضافة مستخدم', href: '/adminfekrah/add-user', icon: UserPlus },
       ]
     },
     // 4. الفوترة والمدفوعات
     {
       label: 'الفوترة والمدفوعات',
       items: [
-        { name: 'الفواتير', href: '/adminmaster/invoices', icon: Receipt, badge: counts.invoices > 0 ? counts.invoices.toString() : null },
-        { name: 'المعاملات الداخلية', href: '/adminmaster/transactions', icon: CreditCard },
-        { name: 'بوابة المدفوعات', href: '/adminmaster/payments', icon: CreditCard },
-        { name: 'المحافظ الرقمية', href: '/adminmaster/wallets', icon: Wallet },
-        { name: 'طلبات السحب', href: '/adminmaster/withdrawals', icon: Banknote },
-        { name: 'Master PayLater', href: '/adminmaster/financing', icon: Wallet },
+        { name: 'الفواتير', href: '/adminfekrah/invoices', icon: Receipt, badge: counts.invoices > 0 ? counts.invoices.toString() : null },
+        { name: 'المعاملات الداخلية', href: '/adminfekrah/transactions', icon: CreditCard },
+        { name: 'بوابة المدفوعات', href: '/adminfekrah/payments', icon: CreditCard },
+        { name: 'المحافظ الرقمية', href: '/adminfekrah/wallets', icon: Wallet },
+        { name: 'طلبات السحب', href: '/adminfekrah/withdrawals', icon: Banknote },
+        { name: 'Fekrah PayLater', href: '/adminfekrah/financing', icon: Wallet },
       ]
     },
     // 5. التسويق والولاء
     {
       label: 'التسويق والولاء',
       items: [
-        { name: 'العضويات', href: '/adminmaster/memberships', icon: Star },
-        { name: 'الإحالات والعمولات', href: '/adminmaster/referrals', icon: Gift },
+        { name: 'العضويات', href: '/adminfekrah/memberships', icon: Star },
+        { name: 'الإحالات والعمولات', href: '/adminfekrah/referrals', icon: Gift },
         
       ]
     },
@@ -97,10 +97,10 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     {
       label: 'النمو والتحليلات',
       items: [
-        { name: 'تحليلات النمو', href: '/adminmaster/growth', icon: TrendingUp },
-        { name: 'الأتمتة الذكية', href: '/adminmaster/growth/automation', icon: Sparkles },
-        { name: 'تجارب A/B', href: '/adminmaster/experiments', icon: FlaskConical },
-        { name: 'اختبارات المستوى', href: '/adminmaster/assessments', icon: Target },
+        { name: 'تحليلات النمو', href: '/adminfekrah/growth', icon: TrendingUp },
+        { name: 'الأتمتة الذكية', href: '/adminfekrah/growth/automation', icon: Sparkles },
+        { name: 'تجارب A/B', href: '/adminfekrah/experiments', icon: FlaskConical },
+        { name: 'اختبارات المستوى', href: '/adminfekrah/assessments', icon: Target },
         
       ]
     },
@@ -108,33 +108,33 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     {
       label: 'المحتوى والخدمات',
       items: [
-        { name: 'إدارة الخدمات', href: '/adminmaster/services', icon: Briefcase },
-        { name: 'مكتبة الطالب', href: '/adminmaster/student-resources', icon: BookOpen },
-        { name: 'سجل طلبات النشر', href: '/adminmaster/research', icon: BookOpen },
-        { name: 'عقود النشر العلمي', href: '/adminmaster/research/contracts', icon: FileText },
+        { name: 'إدارة الخدمات', href: '/adminfekrah/services', icon: Briefcase },
+        { name: 'مكتبة الطالب', href: '/adminfekrah/student-resources', icon: BookOpen },
+        { name: 'سجل طلبات النشر', href: '/adminfekrah/research', icon: BookOpen },
+        { name: 'عقود النشر العلمي', href: '/adminfekrah/research/contracts', icon: FileText },
       ]
     },
     // 7. العقود والتوثيق
     {
       label: 'العقود والتوثيق',
       items: [
-        { name: 'نظام العقود', href: '/adminmaster/contracts', icon: FileText },
+        { name: 'نظام العقود', href: '/adminfekrah/contracts', icon: FileText },
       ]
     },
     // 8. التواصل والإشعارات
     {
       label: 'التواصل والإشعارات',
       items: [
-        { name: 'الإشعارات البريدية', href: '/adminmaster/email-notifications', icon: Mail },
-        { name: 'إدارة واتساب', href: '/adminmaster/whatsapp', icon: MessageCircle },
+        { name: 'الإشعارات البريدية', href: '/adminfekrah/email-notifications', icon: Mail },
+        { name: 'إدارة واتساب', href: '/adminfekrah/whatsapp', icon: MessageCircle },
       ]
     },
     // 9. إعدادات النظام
     {
       label: 'إعدادات النظام',
       items: [
-        { name: 'ساعات العمل', href: '/adminmaster/working-hours', icon: Clock },
-        { name: 'سجل التغييرات', href: '/adminmaster/changelog', icon: History },
+        { name: 'ساعات العمل', href: '/adminfekrah/working-hours', icon: Clock },
+        { name: 'سجل التغييرات', href: '/adminfekrah/changelog', icon: History },
       ]
     },
   ];
@@ -221,7 +221,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   };
 
   const isActive = (href: string) =>
-    location.pathname === href || (href !== '/adminmaster' && location.pathname.startsWith(href));
+    location.pathname === href || (href !== '/adminfekrah' && location.pathname.startsWith(href));
 
   const SidebarNav = ({ onItemClick }: { onItemClick?: () => void }) => (
     <ScrollArea className="h-full" dir="rtl">
@@ -294,9 +294,9 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             <span className="text-xs font-bold text-foreground">إجراءات سريعة</span>
           </div>
           <div className="space-y-2">
-            <Link to="/adminmaster/add-user" className="block text-xs text-muted-foreground hover:text-primary transition-colors">+ إضافة مستخدم جديد</Link>
-            <Link to="/adminmaster/service-orders" className="block text-xs text-muted-foreground hover:text-primary transition-colors">+ متابعة الطلبات</Link>
-            <Link to="/adminmaster/email-notifications" className="block text-xs text-muted-foreground hover:text-primary transition-colors">+ إرسال إشعار بريدي</Link>
+            <Link to="/adminfekrah/add-user" className="block text-xs text-muted-foreground hover:text-primary transition-colors">+ إضافة مستخدم جديد</Link>
+            <Link to="/adminfekrah/service-orders" className="block text-xs text-muted-foreground hover:text-primary transition-colors">+ متابعة الطلبات</Link>
+            <Link to="/adminfekrah/email-notifications" className="block text-xs text-muted-foreground hover:text-primary transition-colors">+ إرسال إشعار بريدي</Link>
           </div>
         </div>
       </div>
@@ -334,7 +334,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               </Sheet>
 
               {/* Logo */}
-              <Link to="/adminmaster" className="flex items-center gap-2.5">
+              <Link to="/adminfekrah" className="flex items-center gap-2.5">
                 <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center shadow-sm">
                   <Shield className="w-5 h-5 text-primary-foreground" />
                 </div>

@@ -15,7 +15,7 @@
 /admin/*
   X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
 
-/adminmaster/*
+/adminfekrah/*
   X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
 
 /client/*

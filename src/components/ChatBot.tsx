@@ -355,7 +355,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
               />
             </motion.div>
             <div>
-              <h3 className="font-bold text-lg">مساعد ماستر إيدو</h3>
+              <h3 className="font-bold text-lg">مساعد فكرة إيدو</h3>
               <p className="text-xs opacity-90">متاح دائماً لخدمتك</p>
             </div>
           </div>

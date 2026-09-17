@@ -164,7 +164,7 @@ const AdminCustomerDetails: React.FC = () => {
 
       if (existing?.id) {
         toast.success('فتح المحادثة الحالية');
-        navigate('/adminmaster/chat');
+        navigate('/adminfekrah/chat');
         return;
       }
 
@@ -188,7 +188,7 @@ const AdminCustomerDetails: React.FC = () => {
         content: `مرحباً ${customer.name}، كيف يمكننا مساعدتك؟`,
       });
       toast.success('تم بدء المحادثة');
-      navigate('/adminmaster/chat');
+      navigate('/adminfekrah/chat');
     } catch (e: any) {
       toast.error(e?.message || 'تعذر بدء المحادثة');
     }
@@ -228,7 +228,7 @@ const AdminCustomerDetails: React.FC = () => {
     const { error } = await supabase.from('customers').delete().eq('id', customer.id);
     if (error) return toast.error(error.message);
     toast.success('تم الحذف');
-    navigate('/adminmaster/customers');
+    navigate('/adminfekrah/customers');
   };
 
   const openEdit = () => {
@@ -298,7 +298,7 @@ const AdminCustomerDetails: React.FC = () => {
       <AdminLayout>
         <div className="text-center py-20">
           <p className="text-muted-foreground mb-4">العميل غير موجود</p>
-          <Button onClick={() => navigate('/adminmaster/customers')}>العودة</Button>
+          <Button onClick={() => navigate('/adminfekrah/customers')}>العودة</Button>
         </div>
       </AdminLayout>
     );
@@ -310,7 +310,7 @@ const AdminCustomerDetails: React.FC = () => {
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
           className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={() => navigate('/adminmaster/customers')}>
+          <Button variant="ghost" size="icon" onClick={() => navigate('/adminfekrah/customers')}>
             <ArrowRight className="w-5 h-5" />
           </Button>
           <div className="flex-1">
@@ -410,7 +410,7 @@ const AdminCustomerDetails: React.FC = () => {
                   <ActionBtn icon={MessageSquare} label="بدء محادثة داخلية" onClick={startChat} color="text-primary" />
                   <ActionBtn icon={Bell} label="إرسال إشعار" onClick={() => setNotifyOpen(true)} color="text-amber-600" />
                   <ActionBtn icon={MessageCircle} label="واتساب" onClick={openWhatsApp} color="text-emerald-600" />
-                  <ActionBtn icon={Send} label="بريد إلكتروني" onClick={() => navigate(`/adminmaster/customers/${customer.id}/email`)} color="text-blue-600" />
+                  <ActionBtn icon={Send} label="بريد إلكتروني" onClick={() => navigate(`/adminfekrah/customers/${customer.id}/email`)} color="text-blue-600" />
                 </ActionGroup>
 
                 <ActionGroup title="إدارة الحساب">
@@ -461,7 +461,7 @@ const AdminCustomerDetails: React.FC = () => {
                   <TableBody>
                     {orders.map(o => (
                       <TableRow key={o.id} className="cursor-pointer hover:bg-muted/30"
-                        onClick={() => navigate(`/adminmaster/service-orders/${o.id}`)}>
+                        onClick={() => navigate(`/adminfekrah/service-orders/${o.id}`)}>
                         <TableCell className="font-mono text-xs">{o.tracking_id}</TableCell>
                         <TableCell>{o.service_name || '—'}</TableCell>
                         <TableCell><Badge variant="outline">{o.current_status || '—'}</Badge></TableCell>
@@ -488,7 +488,7 @@ const AdminCustomerDetails: React.FC = () => {
                   <TableBody>
                     {invoices.map(i => (
                       <TableRow key={i.id} className="cursor-pointer hover:bg-muted/30"
-                        onClick={() => navigate(`/adminmaster/invoices/${i.id}`)}>
+                        onClick={() => navigate(`/adminfekrah/invoices/${i.id}`)}>
                         <TableCell className="font-mono text-xs">{i.invoice_number}</TableCell>
                         <TableCell>{i.total_amount?.toLocaleString('ar') || '—'}</TableCell>
                         <TableCell>{i.paid_amount?.toLocaleString('ar') || '0'}</TableCell>
@@ -508,7 +508,7 @@ const AdminCustomerDetails: React.FC = () => {
               {conversations.length === 0 ? <Empty msg="لا توجد محادثات" /> : (
                 <div className="divide-y">
                   {conversations.map(c => (
-                    <button key={c.id} onClick={() => navigate('/adminmaster/chat')}
+                    <button key={c.id} onClick={() => navigate('/adminfekrah/chat')}
                       className="w-full text-right p-4 hover:bg-muted/30 transition-colors">
                       <div className="flex items-center justify-between mb-1">
                         <span className="font-semibold text-sm">{c.subject}</span>
@@ -680,7 +680,7 @@ const CustomerTimeline: React.FC<{
       icon: ShoppingCart,
       iconBg: 'bg-amber-500/10',
       iconColor: 'text-amber-600',
-      onClick: () => navigate(`/adminmaster/service-orders/${o.id}`),
+      onClick: () => navigate(`/adminfekrah/service-orders/${o.id}`),
     });
   });
 
@@ -695,7 +695,7 @@ const CustomerTimeline: React.FC<{
       icon: FileText,
       iconBg: 'bg-blue-500/10',
       iconColor: 'text-blue-600',
-      onClick: () => navigate(`/adminmaster/invoices/${i.id}`),
+      onClick: () => navigate(`/adminfekrah/invoices/${i.id}`),
     });
     if ((i.paid_amount || 0) > 0) {
       events.push({
@@ -707,7 +707,7 @@ const CustomerTimeline: React.FC<{
         icon: CreditCard,
         iconBg: 'bg-emerald-500/10',
         iconColor: 'text-emerald-600',
-        onClick: () => navigate(`/adminmaster/invoices/${i.id}`),
+        onClick: () => navigate(`/adminfekrah/invoices/${i.id}`),
       });
     }
   });
@@ -723,7 +723,7 @@ const CustomerTimeline: React.FC<{
       icon: MessageSquare,
       iconBg: 'bg-purple-500/10',
       iconColor: 'text-purple-600',
-      onClick: () => navigate('/adminmaster/chat'),
+      onClick: () => navigate('/adminfekrah/chat'),
     });
   });
 

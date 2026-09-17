@@ -131,7 +131,7 @@ const Header = () => {
                 <DropdownMenuContent align="end" className="w-48 glass border-border/50 rounded-xl p-1">
                   {userRole === 'admin' && (
                     <DropdownMenuItem asChild>
-                      <Link to="/adminmaster" className="flex items-center gap-2 text-sm cursor-pointer">
+                      <Link to="/adminfekrah" className="flex items-center gap-2 text-sm cursor-pointer">
                         <Briefcase className="h-4 w-4" />
                         لوحة التحكم
                       </Link>

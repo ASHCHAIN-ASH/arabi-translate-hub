@@ -184,7 +184,7 @@ export default function AdminTickets() {
                 const Icon = CATEGORY_ICONS[t.category] || TicketIcon;
                 return (
                   <motion.div key={t.id} layout initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} transition={{ delay: Math.min(i * 0.03, 0.3) }}>
-                    <Card className="border-0 shadow-sm hover:shadow-md transition-all cursor-pointer hover:-translate-y-0.5 group" onClick={() => navigate(`/adminmaster/tickets/${t.id}`)}>
+                    <Card className="border-0 shadow-sm hover:shadow-md transition-all cursor-pointer hover:-translate-y-0.5 group" onClick={() => navigate(`/adminfekrah/tickets/${t.id}`)}>
                       <CardContent className="p-4 flex items-start gap-4">
                         <div className={`w-11 h-11 rounded-xl flex items-center justify-center border ${CATEGORY_COLOR[t.category] || CATEGORY_COLOR.general}`}>
                           <Icon className="w-5 h-5" />

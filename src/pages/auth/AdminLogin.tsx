@@ -24,7 +24,7 @@ const AdminLogin = () => {
     if (!user) return;
     
     if (userRole === 'admin') {
-      navigate('/adminmaster', { replace: true });
+      navigate('/adminfekrah', { replace: true });
     } else if (userRole) {
       // Non-admin user trying admin login → send to client dashboard
       toast.error('هذا الحساب ليس حساب إدارة');

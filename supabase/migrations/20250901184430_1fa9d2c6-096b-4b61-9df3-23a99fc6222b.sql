@@ -98,11 +98,11 @@ EXECUTE FUNCTION public.update_updated_at_column();
 INSERT INTO public.email_templates (name, subject, content, template_type, variables) VALUES
 (
   'رسالة ترحيب',
-  'مرحباً بك في موقع ماستر التعليمي',
+  'مرحباً بك في موقع فكرة التعليمي',
   '<h1>أهلاً وسهلاً {name}</h1>
-  <p>نشكرك لانضمامك إلى موقع ماستر التعليمي. نحن سعداء لوجودك معنا!</p>
+  <p>نشكرك لانضمامك إلى موقع فكرة التعليمي. نحن سعداء لوجودك معنا!</p>
   <p>يمكنك الآن الاستفادة من جميع خدماتنا التعليمية والترجمة.</p>
-  <p>مع أطيب التحيات،<br>فريق ماستر التعليمي</p>',
+  <p>مع أطيب التحيات،<br>فريق فكرة التعليمي</p>',
   'welcome',
   ARRAY['name']
 ),
@@ -119,7 +119,7 @@ INSERT INTO public.email_templates (name, subject, content, template_type, varia
     <li>تاريخ التسليم المتوقع: {delivery_date}</li>
   </ul>
   <p>سيتم التواصل معك قريباً لتأكيد التفاصيل.</p>
-  <p>مع أطيب التحيات،<br>فريق ماستر التعليمي</p>',
+  <p>مع أطيب التحيات،<br>فريق فكرة التعليمي</p>',
   'order_confirmation',
   ARRAY['name', 'order_number', 'service_type', 'amount', 'delivery_date']
 ),
@@ -134,7 +134,7 @@ INSERT INTO public.email_templates (name, subject, content, template_type, varia
     <li>الهاتف: +966 50 123 4567</li>
     <li>البريد الإلكتروني: info@fekrahedu.com</li>
   </ul>
-  <p>مع أطيب التحيات،<br>فريق ماستر التعليمي</p>',
+  <p>مع أطيب التحيات،<br>فريق فكرة التعليمي</p>',
   'contact_auto_reply',
   ARRAY['name']
 );

@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Crown, Sparkles, ArrowRight, Gift, Star, Zap, Award, Shield, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const MasterMembershipBanner = () => {
+const FekrahMembershipBanner = () => {
   const membershipTiers = [
     {
       name: 'الفضية',
@@ -310,4 +310,4 @@ const MasterMembershipBanner = () => {
   );
 };
 
-export default MasterMembershipBanner;
+export default FekrahMembershipBanner;

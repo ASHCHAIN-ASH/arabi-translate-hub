@@ -122,7 +122,7 @@ export default function AdminGrowthAutomation() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2 text-muted-foreground text-sm">
-              <Link to="/adminmaster/growth" className="hover:text-primary inline-flex items-center gap-1">
+              <Link to="/adminfekrah/growth" className="hover:text-primary inline-flex items-center gap-1">
                 <ArrowRight className="h-3.5 w-3.5" /> العودة لتحليلات النمو
               </Link>
             </div>
@@ -139,7 +139,7 @@ export default function AdminGrowthAutomation() {
               {running ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
               تحليل الآن
             </Button>
-            <Link to="/adminmaster/growth/automation/rules">
+            <Link to="/adminfekrah/growth/automation/rules">
               <Button variant="outline" className="gap-2">
                 <Settings className="h-4 w-4" /> القواعد
               </Button>

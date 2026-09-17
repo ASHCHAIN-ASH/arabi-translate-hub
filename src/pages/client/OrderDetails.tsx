@@ -242,7 +242,7 @@ const OrderDetails = () => {
               title: '✅ تم قبول عرض السعر',
               message: `قبل العميل عرض السعر للطلب ${order.tracking_id}`,
               type: 'order',
-              link: '/adminmaster/orders',
+              link: '/adminfekrah/orders',
             }))
           );
         }
@@ -275,7 +275,7 @@ const OrderDetails = () => {
             title: '❌ تم رفض عرض السعر',
             message: `رفض العميل عرض السعر للطلب ${order.tracking_id}${rejectionReason ? ` - السبب: ${rejectionReason}` : ''}`,
             type: 'order',
-            link: '/adminmaster/orders',
+            link: '/adminfekrah/orders',
           }))
         );
       }

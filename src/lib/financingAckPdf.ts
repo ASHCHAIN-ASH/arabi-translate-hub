@@ -73,8 +73,8 @@ function buildHtml(rec: AckRecord, applicationCode?: string): HTMLElement {
     <div style="background:#1e3a8a; padding:24px 48px; color:#ffffff;">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <div>
-          <div style="font-size:11px; color:#bfdbfe; letter-spacing:2px; margin-bottom:4px;">MASTER PAYLATER</div>
-          <div style="font-size:22px; font-weight:700;">ماستر باي ليتر</div>
+          <div style="font-size:11px; color:#bfdbfe; letter-spacing:2px; margin-bottom:4px;">FEKRAH PAYLATER</div>
+          <div style="font-size:22px; font-weight:700;">فكرة باي ليتر</div>
         </div>
         <div style="text-align:left;">
           <div style="font-size:11px; color:#bfdbfe; margin-bottom:4px;">DIGITAL ACKNOWLEDGMENT</div>
@@ -166,14 +166,14 @@ function buildHtml(rec: AckRecord, applicationCode?: string): HTMLElement {
       <div style="border:2px solid #1e3a8a; border-radius:6px; padding:16px; background:#f0f9ff;">
         <div style="font-size:12px; font-weight:700; color:#1e3a8a; margin-bottom:8px; text-align:center;">شهادة التوثيق الإلكتروني</div>
         <div style="font-size:11px; color:#334155; line-height:1.9; text-align:justify;">
-          هذه الوثيقة صادرة آلياً من نظام <strong>ماستر باي ليتر</strong> وتُعدّ إقراراً رقمياً موثَّقاً ذا حجّية قانونية كاملة وفق نظام التعاملات الإلكترونية السعودي الصادر بالمرسوم الملكي رقم (م/18) ونظام التنفيذ السعودي رقم (م/53). يمكن التحقق من صحة هذه الوثيقة عبر مطابقة البصمة الرقمية SHA-256 المدوّنة أعلاه مع السجل المحفوظ في قاعدة البيانات.
+          هذه الوثيقة صادرة آلياً من نظام <strong>فكرة باي ليتر</strong> وتُعدّ إقراراً رقمياً موثَّقاً ذا حجّية قانونية كاملة وفق نظام التعاملات الإلكترونية السعودي الصادر بالمرسوم الملكي رقم (م/18) ونظام التنفيذ السعودي رقم (م/53). يمكن التحقق من صحة هذه الوثيقة عبر مطابقة البصمة الرقمية SHA-256 المدوّنة أعلاه مع السجل المحفوظ في قاعدة البيانات.
         </div>
       </div>
     </div>
 
     <!-- ذيل رسمي -->
     <div style="background:#1e3a8a; color:#bfdbfe; padding:14px 48px; font-size:10px; display:flex; justify-content:space-between;">
-      <div>© ماستر باي ليتر — جميع الحقوق محفوظة</div>
+      <div>© فكرة باي ليتر — جميع الحقوق محفوظة</div>
       <div>وثيقة رقم ${refNo}</div>
     </div>
   `;

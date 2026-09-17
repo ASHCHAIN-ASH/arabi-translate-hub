@@ -318,7 +318,7 @@ const AdminServiceOrders = () => {
 
   const navigate = useNavigate();
   const openOrderDetails = (order: ServiceOrder) => {
-    navigate(`/adminmaster/service-orders/${order.id}`);
+    navigate(`/adminfekrah/service-orders/${order.id}`);
   };
 
   const stats = {

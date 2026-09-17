@@ -99,7 +99,7 @@ const AdminCustomers = () => {
 
       if (existing?.id) {
         toast.success('فتح المحادثة الحالية');
-        navigate('/adminmaster/chat');
+        navigate('/adminfekrah/chat');
         return;
       }
 
@@ -123,7 +123,7 @@ const AdminCustomers = () => {
         content: `مرحباً ${customer.name}، كيف يمكننا مساعدتك؟`,
       });
       toast.success('تم بدء المحادثة');
-      navigate('/adminmaster/chat');
+      navigate('/adminfekrah/chat');
     } catch (e: any) {
       toast.error(e?.message || 'تعذر بدء المحادثة');
     }
@@ -750,7 +750,7 @@ const AdminCustomers = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.05, duration: 0.3 }}
-                        onClick={() => navigate(`/adminmaster/customers/${customer.id}`)}
+                        onClick={() => navigate(`/adminfekrah/customers/${customer.id}`)}
                         className="hover:bg-muted/30 transition-all duration-200 border-b group cursor-pointer"
                       >
                         <TableCell className="py-4 px-4">
@@ -903,14 +903,14 @@ const AdminCustomers = () => {
                                    عرض السجلات
                                  </DropdownMenuLabel>
                                  <DropdownMenuItem
-                                   onClick={() => navigate(`/adminmaster/orders?customer=${customer.user_id || ''}`)}
+                                   onClick={() => navigate(`/adminfekrah/orders?customer=${customer.user_id || ''}`)}
                                    className="cursor-pointer gap-2 py-2 text-xs"
                                  >
                                    <ShoppingCart className="h-3.5 w-3.5 text-indigo-600" />
                                    عرض طلبات العميل
                                  </DropdownMenuItem>
                                  <DropdownMenuItem
-                                   onClick={() => navigate(`/adminmaster/invoices?customer=${customer.id}`)}
+                                   onClick={() => navigate(`/adminfekrah/invoices?customer=${customer.id}`)}
                                    className="cursor-pointer gap-2 py-2 text-xs"
                                  >
                                    <FileText className="h-3.5 w-3.5 text-violet-600" />

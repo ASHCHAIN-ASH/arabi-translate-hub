@@ -221,7 +221,7 @@ const FinancingAuditTrail = () => {
                         asChild
                         className="text-xs h-7"
                       >
-                        <Link to={`/adminmaster/financing/${r.application_id}`}>
+                        <Link to={`/adminfekrah/financing/${r.application_id}`}>
                           عرض الطلب
                           <ArrowUpRight className="w-3 h-3 mr-1" />
                         </Link>

@@ -104,7 +104,7 @@ const FinancingHome: React.FC = () => {
   };
 
   useEffect(() => {
-    document.title = 'Master PayLater — التمويل | منصة فكرة';
+    document.title = 'Fekrah PayLater — التمويل | منصة فكرة';
   }, []);
 
   const load = async () => {
@@ -438,7 +438,7 @@ const FinancingHome: React.FC = () => {
                     </h3>
                     <p className="text-sm text-muted-foreground mb-4">
                       {apps.length === 0
-                        ? 'ابدأ أول طلب تمويل لك عبر Master PayLater'
+                        ? 'ابدأ أول طلب تمويل لك عبر Fekrah PayLater'
                         : 'جرّب تبويبًا آخر أو أنشئ طلبًا جديدًا'}
                     </p>
                     <Button asChild>

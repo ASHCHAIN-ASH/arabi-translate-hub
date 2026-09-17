@@ -39,7 +39,7 @@ const LegacyStudentRedirect: React.FC = () => {
   }
 
   // أدمن → لوحة الأدمن، عميل → لوحة العميل
-  const target = userRole === 'admin' ? '/adminmaster' : '/dashboard';
+  const target = userRole === 'admin' ? '/adminfekrah' : '/dashboard';
   return <Navigate to={target} replace />;
 };
 

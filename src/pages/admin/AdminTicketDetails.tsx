@@ -9,7 +9,7 @@ export default function AdminTicketDetails() {
   if (!id || !user) return null;
   return (
     <AdminLayout>
-      <TicketDetailView ticketId={id} currentUserId={user.id} isAdmin backTo="/adminmaster/tickets" displayName={user.email || 'الدعم'} />
+      <TicketDetailView ticketId={id} currentUserId={user.id} isAdmin backTo="/adminfekrah/tickets" displayName={user.email || 'الدعم'} />
     </AdminLayout>
   );
 }

@@ -57,7 +57,7 @@ interface Props {
 }
 
 const FinancingJourneyShowcase: React.FC<Props> = ({
-  title = 'رحلتك مع تمويل ماستر',
+  title = 'رحلتك مع تمويل فكرة',
   subtitle = 'ثلاث خطوات بسيطة تفصلك عن تفعيل رصيدك التعليمي.',
 }) => {
   const reduce = useReducedMotion();

@@ -160,7 +160,7 @@ export default function AdminInvoices() {
                 <TableBody>
                   {filtered.map((inv) => (
                     <TableRow key={inv.id}>
-                      <TableCell className="font-bold"><Link to={`/adminmaster/invoices/${inv.id}`} className="text-primary hover:underline">{inv.invoice_number}</Link></TableCell>
+                      <TableCell className="font-bold"><Link to={`/adminfekrah/invoices/${inv.id}`} className="text-primary hover:underline">{inv.invoice_number}</Link></TableCell>
                       <TableCell>
                         <div className="font-medium flex items-center gap-1.5 flex-wrap">
                           <span>{inv.customer_name ?? '-'}</span>
@@ -201,7 +201,7 @@ export default function AdminInvoices() {
             <Card key={inv.id} className="border-0 shadow-md">
               <CardContent className="p-4 space-y-3">
                 <div className="flex items-center justify-between gap-2">
-                  <Link to={`/adminmaster/invoices/${inv.id}`} className="font-bold text-primary">{inv.invoice_number}</Link>
+                  <Link to={`/adminfekrah/invoices/${inv.id}`} className="font-bold text-primary">{inv.invoice_number}</Link>
                   <Badge className={InvoiceService.statusColor(inv.status)}>{InvoiceService.statusLabel(inv.status)}</Badge>
                 </div>
                 <div className="text-sm">
@@ -221,7 +221,7 @@ export default function AdminInvoices() {
                   <div><div className="text-muted-foreground">المتبقي</div><div className="font-bold text-red-600">{InvoiceService.formatCurrency(inv.remaining_amount, inv.currency)}</div></div>
                 </div>
                 <div className="flex gap-2">
-                  <Button size="sm" variant="outline" className="flex-1" asChild><Link to={`/adminmaster/invoices/${inv.id}`}><Eye className="w-3 h-3 ml-1" />عرض</Link></Button>
+                  <Button size="sm" variant="outline" className="flex-1" asChild><Link to={`/adminfekrah/invoices/${inv.id}`}><Eye className="w-3 h-3 ml-1" />عرض</Link></Button>
                   <Button size="sm" variant="outline" className="flex-1" onClick={() => handleSend(inv)}>
                     <Mail className="w-3 h-3 ml-1" />
                     إرسال
@@ -281,7 +281,7 @@ function RowActions({ inv, onEdit, onPay, onDelete, onPrint, onDownload, onSend 
     <DropdownMenu>
       <DropdownMenuTrigger asChild><Button variant="ghost" size="icon"><MoreVertical className="w-4 h-4" /></Button></DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem asChild><Link to={`/adminmaster/invoices/${inv.id}`}><Eye className="w-4 h-4 ml-2" />التفاصيل</Link></DropdownMenuItem>
+        <DropdownMenuItem asChild><Link to={`/adminfekrah/invoices/${inv.id}`}><Eye className="w-4 h-4 ml-2" />التفاصيل</Link></DropdownMenuItem>
         <DropdownMenuItem onClick={onEdit}><Edit className="w-4 h-4 ml-2" />تعديل</DropdownMenuItem>
         <DropdownMenuItem onClick={onPay}><CreditCard className="w-4 h-4 ml-2" />دفعة</DropdownMenuItem>
         <DropdownMenuItem onClick={onSend}>

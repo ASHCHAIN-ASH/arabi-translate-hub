@@ -97,7 +97,7 @@ export default function AdminInvoiceDetails() {
   const handleDelete = async () => {
     if (!invoice) return;
     if (!confirm(`حذف الفاتورة ${invoice.invoice_number}؟`)) return;
-    try { await InvoiceService.remove(invoice.id); toast.success('تم الحذف'); navigate('/adminmaster/invoices'); }
+    try { await InvoiceService.remove(invoice.id); toast.success('تم الحذف'); navigate('/adminfekrah/invoices'); }
     catch (e: any) { toast.error('فشل الحذف', { description: e.message }); }
   };
 
@@ -111,7 +111,7 @@ export default function AdminInvoiceDetails() {
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" asChild><Link to="/adminmaster/invoices"><ArrowRight className="w-5 h-5" /></Link></Button>
+            <Button variant="ghost" size="icon" asChild><Link to="/adminfekrah/invoices"><ArrowRight className="w-5 h-5" /></Link></Button>
             <div>
               <h1 className="text-xl lg:text-2xl font-bold flex items-center gap-2"><FileText className="w-6 h-6 text-primary" />{invoice.invoice_number}</h1>
               <div className="flex items-center gap-2 mt-1">
@@ -157,7 +157,7 @@ export default function AdminInvoiceDetails() {
                 <CardHeader className="pb-3"><CardTitle className="text-sm flex items-center gap-2"><Package className="w-4 h-4 text-primary" />الطلب المرتبط</CardTitle></CardHeader>
                 <CardContent className="text-sm">
                   {order ? (
-                    <Link to={`/adminmaster/service-orders/${order.id}`} className="text-primary hover:underline">
+                    <Link to={`/adminfekrah/service-orders/${order.id}`} className="text-primary hover:underline">
                       <div className="font-bold">{order.tracking_id}</div>
                       <div className="text-muted-foreground">{order.service_name ?? '-'}</div>
                       <div className="text-xs mt-1">الحالة: {orderStatusLabel(order.current_status)}</div>

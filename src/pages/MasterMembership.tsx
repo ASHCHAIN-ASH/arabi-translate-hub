@@ -24,7 +24,7 @@ import { WorkingHoursBannerRTL } from "@/components/WorkingHoursBannerRTL";
 import MembershipSubscriptionForm from "@/components/MembershipSubscriptionForm";
 
 import Footer from '@/components/Footer';
-const MasterMembership = () => {
+const FekrahMembership = () => {
   const [selectedPlan, setSelectedPlan] = useState<any>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
@@ -976,4 +976,4 @@ const MasterMembership = () => {
   );
 };
 
-export default MasterMembership;
+export default FekrahMembership;

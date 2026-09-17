@@ -41,7 +41,7 @@ const Login = () => {
 
   useEffect(() => {
     if (!authLoading && user) {
-      navigate(userRole === 'admin' ? '/adminmaster' : (nextPath || '/dashboard'), { replace: true });
+      navigate(userRole === 'admin' ? '/adminfekrah' : (nextPath || '/dashboard'), { replace: true });
     }
   }, [authLoading, user, userRole, navigate, nextPath]);
 

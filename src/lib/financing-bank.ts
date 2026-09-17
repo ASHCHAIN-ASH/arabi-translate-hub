@@ -1,4 +1,4 @@
-// Master PayLater — Bank account for manual transfers
+// Fekrah PayLater — Bank account for manual transfers
 // IBAN ثابت للتحويلات اليدوية (الدفعة الأولى)
 export const MASTER_PAYLATER_BANK = {
   bankName: 'البنك الأهلي السعودي (SNB)',

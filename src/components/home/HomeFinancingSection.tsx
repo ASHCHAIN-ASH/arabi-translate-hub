@@ -28,7 +28,7 @@ import researcherWorking from '@/assets/financing-researcher-working.jpg';
 import signingContract from '@/assets/financing-signing-contract.jpg';
 
 /**
- * قسم Master PayLater للصفحة الرئيسية — نسخة موسّعة
+ * قسم Fekrah PayLater للصفحة الرئيسية — نسخة موسّعة
  * - واقعي · تشجيعي · تفاعلي · بصور حقيقية
  */
 
@@ -163,7 +163,7 @@ const HomeFinancingSection: React.FC = () => {
         >
           <Badge className="mb-4 bg-amber-400/15 text-amber-200 border-amber-300/30 px-4 py-1.5 text-xs">
             <Sparkles className="w-3.5 h-3.5 ml-1" />
-            Master PayLater · ممكّنك أكاديمياً
+            Fekrah PayLater · ممكّنك أكاديمياً
           </Badge>
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 leading-tight">
             لا تؤجّل حلمك الأكاديمي
@@ -216,7 +216,7 @@ const HomeFinancingSection: React.FC = () => {
             <div className="relative rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/10 group">
               <img
                 src={paylaterCard}
-                alt="بطاقة Master PayLater للتمويل الأكاديمي"
+                alt="بطاقة Fekrah PayLater للتمويل الأكاديمي"
                 className="w-full h-full object-cover aspect-[16/10] group-hover:scale-105 transition-transform duration-700"
                 loading="lazy"
                 width={1024}
@@ -248,7 +248,7 @@ const HomeFinancingSection: React.FC = () => {
             <div className="relative rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/10 aspect-[16/10]">
               <img
                 src={researcherWorking}
-                alt="باحث سعودي يستخدم تمويل Master PayLater"
+                alt="باحث سعودي يستخدم تمويل Fekrah PayLater"
                 className="absolute inset-0 w-full h-full object-cover"
                 loading="lazy"
                 width={1024}
@@ -585,7 +585,7 @@ const HomeFinancingSection: React.FC = () => {
         >
           <img
             src={handshakeTrust}
-            alt="ثقة وشراكة Master PayLater"
+            alt="ثقة وشراكة Fekrah PayLater"
             className="w-full h-64 sm:h-80 object-cover"
             loading="lazy"
             width={1280}
@@ -605,7 +605,7 @@ const HomeFinancingSection: React.FC = () => {
                 </h3>
                 <p className="text-sm sm:text-base text-white/80 max-w-xl leading-relaxed">
                   انضم لـ <strong className="text-amber-300 tabular-nums">2,400+</strong> باحث وطالب
-                  استفادوا من تمويل Master PayLater — لا تدع الميزانية تعرقل طموحك.
+                  استفادوا من تمويل Fekrah PayLater — لا تدع الميزانية تعرقل طموحك.
                 </p>
               </div>
               <div className="flex flex-col gap-2">

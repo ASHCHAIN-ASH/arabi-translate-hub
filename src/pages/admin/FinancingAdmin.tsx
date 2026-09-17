@@ -386,7 +386,7 @@ const FinancingAdmin: React.FC = () => {
                   <Sparkles className="w-4 h-4 text-primary animate-pulse" />
                 </h1>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  إدارة طلبات Master PayLater • مزامنة لحظية مع لوحة العميل والواتساب
+                  إدارة طلبات Fekrah PayLater • مزامنة لحظية مع لوحة العميل والواتساب
                 </p>
                 <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                   <span className="inline-flex items-center gap-1.5 text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
@@ -405,7 +405,7 @@ const FinancingAdmin: React.FC = () => {
             </div>
             <div className="flex items-center gap-2">
               <Button asChild variant="outline" size="sm" className="gap-1.5 h-8">
-                <Link to="/adminmaster/financing/audit">
+                <Link to="/adminfekrah/financing/audit">
                   <Activity className="w-3.5 h-3.5" /> سجل التدقيق
                 </Link>
               </Button>
@@ -534,7 +534,7 @@ const FinancingAdmin: React.FC = () => {
                           #{selected.id.slice(0, 8).toUpperCase()}
                         </p>
                         <Button asChild variant="ghost" size="sm" className="h-6 px-2 gap-1 text-xs">
-                          <Link to={`/adminmaster/financing/${selected.id}`}>
+                          <Link to={`/adminfekrah/financing/${selected.id}`}>
                             <ExternalLink className="w-3 h-3" /> عرض كامل
                           </Link>
                         </Button>

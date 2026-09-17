@@ -296,7 +296,7 @@ const FinancingNew: React.FC = () => {
   ]);
 
   useEffect(() => {
-    document.title = 'طلب تمويل جديد — Master PayLater';
+    document.title = 'طلب تمويل جديد — Fekrah PayLater';
   }, []);
 
   // ===== Draft autosave (localStorage) — silent debounced + manual save =====
@@ -1506,8 +1506,8 @@ const FinancingNew: React.FC = () => {
                     icon={ScrollText}
                     checked={agreed.terms}
                     onChange={(v) => setAgreed((a) => ({ ...a, terms: v }))}
-                    title="الموافقة على شروط Master PayLater"
-                    text="أوافق على كافة شروط وأحكام Master PayLater وعلى توقيع العقد إلكترونيًا بصفة مُلزِمة بعد موافقة الإدارة."
+                    title="الموافقة على شروط Fekrah PayLater"
+                    text="أوافق على كافة شروط وأحكام Fekrah PayLater وعلى توقيع العقد إلكترونيًا بصفة مُلزِمة بعد موافقة الإدارة."
                   />
                   <AckRow
                     icon={ShieldCheck}

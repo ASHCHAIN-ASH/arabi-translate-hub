@@ -5,7 +5,7 @@ import {
 } from 'npm:@react-email/components@0.0.22'
 import type { TemplateEntry } from './registry.ts'
 
-const SITE_NAME = 'Master PayLater'
+const SITE_NAME = 'Fekrah PayLater'
 const BRAND_COLOR = '#0f5132'
 const ACCENT = '#198754'
 

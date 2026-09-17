@@ -10,7 +10,7 @@ Crawl-delay: 1
 
 # Block private/authenticated areas
 Disallow: /admin/
-Disallow: /adminmaster/
+Disallow: /adminfekrah/
 Disallow: /client/
 Disallow: /platform/
 Disallow: /workspace/
