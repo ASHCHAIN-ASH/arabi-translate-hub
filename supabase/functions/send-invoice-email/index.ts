@@ -164,7 +164,8 @@ Deno.serve(async (req) => {
     await admin.from("invoice_timeline").insert({
       invoice_id: invoice.id,
       action_type: "email_sent",
-      description: `تم إرسال بريد (${event}) إلى ${recipient}`,
+      action_label: "إرسال بريد إلكتروني",
+      action_description: `تم إرسال بريد (${event}) إلى ${recipient}`,
       metadata: { event, recipient, template: templateName },
     }).then(() => {}, () => {});
 
