@@ -1,0 +1,63 @@
+ALTER TABLE ONLY public.contract_signatures REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.contract_timeline REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.contracts REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.customers REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.deadline_reminders REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.financing_applications REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.financing_documents REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.financing_installments REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.financing_payment_receipts REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.financing_status_logs REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.inbox_messages REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.inbox_notes REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.inbox_replies REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.invoice_payments REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.invoice_timeline REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.invoices REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.order_attachments REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.profiles REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.service_order_admin_notes REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.service_order_messages REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.service_order_timeline REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.service_orders REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.study_sessions REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.ticket_attachments REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.ticket_messages REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.ticket_timeline REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.tickets REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.user_inbox_notifications REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.user_roles REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.wallet_topup_requests REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.wallet_transactions REPLICA IDENTITY FULL;
+
+ALTER TABLE ONLY public.wallets REPLICA IDENTITY FULL;
