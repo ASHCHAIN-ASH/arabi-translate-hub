@@ -40,7 +40,6 @@ import inquiryTeamImg from "@/assets/home-inquiry-team.jpg";
 const ServicesShowcase = lazy(() => import("@/components/ServicesShowcase"));
 const FekrahEduMembershipBanner = lazy(() => import("@/components/FekrahEduMembershipBanner"));
 const ServiceSteps = lazy(() => import("@/components/ServiceSteps"));
-const HomeFinancingSection = lazy(() => import("@/components/home/HomeFinancingSection"));
 const SuccessStoriesCarousel = lazy(() => import("@/components/home/SuccessStoriesCarousel"));
 
 
@@ -1167,11 +1166,6 @@ const Index = () => {
       {/* كاروسيل قصص النجاح بصور حقيقية */}
       <Suspense fallback={<LoadingSpinner />}>
         <SuccessStoriesCarousel />
-      </Suspense>
-
-      {/* قسم FekrahEdu PayLater — تمويل أكاديمي تفاعلي */}
-      <Suspense fallback={<LoadingSpinner />}>
-        <HomeFinancingSection />
       </Suspense>
 
       {/* Call to Action النهائي - بصورة حرم جامعي حقيقية */}

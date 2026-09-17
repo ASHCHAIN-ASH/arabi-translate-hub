@@ -1,8 +1,7 @@
+import { useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
 import {
   BellRing,
-  ArrowLeft,
   Sparkles,
   Clock,
   Wallet,
@@ -11,10 +10,14 @@ import {
   FileCheck,
   CreditCard,
   BadgePercent,
+  CheckCircle2,
+  Loader2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
+import ClientLayout from '@/components/client/ClientLayout';
+import { useAuth } from '@/components/SimpleAuthProvider';
+import { useToast } from '@/hooks/use-toast';
+import { financingInterestsRepository } from '@/data/repositories';
 
 const FINANCING_FEATURES = [
   { icon: Wallet, label: 'ادفع لاحقًا وقسّط على دفعات مريحة' },
@@ -26,39 +29,84 @@ const FINANCING_FEATURES = [
 ];
 
 /**
- * صفحة «قريبًا» لنظام التمويل (FekrahEdu PayLater).
- * تعرض على /financing حتى اكتمال الإطلاق، وتحافظ على نفس هوية قالب «قريبًا».
+ * صفحة «قريبًا» لنظام التمويل داخل لوحة العميل.
  */
 export default function FinancingComingSoon() {
-  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { toast } = useToast();
   const reduceMotion = useReducedMotion();
+  const [checkingInterest, setCheckingInterest] = useState(true);
+  const [submittingInterest, setSubmittingInterest] = useState(false);
+  const [isInterested, setIsInterested] = useState(false);
   const readiness = 82;
 
   const orbit = reduceMotion
     ? { duration: 0, repeat: 0 }
     : { duration: 18, repeat: Infinity, ease: 'linear' as const };
 
+  useEffect(() => {
+    let active = true;
+
+    const checkInterest = async () => {
+      if (!user?.id) return;
+      try {
+        const record = await financingInterestsRepository.findForUser(user.id);
+        if (active) setIsInterested(Boolean(record));
+      } catch {
+        if (active) setIsInterested(false);
+      } finally {
+        if (active) setCheckingInterest(false);
+      }
+    };
+
+    void checkInterest();
+    return () => {
+      active = false;
+    };
+  }, [user?.id]);
+
+  const registerInterest = async () => {
+    if (!user?.id || !user.email || isInterested) return;
+    setSubmittingInterest(true);
+    try {
+      const customerName = user.user_metadata?.full_name || user.email.split('@')[0] || 'عميل FekrahEdu';
+      await financingInterestsRepository.register(user.id, customerName, user.email);
+      setIsInterested(true);
+      toast({
+        title: 'تم تسجيل اهتمامك',
+        description: 'سنرسل لك إشعارًا على بريد حسابك فور إتاحة نظام التمويل.',
+      });
+    } catch {
+      toast({
+        title: 'تعذّر تسجيل الاهتمام',
+        description: 'حاول مرة أخرى بعد قليل.',
+        variant: 'destructive',
+      });
+    } finally {
+      setSubmittingInterest(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen flex flex-col bg-background" dir="rtl">
-      <Header />
-      <main className="flex-1">
-        <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-20">
+    <ClientLayout>
+      <main className="min-h-[calc(100vh-4rem)] bg-background p-3 sm:p-5 lg:p-6" dir="rtl">
+        <section className="mx-auto max-w-7xl py-4 md:py-8">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: 'easeOut' }}
-            className="relative rounded-[2rem] p-[1.5px] overflow-hidden bg-gradient-to-l from-primary/40 via-secondary/40 to-accent/40 shadow-2xl"
+            className="relative overflow-hidden rounded-3xl border border-primary/25 bg-card shadow-2xl"
           >
             {!reduceMotion && (
               <motion.div
                 aria-hidden
                 animate={{ rotate: 360 }}
                 transition={{ duration: 26, repeat: Infinity, ease: 'linear' }}
-                className="pointer-events-none absolute -inset-1/2 bg-[conic-gradient(from_0deg,transparent_0deg,hsl(var(--primary)/0.35)_60deg,transparent_140deg,hsl(var(--secondary)/0.35)_220deg,transparent_300deg)]"
+                className="pointer-events-none absolute -inset-1/2 bg-[conic-gradient(from_0deg,transparent_0deg,hsl(var(--primary)/0.22)_60deg,transparent_140deg,hsl(var(--secondary)/0.22)_220deg,transparent_300deg)]"
               />
             )}
 
-            <div className="relative bg-card/95 backdrop-blur-xl rounded-[calc(2rem-1.5px)] overflow-hidden">
+            <div className="relative overflow-hidden bg-card/95 backdrop-blur-xl">
               <div
                 aria-hidden
                 className="pointer-events-none absolute inset-0 opacity-[0.06]"
@@ -143,30 +191,32 @@ export default function FinancingComingSoon() {
                     </div>
                   </div>
 
-                  {/* أزرار الإجراء */}
+                   {/* تسجيل الاهتمام */}
                   <motion.div
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.5, duration: 0.6 }}
                     className="mt-8 flex flex-col gap-3 sm:flex-row"
                   >
-                    <Button
-                      size="lg"
-                      className="rounded-2xl bg-gradient-to-l from-primary to-secondary px-7 py-6 text-base font-bold shadow-lg transition-all duration-300 hover:opacity-90"
-                      onClick={() => navigate('/contact')}
-                    >
-                      <BellRing className="ml-2 h-5 w-5" />
-                      نبّهني عند الإطلاق
-                    </Button>
-                    <Button
-                      size="lg"
-                      variant="outline"
-                      className="rounded-2xl border-2 border-primary/25 px-7 py-6 text-base font-bold text-primary hover:bg-primary/5"
-                      onClick={() => navigate('/order-now')}
-                    >
-                      اطلب خدمتك الآن
-                      <ArrowLeft className="mr-2 h-5 w-5" />
-                    </Button>
+                     <Button
+                       size="lg"
+                       disabled={checkingInterest || submittingInterest || isInterested}
+                       className="min-w-52 rounded-2xl bg-gradient-to-l from-primary to-secondary px-7 py-6 text-base font-bold shadow-lg transition-all duration-300 hover:opacity-90"
+                       onClick={registerInterest}
+                     >
+                       {checkingInterest || submittingInterest ? (
+                         <Loader2 className="ml-2 h-5 w-5 animate-spin" />
+                       ) : isInterested ? (
+                         <CheckCircle2 className="ml-2 h-5 w-5" />
+                       ) : (
+                         <BellRing className="ml-2 h-5 w-5" />
+                       )}
+                       {isInterested ? 'تم تسجيل اهتمامك' : 'سجّل اهتمامك'}
+                     </Button>
+                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                       <ShieldCheck className="h-4 w-4 text-primary" />
+                       سنراسلك على بريد حسابك عند بدء الإطلاق
+                     </div>
                   </motion.div>
                 </div>
 
@@ -222,7 +272,6 @@ export default function FinancingComingSoon() {
           </motion.div>
         </section>
       </main>
-      <Footer />
-    </div>
+    </ClientLayout>
   );
 }

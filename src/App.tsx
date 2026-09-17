@@ -145,9 +145,7 @@ import AdminResearchContracts from "./pages/admin/AdminResearchContracts";
 import AdminResearchContractDetails from "./pages/admin/AdminResearchContractDetails";
 import AdminResearchPublicationDetails from "./pages/admin/AdminResearchPublicationDetails";
 import ClientContractView from "./pages/ClientContractView";
-import FinancingHome from "./pages/client/FinancingHome";
 import FinancingComingSoon from "./pages/FinancingComingSoon";
-import FekrahEduPayLater from "./pages/FekrahEduPayLater";
 import FinancingNew from "./pages/client/FinancingNew";
 import FinancingDetails from "./pages/client/FinancingDetails";
 import FinancingAcknowledgments from "./pages/client/FinancingAcknowledgments";
@@ -478,9 +476,13 @@ const App = () => (
                 <ClientContracts />
               </SimpleProtectedRoute>
             } />
-            <Route path="/fekrahedu-paylater" element={<FekrahEduPayLater />} />
-            <Route path="/master-paylater" element={<Navigate to="/fekrahedu-paylater" replace />} />
-            <Route path="/financing" element={<FinancingComingSoon />} />
+            <Route path="/fekrahedu-paylater" element={<Navigate to="/financing" replace />} />
+            <Route path="/master-paylater" element={<Navigate to="/financing" replace />} />
+            <Route path="/financing" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <FinancingComingSoon />
+              </SimpleProtectedRoute>
+            } />
             <Route path="/financing/new" element={
               <SimpleProtectedRoute requiredRole="client">
                 <FinancingNew />
