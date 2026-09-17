@@ -274,29 +274,29 @@ const Index = () => {
          initial={{ opacity: 0, y: -20 }}
          animate={{ opacity: 1, y: 0 }}
          transition={{ duration: 0.5 }}
-         className="bg-gradient-to-l from-violet-700 via-purple-700 to-fuchsia-700 text-white py-2 sm:py-3 px-3 sm:px-4 relative overflow-hidden"
-      >
-        <div className="absolute inset-0 bg-gradient-to-l from-violet-800/90 via-purple-800/90 to-fuchsia-800/90" />
-        <div className="container mx-auto relative">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-center">
-            <motion.div animate={{ rotate: [0, 15, -15, 0] }} transition={{ duration: 2, repeat: Infinity }}>
-              <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-300" />
-            </motion.div>
-            <div className="flex-1">
-              <p className="text-xs sm:text-sm md:text-base font-semibold mb-0.5 text-white">
-                🎁 بمناسبة تجديد الموقع وانطلاقته التجريبية — هدية مجانية عبر عجلة الجوائز
-              </p>
-              <p className="text-xs sm:text-sm text-violet-100 hidden sm:block">
-                مزايا وخدمات تدعم رحلتك الأكاديمية — جرّب حظك الآن واكتشف جائزتك!
-              </p>
-            </div>
-            <Button 
-              variant="secondary" 
-              size="sm"
-              className="bg-white hover:bg-violet-50 text-violet-800 border-white/60 font-bold text-xs sm:text-sm px-3 py-1.5 sm:px-4 sm:py-2"
-              onClick={() => navigate('/spin-the-wheel')}
-            >
-              <Sparkles className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4 text-violet-600" />
+          className="bg-secondary/10 text-secondary py-2 sm:py-3 px-3 sm:px-4 relative overflow-hidden border-b border-secondary/20 dark:bg-secondary/15"
+       >
+         <div className="absolute inset-0 bg-gradient-to-l from-secondary/15 via-secondary/5 to-secondary/15" />
+         <div className="container mx-auto relative">
+           <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-center">
+             <motion.div animate={{ rotate: [0, 15, -15, 0] }} transition={{ duration: 2, repeat: Infinity }}>
+               <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-secondary" />
+             </motion.div>
+             <div className="flex-1">
+               <p className="text-xs sm:text-sm md:text-base font-semibold mb-0.5 text-secondary dark:text-secondary-light">
+                 🎁 بمناسبة تجديد الموقع وانطلاقته التجريبية — هدية مجانية عبر عجلة الجوائز
+               </p>
+               <p className="text-xs sm:text-sm text-secondary/75 hidden sm:block dark:text-secondary-light/80">
+                 مزايا وخدمات تدعم رحلتك الأكاديمية — جرّب حظك الآن واكتشف جائزتك!
+               </p>
+             </div>
+             <Button 
+               variant="secondary" 
+               size="sm"
+               className="bg-secondary hover:bg-secondary/90 text-secondary-foreground border border-secondary/30 font-bold text-xs sm:text-sm px-3 py-1.5 sm:px-4 sm:py-2"
+               onClick={() => navigate('/spin-the-wheel')}
+             >
+               <Sparkles className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4 text-secondary-foreground" />
               جرّب حظك الآن
             </Button>
           </div>
