@@ -266,10 +266,10 @@ const SpinTheWheel = () => {
               <Sparkles className="w-4 h-4" />
               عرض حصري · مرة واحدة يومياً
             </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-3 leading-tight"
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-3 leading-[1.45] sm:leading-[1.4]"
                 style={{ color: "hsl(220 45% 18%)" }}>
-              لف العجلة الذهبية{" "}
-              <span style={{
+              <span className="block">لف العجلة الذهبية</span>
+              <span className="block pb-2" style={{
                 background: "linear-gradient(90deg, hsl(43 74% 45%), hsl(45 90% 60%))",
                 WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
               }}>واربح فوراً</span>
