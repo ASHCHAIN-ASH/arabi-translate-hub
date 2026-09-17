@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import fekrahLogo from "@/assets/fekrah-logo.jpg.asset.json";
+const fekrahLogoUrl = "/fekrah-logo.jpg";
 import { 
   Menu, GraduationCap, ChevronDown, Languages, Home, Users, Phone, 
   Briefcase, Microscope, ArrowLeft, FileText, MapIcon, LogIn, UserPlus, LogOut, User
@@ -48,7 +48,7 @@ const Header = () => {
           <Link to="/" className="flex items-center gap-3 group">
             <div className="relative w-10 h-10 lg:w-11 lg:h-11 flex-shrink-0 rounded-xl overflow-hidden bg-white shadow-lg shadow-primary/10 group-hover:shadow-primary/30 transition-shadow duration-300">
               <img
-                src={fekrahLogo.url}
+                src={fekrahLogoUrl}
                 alt="شعار FekrahEdu"
                 className="w-full h-full object-contain"
                 loading="eager"
