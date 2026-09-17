@@ -28,7 +28,7 @@ const E = ({ customerName, invoiceNumber, totalAmount, paidAt, currency, invoice
                 <Text style={S.brand}>🏦 {S.SITE_NAME}</Text>
                 <Text style={S.tagline}>إيصال سداد نهائي</Text>
               </Column>
-              <Column align="left">
+              <Column align="right">
                 <Text style={S.badge}>✓ مدفوعة بالكامل</Text>
               </Column>
             </Row>

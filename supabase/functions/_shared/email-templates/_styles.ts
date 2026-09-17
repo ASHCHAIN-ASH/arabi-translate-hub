@@ -6,6 +6,7 @@ export const BRAND = {
   nameAr: 'FekrahEdu',
   tagline: 'منصّتك الأكاديمية الموثوقة',
   url: 'https://fekrahedu.com',
+  logoUrl: 'https://fekrahedu.com/fekrah-logo.jpg',
   supportEmail: 'support@fekrahedu.com',
   year: new Date().getFullYear(),
 };
@@ -22,12 +23,15 @@ export const PALETTES = {
 
 // CSS animations + RTL global injected via <Head>
 export const renderHeadCss = (palette: { primary: string; accent: string; glow: string; tint: string }) => `
-  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap');
   @keyframes fadeInUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes pulseGlow { 0%, 100% { box-shadow: 0 8px 24px ${palette.glow}; } 50% { box-shadow: 0 12px 36px ${palette.glow}; } }
   @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
   @keyframes drawLine { from { stroke-dashoffset: 100; } to { stroke-dashoffset: 0; } }
-  body, table, td, p, a, h1, h2, h3, h4 { font-family: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif !important; direction: rtl; }
+  html, body, table, tbody, tr, td, p, a, h1, h2, h3, h4, span { direction: rtl !important; }
+  body, table, td, p, a, h1, h2, h3, h4 { font-family: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, Arial, sans-serif !important; }
+  td, p, h1, h2, h3, h4 { text-align: right; }
+  table { border-spacing: 0; }
+  a { overflow-wrap: anywhere; word-break: break-word; }
   .anim-fade { animation: fadeInUp .7s cubic-bezier(.22,.61,.36,1) both; }
   .anim-fade-1 { animation: fadeInUp .7s .1s cubic-bezier(.22,.61,.36,1) both; }
   .anim-fade-2 { animation: fadeInUp .7s .2s cubic-bezier(.22,.61,.36,1) both; }
@@ -35,7 +39,7 @@ export const renderHeadCss = (palette: { primary: string; accent: string; glow: 
   .anim-cta { animation: fadeInUp .7s .25s cubic-bezier(.22,.61,.36,1) both, pulseGlow 2.6s 1.5s ease-in-out infinite; }
   .shimmer-text { background: linear-gradient(90deg, ${palette.primary} 0%, ${palette.accent} 40%, ${palette.primary} 80%); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: shimmer 4s linear infinite; }
   @media (max-width: 600px) {
-    .container { padding: 24px 18px !important; }
+    .container { width: 100% !important; }
     .h1 { font-size: 22px !important; }
     .cta { padding: 14px 24px !important; font-size: 15px !important; }
   }
@@ -44,6 +48,9 @@ export const renderHeadCss = (palette: { primary: string; accent: string; glow: 
 // أنماط مكوّنات React Email المشتركة
 export const styles = (p: { primary: string; accent: string; glow: string; tint: string }) => ({
   main: {
+    width: '100%',
+    direction: 'rtl',
+    textAlign: 'right',
     backgroundColor: '#F4F6FB',
     margin: 0,
     padding: '32px 12px',
@@ -51,12 +58,13 @@ export const styles = (p: { primary: string; accent: string; glow: string; tint:
   } as React.CSSProperties,
 
   shell: {
+    width: '100%',
     maxWidth: '620px',
     margin: '0 auto',
     backgroundColor: '#FFFFFF',
     borderRadius: '20px',
     overflow: 'hidden',
-    border: '1px solid #E5E9F2',
+    border: '1px solid #CBD5E1',
     boxShadow: '0 24px 60px -20px rgba(15, 23, 42, 0.18)',
   } as React.CSSProperties,
 
@@ -68,33 +76,27 @@ export const styles = (p: { primary: string; accent: string; glow: string; tint:
   } as React.CSSProperties,
 
   brandRow: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: '10px',
+    textAlign: 'center',
     marginBottom: '18px',
   } as React.CSSProperties,
 
   brandMark: {
+    display: 'inline-block',
     width: '44px',
     height: '44px',
     borderRadius: '12px',
-    background: 'rgba(255,255,255,0.16)',
+    background: '#FFFFFF',
     border: '1px solid rgba(255,255,255,0.28)',
-    color: '#FFFFFF',
-    fontWeight: 700,
-    fontSize: '20px',
-    lineHeight: '44px',
-    textAlign: 'center' as const,
-    backdropFilter: 'blur(8px)',
+    verticalAlign: 'middle',
   } as React.CSSProperties,
 
   brandName: {
+    display: 'inline-block',
     color: '#FFFFFF',
     fontSize: '17px',
     fontWeight: 600,
     letterSpacing: '0.3px',
-    margin: 0,
+    margin: '0 10px 0 0',
   } as React.CSSProperties,
 
   badge: {

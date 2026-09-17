@@ -12,17 +12,21 @@ export const main = { direction: 'rtl' as const, textAlign: 'right' as const,
   backgroundColor: '#f1f5f9',
   fontFamily: "'IBM Plex Sans Arabic', Tahoma, Arial, sans-serif",
   margin: 0,
-  padding: '20px 0',
+  padding: '24px 12px',
+  width: '100%',
 }
 
 export const container = { direction: 'rtl' as const, textAlign: 'right' as const,
   padding: '0',
+  width: '100%',
   maxWidth: '620px',
   margin: '0 auto',
   backgroundColor: '#ffffff',
-  borderRadius: '16px',
+  border: '1px solid #cbd5e1',
+  borderRadius: '14px',
   overflow: 'hidden' as const,
   boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
+  boxSizing: 'border-box' as const,
 }
 
 export const header = {
@@ -110,7 +114,7 @@ export const cardTitle = {
   textAlign: 'right' as const,
 }
 
-export const tbl = { width: '100%', borderCollapse: 'collapse' as const }
+export const tbl = { width: '100%', direction: 'rtl' as const, textAlign: 'right' as const, borderCollapse: 'collapse' as const }
 export const trAlt = { backgroundColor: '#ffffff' }
 export const trTotal = { background: 'linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 100%)' }
 export const tdLabel = {
@@ -125,9 +129,10 @@ export const tdValue = {
   padding: '10px 12px',
   fontSize: '13px',
   color: '#0f172a',
-  textAlign: 'left' as const,
+  textAlign: 'right' as const,
   borderBottom: '1px solid #e2e8f0',
   fontWeight: '700' as const,
+  overflowWrap: 'anywhere' as const,
 }
 export const tdTotalLabel = {
   padding: '14px 12px',
@@ -140,7 +145,7 @@ export const tdTotalValue = {
   padding: '14px 12px',
   fontSize: '18px',
   color: '#ffffff',
-  textAlign: 'left' as const,
+  textAlign: 'right' as const,
   fontWeight: '900' as const,
 }
 

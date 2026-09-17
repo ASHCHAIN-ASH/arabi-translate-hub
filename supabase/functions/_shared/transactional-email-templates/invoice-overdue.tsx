@@ -31,7 +31,7 @@ const E = ({ customerName, invoiceNumber, remainingAmount, dueDate, daysOverdue,
                 <Text style={S.brand}>🏦 {S.SITE_NAME}</Text>
                 <Text style={S.tagline}>تذكير بسداد فاتورة</Text>
               </Column>
-              <Column align="left">
+              <Column align="right">
                 <Text style={S.badge}>{isLate ? '⚠️ متأخرة' : '⏳ تستحق قريباً'}</Text>
               </Column>
             </Row>

@@ -130,7 +130,7 @@ export const template = {
 } satisfies TemplateEntry
 
 const main = { backgroundColor: '#ffffff', fontFamily: 'IBM Plex Sans Arabic, Tahoma, Arial, sans-serif', margin: '0', padding: '0' }
-const container = { maxWidth: '560px', margin: '0 auto', padding: '24px', direction: 'rtl' as const }
+const container = { maxWidth: '560px', margin: '0 auto', padding: '24px', direction: 'rtl' as const, border: '1px solid #cbd5e1', borderRadius: '14px', overflow: 'hidden' as const, boxSizing: 'border-box' as const }
 const brandBar = { background: 'linear-gradient(135deg,#0f3a5f,#1c6aa8)', padding: '14px 18px', borderRadius: '10px', textAlign: 'center' as const }
 const brandText = { color: '#ffffff', fontSize: '16px', fontWeight: 700, margin: 0 }
 const h1 = { fontSize: '22px', fontWeight: 700, color: '#0f3a5f', margin: '24px 0 12px', textAlign: 'right' as const }
