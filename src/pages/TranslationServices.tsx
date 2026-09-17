@@ -42,6 +42,7 @@ import technicalTranslationImg from "@/assets/technical-translation-service.jpg"
 import academicTranslationImg from "@/assets/academic-translation-service.jpg";
 
 import Footer from '@/components/Footer';
+import CertifiedTranslationComingSoon from '@/components/CertifiedTranslationComingSoon';
 // Translation services data
 const translationServices = [
   {
@@ -292,6 +293,8 @@ export default function TranslationServices() {
           </motion.div>
         </div>
       </section>
+
+      <CertifiedTranslationComingSoon />
 
       {/* Services Grid */}
       <section className="container mx-auto p-6 pb-24">
