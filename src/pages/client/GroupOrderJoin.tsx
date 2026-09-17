@@ -5,7 +5,7 @@ import { Users, ArrowRight } from 'lucide-react';
 import ClientLayout from '@/components/client/ClientLayout';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import { useToast } from '@/hooks/use-toast';
 
 const GroupOrderJoin: React.FC = () => {

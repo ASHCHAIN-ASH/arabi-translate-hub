@@ -19,7 +19,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import AcknowledgmentDialog, { type AcknowledgmentClause } from '@/components/financing/AcknowledgmentDialog';
 import {
   FINANCING_ACK_TITLES_AR,

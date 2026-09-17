@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/data/legacy/client";
 import { 
   Mail, Send, Eye, Users, Search, FileText, Receipt, 
   Gift, UserCheck, Calendar, Bell, CreditCard, Package,

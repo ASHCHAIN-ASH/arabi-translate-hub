@@ -15,7 +15,7 @@ import {
   CheckCircle2, Clock, AlertCircle, FileText, Loader2, User, Sparkles,
   Star, Zap, Eye, ExternalLink, Lightbulb, Wand2, BookOpen, X,
 } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import {
   SupportService, type Ticket, type TicketMessage, type TicketTimelineEntry,
   type TicketAttachment, type TicketPresence, type QuickReply,

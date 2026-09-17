@@ -1,4 +1,4 @@
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 
 const STATUS_LABELS: Record<string, { label: string; emoji: string }> = {
   pending: { label: 'معلق', emoji: '⏳' },

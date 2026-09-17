@@ -8,7 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ArrowRight, Edit, Printer, Download, CreditCard, Send, FileText, User, Package, Clock, Loader2, Trash2, MessageCircle } from 'lucide-react';
 import { toast } from 'sonner';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import { InvoiceService, type Invoice, type InvoiceItem, type InvoicePayment, type InvoiceTimelineEntry } from '@/utils/invoiceService';
 import { openInvoicePrintWindow, downloadInvoiceAsPDF } from '@/utils/invoicePdf';
 import InvoiceFormDialog from '@/components/admin/invoices/InvoiceFormDialog';

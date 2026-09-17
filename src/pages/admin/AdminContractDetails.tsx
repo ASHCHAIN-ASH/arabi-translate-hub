@@ -18,7 +18,7 @@ import {
   Mail, Phone, IdCard, RefreshCw, MessageCircle,
 } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/data/legacy/client";
 import {
   getContract, getContractTimeline, getContractSignatures,
   generateContractContent, sendContractToClient, updateContractStatus,

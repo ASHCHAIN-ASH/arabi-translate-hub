@@ -1,4 +1,4 @@
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 
 const ANON_KEY = 'mep_anon_id';
 export function getAssessmentAnonId(): string {

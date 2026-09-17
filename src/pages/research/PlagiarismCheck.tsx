@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Shield, Search, CheckCircle, AlertTriangle, FileText, Clock, Award, Upload, Eye, Download, Zap } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/data/legacy/client";
 
 import Footer from '@/components/Footer';
 import AuthCtaCard from "@/components/research/AuthCtaCard";

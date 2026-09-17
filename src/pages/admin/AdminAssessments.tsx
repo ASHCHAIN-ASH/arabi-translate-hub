@@ -10,7 +10,7 @@ import { Switch } from '@/components/ui/switch';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import { Plus, Pencil, Trash2, Loader2, Target, Users, BarChart3, ChevronDown, ChevronUp } from 'lucide-react';
 import { toast } from 'sonner';
 import { skillLabel } from '@/utils/assessmentService';

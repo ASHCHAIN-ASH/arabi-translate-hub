@@ -7,7 +7,7 @@ import {
   CheckCircle, Trash2, Loader2, User, Activity, DollarSign, Clock,
   History, UserPlus, CreditCard,
 } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';

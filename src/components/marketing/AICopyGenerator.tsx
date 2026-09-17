@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/data/legacy/client";
 import { buildReferralLink, copyToClipboard } from "@/utils/referralLink";
 
 interface AICopyGeneratorProps {

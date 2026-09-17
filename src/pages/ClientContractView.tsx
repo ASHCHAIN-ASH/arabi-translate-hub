@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ArrowRight, FileText, ShieldCheck, Calendar, Wallet, Loader2, AlertCircle, CalendarClock, BadgePercent } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/data/legacy/client";
 import { useToast } from "@/hooks/use-toast";
 import { ContractSigningCard } from "@/components/orders/ContractSigningCard";
 import { ContractDocumentView } from "@/components/orders/ContractDocumentView";

@@ -21,7 +21,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import {
   analyzeTranslationFile, recomputePricing, DOMAIN_LABELS_AR,
   LANGUAGE_LABELS_AR, CONFIDENCE_LABELS_AR,

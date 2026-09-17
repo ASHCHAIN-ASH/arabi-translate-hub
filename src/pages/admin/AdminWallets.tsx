@@ -58,7 +58,7 @@ const AdminWallets: React.FC = () => {
   useEffect(() => {
     load();
     // Realtime subscription for wallets, topup requests, and transactions
-    import('@/integrations/supabase/client').then(({ supabase }) => {
+    import('@/data/legacy/client').then(({ supabase }) => {
       const channel = supabase
         .channel('admin-wallets-realtime')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'wallets' }, () => load())
@@ -69,7 +69,7 @@ const AdminWallets: React.FC = () => {
     });
     return () => {
       const ch = (window as any).__adminWalletsChannel;
-      if (ch) import('@/integrations/supabase/client').then(({ supabase }) => supabase.removeChannel(ch));
+      if (ch) import('@/data/legacy/client').then(({ supabase }) => supabase.removeChannel(ch));
     };
   }, []);
 
@@ -116,7 +116,7 @@ const AdminWallets: React.FC = () => {
 
   const sendTopupEmail = async (r: TopupRequest, kind: 'approved' | 'rejected', reason?: string) => {
     try {
-      const { supabase } = await import('@/integrations/supabase/client');
+      const { supabase } = await import('@/data/legacy/client');
       // Resolve recipient email + name from customers/profiles
       const { data: cust } = await supabase
         .from('customers').select('email, name').eq('user_id', r.user_id).maybeSingle();
@@ -165,7 +165,7 @@ const AdminWallets: React.FC = () => {
 
   const sendTopupWhatsApp = async (r: TopupRequest, kind: 'approved' | 'rejected', reason?: string) => {
     try {
-      const { supabase } = await import('@/integrations/supabase/client');
+      const { supabase } = await import('@/data/legacy/client');
       const { sendWhatsApp } = await import('@/lib/whatsapp');
       const { data: cust } = await supabase
         .from('customers').select('phone, name').eq('user_id', r.user_id).maybeSingle();

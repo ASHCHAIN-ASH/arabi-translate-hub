@@ -1,5 +1,5 @@
 // نصوص أكاديمية موحّدة لحالات طلبات نشر الأبحاث + الإشعارات اللحظية
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/data/legacy/client";
 import {
   FileText, Search, Award, CheckCircle2, Loader2, BookOpenCheck, XCircle,
   Pencil, RefreshCw, Send, Clock, FlagTriangleRight,

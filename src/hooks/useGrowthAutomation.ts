@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 
 export type Severity = 'low' | 'medium' | 'high' | 'critical';
 export type InsightStatus = 'active' | 'dismissed' | 'resolved';

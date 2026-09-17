@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/data/legacy/client";
 import SEO from "@/components/SEO";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Calendar, Clock, User } from "lucide-react";

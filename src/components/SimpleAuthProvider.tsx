@@ -1,15 +1,22 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { User, Session } from '@supabase/supabase-js';
+import { authService, db, userRolesRepository, type AuthSession, type AuthUser } from '@/data';
 
 // IMPORTANT: 'client' is a UI alias for the DB role 'user'.
 // DB enum app_role is: 'admin' | 'moderator' | 'user'.
 // We map DB 'user' → UI 'client'. Anything else that is NOT 'admin' is treated as 'client'.
 type AppRole = 'admin' | 'client';
 
+/** مستخدم الواجهة — نحتفظ بحقل user_metadata للتوافق مع الشاشات الحالية. */
+export type SessionUser = AuthUser & { user_metadata: Record<string, any> };
+
+function toSessionUser(user: AuthUser | null): SessionUser | null {
+  if (!user) return null;
+  return { ...user, user_metadata: (user.metadata ?? {}) as Record<string, any> };
+}
+
 interface AuthContextType {
-  user: User | null;
-  session: Session | null;
+  user: SessionUser | null;
+  session: AuthSession | null;
   userRole: AppRole | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
@@ -18,6 +25,7 @@ interface AuthContextType {
   forgotPassword: (email: string) => Promise<{ error?: string }>;
   resetPassword: (token: string, password: string) => Promise<{ error?: string }>;
 }
+
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -30,8 +38,8 @@ export const useAuth = () => {
 };
 
 export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<SessionUser | null>(null);
+  const [session, setSession] = useState<AuthSession | null>(null);
   const [userRole, setUserRole] = useState<AppRole | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -40,18 +48,7 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   // or any fallback to elevate privileges.
   const fetchUserRole = useCallback(async (userId: string): Promise<AppRole | null> => {
     try {
-      const { data, error } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', userId);
-
-      if (error) {
-        // Hard fail — do NOT default to any role. Caller will sign the user out.
-        console.error('[SECURITY] Failed to fetch user role:', error.message);
-        return null;
-      }
-
-      const roles = (data ?? []).map((r) => r.role as string);
+      const roles = await userRolesRepository.rolesOf(userId);
 
       // Strict whitelist: admin only if an 'admin' row exists.
       if (roles.includes('admin')) return 'admin';
@@ -59,7 +56,8 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       // Any authenticated user without 'admin' is a client (UI alias for 'user').
       return 'client';
     } catch (err) {
-      console.error('[SECURITY] Unexpected error fetching user role:', err);
+      // Hard fail — do NOT default to any role. Caller will sign the user out.
+      console.error('[SECURITY] Failed to fetch user role:', err);
       return null;
     }
   }, []);
@@ -67,11 +65,11 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   useEffect(() => {
     let isMounted = true;
 
-    const applySession = async (currentSession: Session | null) => {
+    const applySession = async (currentSession: AuthSession | null) => {
       if (!isMounted) return;
 
       setSession(currentSession);
-      setUser(currentSession?.user ?? null);
+      setUser(toSessionUser(currentSession?.user ?? null));
 
       if (currentSession?.user) {
         setLoading(true);
@@ -85,7 +83,7 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         // protected route with an unknown privilege level.
         if (role === null) {
           console.error('[SECURITY] Role resolution failed — forcing sign-out');
-          await supabase.auth.signOut();
+          await authService.signOut();
           if (!isMounted) return;
           setSession(null);
           setUser(null);
@@ -103,7 +101,7 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       setLoading(false);
     };
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, currentSession) => {
+    const unsubscribe = authService.onAuthStateChange((event, currentSession) => {
       console.log('Auth state change:', event);
       setTimeout(() => {
         void applySession(currentSession);
@@ -118,35 +116,36 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       }
     });
 
-    supabase.auth.getSession().then(({ data: { session: initialSession } }) => {
+    authService.getSession().then((initialSession) => {
       void applySession(initialSession);
     });
 
     return () => {
       isMounted = false;
-      subscription.unsubscribe();
+      unsubscribe();
     };
   }, [fetchUserRole]);
 
+
   const signIn = async (email: string, password: string): Promise<{ error?: string }> => {
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: email.toLowerCase().trim(),
+      const { user: signedInUser, error } = await authService.signInWithPassword(
+        email.toLowerCase().trim(),
         password,
-      });
+      );
 
       if (error) {
         console.error('Sign in error:', error);
-        if (error.message.includes('Invalid login credentials')) {
+        if (error.includes('Invalid login credentials')) {
           return { error: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' };
         }
-        if (error.message.includes('Email not confirmed')) {
+        if (error.includes('Email not confirmed')) {
           return { error: 'يرجى تأكيد البريد الإلكتروني أولاً' };
         }
-        return { error: error.message };
+        return { error };
       }
 
-      if (!data.user) {
+      if (!signedInUser) {
         return { error: 'حدث خطأ أثناء تسجيل الدخول' };
       }
 
@@ -178,36 +177,32 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         return { error: 'كلمة المرور يجب أن تحتوي على رمز خاص واحد على الأقل' };
       }
 
-      const { data, error } = await supabase.auth.signUp({
-        email: email.toLowerCase().trim(),
+      const { user: createdUser, error } = await authService.signUp(
+        email.toLowerCase().trim(),
         password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/`,
-          data: {
-            full_name: metadata.name,
-            phone: metadata.phone || '',
-          },
+        {
+          full_name: metadata.name,
+          phone: metadata.phone || '',
         },
-      });
+        `${window.location.origin}/`,
+      );
 
       if (error) {
-        if (error.message.includes('already registered')) {
+        if (error.includes('already registered')) {
           return { error: 'البريد الإلكتروني مستخدم بالفعل' };
         }
-        return { error: `خطأ في التسجيل: ${error.message}` };
+        return { error: `خطأ في التسجيل: ${error}` };
       }
 
-      if (!data.user) {
+      if (!createdUser) {
         return { error: 'حدث خطأ أثناء إنشاء الحساب' };
       }
 
       // Send welcome email (non-blocking)
-      supabase.functions.invoke('send-welcome-email', {
-        body: {
-          user_email: data.user.email,
-          user_name: metadata.name,
-          user_id: data.user.id,
-        },
+      db.callFunction('send-welcome-email', {
+        user_email: createdUser.email,
+        user_name: metadata.name,
+        user_id: createdUser.id,
       }).catch(console.error);
 
       return {};
@@ -218,19 +213,23 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   };
 
   const signOut = async (): Promise<void> => {
-    const { error } = await supabase.auth.signOut();
-    if (error) console.error('Sign out error:', error);
+    try {
+      await authService.signOut();
+    } catch (error) {
+      console.error('Sign out error:', error);
+    }
     // State cleared via onAuthStateChange
   };
 
   const forgotPassword = async (email: string): Promise<{ error?: string }> => {
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email.toLowerCase().trim(), {
-        redirectTo: `${window.location.origin}/auth/reset-password`,
-      });
+      const { error } = await authService.requestPasswordReset(
+        email.toLowerCase().trim(),
+        `${window.location.origin}/auth/reset-password`,
+      );
 
       if (error) {
-        return { error: 'حدث خطأ أثناء إرسال رسالة إعادة التعيين: ' + error.message };
+        return { error: 'حدث خطأ أثناء إرسال رسالة إعادة التعيين: ' + error };
       }
 
       return {};
@@ -245,10 +244,10 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         return { error: 'كلمة المرور يجب أن تكون 8 أحرف على الأقل' };
       }
 
-      const { error } = await supabase.auth.updateUser({ password });
+      const { error } = await authService.updatePassword(password);
 
       if (error) {
-        return { error: 'حدث خطأ أثناء تحديث كلمة المرور: ' + error.message };
+        return { error: 'حدث خطأ أثناء تحديث كلمة المرور: ' + error };
       }
 
       return {};
@@ -256,6 +255,7 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       return { error: 'حدث خطأ أثناء تحديث كلمة المرور' };
     }
   };
+
 
   const value: AuthContextType = {
     user,

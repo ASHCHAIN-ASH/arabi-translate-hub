@@ -8,7 +8,7 @@ import WritingPanel from '@/components/workspace/WritingPanel';
 import SummarizerPanel from '@/components/workspace/SummarizerPanel';
 import StudyPanel from '@/components/workspace/StudyPanel';
 import NotesPanel, { Note } from '@/components/workspace/NotesPanel';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 
 export default function Workspace() {
   const [tab, setTab] = useState('write');

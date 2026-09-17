@@ -20,7 +20,7 @@ import {
   Gift, HeadphonesIcon, Star, Award, ArrowLeft, Info, HelpCircle, Rocket,
   Clock, Users, BadgeCheck, Flame, Diamond, ArrowRight, CheckCircle2, Quote,
 } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';

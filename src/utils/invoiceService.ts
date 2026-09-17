@@ -1,4 +1,4 @@
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 
 export type InvoiceStatus = 'draft' | 'pending' | 'sent' | 'partially_paid' | 'paid' | 'overdue' | 'cancelled';
 

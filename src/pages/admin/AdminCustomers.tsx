@@ -8,7 +8,7 @@ import {
   UserPlus, Loader2, RefreshCw, Copy, MessageSquare, MessageCircle, Send,
   ShoppingCart, FileText, ExternalLink, Bell
 } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { useCustomers, Customer } from '@/hooks/useCustomers';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

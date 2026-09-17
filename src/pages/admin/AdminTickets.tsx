@@ -12,7 +12,7 @@ import {
   Search, RefreshCw, Ticket as TicketIcon, AlertCircle,
   CheckCircle2, Clock, ArrowLeft, DollarSign, ShoppingBag, ShieldAlert, Wrench, Filter,
 } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import { TicketsService, type Ticket, CATEGORY_LABELS, STATUS_LABELS, PRIORITY_LABELS, CATEGORY_COLOR, STATUS_COLOR, PRIORITY_COLOR } from '@/utils/ticketsService';
 import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';

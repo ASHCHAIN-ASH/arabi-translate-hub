@@ -15,7 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import { WalletService, type Wallet as WalletT } from '@/utils/walletService';
 import { InvoiceService, type Invoice } from '@/utils/invoiceService';
 import { recordInvoicePayment } from '@/utils/invoicePaymentService';

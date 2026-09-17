@@ -1,7 +1,7 @@
 // مولّد PDF رسمي لإقرارات التمويل — تصميم بنكي رسمي مع دعم كامل للعربية
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import { FINANCING_ACK_TITLES_AR, type FinancingAcknowledgmentType } from '@/lib/financing';
 
 interface AckRecord {

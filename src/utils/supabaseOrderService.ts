@@ -1,5 +1,5 @@
 import { OrderStatus, TIMELINE_STEPS } from '@/types/order';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 
 export interface DatabaseOrder {
   id: string;

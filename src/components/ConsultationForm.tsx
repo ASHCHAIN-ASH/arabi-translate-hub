@@ -17,7 +17,7 @@ import {
   Send,
   CheckCircle 
 } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import { toast } from 'sonner';
 import { z } from 'zod';
 

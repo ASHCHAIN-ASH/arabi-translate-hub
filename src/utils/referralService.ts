@@ -1,4 +1,4 @@
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import { buildPublicUrl } from '@/lib/publicUrl';
 
 export interface MemberReferral {

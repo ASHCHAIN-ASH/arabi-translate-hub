@@ -10,7 +10,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { FileText, Plus, Search, RefreshCw, Eye, Edit, Trash2, Download, Printer, CreditCard, MoreVertical, TrendingUp, Clock, CheckCircle2, Mail, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import { InvoiceService, type Invoice } from '@/utils/invoiceService';
 import { openInvoicePrintWindow, downloadInvoiceAsPDF } from '@/utils/invoicePdf';
 import InvoiceFormDialog from '@/components/admin/invoices/InvoiceFormDialog';

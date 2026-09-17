@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Plus, Trash2, Loader2, Crown, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import { InvoiceService, type Invoice, type InvoiceItem } from '@/utils/invoiceService';
 
 interface OrderOption { id: string; tracking_id: string; service_name: string | null; user_id: string | null; total_amount: number | null; }

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/data/legacy/client';
 import { getAllOrders, updateOrderStatus, type DatabaseOrder } from '@/utils/supabaseOrderService';
 import { toast } from 'sonner';
 
