@@ -959,6 +959,7 @@ const Index = () => {
           </motion.div>
         </div>
       </section>
+      )}
 
       {/* Institutional Partnership Banner */}
       <InstitutionalPartnershipBanner />
