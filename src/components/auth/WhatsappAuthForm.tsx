@@ -318,7 +318,7 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
       {step === 'code' && (
         <>
           <div className="text-center text-sm text-slate-600">
-            تم إرسال الرمز إلى <span className="font-mono font-bold">{phone}</span>
+            تم إرسال الرمز إلى <span className="font-mono font-bold" dir="ltr">+{fullPhone}</span>
           </div>
           <div>
             <Label className="flex items-center gap-2 text-slate-700 font-medium mb-3">
