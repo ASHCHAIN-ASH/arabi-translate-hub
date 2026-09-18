@@ -251,7 +251,8 @@ const ServicesShowcase = () => {
           })}
         </div>
 
-        {/* الإحصائيات */}
+        {/* الإحصائيات — مخفية مؤقتًا */}
+        {false && (
         <motion.div 
           className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-3xl p-8 md:p-12 relative overflow-hidden"
           initial={{ opacity: 0, y: 40 }}
@@ -321,6 +322,7 @@ const ServicesShowcase = () => {
             </div>
           </div>
         </motion.div>
+        )}
       </div>
     </section>
   );
