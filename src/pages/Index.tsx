@@ -1152,6 +1152,7 @@ const Index = () => {
           </div>
         </div>
       </section>
+      )}
 
       {/* Suspense Sections مع Lazy Loading */}
       <Suspense fallback={<LoadingSpinner />}>
