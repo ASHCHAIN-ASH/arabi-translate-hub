@@ -1,6 +1,6 @@
 import { FormEvent, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { Clock3, Mail, MapPin, MessageCircle, Phone, Send, ShieldCheck } from "lucide-react";
+import { Clock3, MapPin, MessageCircle, Send, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -29,26 +29,10 @@ const CONTACT_METHODS = [
   {
     icon: MessageCircle,
     title: "واتساب",
-    value: "+966 55 960 0824",
-    detail: "للتواصل السريع مع فريق خدمة العملاء",
+    value: "0593799355",
+    detail: "للاستفسارات والمراسلات الرسمية مع فريق خدمة العملاء",
     href: "https://wa.me/966593799355",
     label: "ابدأ المحادثة",
-  },
-  {
-    icon: Mail,
-    title: "البريد الإلكتروني",
-    value: "info@fekrahedu.com",
-    detail: "للطلبات والاستفسارات والمراسلات الرسمية",
-    href: "mailto:info@fekrahedu.com",
-    label: "أرسل بريدًا",
-  },
-  {
-    icon: Phone,
-    title: "الهاتف",
-    value: "0593799355",
-    detail: "للتواصل المباشر خلال أوقات العمل",
-    href: "tel:+966593799355",
-    label: "اتصل الآن",
   },
 ];
 
@@ -179,7 +163,7 @@ const ContactUs = () => {
         </section>
 
         <section className="border-b border-border bg-muted/30 py-8 sm:py-10">
-          <div className="container-responsive grid gap-4 md:grid-cols-3">
+          <div className="container-responsive mx-auto max-w-2xl">
             {CONTACT_METHODS.map((method, index) => (
               <motion.a
                 {...reveal}
