@@ -20,7 +20,7 @@ interface AuthContextType {
   userRole: AppRole | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
-  signUp: (email: string, password: string, metadata: { name: string; phone?: string }) => Promise<{ error?: string }>;
+  signUp: (email: string, password: string, metadata: { name: string; phone?: string; newsletter_opt_in?: boolean }) => Promise<{ error?: string }>;
   resendConfirmation: (email: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
   forgotPassword: (email: string) => Promise<{ error?: string }>;
@@ -161,7 +161,7 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const signUp = async (
     email: string,
     password: string,
-    metadata: { name: string; phone?: string }
+    metadata: { name: string; phone?: string; newsletter_opt_in?: boolean }
   ): Promise<{ error?: string }> => {
     try {
       // Password validation
@@ -184,6 +184,8 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         {
           full_name: metadata.name,
           phone: metadata.phone || '',
+          newsletter_opt_in: metadata.newsletter_opt_in === true,
+          newsletter_opt_in_at: metadata.newsletter_opt_in ? new Date().toISOString() : null,
         },
         `${window.location.origin}/`,
       );
