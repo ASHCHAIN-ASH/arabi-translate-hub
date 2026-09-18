@@ -39,7 +39,6 @@ import inquiryTeamImg from "@/assets/home-inquiry-team.jpg";
 const ServicesShowcase = lazy(() => import("@/components/ServicesShowcase"));
 const FekrahEduMembershipBanner = lazy(() => import("@/components/FekrahEduMembershipBanner"));
 const ServiceSteps = lazy(() => import("@/components/ServiceSteps"));
-const SuccessStoriesCarousel = lazy(() => import("@/components/home/SuccessStoriesCarousel"));
 
 
 
