@@ -13,7 +13,7 @@ export const FINANCING_TEAMS = {
   credit: 'فريق الائتمان',
   funding: 'فريق التمويل',
   unified: 'فريق التمويل والائتمان والمتابعة',
-  contact: '+966559600824',
-  whatsappPrimary: '966559600824',
+  contact: '+966593799355',
+  whatsappPrimary: '966593799355',
   email: 'info@fekrahedu.com',
 } as const;

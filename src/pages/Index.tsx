@@ -148,7 +148,7 @@ const Index = () => {
             "url": "https://fekrahedu.com/",
             "logo": "https://fekrahedu.com/assets/national-day-logo-original.webp",
             "image": "https://fekrahedu.com/assets/national-day-logo-original.webp",
-            "telephone": "+966559600824",
+            "telephone": "+966593799355",
             "email": "info@fekrahedu.com",
             "address": {
               "@type": "PostalAddress",
@@ -258,7 +258,7 @@ const Index = () => {
                 "name": "كيف أحصل على استشارة مجانية؟",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "تواصل معنا عبر الواتساب على +966559600824 أو املأ نموذج الاستشارة في الموقع وسيرد عليك أحد خبرائنا خلال 60 دقيقة."
+                  "text": "تواصل معنا عبر الواتساب على +966593799355 أو املأ نموذج الاستشارة في الموقع وسيرد عليك أحد خبرائنا خلال 60 دقيقة."
                 }
               }
             ]
@@ -407,7 +407,7 @@ const Index = () => {
                   size="lg"
                   variant="outline"
                   className="border-2 border-green-500 text-green-600 hover:bg-green-50 dark:hover:bg-green-950 w-full sm:w-auto text-sm sm:text-base"
-                  onClick={() => window.open('https://wa.me/966559600824?text=' + encodeURIComponent('مرحباً، أريد الاستفسار عن خدماتكم'), '_blank')}
+                  onClick={() => window.open('https://wa.me/966593799355?text=' + encodeURIComponent('مرحباً، أريد الاستفسار عن خدماتكم'), '_blank')}
                 >
                   <MessageCircle className="h-4 w-4 sm:h-5 sm:w-5 ml-2" />
                   تواصل واتساب
@@ -1262,7 +1262,7 @@ const Index = () => {
                   size="lg"
                   variant="outline"
                   className="border-2 border-white/60 bg-white/10 backdrop-blur-md text-white hover:bg-white hover:text-slate-900 text-base sm:text-lg px-8 py-6 transition-all"
-                  onClick={() => window.open('https://wa.me/966559600824', '_blank')}
+                  onClick={() => window.open('https://wa.me/966593799355', '_blank')}
                 >
                   <MessageCircle className="h-5 w-5 ml-2" />
                   تواصل عبر واتساب

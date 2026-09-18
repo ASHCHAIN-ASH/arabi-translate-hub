@@ -730,7 +730,7 @@ const PaymentMethods = () => {
                     </p>
                     <div className="bg-green-100 border-2 border-green-300 rounded-lg p-4">
                       <p className="text-green-800 font-semibold text-center">
-                        📱 واتساب: +966559600824
+                        📱 واتساب: +966593799355
                       </p>
                     </div>
                   </div>
