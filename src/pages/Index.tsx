@@ -121,7 +121,7 @@ const Index = () => {
         description="وكالة FekrahEdu الأكاديمية: ترجمة بحثية احترافية، نشر علمي في مجلات Scopus وISI، تحليل إحصائي SPSS، تدقيق لغوي، ودعم رسائل الماجستير والدكتوراه. استشارة مجانية خلال ساعة."
         keywords="FekrahEdu, FekrahEdu, خدمات بحثية, ترجمة أكاديمية, نشر علمي, Scopus, ISI, تدقيق لغوي, تحليل إحصائي, SPSS, AMOS, جامعات سعودية, بحث علمي, رسائل ماجستير, رسائل دكتوراه, خدمات أكاديمية السعودية"
         url="https://fekrahedu.com/"
-        image="https://fekrahedu.com/assets/national-day-logo-original.webp"
+        image="https://fekrahedu.com/fekrahedu-share.jpg?v=1"
         schema={[
           {
             "@context": "https://schema.org",
@@ -146,8 +146,8 @@ const Index = () => {
             "alternateName": "FekrahEdu",
             "description": "وكالة متخصصة في تقديم الخدمات الأكاديمية والبحثية للطلاب والباحثين",
             "url": "https://fekrahedu.com/",
-            "logo": "https://fekrahedu.com/assets/national-day-logo-original.webp",
-            "image": "https://fekrahedu.com/assets/national-day-logo-original.webp",
+            "logo": "https://fekrahedu.com/fekrah-logo.jpg",
+            "image": "https://fekrahedu.com/fekrahedu-share.jpg?v=1",
             "telephone": "+966593799355",
             "email": "info@fekrahedu.com",
             "address": {
