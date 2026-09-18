@@ -672,7 +672,8 @@ const Index = () => {
         </div>
       </section>
 
-      {/* قسم مميزات الجودة - تصميم تفاعلي بصور حقيقية */}
+      {/* قسم مميزات الجودة - مخفي مؤقتًا */}
+      {false && (
       <section className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-slate-900 via-violet-950 to-slate-900 text-white relative overflow-hidden">
         {/* خلفية صورة بـ Parallax */}
         <motion.div
@@ -819,6 +820,7 @@ const Index = () => {
           </div>
         </div>
       </section>
+      )}
 
       {/* قسم الشركاء الأكاديميين */}
       <section className="py-16 bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 dark:from-slate-900 dark:via-amber-950 dark:to-orange-950">
