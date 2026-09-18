@@ -57,4 +57,3 @@ export const template = {
   },
 } satisfies TemplateEntry
 
-const _unusedOtp = { direction: 'ltr' as const, textAlign: 'center' as const, fontSize: '34px', fontWeight: 700, letterSpacing: '8px', color: '#4c1d95', margin: 0, fontFamily: 'monospace' }
