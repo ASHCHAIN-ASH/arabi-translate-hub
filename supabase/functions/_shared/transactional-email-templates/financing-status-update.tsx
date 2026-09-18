@@ -2,9 +2,9 @@
 import * as React from 'npm:react@18.3.1'
 import {
   Body, Container, Head, Heading, Html, Preview, Text, Section, Hr, Button, Row, Column,
-} from 'npm:@react-email/components@0.0.22'
+ Img, } from 'npm:@react-email/components@0.0.22'
 import type { TemplateEntry } from './registry.ts'
-import { HEAD_CSS } from './_head.ts'
+import { HEAD_CSS, LOGO_URL } from './_head.ts'
 
 const SITE_NAME = 'FekrahEdu PayLater'
 const BRAND_COLOR = '#0f5132'
@@ -59,6 +59,7 @@ const FinancingStatusEmail = (props: FinancingStatusEmailProps) => {
       <Body dir="rtl" style={main}>
         <Container dir="rtl" className="fk-shell" style={container}>
           <Section style={header}>
+            <Img src={LOGO_URL} width="42" height="42" alt="FekrahEdu" style={{ borderRadius: '10px', backgroundColor: '#fff', marginBottom: '8px' }} />
             <Heading style={brand}>{SITE_NAME}</Heading>
           </Section>
 

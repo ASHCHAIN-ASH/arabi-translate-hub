@@ -1,10 +1,10 @@
 import * as React from 'npm:react@18.3.1'
 import {
   Body, Container, Head, Heading, Html, Preview, Text, Button, Hr, Section, Row, Column,
-} from 'npm:@react-email/components@0.0.22'
+ Img, } from 'npm:@react-email/components@0.0.22'
 import type { TemplateEntry } from './registry.ts'
 import * as S from './_invoice-shared.ts'
-import { HEAD_CSS } from './_head.ts'
+import { HEAD_CSS, LOGO_URL } from './_head.ts'
 
 interface Props {
   customerName?: string
@@ -32,6 +32,7 @@ const E = ({ customerName, invoiceNumber, remainingAmount, dueDate, daysOverdue,
           <Section style={S.header}>
             <Row>
               <Column>
+                <Img src={LOGO_URL} width="42" height="42" alt="FekrahEdu" style={{ borderRadius: '10px', backgroundColor: '#fff', marginBottom: '8px' }} />
                 <Text style={S.brand}>{S.SITE_NAME}</Text>
                 <Text style={S.tagline}>تذكير بسداد فاتورة</Text>
               </Column>
