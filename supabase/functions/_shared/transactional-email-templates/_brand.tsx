@@ -96,14 +96,29 @@ export const S = {
 }
 
 export const heroBox = (a: Accent = 'blue') => ({
-  margin: '22px 28px', padding: '22px', backgroundColor: accentOf(a).soft,
+  margin: '22px 28px', padding: '22px 16px', backgroundColor: accentOf(a).soft,
   border: `1px solid ${accentOf(a).solid}`, borderRadius: '10px', textAlign: 'center' as const,
+  boxSizing: 'border-box' as const, maxWidth: '100%', overflow: 'hidden' as const,
 })
 export const heroLabel = (a: Accent = 'blue') => ({
   fontSize: '12px', color: accentOf(a).ink, fontWeight: '700' as const, margin: '0 0 8px', letterSpacing: '1px',
+  textAlign: 'center' as const,
 })
 export const heroValue = (a: Accent = 'blue') => ({
-  fontSize: '34px', fontWeight: '900' as const, color: accentOf(a).solid, margin: 0, lineHeight: 1.25,
+  fontSize: '32px', fontWeight: '900' as const, color: accentOf(a).solid, margin: 0, lineHeight: 1.3,
+  textAlign: 'center' as const, overflowWrap: 'anywhere' as const,
+})
+
+/** صندوق رمز التحقق — يبقى داخل إطار الرسالة على كل الأحجام */
+export const otpBox = (a: Accent = 'violet') => ({
+  margin: '22px 28px', padding: '20px 12px', backgroundColor: '#ffffff',
+  border: `2px dashed ${accentOf(a).solid}`, borderRadius: '12px', textAlign: 'center' as const,
+  boxSizing: 'border-box' as const, maxWidth: '100%', overflow: 'hidden' as const,
+})
+export const otpCode = (a: Accent = 'violet') => ({
+  direction: 'ltr' as const, textAlign: 'center' as const, fontSize: '30px', fontWeight: 800,
+  letterSpacing: '8px', textIndent: '8px', color: accentOf(a).ink, margin: 0, lineHeight: 1.4,
+  fontFamily: "'IBM Plex Sans Arabic', 'Courier New', monospace", maxWidth: '100%',
 })
 export const card = { direction: 'rtl' as const, textAlign: 'right' as const, margin: '16px 28px', padding: '18px', backgroundColor: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '10px', overflow: 'hidden' as const }
 export const cardTitle = { fontSize: '14px', fontWeight: '800' as const, color: '#1e293b', margin: '0 0 12px', textAlign: 'right' as const }
