@@ -386,7 +386,7 @@ const Index = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.5 }}
               >
-                على مدى 11 عامًا، حظينا بثقة أكثر من {UNIFIED_STATS.studentsServed.toLocaleString()} باحث وطالب.
+                نلتزم بأعلى معايير الجودة الأكاديمية ونضع نجاحك في صدارة أولوياتنا.
               </motion.p>
 
               {/* الأزرار */}
