@@ -83,7 +83,7 @@ export default function ResetPassword() {
       return;
     }
 
-    const result = await resetPassword(token, formData.password);
+    const result = await resetPassword(tokenHash ?? '', formData.password);
 
     if (result.error) {
       setError(result.error);
