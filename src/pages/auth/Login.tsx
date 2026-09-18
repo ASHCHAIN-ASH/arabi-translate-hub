@@ -206,15 +206,22 @@ const Login = () => {
               )}
             </AnimatePresence>
 
-            {/* Remember me */}
+            {/* الموافقة على شروط الاستخدام */}
             <div className="flex items-center gap-2">
               <Checkbox
-                id="remember"
-                checked={remember}
-                onCheckedChange={(v) => setRemember(Boolean(v))}
+                id="agree-terms"
+                checked={agreeTerms}
+                onCheckedChange={(v) => setAgreeTerms(Boolean(v))}
               />
-              <Label htmlFor="remember" className="text-sm text-muted-foreground cursor-pointer select-none">
-                تذكّرني على هذا الجهاز
+              <Label htmlFor="agree-terms" className="text-sm text-muted-foreground cursor-pointer select-none">
+                أوافق على{' '}
+                <button
+                  type="button"
+                  onClick={() => navigate('/terms-of-service')}
+                  className="text-primary hover:underline font-medium"
+                >
+                  شروط الاستخدام
+                </button>
               </Label>
             </div>
 
