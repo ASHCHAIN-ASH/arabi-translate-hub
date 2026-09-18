@@ -15,7 +15,6 @@ import {
   Users,
   Star,
   Zap,
-  Timer,
   HelpCircle,
   TrendingUp,
   DollarSign,
