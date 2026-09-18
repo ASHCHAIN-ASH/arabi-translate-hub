@@ -373,15 +373,6 @@ const Footer = () => {
               </div>
             </div>
             
-            <div className="flex flex-wrap items-center justify-center lg:justify-end gap-3 md:gap-4 text-xs md:text-sm">
-              <a 
-                href="/contact-us"
-                className="text-white/70 hover:text-white transition-colors relative group hover:underline whitespace-nowrap flex items-center gap-1"
-              >
-                <Headphones className="h-3 w-3" />
-                دعم العملاء
-              </a>
-            </div>
             
             {/* شعار اليوم الوطني في الفوتر */}
             <div className="flex items-center gap-2 md:gap-3 mt-2 lg:mt-0 mx-auto lg:mx-0">
