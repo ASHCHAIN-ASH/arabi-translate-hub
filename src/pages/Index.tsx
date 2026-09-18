@@ -1041,6 +1041,8 @@ const Index = () => {
           </div>
         </div>
       </section>
+      )}
+
 
       {/* Quick Inquiry Form - Lead Capture بصورة فريق حقيقية - مخفي مؤقتًا */}
       {false && (
