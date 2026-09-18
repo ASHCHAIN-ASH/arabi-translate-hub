@@ -26,16 +26,16 @@ const ContractOtpEmail = ({
     badge={contractNumber ? `عقد ${contractNumber}` : 'تحقق آمن'}
     footerNote="إذا لم تطلب هذا الرمز فتجاهل الرسالة؛ لن يتم توقيع العقد دون إدخاله."
   >
-        <Heading style={S.title}>رمز التحقق لتوقيع العقد</Heading>
+        <Heading style={S.title} className="fk-title">رمز التحقق لتوقيع العقد</Heading>
         <Text style={S.greeting}>مرحباً {clientName}،</Text>
         <Text style={S.text}>
           لإتمام توقيع العقد رقم <strong>{contractNumber}</strong>
           {contractTitle ? <> — {contractTitle}</> : null}، استخدم رمز التحقق التالي:
         </Text>
 
-        <Section style={heroBox('violet')}>
+        <Section style={otpBox('violet')}>
           <Text style={heroLabel('violet')}>رمز التحقق الخاص بك</Text>
-          <Text style={otp}>{otpCode}</Text>
+          <Text style={otpCode('violet')} className="fk-code">{otpCode_(otpCode0(otpCode1(otpCodeValue(otpCodeRaw))))}</Text>
         </Section>
 
         <Text style={S.text}>
