@@ -1041,7 +1041,8 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Quick Inquiry Form - Lead Capture بصورة فريق حقيقية */}
+      {/* Quick Inquiry Form - Lead Capture بصورة فريق حقيقية - مخفي مؤقتًا */}
+      {false && (
       <section className="py-16 sm:py-20 relative overflow-hidden text-white" dir="rtl">
         {/* خلفية صورة فريق حقيقي مع Parallax */}
         <motion.div
@@ -1151,6 +1152,7 @@ const Index = () => {
           </div>
         </div>
       </section>
+      )}
 
       {/* Suspense Sections مع Lazy Loading */}
       <Suspense fallback={<LoadingSpinner />}>
