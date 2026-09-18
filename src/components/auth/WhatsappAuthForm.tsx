@@ -22,9 +22,19 @@ const withTimeout = <T,>(promise: Promise<T>, ms = 20000): Promise<T> =>
     ),
   ]);
 
+// تحويل أي صيغة مُدخلة إلى الرقم المحلي (9 أرقام تبدأ بـ 5)
+const normalizeLocal = (raw: string) => {
+  let d = raw.replace(/\D/g, '');
+  if (d.startsWith('00966')) d = d.slice(5);
+  else if (d.startsWith('966')) d = d.slice(3);
+  if (d.startsWith('0')) d = d.slice(1);
+  return d.slice(0, 9);
+};
+
 export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
   const [step, setStep] = useState<'phone' | 'code'>('phone');
   const [phone, setPhone] = useState('');
+
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
@@ -56,11 +66,14 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
     };
   }, []);
 
+  const fullPhone = phone ? `966${phone}` : '';
+
   const requestCode = async () => {
-    if (!phone || phone.replace(/\D/g, '').length < 8) {
+    if (phone.length !== 9 || !phone.startsWith('5')) {
       toast.error('أدخل رقم جوال صحيح');
       return;
     }
+
     if (mode === 'register' && !fullName.trim()) {
       toast.error('أدخل اسمك الكامل');
       return;
@@ -81,7 +94,7 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
     try {
       const { data, error } = await withTimeout(
         supabase.functions.invoke('whatsapp-otp-request', {
-          body: { phone, purpose: mode },
+          body: { phone: fullPhone, purpose: mode },
         }),
       );
       if (error || !data?.success) {
@@ -108,7 +121,8 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
       const { data, error } = await withTimeout(
         supabase.functions.invoke('whatsapp-auth-complete', {
           body: {
-            phone,
+            phone: fullPhone,
+
             code: finalCode,
             full_name: fullName,
             email: email.trim() || undefined,
@@ -238,17 +252,25 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
             <Label htmlFor="wa-phone" className="flex items-center gap-2 text-slate-700 font-medium">
               <Phone className="w-4 h-4" /> رقم الجوال (واتساب)
             </Label>
-            <Input
-              id="wa-phone"
-              type="tel"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="966xxxxxxxxx"
-              dir="ltr"
-              className="mt-2 h-12 border-2 focus:border-emerald-500 text-right"
-            />
+            <div className="mt-2 flex items-center gap-2" dir="ltr">
+              <span className="h-12 shrink-0 rounded-md border-2 border-input bg-muted px-3 flex items-center font-semibold text-slate-700">
+                +966
+              </span>
+              <Input
+                id="wa-phone"
+                type="tel"
+                inputMode="numeric"
+                value={phone}
+                onChange={(e) => setPhone(normalizeLocal(e.target.value))}
+                placeholder="5xxxxxxxx"
+                dir="ltr"
+                maxLength={9}
+                className="h-12 border-2 focus:border-emerald-500"
+              />
+            </div>
             <p className="text-xs text-slate-500 mt-1">سنرسل رمز التحقق على واتساب</p>
           </div>
+
           {mode === 'register' && (
             <div className="space-y-3 rounded-lg border border-border bg-muted/30 p-3.5">
               <div className="flex items-start gap-3">
@@ -296,7 +318,7 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
       {step === 'code' && (
         <>
           <div className="text-center text-sm text-slate-600">
-            تم إرسال الرمز إلى <span className="font-mono font-bold">{phone}</span>
+            تم إرسال الرمز إلى <span className="font-mono font-bold" dir="ltr">+{fullPhone}</span>
           </div>
           <div>
             <Label className="flex items-center gap-2 text-slate-700 font-medium mb-3">
