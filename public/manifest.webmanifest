@@ -13,13 +13,13 @@
   "categories": ["education", "finance", "productivity"],
   "icons": [
     {
-      "src": "/favicon.png?v=2",
+      "src": "/favicon.png?v=3",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/favicon.png?v=2",
+      "src": "/favicon.png?v=3",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
@@ -30,13 +30,13 @@
       "name": "طلب تمويل جديد",
       "short_name": "تمويل",
       "url": "/financing/new",
-      "icons": [{ "src": "/favicon.png?v=2", "sizes": "192x192" }]
+      "icons": [{ "src": "/favicon.png?v=3", "sizes": "192x192" }]
     },
     {
       "name": "لوحة العميل",
       "short_name": "لوحتي",
       "url": "/dashboard",
-      "icons": [{ "src": "/favicon.png?v=2", "sizes": "192x192" }]
+      "icons": [{ "src": "/favicon.png?v=3", "sizes": "192x192" }]
     }
   ]
 }
