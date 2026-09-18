@@ -28,9 +28,8 @@ import {
   Newspaper
 } from "lucide-react";
 const fekrahLogoUrl = "/fekrah-logo.jpg";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
+
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
