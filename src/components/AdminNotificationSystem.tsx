@@ -88,7 +88,7 @@ const AdminNotificationSystem: React.FC<AdminNotificationSystemProps> = ({ onNot
       id: `notification-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       type: randomData.priority === 'critical' ? 'urgent_order' : 'new_order',
       timestamp: new Date(),
-      phone: '+966559600824',
+      phone: '+966593799355',
       budget: '15k-30k',
       timeline: 'week',
       description: 'طلب خدمة عاجلة من عميل مهم يتطلب اهتماماً خاصاً',

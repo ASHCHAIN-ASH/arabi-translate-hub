@@ -616,7 +616,7 @@ export default function EmailNotifications() {
           <div class="mobile-contact" style="background: rgba(255,255,255,0.08); padding: 8px 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(10px); margin: 15px auto 5px auto; text-align: center; max-width: 280px;">
             <div style="display: flex; align-items: center; justify-content: center; gap: 15px; flex-wrap: wrap; direction: rtl;">
               <span style="color: rgba(255,255,255,0.9); font-size: 10px; font-weight: 700; direction: rtl;">📧 info@fekrahedu.com</span>
-              <span style="color: rgba(255,255,255,0.9); font-size: 10px; font-weight: 700;">📱 0559600824</span>
+              <span style="color: rgba(255,255,255,0.9); font-size: 10px; font-weight: 700;">📱 0593799355</span>
             </div>
           </div>
 
@@ -634,7 +634,7 @@ export default function EmailNotifications() {
                 <p style="margin: 8px 0; color: #334155; line-height: 1.8; text-align: right; direction: rtl; font-size: 15px; font-weight: 600; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">FekrahEdu</p>
                 <p style="margin: 6px 0; color: #64748b; text-align: right; direction: rtl; font-size: 14px; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">🌍 المملكة العربية السعودية</p>
                 <p style="margin: 6px 0; color: #64748b; text-align: right; direction: rtl; font-size: 14px; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">📧 info@fekrahedu.com</p>
-                <p style="margin: 6px 0; color: #64748b; text-align: right; direction: rtl; font-size: 14px; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">📱 0559600824</p>
+                <p style="margin: 6px 0; color: #64748b; text-align: right; direction: rtl; font-size: 14px; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">📱 0593799355</p>
               </div>
             </div>
             
@@ -791,7 +791,7 @@ export default function EmailNotifications() {
               </div>
               <p style="margin: 0 0 8px 0; color: white; font-size: 14px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">أرسل إيصال التحويل فوراً</p>
               <div style="background: rgba(255,255,255,0.2); border-radius: 8px; padding: 8px; display: inline-block; backdrop-filter: blur(5px);">
-                <p style="margin: 0; color: white; font-size: 18px; font-weight: bold; direction: rtl; font-family: 'Courier New', monospace;" class="mobile-text">0559600824</p>
+                <p style="margin: 0; color: white; font-size: 18px; font-weight: bold; direction: rtl; font-family: 'Courier New', monospace;" class="mobile-text">0593799355</p>
               </div>
               <p style="margin: 8px 0 0 0; color: rgba(255,255,255,0.9); font-size: 10px; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">WhatsApp Business • متاح 24/7</p>
             </div>
@@ -981,7 +981,7 @@ export default function EmailNotifications() {
           <div class="mobile-contact" style="background: rgba(255,255,255,0.08); padding: 6px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); margin: 12px auto; text-align: center; max-width: 250px;">
             <div style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; direction: rtl;">
               <span style="color: rgba(255,255,255,0.9); font-size: 9px; font-weight: 700; direction: rtl;">📧 info@fekrahedu.com</span>
-              <span style="color: rgba(255,255,255,0.9); font-size: 9px; font-weight: 700;">📱 0559600824</span>
+              <span style="color: rgba(255,255,255,0.9); font-size: 9px; font-weight: 700;">📱 0593799355</span>
             </div>
           </div>
         </div>
@@ -1031,7 +1031,7 @@ export default function EmailNotifications() {
           <!-- WhatsApp Contact -->
           <div style="background: #25d366; border-radius: 8px; padding: 15px; margin: 20px 0; direction: rtl; text-align: center; color: white;">
             <p style="margin: 0 0 5px 0; color: white; font-size: 14px; direction: rtl;" class="mobile-text">📱 للاستفسارات والتواصل:</p>
-            <p style="margin: 0; color: white; font-size: 16px; font-weight: bold; direction: rtl;" class="mobile-text">0559600824</p>
+            <p style="margin: 0; color: white; font-size: 16px; font-weight: bold; direction: rtl;" class="mobile-text">0593799355</p>
           </div>
 
           <!-- Signature Section - Mobile Optimized -->
@@ -1151,7 +1151,7 @@ export default function EmailNotifications() {
         <div class="mobile-contact" style="background: rgba(255,255,255,0.08); padding: 6px 12px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.15); margin: 15px auto; text-align: center; max-width: 260px;">
           <div style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; direction: rtl;">
             <span style="color: rgba(255,255,255,0.9); font-size: 9px; font-weight: 700; direction: rtl;">📧 info@fekrahedu.com</span>
-            <span style="color: rgba(255,255,255,0.9); font-size: 9px; font-weight: 700;">📱 0559600824</span>
+            <span style="color: rgba(255,255,255,0.9); font-size: 9px; font-weight: 700;">📱 0593799355</span>
           </div>
         </div>
       </div>
@@ -1280,7 +1280,7 @@ export default function EmailNotifications() {
           <div class="mobile-contact" style="background: rgba(255,255,255,0.08); padding: 6px 12px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.15); margin: 15px auto; text-align: center; max-width: 260px;">
             <div style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; direction: rtl;">
               <span style="color: rgba(255,255,255,0.9); font-size: 9px; font-weight: 700; direction: rtl;">📧 info@fekrahedu.com</span>
-              <span style="color: rgba(255,255,255,0.9); font-size: 9px; font-weight: 700;">📱 0559600824</span>
+              <span style="color: rgba(255,255,255,0.9); font-size: 9px; font-weight: 700;">📱 0593799355</span>
             </div>
           </div>
         </div>

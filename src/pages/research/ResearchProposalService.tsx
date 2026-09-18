@@ -27,7 +27,7 @@ export default function ResearchProposalService() {
   });
 
   const whatsappNumbers = [
-    { number: '0559600824', label: 'واتساب' }
+    { number: '0593799355', label: 'واتساب' }
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {

@@ -31,7 +31,7 @@ const CONTACT_METHODS = [
     title: "واتساب",
     value: "+966 55 960 0824",
     detail: "للتواصل السريع مع فريق خدمة العملاء",
-    href: "https://wa.me/966559600824",
+    href: "https://wa.me/966593799355",
     label: "ابدأ المحادثة",
   },
   {
@@ -45,9 +45,9 @@ const CONTACT_METHODS = [
   {
     icon: Phone,
     title: "الهاتف",
-    value: "0559600824",
+    value: "0593799355",
     detail: "للتواصل المباشر خلال أوقات العمل",
-    href: "tel:+966559600824",
+    href: "tel:+966593799355",
     label: "اتصل الآن",
   },
 ];
@@ -136,7 +136,7 @@ const ContactUs = () => {
           mainEntity: {
             "@type": "Organization",
             name: "FekrahEdu",
-            telephone: "+966559600824",
+            telephone: "+966593799355",
             email: "info@fekrahedu.com",
             address: { "@type": "PostalAddress", addressCountry: "SA" },
           },

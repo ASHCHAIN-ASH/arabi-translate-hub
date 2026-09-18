@@ -158,7 +158,7 @@ export default function EmailComposer({ defaultTo = "", defaultTemplateKey = "",
           <tr><td class="content">${bodyHtml}</td></tr>
           <tr><td class="footer">
             © ${new Date().getFullYear()} FekrahEdu - جميع الحقوق محفوظة<br/>
-            للتواصل: <a href="mailto:info@fekrahedu.com">info@fekrahedu.com</a> · واتساب: 0559600824
+            للتواصل: <a href="mailto:info@fekrahedu.com">info@fekrahedu.com</a> · واتساب: 0593799355
             <div class="links">
               <a href="https://fekrahedu.com">الموقع</a> ·
               <a href="https://fekrahedu.com/contact-us">تواصل معنا</a>

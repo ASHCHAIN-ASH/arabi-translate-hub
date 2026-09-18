@@ -215,7 +215,7 @@ const AboutUs = () => {
             },
             "contactPoint": {
               "@type": "ContactPoint",
-              "telephone": "+966559600824",
+              "telephone": "+966593799355",
               "contactType": "customer service",
               "email": "info@fekrahedu.com",
               "areaServed": "SA",

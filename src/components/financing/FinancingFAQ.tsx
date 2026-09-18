@@ -113,12 +113,12 @@ const FinancingFAQ: React.FC = () => {
             <p className="text-[12px] sm:text-sm text-white/80">
               تواصل مع فريق التمويل والائتمان والمتابعة عبر الواتساب —{' '}
               <a
-                href="https://wa.me/966559600824"
+                href="https://wa.me/966593799355"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-bold tabular-nums underline-offset-2 hover:underline"
               >
-                +966559600824
+                +966593799355
               </a>
             </p>
           </div>

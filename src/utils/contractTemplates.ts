@@ -18,7 +18,7 @@ export const PARENT_COMPANY = {
   governingLaw:
     "أنظمة المملكة العربية السعودية ذات العلاقة (نظام التجارة الإلكترونية، نظام المعاملات المدنية، نظام التعاملات الإلكترونية، ونظام حماية البيانات الشخصية)",
   arbitrationVenue: "مركز التحكيم التجاري السعودي بمدينة الرياض",
-  contactPhone: "0559600824",
+  contactPhone: "0593799355",
   email: "info@fekrahedu.com",
   website: "fekrahedu.com",
 };

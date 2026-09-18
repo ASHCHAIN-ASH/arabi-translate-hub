@@ -420,7 +420,7 @@ const Footer = () => {
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-4xl mx-auto">
               {[
-                { Icon: Phone, text: "0559600824", subtext: "اتصل بنا الآن", color: "text-green-400", bgColor: "bg-green-400/10", borderColor: "border-green-400/20" },
+                { Icon: Phone, text: "0593799355", subtext: "اتصل بنا الآن", color: "text-green-400", bgColor: "bg-green-400/10", borderColor: "border-green-400/20" },
                 { Icon: Mail, text: "info@fekrahedu.com", subtext: "راسلنا عبر البريد", color: "text-blue-400", bgColor: "bg-blue-400/10", borderColor: "border-blue-400/20" },
                 { Icon: MapPin, text: "جدة، المملكة العربية السعودية", subtext: "موقعنا الرئيسي", color: "text-red-400", bgColor: "bg-red-400/10", borderColor: "border-red-400/20" }
               ].map(({ Icon, text, subtext, color, bgColor, borderColor }, index) => (

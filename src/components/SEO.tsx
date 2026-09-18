@@ -38,7 +38,7 @@ const SEO = ({
     "logo": "https://fekrahedu.com/assets/national-day-logo-original.webp",
     "contactPoint": {
       "@type": "ContactPoint",
-      "telephone": "+966559600824",
+      "telephone": "+966593799355",
       "contactType": "customer service",
       "email": "info@fekrahedu.com",
       "areaServed": "SA",

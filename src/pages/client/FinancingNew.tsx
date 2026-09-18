@@ -801,7 +801,7 @@ const FinancingNew: React.FC = () => {
                       valid={v.phone}
                       invalid={v.phoneInvalid}
                       errorMessage={errMsg.phone}
-                      hint="مثال: 0501234567 أو 966501234567"
+                      hint="مثال: 0593799355 أو 966593799355"
                     >
                       <Input
                         type="tel"

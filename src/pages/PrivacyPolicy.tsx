@@ -450,7 +450,7 @@ const PrivacyPolicy = () => {
                       <div className="text-center">
                         <p className="font-semibold text-primary">الطريقة الثانية</p>
                         <p className="text-muted-foreground">التواصل الهاتفي المباشر</p>
-                        <p className="text-xs text-primary">0559600824</p>
+                        <p className="text-xs text-primary">0593799355</p>
                       </div>
                       <div className="text-center">
                         <p className="font-semibold text-primary">الطريقة الثالثة</p>
@@ -698,12 +698,12 @@ const PrivacyPolicy = () => {
                     <div className="grid lg:grid-cols-3 gap-4 text-center">
                       <div>
                         <div className="text-purple-600 font-semibold">الهاتف</div>
-                        <p className="text-sm text-purple-700">0559600824</p>
+                        <p className="text-sm text-purple-700">0593799355</p>
                         <p className="text-xs text-purple-600">متاح دائماً</p>
                       </div>
                       <div>
                         <div className="text-purple-600 font-semibold">الواتساب</div>
-                        <p className="text-sm text-purple-700">0559600824</p>
+                        <p className="text-sm text-purple-700">0593799355</p>
                         <p className="text-xs text-purple-600">رد سريع</p>
                       </div>
                       <div>
@@ -775,7 +775,7 @@ const PrivacyPolicy = () => {
               </div>
               <div className="flex items-center gap-2 text-primary">
                 <span>📞</span>
-                <span>0559600824</span>
+                <span>0593799355</span>
               </div>
             </div>
           </motion.div>
