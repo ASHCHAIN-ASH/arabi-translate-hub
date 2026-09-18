@@ -15,7 +15,6 @@ import {
   Users,
   Star,
   Zap,
-  Timer,
   HelpCircle,
   TrendingUp,
   DollarSign,
@@ -29,9 +28,8 @@ import {
   Newspaper
 } from "lucide-react";
 const fekrahLogoUrl = "/fekrah-logo.jpg";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
+
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -313,34 +311,6 @@ const Footer = () => {
 
         </div>
 
-        {/* Newsletter Section */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-          className="mt-12 bg-gradient-to-br from-primary/10 to-blue-600/10 border border-white/10 hover:border-white/20 transition-all duration-300 rounded-xl p-6 md:p-8"
-        >
-          <div className="text-center space-y-4">
-            <h5 className="text-lg font-bold text-white flex items-center justify-center gap-3">
-              <div className="flex items-center justify-center w-10 h-10 bg-yellow-400/10 rounded-full">
-                <Timer className="h-5 w-5 text-yellow-400" />
-              </div>
-              اشترك في نشرتنا الإخبارية
-            </h5>
-            <p className="text-sm text-white/70">احصل على آخر العروض والأخبار المهمة</p>
-            <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-              <Input 
-                placeholder="البريد الإلكتروني" 
-                className="bg-white/10 border-white/20 text-white placeholder:text-white/50 flex-1 text-sm"
-              />
-              <Button 
-                className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/80 hover:to-blue-600/80 text-white shadow-lg hover:shadow-xl transition-all duration-300 whitespace-nowrap px-6"
-              >
-                اشترك الآن
-              </Button>
-            </div>
-          </div>
-         </motion.div>
 
       </div>
 
