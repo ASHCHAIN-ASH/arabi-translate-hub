@@ -6,7 +6,8 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAuth } from '@/components/SimpleAuthProvider';
-import { CheckCircle, AlertCircle } from 'lucide-react';
+import { authService } from '@/data';
+import { CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function ResetPassword() {
@@ -19,15 +20,43 @@ export default function ResetPassword() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-  
-  const { resetPassword } = useAuth();
-  const token = searchParams.get('token');
+  const [checking, setChecking] = useState(true);
+  const [linkInvalid, setLinkInvalid] = useState(false);
+
+  const { resetPassword, session, loading: authLoading } = useAuth();
+  const tokenHash = searchParams.get('token_hash') || searchParams.get('token');
 
   useEffect(() => {
-    if (!token) {
-      setError('رمز إعادة التعيين غير موجود أو غير صحيح');
-    }
-  }, [token]);
+    let cancelled = false;
+
+    (async () => {
+      if (tokenHash) {
+        const { error: verifyError } = await authService.verifyEmailToken(tokenHash, 'recovery');
+        if (cancelled) return;
+        setLinkInvalid(Boolean(verifyError));
+        setChecking(false);
+        return;
+      }
+
+      if (authLoading) return;
+      if (session) {
+        setLinkInvalid(false);
+        setChecking(false);
+        return;
+      }
+
+      // امنح الجلسة فرصة للوصول بعد التحقق من الرابط
+      setTimeout(() => {
+        if (cancelled) return;
+        setLinkInvalid(true);
+        setChecking(false);
+      }, 1200);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [tokenHash, authLoading, session]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({
@@ -38,11 +67,6 @@ export default function ResetPassword() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!token) {
-      setError('رمز إعادة التعيين غير صحيح');
-      return;
-    }
 
     setLoading(true);
     setError('');
@@ -53,13 +77,13 @@ export default function ResetPassword() {
       return;
     }
 
-    if (formData.password.length < 6) {
-      setError('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+    if (formData.password.length < 8) {
+      setError('كلمة المرور يجب أن تكون 8 أحرف على الأقل');
       setLoading(false);
       return;
     }
 
-    const result = await resetPassword(token, formData.password);
+    const result = await resetPassword(tokenHash ?? '', formData.password);
 
     if (result.error) {
       setError(result.error);
@@ -100,7 +124,18 @@ export default function ResetPassword() {
     );
   }
 
-  if (!token || error) {
+  if (checking) {
+    return (
+      <div dir="rtl" className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 to-secondary/5 px-4">
+        <div className="text-center">
+          <Loader2 className="mx-auto h-10 w-10 animate-spin text-primary" />
+          <p className="mt-4 text-sm text-muted-foreground">جارٍ التحقق من الرابط…</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (linkInvalid) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 to-secondary/5 px-4">
         <Card className="w-full max-w-md">
