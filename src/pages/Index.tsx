@@ -1270,7 +1270,8 @@ const Index = () => {
               </motion.div>
             </div>
 
-            {/* مؤشرات الثقة السفلية */}
+            {/* مؤشرات الثقة السفلية (15,000+ عميل، 4.9/5 تقييم، 25+ دولة، تسليم 24 ساعة) — مخفية مؤقتًا */}
+            {false && (
             <motion.div
               className="mt-12 flex flex-wrap justify-center gap-6 sm:gap-10 text-white/80"
               initial={{ opacity: 0, y: 20 }}
@@ -1295,6 +1296,7 @@ const Index = () => {
                 <span className="text-sm font-medium">تسليم 24 ساعة</span>
               </div>
             </motion.div>
+            )}
           </motion.div>
         </div>
       </section>
