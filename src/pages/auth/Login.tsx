@@ -13,14 +13,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { WhatsappAuthForm } from '@/components/auth/WhatsappAuthForm';
 import AuthShell from '@/components/auth/AuthShell';
 
-const REMEMBER_KEY = 'edu_remember_email';
-
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [remember, setRemember] = useState(false);
+  const [agreeTerms, setAgreeTerms] = useState(false);
   const [capsOn, setCapsOn] = useState(false);
   const [needsConfirmation, setNeedsConfirmation] = useState(false);
   const [resendingConfirmation, setResendingConfirmation] = useState(false);
@@ -32,14 +30,6 @@ const Login = () => {
   const nextPath = redirectTo?.pathname
     ? `${redirectTo.pathname}${redirectTo.search ?? ''}`
     : null;
-
-  useEffect(() => {
-    const saved = localStorage.getItem(REMEMBER_KEY);
-    if (saved) {
-      setEmail(saved);
-      setRemember(true);
-    }
-  }, []);
 
   useEffect(() => {
     if (!authLoading && user) {
