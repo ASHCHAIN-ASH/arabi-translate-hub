@@ -153,11 +153,12 @@ interface LayoutProps {
   tagline?: string
   badge?: string
   cta?: { label: string; url: string }
+  fallbackUrl?: string
   children: React.ReactNode
   footerNote?: string
 }
 
-export function BrandEmail({ preview, accent = 'blue', tagline, badge, cta, children, footerNote }: LayoutProps) {
+export function BrandEmail({ preview, accent = 'blue', tagline, badge, cta, fallbackUrl, children, footerNote }: LayoutProps) {
   const a = accentOf(accent)
   return (
     <Html lang="ar" dir="rtl">
