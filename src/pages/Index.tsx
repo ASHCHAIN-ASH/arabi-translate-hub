@@ -119,7 +119,7 @@ const Index = () => {
     <div className="min-h-screen bg-background" dir="rtl">
       <SEO
         title="FekrahEdu | خدمات بحثية وأكاديمية متقدمة — ترجمة، نشر علمي، تحليل SPSS"
-        description="وكالة FekrahEdu الأكاديمية: ترجمة بحثية احترافية، نشر علمي في مجلات Scopus وISI، تحليل إحصائي SPSS، تدقيق لغوي، ودعم رسائل الماجستير والدكتوراه. أكثر من 15,000 باحث في 25+ دولة. استشارة مجانية خلال ساعة."
+        description="وكالة FekrahEdu الأكاديمية: ترجمة بحثية احترافية، نشر علمي في مجلات Scopus وISI، تحليل إحصائي SPSS، تدقيق لغوي، ودعم رسائل الماجستير والدكتوراه. استشارة مجانية خلال ساعة."
         keywords="FekrahEdu, FekrahEdu, خدمات بحثية, ترجمة أكاديمية, نشر علمي, Scopus, ISI, تدقيق لغوي, تحليل إحصائي, SPSS, AMOS, جامعات سعودية, بحث علمي, رسائل ماجستير, رسائل دكتوراه, خدمات أكاديمية السعودية"
         url="https://fekrahedu.com/"
         image="https://fekrahedu.com/assets/national-day-logo-original.webp"
