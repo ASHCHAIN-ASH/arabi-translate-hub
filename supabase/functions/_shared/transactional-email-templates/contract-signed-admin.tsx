@@ -30,7 +30,7 @@ const ContractSignedAdminEmail = ({
       </Head>
     <Preview>تم توقيع عقد جديد — نسخة PDF مرفقة</Preview>
     <Body dir="rtl" style={main}>
-      <Container dir="rtl" style={container}>
+      <Container dir="rtl" className="fk-shell" style={container}>
         <Section style={header}>
           <Heading style={brand}>{SITE_NAME}</Heading>
           <Text style={parent}>تابعة لـ {PARENT}</Text>
@@ -53,7 +53,7 @@ const ContractSignedAdminEmail = ({
 
         {pdfUrl && (
           <Section style={{ textAlign: 'center', margin: '28px 0' }}>
-            <Button href={pdfUrl} style={btn}>تنزيل نسخة PDF من العقد</Button>
+            <Button className="fk-btn" href={pdfUrl} style={btn}>تنزيل نسخة PDF من العقد</Button>
             <Text style={hint}>الرابط صالح لمدة 7 أيام</Text>
           </Section>
         )}

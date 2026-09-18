@@ -44,10 +44,11 @@ export const ReauthenticationEmail = ({ recipient, token }: Props) => (
               رمز التحقق
             </div>
             <div
+              className="fk-code"
               style={{
-                fontSize: '38px',
+                fontSize: '30px',
                 fontWeight: 800,
-                letterSpacing: '12px',
+                letterSpacing: '8px',
                 color: P.primary,
                 fontFamily: "'IBM Plex Sans Arabic', monospace",
                 direction: 'ltr',

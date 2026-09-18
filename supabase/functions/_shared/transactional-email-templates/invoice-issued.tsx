@@ -43,11 +43,11 @@ const E = ({
       </Head>
       <Preview>{`فاتورة ${invoiceNumber ?? ''} بمبلغ ${S.fmt(totalAmount)} ${cur} — ${S.SITE_NAME}`}</Preview>
       <Body dir="rtl" style={S.main}>
-        <Container dir="rtl" style={S.container}>
+        <Container dir="rtl" className="fk-shell" style={S.container}>
           <Section style={S.header}>
             <Row>
               <Column>
-                <Text style={S.brand}>🏦 {S.SITE_NAME}</Text>
+                <Text style={S.brand}>{S.SITE_NAME}</Text>
                 <Text style={S.tagline}>فاتورة جديدة صادرة باسمك</Text>
               </Column>
               <Column align="right">
@@ -121,7 +121,7 @@ const E = ({
           </Section>
 
           <Section style={S.btnSection}>
-            <Button style={S.btnPrimary} href={invoiceUrl || `${S.SITE_URL}/invoices`}>
+            <Button className="fk-btn" style={S.btnPrimary} href={invoiceUrl || `${S.SITE_URL}/invoices`}>
               عرض الفاتورة والدفع
             </Button>
             <Text style={{ margin: '12px 0 0', fontSize: '12px' }}>

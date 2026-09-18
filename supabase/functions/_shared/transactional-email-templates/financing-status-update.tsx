@@ -57,9 +57,9 @@ const FinancingStatusEmail = (props: FinancingStatusEmailProps) => {
       </Head>
       <Preview>{`${meta.emoji} ${meta.title} — ${SITE_NAME}`}</Preview>
       <Body dir="rtl" style={main}>
-        <Container dir="rtl" style={container}>
+        <Container dir="rtl" className="fk-shell" style={container}>
           <Section style={header}>
-            <Heading style={brand}>🏦 {SITE_NAME}</Heading>
+            <Heading style={brand}>{SITE_NAME}</Heading>
           </Section>
 
           <Section style={hero}>
@@ -126,7 +126,7 @@ const FinancingStatusEmail = (props: FinancingStatusEmailProps) => {
 
           {props.contractPdfUrl && (
             <Section style={{ textAlign: 'center', margin: '20px 0' }}>
-              <Button href={props.contractPdfUrl} style={button}>📄 تحميل العقد للمراجعة</Button>
+              <Button className="fk-btn" href={props.contractPdfUrl} style={button}>📄 تحميل العقد للمراجعة</Button>
             </Section>
           )}
 

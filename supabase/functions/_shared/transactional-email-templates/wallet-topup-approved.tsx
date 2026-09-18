@@ -25,11 +25,11 @@ const E = ({ customerName, amount, newBalance, requestId, approvedAt, paymentMet
       </Head>
     <Preview>{`✅ تم إيداع ${amount ?? ''} ر.س في محفظتك بنجاح — ${SITE_NAME}`}</Preview>
     <Body dir="rtl" style={main}>
-      <Container dir="rtl" style={container}>
+      <Container dir="rtl" className="fk-shell" style={container}>
         <Section style={bankHeader}>
           <Row>
             <Column>
-              <Text style={bankBrand}>🏦 {SITE_NAME}</Text>
+              <Text style={bankBrand}>{SITE_NAME}</Text>
               <Text style={bankTagline}>إشعار إيداع رسمي</Text>
             </Column>
             <Column align="right">
@@ -115,7 +115,7 @@ const E = ({ customerName, amount, newBalance, requestId, approvedAt, paymentMet
         </Section>
 
         <Section style={btnSection}>
-          <Button style={btnPrimary} href={walletUrl || 'https://fekrahedu.com/wallet'}>
+          <Button className="fk-btn" style={btnPrimary} href={walletUrl || 'https://fekrahedu.com/wallet'}>
             عرض المحفظة والرصيد
           </Button>
         </Section>

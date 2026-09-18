@@ -25,11 +25,11 @@ const E = ({ customerName, invoiceNumber, totalAmount, paidAt, currency, invoice
       </Head>
       <Preview>{`إيصال سداد الفاتورة ${invoiceNumber ?? ''} — ${S.SITE_NAME}`}</Preview>
       <Body dir="rtl" style={S.main}>
-        <Container dir="rtl" style={S.container}>
+        <Container dir="rtl" className="fk-shell" style={S.container}>
           <Section style={S.header}>
             <Row>
               <Column>
-                <Text style={S.brand}>🏦 {S.SITE_NAME}</Text>
+                <Text style={S.brand}>{S.SITE_NAME}</Text>
                 <Text style={S.tagline}>إيصال سداد نهائي</Text>
               </Column>
               <Column align="right">
@@ -78,7 +78,7 @@ const E = ({ customerName, invoiceNumber, totalAmount, paidAt, currency, invoice
           </Section>
 
           <Section style={S.btnSection}>
-            <Button style={S.btnPrimary} href={invoiceUrl || `${S.SITE_URL}/invoices`}>
+            <Button className="fk-btn" style={S.btnPrimary} href={invoiceUrl || `${S.SITE_URL}/invoices`}>
               تحميل الفاتورة المدفوعة
             </Button>
           </Section>

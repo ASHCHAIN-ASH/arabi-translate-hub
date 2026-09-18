@@ -22,7 +22,7 @@ const QuoteNotificationEmail = ({ serviceName, trackingId, amount, ordersUrl }: 
       </Head>
     <Preview>تم إرسال عرض سعر جديد لطلبك - {SITE_NAME}</Preview>
     <Body dir="rtl" style={main}>
-      <Container dir="rtl" style={container}>
+      <Container dir="rtl" className="fk-shell" style={container}>
         <Section style={headerSection}>
           <Heading style={logo}>{SITE_NAME}</Heading>
         </Section>
@@ -54,7 +54,7 @@ const QuoteNotificationEmail = ({ serviceName, trackingId, amount, ordersUrl }: 
         </Section>
 
         <Section style={buttonSection}>
-          <Button style={button} href={ordersUrl || '#'}>
+          <Button className="fk-btn" style={button} href={ordersUrl || '#'}>
             مراجعة عرض السعر
           </Button>
         </Section>

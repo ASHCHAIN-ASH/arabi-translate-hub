@@ -28,11 +28,11 @@ const E = ({ customerName, invoiceNumber, remainingAmount, dueDate, daysOverdue,
       </Head>
       <Preview>{`${isLate ? 'تذكير بتأخر سداد' : 'تذكير باستحقاق'} الفاتورة ${invoiceNumber ?? ''}`}</Preview>
       <Body dir="rtl" style={S.main}>
-        <Container dir="rtl" style={S.container}>
+        <Container dir="rtl" className="fk-shell" style={S.container}>
           <Section style={S.header}>
             <Row>
               <Column>
-                <Text style={S.brand}>🏦 {S.SITE_NAME}</Text>
+                <Text style={S.brand}>{S.SITE_NAME}</Text>
                 <Text style={S.tagline}>تذكير بسداد فاتورة</Text>
               </Column>
               <Column align="right">
@@ -81,7 +81,7 @@ const E = ({ customerName, invoiceNumber, remainingAmount, dueDate, daysOverdue,
           </Section>
 
           <Section style={S.btnSection}>
-            <Button style={S.btnPrimary} href={invoiceUrl || `${S.SITE_URL}/invoices`}>
+            <Button className="fk-btn" style={S.btnPrimary} href={invoiceUrl || `${S.SITE_URL}/invoices`}>
               سداد الفاتورة الآن
             </Button>
           </Section>

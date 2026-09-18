@@ -25,12 +25,12 @@ const E = ({ customerName, amount, paymentMethod, referenceNumber, requestId, re
       </Head>
     <Preview>{`تم استلام طلب شحن محفظتك بمبلغ ${amount ?? ''} ر.س — ${SITE_NAME}`}</Preview>
     <Body dir="rtl" style={main}>
-      <Container dir="rtl" style={container}>
+      <Container dir="rtl" className="fk-shell" style={container}>
         {/* Bank-style Header */}
         <Section style={bankHeader}>
           <Row>
             <Column>
-              <Text style={bankBrand}>🏦 {SITE_NAME}</Text>
+              <Text style={bankBrand}>{SITE_NAME}</Text>
               <Text style={bankTagline}>المحفظة الرقمية</Text>
             </Column>
             <Column align="right">
@@ -109,7 +109,7 @@ const E = ({ customerName, amount, paymentMethod, referenceNumber, requestId, re
         </Section>
 
         <Section style={btnSection}>
-          <Button style={btnPrimary} href={walletUrl || 'https://fekrahedu.com/wallet'}>
+          <Button className="fk-btn" style={btnPrimary} href={walletUrl || 'https://fekrahedu.com/wallet'}>
             متابعة الطلب من المحفظة
           </Button>
         </Section>

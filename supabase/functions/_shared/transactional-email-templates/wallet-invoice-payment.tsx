@@ -26,11 +26,11 @@ const E = ({ customerName, invoiceNumber, amount, newBalance, paidAt, transactio
       </Head>
     <Preview>{`💳 تم دفع الفاتورة ${invoiceNumber ?? ''} بمبلغ ${amount ?? ''} ر.س من محفظتك — ${SITE_NAME}`}</Preview>
     <Body dir="rtl" style={main}>
-      <Container dir="rtl" style={container}>
+      <Container dir="rtl" className="fk-shell" style={container}>
         <Section style={bankHeader}>
           <Row>
             <Column>
-              <Text style={bankBrand}>🏦 {SITE_NAME}</Text>
+              <Text style={bankBrand}>{SITE_NAME}</Text>
               <Text style={bankTagline}>إيصال دفع فاتورة من المحفظة</Text>
             </Column>
             <Column align="right">
@@ -119,7 +119,7 @@ const E = ({ customerName, invoiceNumber, amount, newBalance, paidAt, transactio
         </Section>
 
         <Section style={btnSection}>
-          <Button style={btnPrimary} href={invoiceUrl || 'https://fekrahedu.com/invoices'}>
+          <Button className="fk-btn" style={btnPrimary} href={invoiceUrl || 'https://fekrahedu.com/invoices'}>
             عرض الفاتورة المدفوعة
           </Button>
           <Text style={{ margin: '12px 0 0', fontSize: '12px' }}>

@@ -26,11 +26,11 @@ const E = ({ customerName, amount, requestId, rejectedAt, paymentMethod, reason,
       </Head>
     <Preview>{`تعذّر اعتماد طلب شحن محفظتك بمبلغ ${amount ?? ''} ر.س — ${SITE_NAME}`}</Preview>
     <Body dir="rtl" style={main}>
-      <Container dir="rtl" style={container}>
+      <Container dir="rtl" className="fk-shell" style={container}>
         <Section style={bankHeader}>
           <Row>
             <Column>
-              <Text style={bankBrand}>🏦 {SITE_NAME}</Text>
+              <Text style={bankBrand}>{SITE_NAME}</Text>
               <Text style={bankTagline}>إشعار حالة طلب</Text>
             </Column>
             <Column align="right">
@@ -112,10 +112,10 @@ const E = ({ customerName, amount, requestId, rejectedAt, paymentMethod, reason,
         </Section>
 
         <Section style={btnSection}>
-          <Button style={btnPrimary} href={walletUrl || 'https://fekrahedu.com/wallet'}>
+          <Button className="fk-btn" style={btnPrimary} href={walletUrl || 'https://fekrahedu.com/wallet'}>
             إعادة تقديم الطلب
           </Button>
-          <Button style={btnSecondary} href={supportUrl || 'https://fekrahedu.com/support/tickets'}>
+          <Button className="fk-btn" style={btnSecondary} href={supportUrl || 'https://fekrahedu.com/support/tickets'}>
             تواصل مع الدعم
           </Button>
         </Section>
