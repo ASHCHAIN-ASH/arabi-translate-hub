@@ -22,9 +22,19 @@ const withTimeout = <T,>(promise: Promise<T>, ms = 20000): Promise<T> =>
     ),
   ]);
 
+// تحويل أي صيغة مُدخلة إلى الرقم المحلي (9 أرقام تبدأ بـ 5)
+const normalizeLocal = (raw: string) => {
+  let d = raw.replace(/\D/g, '');
+  if (d.startsWith('00966')) d = d.slice(5);
+  else if (d.startsWith('966')) d = d.slice(3);
+  if (d.startsWith('0')) d = d.slice(1);
+  return d.slice(0, 9);
+};
+
 export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
   const [step, setStep] = useState<'phone' | 'code'>('phone');
   const [phone, setPhone] = useState('');
+
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
