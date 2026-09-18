@@ -49,17 +49,17 @@ p, td, h1, h2, h3 { overflow-wrap: anywhere; word-break: break-word; }
 .fk-bar { background-size: 200% 100%; animation: fekrahSweep 3s linear infinite alternate; }
 .fk-btn { transition: transform .2s ease, box-shadow .2s ease; }
 .fk-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(0,0,0,.18); }
-.fk-code { direction: ltr !important; text-align: center !important; font-size: 30px !important; letter-spacing: 8px !important; text-indent: 8px; white-space: nowrap; }
+.fk-code { direction: ltr !important; text-align: center !important; font-size: 28px !important; letter-spacing: 2px !important; text-indent: 0 !important; white-space: normal !important; word-break: break-all !important; overflow-wrap: anywhere !important; max-width: 100% !important; }
 @media only screen and (max-width: 620px) {
   .fk-shell { width: 100% !important; max-width: 100% !important; border-radius: 10px !important; }
   .fk-pad { padding-left: 16px !important; padding-right: 16px !important; }
   .fk-title { font-size: 19px !important; margin-right: 18px !important; margin-left: 18px !important; }
   .fk-hero { font-size: 26px !important; }
-  .fk-code { font-size: 24px !important; letter-spacing: 5px !important; text-indent: 5px; }
+  .fk-code { font-size: 23px !important; letter-spacing: 1px !important; text-indent: 0 !important; }
   .fk-btn { display: block !important; width: 100% !important; box-sizing: border-box; padding-left: 12px !important; padding-right: 12px !important; }
 }
 @media only screen and (max-width: 420px) {
-  .fk-code { font-size: 20px !important; letter-spacing: 3px !important; text-indent: 3px; }
+  .fk-code { font-size: 19px !important; letter-spacing: 0 !important; text-indent: 0 !important; }
   .fk-hero { font-size: 22px !important; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -111,14 +111,15 @@ export const heroValue = (a: Accent = 'blue') => ({
 
 /** صندوق رمز التحقق — يبقى داخل إطار الرسالة على كل الأحجام */
 export const otpBox = (a: Accent = 'violet') => ({
-  margin: '22px 28px', padding: '20px 12px', backgroundColor: '#ffffff',
+  margin: '22px 28px', padding: '20px 8px', backgroundColor: '#ffffff', width: 'auto',
   border: `2px dashed ${accentOf(a).solid}`, borderRadius: '12px', textAlign: 'center' as const,
   boxSizing: 'border-box' as const, maxWidth: '100%', overflow: 'hidden' as const,
 })
 export const otpCode = (a: Accent = 'violet') => ({
-  direction: 'ltr' as const, textAlign: 'center' as const, fontSize: '30px', fontWeight: 800,
-  letterSpacing: '8px', textIndent: '8px', color: accentOf(a).ink, margin: 0, lineHeight: 1.4,
-  fontFamily: "'IBM Plex Sans Arabic', 'Courier New', monospace", maxWidth: '100%',
+  direction: 'ltr' as const, textAlign: 'center' as const, fontSize: '28px', fontWeight: 800,
+  letterSpacing: '2px', textIndent: 0, color: accentOf(a).ink, margin: 0, lineHeight: 1.5,
+  fontFamily: "'Courier New', monospace", width: '100%', maxWidth: '100%', boxSizing: 'border-box' as const,
+  whiteSpace: 'normal' as const, wordBreak: 'break-all' as const, overflowWrap: 'anywhere' as const,
 })
 export const card = { direction: 'rtl' as const, textAlign: 'right' as const, margin: '16px 28px', padding: '18px', backgroundColor: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '10px', overflow: 'hidden' as const }
 export const cardTitle = { fontSize: '14px', fontWeight: '800' as const, color: '#1e293b', margin: '0 0 12px', textAlign: 'right' as const }

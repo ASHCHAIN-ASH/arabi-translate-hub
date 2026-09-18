@@ -33,7 +33,7 @@ export const renderHeadCss = (palette: { primary: string; accent: string; glow: 
   table { border-spacing: 0; }
   a, p, td, h1, h2, h3, h4 { overflow-wrap: anywhere; word-break: break-word; }
   img { max-width: 100%; height: auto; }
-  .fk-code { direction: ltr !important; text-align: center !important; font-size: 30px !important; letter-spacing: 8px !important; text-indent: 8px; }
+  .fk-code { direction: ltr !important; text-align: center !important; font-size: 28px !important; letter-spacing: 2px !important; text-indent: 0 !important; white-space: normal !important; word-break: break-all !important; overflow-wrap: anywhere !important; max-width: 100% !important; }
   .anim-fade { animation: fadeInUp .7s cubic-bezier(.22,.61,.36,1) both; }
   .anim-fade-1 { animation: fadeInUp .7s .1s cubic-bezier(.22,.61,.36,1) both; }
   .anim-fade-2 { animation: fadeInUp .7s .2s cubic-bezier(.22,.61,.36,1) both; }
@@ -44,10 +44,10 @@ export const renderHeadCss = (palette: { primary: string; accent: string; glow: 
     .container { width: 100% !important; max-width: 100% !important; }
     .h1 { font-size: 21px !important; }
     .cta { display: block !important; width: 100% !important; box-sizing: border-box; padding: 14px 18px !important; font-size: 15px !important; }
-    .fk-code { font-size: 24px !important; letter-spacing: 5px !important; text-indent: 5px; }
+    .fk-code { font-size: 23px !important; letter-spacing: 1px !important; text-indent: 0 !important; }
   }
   @media (max-width: 420px) {
-    .fk-code { font-size: 20px !important; letter-spacing: 3px !important; text-indent: 3px; }
+    .fk-code { font-size: 19px !important; letter-spacing: 0 !important; text-indent: 0 !important; }
   }
 `;
 
