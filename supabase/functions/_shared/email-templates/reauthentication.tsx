@@ -35,9 +35,12 @@ export const ReauthenticationEmail = ({ recipient, token }: Props) => (
               background: `linear-gradient(135deg, ${P.tint} 0%, #FFFFFF 100%)`,
               border: `2px dashed ${P.accent}`,
               borderRadius: '14px',
-              padding: '28px 16px',
+               padding: '24px 8px',
               margin: '24px 0',
               textAlign: 'center',
+               maxWidth: '100%',
+               overflow: 'hidden',
+               boxSizing: 'border-box',
             }}
           >
             <div style={{ fontSize: '12px', color: '#64748B', letterSpacing: '2px', marginBottom: '10px', fontWeight: 600 }}>
@@ -46,12 +49,20 @@ export const ReauthenticationEmail = ({ recipient, token }: Props) => (
             <div
               className="fk-code"
               style={{
-                fontSize: '30px',
+                 fontSize: '28px',
                 fontWeight: 800,
-                letterSpacing: '8px',
+                 letterSpacing: '2px',
+                 textIndent: 0,
                 color: P.primary,
-                fontFamily: "'IBM Plex Sans Arabic', monospace",
+                 fontFamily: "'Courier New', monospace",
                 direction: 'ltr',
+                 textAlign: 'center',
+                 width: '100%',
+                 maxWidth: '100%',
+                 boxSizing: 'border-box',
+                 whiteSpace: 'normal',
+                 wordBreak: 'break-all',
+                 overflowWrap: 'anywhere',
               }}
             >
               {token}
