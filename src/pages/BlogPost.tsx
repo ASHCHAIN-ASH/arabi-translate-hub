@@ -68,7 +68,7 @@ const BlogPostPage = () => {
       name: "FekrahEdu",
       logo: {
         "@type": "ImageObject",
-        url: "https://fekrahedu.com/assets/national-day-logo-original.webp",
+        url: "https://fekrahedu.com/fekrah-logo.jpg",
       },
     },
     mainEntityOfPage: { "@type": "WebPage", "@id": url },

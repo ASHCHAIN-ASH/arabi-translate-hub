@@ -204,7 +204,7 @@ const AboutUs = () => {
             "name": "FekrahEdu Agency",
             "alternateName": "FekrahEdu",
             "url": "https://fekrahedu.com",
-            "logo": "https://fekrahedu.com/assets/national-day-logo-original.webp",
+            "logo": "https://fekrahedu.com/fekrah-logo.jpg",
             "foundingDate": "2014",
             "numberOfEmployees": { "@type": "QuantitativeValue", "value": "50+" },
             "slogan": "شريكك الموثوق للحلول التعليمية المتقدمة",

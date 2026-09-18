@@ -17,7 +17,7 @@ const SEO = ({
   title,
   description,
   keywords = "FekrahEdu, خدمات بحثية, ترجمة أكاديمية, نشر علمي, تدقيق لغوي, تحليل إحصائي, SPSS, جامعات سعودية, بحث علمي",
-  image = "https://fekrahedu.com/assets/national-day-logo-original.webp",
+  image = "https://fekrahedu.com/fekrahedu-share.jpg?v=1",
   url = "https://fekrahedu.com",
   type = "website",
   author = "FekrahEdu Agency",
@@ -35,7 +35,7 @@ const SEO = ({
     "name": "FekrahEdu Agency",
     "alternateName": "FekrahEdu",
     "url": "https://fekrahedu.com",
-    "logo": "https://fekrahedu.com/assets/national-day-logo-original.webp",
+    "logo": "https://fekrahedu.com/fekrah-logo.jpg",
     "contactPoint": {
       "@type": "ContactPoint",
       "telephone": "+966593799355",
@@ -86,8 +86,10 @@ const SEO = ({
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={image} />
+      <meta property="og:image:secure_url" content={image} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
+      <meta property="og:image:alt" content="شعار FekrahEdu" />
       <meta property="og:site_name" content={siteName} />
       <meta property="og:locale" content="ar_SA" />
       {publishedTime && <meta property="article:published_time" content={publishedTime} />}
@@ -99,6 +101,7 @@ const SEO = ({
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={image} />
+      <meta name="twitter:image:alt" content="شعار FekrahEdu" />
       <meta name="twitter:site" content={twitterHandle} />
       <meta name="twitter:creator" content={twitterHandle} />
       

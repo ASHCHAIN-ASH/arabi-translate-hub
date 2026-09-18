@@ -55,7 +55,7 @@ const Blog = () => {
       "name": "FekrahEdu",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://fekrahedu.com/assets/national-day-logo-original.webp"
+        "url": "https://fekrahedu.com/fekrah-logo.jpg"
       }
     },
     "blogPost": posts.slice(0, 20).map((p) => ({
