@@ -4,7 +4,6 @@ import { useAuth } from '@/components/SimpleAuthProvider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
 import { triggerLoginWelcome } from '@/components/LoginWelcomeOverlay';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -18,7 +17,6 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [agreeTerms, setAgreeTerms] = useState(false);
   const [capsOn, setCapsOn] = useState(false);
   const [needsConfirmation, setNeedsConfirmation] = useState(false);
   const [resendingConfirmation, setResendingConfirmation] = useState(false);
@@ -41,10 +39,6 @@ const Login = () => {
     e.preventDefault();
     if (!email || !password) {
       toast.error('يرجى إدخال البريد الإلكتروني وكلمة المرور');
-      return;
-    }
-    if (!agreeTerms) {
-      toast.error('يرجى الموافقة على شروط الاستخدام أولاً');
       return;
     }
 
@@ -206,24 +200,6 @@ const Login = () => {
               )}
             </AnimatePresence>
 
-            {/* الموافقة على شروط الاستخدام */}
-            <div className="flex items-center gap-2">
-              <Checkbox
-                id="agree-terms"
-                checked={agreeTerms}
-                onCheckedChange={(v) => setAgreeTerms(Boolean(v))}
-              />
-              <Label htmlFor="agree-terms" className="text-sm text-muted-foreground cursor-pointer select-none">
-                أوافق على{' '}
-                <button
-                  type="button"
-                  onClick={() => navigate('/terms-of-service')}
-                  className="text-primary hover:underline font-medium"
-                >
-                  شروط الاستخدام
-                </button>
-              </Label>
-            </div>
 
             {/* Submit */}
             <Button
