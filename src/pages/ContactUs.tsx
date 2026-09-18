@@ -38,7 +38,7 @@ const CONTACT_METHODS = [
     icon: Mail,
     title: "البريد الإلكتروني",
     value: "info@fekrahedu.com",
-    detail: "للطلبات والمستندات والمراسلات الأكاديمية الرسمية",
+    detail: "للمستندات والمراسلات الأكاديمية الرسمية",
     href: "mailto:info@fekrahedu.com",
     label: "أرسل بريدًا",
   },
