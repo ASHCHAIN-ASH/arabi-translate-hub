@@ -820,7 +820,8 @@ const Index = () => {
       </section>
       )}
 
-      {/* قسم الشركاء الأكاديميين */}
+      {/* قسم الشركاء الأكاديميين - مخفي مؤقتًا */}
+      {false && (
       <section className="py-16 bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 dark:from-slate-900 dark:via-amber-950 dark:to-orange-950">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
