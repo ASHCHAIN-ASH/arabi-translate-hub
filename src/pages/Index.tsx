@@ -12,7 +12,6 @@ import {
   Star, TrendingUp, Shield, Clock, Languages, Target,
   Sparkles, ChevronRight, Zap, Heart, Brain, MessageCircle, Quote
 } from "lucide-react";
-import { UNIFIED_STATS } from "@/constants/academicStats";
 import { InstitutionalPartnershipBanner } from "@/components/InstitutionalPartnershipBanner";
 import { FloatingWhatsAppButton } from "@/components/FloatingWhatsAppButton";
 import Footer from "@/components/Footer";
