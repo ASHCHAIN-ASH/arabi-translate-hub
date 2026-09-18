@@ -4,6 +4,7 @@ import {
   Body, Button, Container, Head, Heading, Html, Preview, Section, Text, Hr,
 } from 'npm:@react-email/components@0.0.22'
 import type { TemplateEntry } from './registry.ts'
+import { HEAD_CSS } from './_head.ts'
 
 interface Props {
   name?: string
@@ -51,7 +52,10 @@ const DeadlineReminderEmail = ({
   const dl = deadlineAt ? new Date(deadlineAt).toLocaleString('ar-SA', { dateStyle: 'full', timeStyle: 'short' }) : ''
   return (
     <Html lang="ar" dir="rtl">
-      <Head />
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <style>{HEAD_CSS}</style>
+      </Head>
       <Preview>{c.emoji} {c.title} — {orderName}</Preview>
       <Body dir="rtl" style={main}>
         <Container dir="rtl" style={container}>

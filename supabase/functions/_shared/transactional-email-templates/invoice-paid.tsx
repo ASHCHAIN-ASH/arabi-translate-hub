@@ -4,6 +4,7 @@ import {
 } from 'npm:@react-email/components@0.0.22'
 import type { TemplateEntry } from './registry.ts'
 import * as S from './_invoice-shared.ts'
+import { HEAD_CSS } from './_head.ts'
 
 interface Props {
   customerName?: string
@@ -18,7 +19,10 @@ const E = ({ customerName, invoiceNumber, totalAmount, paidAt, currency, invoice
   const cur = currency === 'USD' ? '$' : 'ر.س'
   return (
     <Html lang="ar" dir="rtl">
-      <Head />
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <style>{HEAD_CSS}</style>
+      </Head>
       <Preview>{`إيصال سداد الفاتورة ${invoiceNumber ?? ''} — ${S.SITE_NAME}`}</Preview>
       <Body dir="rtl" style={S.main}>
         <Container dir="rtl" style={S.container}>

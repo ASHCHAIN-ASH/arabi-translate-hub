@@ -3,6 +3,7 @@ import {
   Body, Container, Head, Heading, Html, Preview, Text, Button, Hr, Section, Row, Column,
 } from 'npm:@react-email/components@0.0.22'
 import type { TemplateEntry } from './registry.ts'
+import { HEAD_CSS } from './_head.ts'
 
 const SITE_NAME = 'FekrahEdu'
 
@@ -18,7 +19,10 @@ interface Props {
 
 const E = ({ customerName, amount, paymentMethod, referenceNumber, requestId, requestedAt, walletUrl }: Props) => (
   <Html lang="ar" dir="rtl">
-    <Head />
+    <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <style>{HEAD_CSS}</style>
+      </Head>
     <Preview>{`تم استلام طلب شحن محفظتك بمبلغ ${amount ?? ''} ر.س — ${SITE_NAME}`}</Preview>
     <Body dir="rtl" style={main}>
       <Container dir="rtl" style={container}>

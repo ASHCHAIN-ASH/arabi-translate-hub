@@ -4,6 +4,7 @@ import {
   Body, Container, Head, Heading, Html, Preview, Text, Section, Hr, Button, Row, Column,
 } from 'npm:@react-email/components@0.0.22'
 import type { TemplateEntry } from './registry.ts'
+import { HEAD_CSS } from './_head.ts'
 
 const SITE_NAME = 'FekrahEdu PayLater'
 const BRAND_COLOR = '#0f5132'
@@ -50,7 +51,10 @@ const FinancingStatusEmail = (props: FinancingStatusEmailProps) => {
 
   return (
     <Html lang="ar" dir="rtl">
-      <Head />
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <style>{HEAD_CSS}</style>
+      </Head>
       <Preview>{`${meta.emoji} ${meta.title} — ${SITE_NAME}`}</Preview>
       <Body dir="rtl" style={main}>
         <Container dir="rtl" style={container}>
