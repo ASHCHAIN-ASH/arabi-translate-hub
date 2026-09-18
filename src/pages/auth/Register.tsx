@@ -12,6 +12,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { ReferralService } from '@/utils/referralService';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Checkbox } from '@/components/ui/checkbox';
 import { WhatsappAuthForm } from '@/components/auth/WhatsappAuthForm';
 import AuthShell from '@/components/auth/AuthShell';
 
@@ -39,6 +40,8 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [newsletterOptIn, setNewsletterOptIn] = useState(false);
 
   const { signUp } = useAuth();
   const navigate = useNavigate();
@@ -80,12 +83,17 @@ const Register = () => {
       toast.error('كلمة المرور ضعيفة، يرجى استيفاء معظم الشروط');
       return;
     }
+    if (!acceptedTerms) {
+      toast.error('يرجى الموافقة على شروط الاستخدام');
+      return;
+    }
 
     setLoading(true);
     try {
       const { error } = await signUp(formData.email, formData.password, {
         name: formData.name,
         phone: formData.phone,
+        newsletter_opt_in: newsletterOptIn,
       });
       if (error) {
         toast.error(error);
@@ -319,6 +327,43 @@ const Register = () => {
               {passwordsMismatch && (
                 <p className="text-destructive text-xs">كلمات المرور غير متطابقة</p>
               )}
+            </div>
+
+            <div className="space-y-3 rounded-lg border border-border bg-muted/30 p-3.5">
+              <div className="flex items-start gap-3">
+                <Checkbox
+                  id="acceptedTerms"
+                  checked={acceptedTerms}
+                  onCheckedChange={(checked) => setAcceptedTerms(checked === true)}
+                  disabled={loading}
+                  className="mt-0.5"
+                />
+                <Label htmlFor="acceptedTerms" className="cursor-pointer text-sm leading-6 text-foreground">
+                  أوافق على{' '}
+                  <a href="/terms-of-service" target="_blank" rel="noreferrer" className="font-semibold text-primary hover:underline">
+                    شروط الاستخدام
+                  </a>
+                  {' '}و{' '}
+                  <a href="/privacy-policy" target="_blank" rel="noreferrer" className="font-semibold text-primary hover:underline">
+                    سياسة الخصوصية
+                  </a>
+                  <span className="text-destructive"> *</span>
+                </Label>
+              </div>
+
+              <div className="flex items-start gap-3 border-t border-border pt-3">
+                <Checkbox
+                  id="newsletterOptIn"
+                  checked={newsletterOptIn}
+                  onCheckedChange={(checked) => setNewsletterOptIn(checked === true)}
+                  disabled={loading}
+                  className="mt-0.5"
+                />
+                <Label htmlFor="newsletterOptIn" className="cursor-pointer text-sm leading-6 text-foreground">
+                  اشترك في نشرتنا الإخبارية
+                  <span className="block text-xs font-normal text-muted-foreground">أرغب باستلام الأخبار والعروض والتحديثات الأكاديمية عبر البريد الإلكتروني.</span>
+                </Label>
+              </div>
             </div>
 
             {/* Submit */}

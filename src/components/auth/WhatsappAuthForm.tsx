@@ -3,6 +3,7 @@ import { supabase } from '@/data/legacy/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
 import { Phone, MessageCircle, KeyRound, User, Loader2, Mail } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -29,6 +30,8 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [resendIn, setResendIn] = useState(0);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [newsletterOptIn, setNewsletterOptIn] = useState(false);
 
   React.useEffect(() => {
     if (resendIn <= 0) return;
@@ -69,6 +72,10 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
         toast.error('أدخل بريداً إلكترونياً صحيحاً');
         return;
       }
+      if (!acceptedTerms) {
+        toast.error('يرجى الموافقة على شروط الاستخدام');
+        return;
+      }
     }
     setLoading(true);
     try {
@@ -100,7 +107,14 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
     try {
       const { data, error } = await withTimeout(
         supabase.functions.invoke('whatsapp-auth-complete', {
-          body: { phone, code: finalCode, full_name: fullName, email: email.trim() || undefined, purpose: mode },
+          body: {
+            phone,
+            code: finalCode,
+            full_name: fullName,
+            email: email.trim() || undefined,
+            purpose: mode,
+            newsletter_opt_in: mode === 'register' && newsletterOptIn,
+          },
         }),
       );
       if (error || !data?.success) {
@@ -235,6 +249,39 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
             />
             <p className="text-xs text-slate-500 mt-1">سنرسل رمز التحقق على واتساب</p>
           </div>
+          {mode === 'register' && (
+            <div className="space-y-3 rounded-lg border border-border bg-muted/30 p-3.5">
+              <div className="flex items-start gap-3">
+                <Checkbox
+                  id="wa-terms"
+                  checked={acceptedTerms}
+                  onCheckedChange={(checked) => setAcceptedTerms(checked === true)}
+                  disabled={loading}
+                  className="mt-0.5"
+                />
+                <Label htmlFor="wa-terms" className="cursor-pointer text-sm leading-6 text-foreground">
+                  أوافق على{' '}
+                  <a href="/terms-of-service" target="_blank" rel="noreferrer" className="font-semibold text-primary hover:underline">شروط الاستخدام</a>
+                  {' '}و{' '}
+                  <a href="/privacy-policy" target="_blank" rel="noreferrer" className="font-semibold text-primary hover:underline">سياسة الخصوصية</a>
+                  <span className="text-destructive"> *</span>
+                </Label>
+              </div>
+              <div className="flex items-start gap-3 border-t border-border pt-3">
+                <Checkbox
+                  id="wa-newsletter"
+                  checked={newsletterOptIn}
+                  onCheckedChange={(checked) => setNewsletterOptIn(checked === true)}
+                  disabled={loading}
+                  className="mt-0.5"
+                />
+                <Label htmlFor="wa-newsletter" className="cursor-pointer text-sm leading-6 text-foreground">
+                  اشترك في نشرتنا الإخبارية
+                  <span className="block text-xs font-normal text-muted-foreground">أرغب باستلام الأخبار والعروض والتحديثات الأكاديمية عبر البريد الإلكتروني.</span>
+                </Label>
+              </div>
+            </div>
+          )}
           <Button
             onClick={requestCode}
             disabled={loading}

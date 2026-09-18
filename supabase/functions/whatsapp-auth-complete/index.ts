@@ -61,7 +61,7 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
-    const { phone, code, full_name, email, purpose = "login" } = await req.json();
+    const { phone, code, full_name, email, purpose = "login", newsletter_opt_in = false } = await req.json();
     if (!phone || !code) {
       return resp({ success: false, error: "البيانات ناقصة" });
     }
@@ -173,7 +173,13 @@ serve(async (req) => {
         phone: normalized,
         email_confirm: true,
         phone_confirm: true,
-        user_metadata: { full_name: full_name || `مستخدم ${normalized.slice(-4)}`, phone: normalized, email: cleanEmail || undefined },
+        user_metadata: {
+          full_name: full_name || `مستخدم ${normalized.slice(-4)}`,
+          phone: normalized,
+          email: cleanEmail || undefined,
+          newsletter_opt_in: newsletter_opt_in === true,
+          newsletter_opt_in_at: newsletter_opt_in === true ? new Date().toISOString() : null,
+        },
       });
 
       if (createErr || !created.user) {
@@ -185,7 +191,13 @@ serve(async (req) => {
             phone: normalized,
             email_confirm: true,
             phone_confirm: true,
-            user_metadata: { full_name: full_name || `مستخدم ${normalized.slice(-4)}`, phone: normalized, email: cleanEmail },
+            user_metadata: {
+              full_name: full_name || `مستخدم ${normalized.slice(-4)}`,
+              phone: normalized,
+              email: cleanEmail,
+              newsletter_opt_in: newsletter_opt_in === true,
+              newsletter_opt_in_at: newsletter_opt_in === true ? new Date().toISOString() : null,
+            },
           });
           if (retry.error || !retry.data.user) {
             return resp({ success: false, error: retry.error?.message || "تعذر إنشاء الحساب" });
