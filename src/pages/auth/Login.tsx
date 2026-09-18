@@ -43,6 +43,10 @@ const Login = () => {
       toast.error('يرجى إدخال البريد الإلكتروني وكلمة المرور');
       return;
     }
+    if (!agreeTerms) {
+      toast.error('يرجى الموافقة على شروط الاستخدام أولاً');
+      return;
+    }
 
     setLoading(true);
     setNeedsConfirmation(false);
@@ -53,8 +57,6 @@ const Login = () => {
         toast.error(error);
         return;
       }
-      if (remember) localStorage.setItem(REMEMBER_KEY, email);
-      else localStorage.removeItem(REMEMBER_KEY);
       triggerLoginWelcome();
     } catch (error: any) {
       toast.error(error.message || 'خطأ في تسجيل الدخول');
