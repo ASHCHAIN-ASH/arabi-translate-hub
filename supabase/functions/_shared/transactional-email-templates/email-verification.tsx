@@ -12,6 +12,7 @@ const E = ({ name, confirmationUrl, expiresInMinutes = 60 }: Props) => (
     tagline="تفعيل الحساب"
     badge="تحقّق من البريد"
     cta={{ label: 'تفعيل الحساب الآن', url: confirmationUrl || SITE_URL }}
+    fallbackUrl={confirmationUrl || SITE_URL}
     footerNote="إذا لم تقم بإنشاء هذا الحساب، تجاهل هذه الرسالة بأمان."
   >
     <Heading style={S.title} className="fk-title">مرحبًا بك في {SITE_NAME} 🎓</Heading>
@@ -24,10 +25,6 @@ const E = ({ name, confirmationUrl, expiresInMinutes = 60 }: Props) => (
       <Text style={heroLabel('blue')}>صلاحية رابط التفعيل</Text>
       <Text style={heroValue('blue')} className="fk-hero">{expiresInMinutes} دقيقة</Text>
     </Section>
-    <Text style={S.small}>
-      إذا لم يعمل الزر، انسخ الرابط التالي والصقه في المتصفح:<br />
-      {confirmationUrl || SITE_URL}
-    </Text>
   </BrandEmail>
 )
 

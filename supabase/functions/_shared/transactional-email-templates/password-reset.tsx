@@ -12,6 +12,7 @@ const E = ({ name, confirmationUrl, expiresInMinutes = 60 }: Props) => (
     tagline="أمان الحساب"
     badge="إعادة التعيين"
     cta={{ label: 'تعيين كلمة مرور جديدة', url: confirmationUrl || SITE_URL }}
+    fallbackUrl={confirmationUrl || SITE_URL}
     footerNote="لم تطلب ذلك؟ تجاهل الرسالة — كلمة مرورك الحالية تبقى فعّالة."
   >
     <Heading style={S.title} className="fk-title">طلب إعادة تعيين كلمة المرور 🔐</Heading>
@@ -24,10 +25,6 @@ const E = ({ name, confirmationUrl, expiresInMinutes = 60 }: Props) => (
       <Text style={heroLabel('violet')}>صلاحية الرابط</Text>
       <Text style={heroValue('violet')} className="fk-hero">{expiresInMinutes} دقيقة</Text>
     </Section>
-    <Text style={S.small}>
-      إذا لم يعمل الزر، انسخ الرابط التالي والصقه في المتصفح:<br />
-      {confirmationUrl || SITE_URL}
-    </Text>
   </BrandEmail>
 )
 
