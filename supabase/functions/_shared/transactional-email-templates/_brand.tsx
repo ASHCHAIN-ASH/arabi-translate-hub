@@ -38,7 +38,9 @@ html, body, table, tbody, tr, td, p, h1, h2, h3, a, span { direction: rtl !impor
 body, table, td, p, h1, h2, h3 { font-family: ${FONT} !important; }
 table { border-spacing: 0; }
 td, p, h1, h2, h3 { text-align: right; }
+img { max-width: 100%; }
 a { overflow-wrap: anywhere; word-break: break-word; }
+p, td, h1, h2, h3 { overflow-wrap: anywhere; word-break: break-word; }
 @keyframes fekrahFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @keyframes fekrahPulse { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.06); opacity: .88; } }
 @keyframes fekrahSweep { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
@@ -47,12 +49,18 @@ a { overflow-wrap: anywhere; word-break: break-word; }
 .fk-bar { background-size: 200% 100%; animation: fekrahSweep 3s linear infinite alternate; }
 .fk-btn { transition: transform .2s ease, box-shadow .2s ease; }
 .fk-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(0,0,0,.18); }
+.fk-code { direction: ltr !important; text-align: center !important; font-size: 30px !important; letter-spacing: 8px !important; text-indent: 8px; white-space: nowrap; }
 @media only screen and (max-width: 620px) {
-  .fk-shell { width: 100% !important; }
-  .fk-pad { padding-left: 18px !important; padding-right: 18px !important; }
-  .fk-title { font-size: 20px !important; }
-  .fk-hero { font-size: 28px !important; }
-  .fk-btn { display: block !important; width: 100% !important; box-sizing: border-box; }
+  .fk-shell { width: 100% !important; max-width: 100% !important; border-radius: 10px !important; }
+  .fk-pad { padding-left: 16px !important; padding-right: 16px !important; }
+  .fk-title { font-size: 19px !important; margin-right: 18px !important; margin-left: 18px !important; }
+  .fk-hero { font-size: 26px !important; }
+  .fk-code { font-size: 24px !important; letter-spacing: 5px !important; text-indent: 5px; }
+  .fk-btn { display: block !important; width: 100% !important; box-sizing: border-box; padding-left: 12px !important; padding-right: 12px !important; }
+}
+@media only screen and (max-width: 420px) {
+  .fk-code { font-size: 20px !important; letter-spacing: 3px !important; text-indent: 3px; }
+  .fk-hero { font-size: 22px !important; }
 }
 @media (prefers-reduced-motion: reduce) {
   .fk-card, .fk-badge, .fk-bar { animation: none !important; }
