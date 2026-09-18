@@ -124,7 +124,18 @@ export default function ResetPassword() {
     );
   }
 
-  if (!token || error) {
+  if (checking) {
+    return (
+      <div dir="rtl" className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 to-secondary/5 px-4">
+        <div className="text-center">
+          <Loader2 className="mx-auto h-10 w-10 animate-spin text-primary" />
+          <p className="mt-4 text-sm text-muted-foreground">جارٍ التحقق من الرابط…</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (linkInvalid) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 to-secondary/5 px-4">
         <Card className="w-full max-w-md">
