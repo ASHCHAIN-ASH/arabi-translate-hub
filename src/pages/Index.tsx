@@ -39,7 +39,6 @@ import inquiryTeamImg from "@/assets/home-inquiry-team.jpg";
 const ServicesShowcase = lazy(() => import("@/components/ServicesShowcase"));
 const FekrahEduMembershipBanner = lazy(() => import("@/components/FekrahEduMembershipBanner"));
 const ServiceSteps = lazy(() => import("@/components/ServiceSteps"));
-const SuccessStoriesCarousel = lazy(() => import("@/components/home/SuccessStoriesCarousel"));
 
 
 
@@ -1164,10 +1163,7 @@ const Index = () => {
         <ServicesShowcase />
       </Suspense>
 
-      {/* كاروسيل قصص النجاح بصور حقيقية */}
-      <Suspense fallback={<LoadingSpinner />}>
-        <SuccessStoriesCarousel />
-      </Suspense>
+      {/* كاروسيل قصص النجاح — مخفي مؤقتًا */}
 
       {/* Call to Action النهائي - بصورة حرم جامعي حقيقية */}
       <section className="relative py-24 sm:py-28 lg:py-32 overflow-hidden text-white">
