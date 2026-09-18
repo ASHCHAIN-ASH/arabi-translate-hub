@@ -203,6 +203,24 @@ export function BrandEmail({ preview, accent = 'blue', tagline, badge, cta, fall
             </Section>
           ) : null}
 
+          {fallbackUrl ? (
+            <Section style={{ margin: '0 28px 22px', padding: '14px 16px', backgroundColor: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '10px', direction: 'rtl', textAlign: 'right', overflow: 'hidden' }}>
+              <Text style={{ margin: '0 0 8px', fontSize: '12px', color: '#64748b', textAlign: 'right', direction: 'rtl' }}>
+                إذا لم يعمل الزر، انسخ الرابط التالي والصقه في المتصفح:
+              </Text>
+              <Link
+                href={fallbackUrl}
+                style={{
+                  display: 'block', direction: 'ltr', textAlign: 'left', fontSize: '11px', lineHeight: '1.7',
+                  color: accentOf(accent).solid, textDecoration: 'underline', wordBreak: 'break-all',
+                  overflowWrap: 'anywhere', maxWidth: '100%',
+                }}
+              >
+                {fallbackUrl}
+              </Link>
+            </Section>
+          ) : null}
+
           <Hr style={S.divider} />
           <Section style={S.footerBox}>
             <Img src={LOGO_URL} width="34" height="34" alt={SITE_NAME} style={{ ...S.logo, margin: '0 auto 8px' }} />
