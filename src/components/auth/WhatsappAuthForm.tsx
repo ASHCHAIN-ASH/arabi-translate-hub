@@ -94,7 +94,7 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
     try {
       const { data, error } = await withTimeout(
         supabase.functions.invoke('whatsapp-otp-request', {
-          body: { phone, purpose: mode },
+          body: { phone: fullPhone, purpose: mode },
         }),
       );
       if (error || !data?.success) {
