@@ -964,7 +964,8 @@ const Index = () => {
       {/* Institutional Partnership Banner */}
       <InstitutionalPartnershipBanner />
 
-      {/* قسم آراء العملاء - Social Proof */}
+      {/* قسم آراء العملاء - Social Proof - مخفي مؤقتًا */}
+      {false && (
       <section className="py-16 bg-gradient-to-br from-slate-50 to-blue-50/30 dark:from-slate-900 dark:to-blue-950/30" dir="rtl">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -1040,6 +1041,8 @@ const Index = () => {
           </div>
         </div>
       </section>
+      )}
+
 
       {/* Quick Inquiry Form - Lead Capture بصورة فريق حقيقية - مخفي مؤقتًا */}
       {false && (
