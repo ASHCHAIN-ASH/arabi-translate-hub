@@ -146,11 +146,11 @@ const Register = () => {
     >
       <Tabs defaultValue="email" dir="rtl" className="w-full">
         <TabsList className="grid grid-cols-2 w-full mb-6 h-11">
-          <TabsTrigger value="email" className="gap-2 text-sm">
-            <Mail className="w-4 h-4" /> البريد الإلكتروني
-          </TabsTrigger>
           <TabsTrigger value="whatsapp" className="gap-2 text-sm">
             <MessageCircle className="w-4 h-4" /> واتساب
+          </TabsTrigger>
+          <TabsTrigger value="email" className="gap-2 text-sm">
+            <Mail className="w-4 h-4" /> البريد الإلكتروني
           </TabsTrigger>
         </TabsList>
 
