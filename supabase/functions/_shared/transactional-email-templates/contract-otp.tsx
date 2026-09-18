@@ -2,7 +2,7 @@
 import * as React from 'npm:react@18.3.1'
 import { Heading, Section, Text } from 'npm:@react-email/components@0.0.22'
 import type { TemplateEntry } from './registry.ts'
-import { BrandEmail, S, heroLabel, otpBox, otpCode, SITE_NAME } from './_brand.tsx'
+import { BrandEmail, S, heroLabel, otpBox, otpCode as otpCodeStyle, SITE_NAME } from './_brand.tsx'
 
 interface Props {
   clientName?: string
@@ -35,7 +35,7 @@ const ContractOtpEmail = ({
 
         <Section style={otpBox('violet')}>
           <Text style={heroLabel('violet')}>رمز التحقق الخاص بك</Text>
-          <Text style={otpCode('violet')} className="fk-code">{otpCode_(otpCode0(otpCode1(otpCodeValue(otpCodeRaw))))}</Text>
+          <Text style={otpCodeStyle('violet')} className="fk-code">{otpCode}</Text>
         </Section>
 
         <Text style={S.text}>
@@ -57,4 +57,4 @@ export const template = {
   },
 } satisfies TemplateEntry
 
-const otp = { direction: 'ltr' as const, textAlign: 'center' as const, fontSize: '34px', fontWeight: 700, letterSpacing: '8px', color: '#4c1d95', margin: 0, fontFamily: 'monospace' }
+const _unusedOtp = { direction: 'ltr' as const, textAlign: 'center' as const, fontSize: '34px', fontWeight: 700, letterSpacing: '8px', color: '#4c1d95', margin: 0, fontFamily: 'monospace' }
