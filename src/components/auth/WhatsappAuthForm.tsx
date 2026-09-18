@@ -66,11 +66,14 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
     };
   }, []);
 
+  const fullPhone = phone ? `966${phone}` : '';
+
   const requestCode = async () => {
-    if (!phone || phone.replace(/\D/g, '').length < 8) {
+    if (phone.length !== 9 || !phone.startsWith('5')) {
       toast.error('أدخل رقم جوال صحيح');
       return;
     }
+
     if (mode === 'register' && !fullName.trim()) {
       toast.error('أدخل اسمك الكامل');
       return;
