@@ -403,7 +403,8 @@ const AboutUs = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
+      {/* Stats Section — مخفي مؤقتًا */}
+      {false && (
       <section className="py-20 bg-gradient-to-br from-muted/20 via-background to-muted/20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -457,6 +458,7 @@ const AboutUs = () => {
           </div>
         </div>
       </section>
+      )}
 
       {/* Vision & Mission Section */}
       <section className="py-20 relative overflow-hidden">
