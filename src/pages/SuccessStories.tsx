@@ -356,6 +356,8 @@ const SuccessStories = () => {
       </section>
 
       {/* Statistics Section */}
+      {/* قسم الإحصائيات — مخفي مؤقتًا */}
+      {false && (
       <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-br from-background via-primary/5 to-background relative overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-5">
@@ -439,6 +441,7 @@ const SuccessStories = () => {
           </div>
         </div>
       </section>
+      )}
 
       {/* Category Filter */}
       <section className="py-6 sm:py-8 md:py-10 bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5 relative overflow-hidden">
