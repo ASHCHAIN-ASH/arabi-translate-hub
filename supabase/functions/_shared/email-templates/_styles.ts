@@ -31,7 +31,9 @@ export const renderHeadCss = (palette: { primary: string; accent: string; glow: 
   body, table, td, p, a, h1, h2, h3, h4 { font-family: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, Arial, sans-serif !important; }
   td, p, h1, h2, h3, h4 { text-align: right; }
   table { border-spacing: 0; }
-  a { overflow-wrap: anywhere; word-break: break-word; }
+  a, p, td, h1, h2, h3, h4 { overflow-wrap: anywhere; word-break: break-word; }
+  img { max-width: 100%; height: auto; }
+  .fk-code { direction: ltr !important; text-align: center !important; font-size: 30px !important; letter-spacing: 8px !important; text-indent: 8px; }
   .anim-fade { animation: fadeInUp .7s cubic-bezier(.22,.61,.36,1) both; }
   .anim-fade-1 { animation: fadeInUp .7s .1s cubic-bezier(.22,.61,.36,1) both; }
   .anim-fade-2 { animation: fadeInUp .7s .2s cubic-bezier(.22,.61,.36,1) both; }
@@ -39,9 +41,13 @@ export const renderHeadCss = (palette: { primary: string; accent: string; glow: 
   .anim-cta { animation: fadeInUp .7s .25s cubic-bezier(.22,.61,.36,1) both, pulseGlow 2.6s 1.5s ease-in-out infinite; }
   .shimmer-text { background: linear-gradient(90deg, ${palette.primary} 0%, ${palette.accent} 40%, ${palette.primary} 80%); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: shimmer 4s linear infinite; }
   @media (max-width: 600px) {
-    .container { width: 100% !important; }
-    .h1 { font-size: 22px !important; }
-    .cta { padding: 14px 24px !important; font-size: 15px !important; }
+    .container { width: 100% !important; max-width: 100% !important; }
+    .h1 { font-size: 21px !important; }
+    .cta { display: block !important; width: 100% !important; box-sizing: border-box; padding: 14px 18px !important; font-size: 15px !important; }
+    .fk-code { font-size: 24px !important; letter-spacing: 5px !important; text-indent: 5px; }
+  }
+  @media (max-width: 420px) {
+    .fk-code { font-size: 20px !important; letter-spacing: 3px !important; text-indent: 3px; }
   }
 `;
 
@@ -54,6 +60,7 @@ export const styles = (p: { primary: string; accent: string; glow: string; tint:
     backgroundColor: '#F4F6FB',
     margin: 0,
     padding: '32px 12px',
+    boxSizing: 'border-box',
     backgroundImage: `radial-gradient(circle at top right, ${p.tint} 0%, #F4F6FB 55%)`,
   } as React.CSSProperties,
 

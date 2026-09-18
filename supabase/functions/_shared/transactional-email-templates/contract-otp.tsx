@@ -2,7 +2,7 @@
 import * as React from 'npm:react@18.3.1'
 import { Heading, Section, Text } from 'npm:@react-email/components@0.0.22'
 import type { TemplateEntry } from './registry.ts'
-import { BrandEmail, S, heroBox, heroLabel, SITE_NAME } from './_brand.tsx'
+import { BrandEmail, S, heroLabel, otpBox, otpCode as otpCodeStyle, SITE_NAME } from './_brand.tsx'
 
 interface Props {
   clientName?: string
@@ -26,16 +26,16 @@ const ContractOtpEmail = ({
     badge={contractNumber ? `عقد ${contractNumber}` : 'تحقق آمن'}
     footerNote="إذا لم تطلب هذا الرمز فتجاهل الرسالة؛ لن يتم توقيع العقد دون إدخاله."
   >
-        <Heading style={S.title}>رمز التحقق لتوقيع العقد</Heading>
+        <Heading style={S.title} className="fk-title">رمز التحقق لتوقيع العقد</Heading>
         <Text style={S.greeting}>مرحباً {clientName}،</Text>
         <Text style={S.text}>
           لإتمام توقيع العقد رقم <strong>{contractNumber}</strong>
           {contractTitle ? <> — {contractTitle}</> : null}، استخدم رمز التحقق التالي:
         </Text>
 
-        <Section style={heroBox('violet')}>
+        <Section style={otpBox('violet')}>
           <Text style={heroLabel('violet')}>رمز التحقق الخاص بك</Text>
-          <Text style={otp}>{otpCode}</Text>
+          <Text style={otpCodeStyle('violet')} className="fk-code">{otpCode}</Text>
         </Section>
 
         <Text style={S.text}>
@@ -57,4 +57,3 @@ export const template = {
   },
 } satisfies TemplateEntry
 
-const otp = { direction: 'ltr' as const, textAlign: 'center' as const, fontSize: '34px', fontWeight: 700, letterSpacing: '8px', color: '#4c1d95', margin: 0, fontFamily: 'monospace' }

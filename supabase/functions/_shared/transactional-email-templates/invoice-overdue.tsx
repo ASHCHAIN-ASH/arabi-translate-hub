@@ -1,9 +1,10 @@
 import * as React from 'npm:react@18.3.1'
 import {
   Body, Container, Head, Heading, Html, Preview, Text, Button, Hr, Section, Row, Column,
-} from 'npm:@react-email/components@0.0.22'
+ Img, } from 'npm:@react-email/components@0.0.22'
 import type { TemplateEntry } from './registry.ts'
 import * as S from './_invoice-shared.ts'
+import { HEAD_CSS, LOGO_URL } from './_head.ts'
 
 interface Props {
   customerName?: string
@@ -21,14 +22,18 @@ const E = ({ customerName, invoiceNumber, remainingAmount, dueDate, daysOverdue,
   const isLate = days > 0
   return (
     <Html lang="ar" dir="rtl">
-      <Head />
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <style>{HEAD_CSS}</style>
+      </Head>
       <Preview>{`${isLate ? 'تذكير بتأخر سداد' : 'تذكير باستحقاق'} الفاتورة ${invoiceNumber ?? ''}`}</Preview>
       <Body dir="rtl" style={S.main}>
-        <Container dir="rtl" style={S.container}>
+        <Container dir="rtl" className="fk-shell" style={S.container}>
           <Section style={S.header}>
             <Row>
               <Column>
-                <Text style={S.brand}>🏦 {S.SITE_NAME}</Text>
+                <Img src={LOGO_URL} width="42" height="42" alt="FekrahEdu" style={{ borderRadius: '10px', backgroundColor: '#fff', marginBottom: '8px' }} />
+                <Text style={S.brand}>{S.SITE_NAME}</Text>
                 <Text style={S.tagline}>تذكير بسداد فاتورة</Text>
               </Column>
               <Column align="right">
@@ -77,7 +82,7 @@ const E = ({ customerName, invoiceNumber, remainingAmount, dueDate, daysOverdue,
           </Section>
 
           <Section style={S.btnSection}>
-            <Button style={S.btnPrimary} href={invoiceUrl || `${S.SITE_URL}/invoices`}>
+            <Button className="fk-btn" style={S.btnPrimary} href={invoiceUrl || `${S.SITE_URL}/invoices`}>
               سداد الفاتورة الآن
             </Button>
           </Section>

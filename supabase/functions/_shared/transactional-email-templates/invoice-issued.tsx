@@ -1,9 +1,10 @@
 import * as React from 'npm:react@18.3.1'
 import {
   Body, Container, Head, Heading, Html, Preview, Text, Button, Hr, Section, Row, Column,
-} from 'npm:@react-email/components@0.0.22'
+ Img, } from 'npm:@react-email/components@0.0.22'
 import type { TemplateEntry } from './registry.ts'
 import * as S from './_invoice-shared.ts'
+import { HEAD_CSS, LOGO_URL } from './_head.ts'
 
 interface Item {
   item_name?: string
@@ -36,14 +37,18 @@ const E = ({
   const list = Array.isArray(items) ? items : []
   return (
     <Html lang="ar" dir="rtl">
-      <Head />
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <style>{HEAD_CSS}</style>
+      </Head>
       <Preview>{`فاتورة ${invoiceNumber ?? ''} بمبلغ ${S.fmt(totalAmount)} ${cur} — ${S.SITE_NAME}`}</Preview>
       <Body dir="rtl" style={S.main}>
-        <Container dir="rtl" style={S.container}>
+        <Container dir="rtl" className="fk-shell" style={S.container}>
           <Section style={S.header}>
             <Row>
               <Column>
-                <Text style={S.brand}>🏦 {S.SITE_NAME}</Text>
+                <Img src={LOGO_URL} width="42" height="42" alt="FekrahEdu" style={{ borderRadius: '10px', backgroundColor: '#fff', marginBottom: '8px' }} />
+                <Text style={S.brand}>{S.SITE_NAME}</Text>
                 <Text style={S.tagline}>فاتورة جديدة صادرة باسمك</Text>
               </Column>
               <Column align="right">
@@ -117,7 +122,7 @@ const E = ({
           </Section>
 
           <Section style={S.btnSection}>
-            <Button style={S.btnPrimary} href={invoiceUrl || `${S.SITE_URL}/invoices`}>
+            <Button className="fk-btn" style={S.btnPrimary} href={invoiceUrl || `${S.SITE_URL}/invoices`}>
               عرض الفاتورة والدفع
             </Button>
             <Text style={{ margin: '12px 0 0', fontSize: '12px' }}>

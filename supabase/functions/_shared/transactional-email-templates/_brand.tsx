@@ -38,7 +38,9 @@ html, body, table, tbody, tr, td, p, h1, h2, h3, a, span { direction: rtl !impor
 body, table, td, p, h1, h2, h3 { font-family: ${FONT} !important; }
 table { border-spacing: 0; }
 td, p, h1, h2, h3 { text-align: right; }
+img { max-width: 100%; }
 a { overflow-wrap: anywhere; word-break: break-word; }
+p, td, h1, h2, h3 { overflow-wrap: anywhere; word-break: break-word; }
 @keyframes fekrahFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @keyframes fekrahPulse { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.06); opacity: .88; } }
 @keyframes fekrahSweep { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
@@ -47,12 +49,18 @@ a { overflow-wrap: anywhere; word-break: break-word; }
 .fk-bar { background-size: 200% 100%; animation: fekrahSweep 3s linear infinite alternate; }
 .fk-btn { transition: transform .2s ease, box-shadow .2s ease; }
 .fk-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(0,0,0,.18); }
+.fk-code { direction: ltr !important; text-align: center !important; font-size: 30px !important; letter-spacing: 8px !important; text-indent: 8px; white-space: nowrap; }
 @media only screen and (max-width: 620px) {
-  .fk-shell { width: 100% !important; }
-  .fk-pad { padding-left: 18px !important; padding-right: 18px !important; }
-  .fk-title { font-size: 20px !important; }
-  .fk-hero { font-size: 28px !important; }
-  .fk-btn { display: block !important; width: 100% !important; box-sizing: border-box; }
+  .fk-shell { width: 100% !important; max-width: 100% !important; border-radius: 10px !important; }
+  .fk-pad { padding-left: 16px !important; padding-right: 16px !important; }
+  .fk-title { font-size: 19px !important; margin-right: 18px !important; margin-left: 18px !important; }
+  .fk-hero { font-size: 26px !important; }
+  .fk-code { font-size: 24px !important; letter-spacing: 5px !important; text-indent: 5px; }
+  .fk-btn { display: block !important; width: 100% !important; box-sizing: border-box; padding-left: 12px !important; padding-right: 12px !important; }
+}
+@media only screen and (max-width: 420px) {
+  .fk-code { font-size: 20px !important; letter-spacing: 3px !important; text-indent: 3px; }
+  .fk-hero { font-size: 22px !important; }
 }
 @media (prefers-reduced-motion: reduce) {
   .fk-card, .fk-badge, .fk-bar { animation: none !important; }
@@ -60,7 +68,7 @@ a { overflow-wrap: anywhere; word-break: break-word; }
 `
 
 export const S = {
-  main: { width: '100%', direction: 'rtl' as const, textAlign: 'right' as const, backgroundColor: '#eef2f7', fontFamily: FONT, margin: 0, padding: '24px 12px' },
+  main: { width: '100%', direction: 'rtl' as const, textAlign: 'right' as const, backgroundColor: '#eef2f7', fontFamily: FONT, margin: 0, padding: '24px 12px', boxSizing: 'border-box' as const },
   container: { direction: 'rtl' as const, textAlign: 'right' as const,
     width: '100%', maxWidth: '620px', margin: '0 auto', backgroundColor: '#ffffff',
     border: '1px solid #cbd5e1', borderRadius: '14px', overflow: 'hidden' as const,
@@ -88,14 +96,29 @@ export const S = {
 }
 
 export const heroBox = (a: Accent = 'blue') => ({
-  margin: '22px 28px', padding: '22px', backgroundColor: accentOf(a).soft,
+  margin: '22px 28px', padding: '22px 16px', backgroundColor: accentOf(a).soft,
   border: `1px solid ${accentOf(a).solid}`, borderRadius: '10px', textAlign: 'center' as const,
+  boxSizing: 'border-box' as const, maxWidth: '100%', overflow: 'hidden' as const,
 })
 export const heroLabel = (a: Accent = 'blue') => ({
   fontSize: '12px', color: accentOf(a).ink, fontWeight: '700' as const, margin: '0 0 8px', letterSpacing: '1px',
+  textAlign: 'center' as const,
 })
 export const heroValue = (a: Accent = 'blue') => ({
-  fontSize: '34px', fontWeight: '900' as const, color: accentOf(a).solid, margin: 0, lineHeight: 1.25,
+  fontSize: '32px', fontWeight: '900' as const, color: accentOf(a).solid, margin: 0, lineHeight: 1.3,
+  textAlign: 'center' as const, overflowWrap: 'anywhere' as const,
+})
+
+/** صندوق رمز التحقق — يبقى داخل إطار الرسالة على كل الأحجام */
+export const otpBox = (a: Accent = 'violet') => ({
+  margin: '22px 28px', padding: '20px 12px', backgroundColor: '#ffffff',
+  border: `2px dashed ${accentOf(a).solid}`, borderRadius: '12px', textAlign: 'center' as const,
+  boxSizing: 'border-box' as const, maxWidth: '100%', overflow: 'hidden' as const,
+})
+export const otpCode = (a: Accent = 'violet') => ({
+  direction: 'ltr' as const, textAlign: 'center' as const, fontSize: '30px', fontWeight: 800,
+  letterSpacing: '8px', textIndent: '8px', color: accentOf(a).ink, margin: 0, lineHeight: 1.4,
+  fontFamily: "'IBM Plex Sans Arabic', 'Courier New', monospace", maxWidth: '100%',
 })
 export const card = { direction: 'rtl' as const, textAlign: 'right' as const, margin: '16px 28px', padding: '18px', backgroundColor: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '10px', overflow: 'hidden' as const }
 export const cardTitle = { fontSize: '14px', fontWeight: '800' as const, color: '#1e293b', margin: '0 0 12px', textAlign: 'right' as const }

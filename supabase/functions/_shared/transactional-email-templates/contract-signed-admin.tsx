@@ -2,8 +2,9 @@
 import * as React from 'npm:react@18.3.1'
 import {
   Body, Button, Container, Head, Heading, Html, Preview, Section, Text,
-} from 'npm:@react-email/components@0.0.22'
+ Img, } from 'npm:@react-email/components@0.0.22'
 import type { TemplateEntry } from './registry.ts'
+import { HEAD_CSS, LOGO_URL } from './_head.ts'
 
 const SITE_NAME = 'FekrahEdu'
 const PARENT = 'شركة علي صالح الشهري القابضة'
@@ -23,11 +24,15 @@ const ContractSignedAdminEmail = ({
   clientName, clientEmail, contractNumber, contractTitle, signedAt, ipAddress, pdfUrl, totalAmount,
 }: Props) => (
   <Html lang="ar" dir="rtl">
-    <Head />
+    <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <style>{HEAD_CSS}</style>
+      </Head>
     <Preview>تم توقيع عقد جديد — نسخة PDF مرفقة</Preview>
     <Body dir="rtl" style={main}>
-      <Container dir="rtl" style={container}>
+      <Container dir="rtl" className="fk-shell" style={container}>
         <Section style={header}>
+          <Img src={LOGO_URL} width="42" height="42" alt="FekrahEdu" style={{ borderRadius: '10px', backgroundColor: '#fff', marginBottom: '8px' }} />
           <Heading style={brand}>{SITE_NAME}</Heading>
           <Text style={parent}>تابعة لـ {PARENT}</Text>
         </Section>
@@ -49,7 +54,7 @@ const ContractSignedAdminEmail = ({
 
         {pdfUrl && (
           <Section style={{ textAlign: 'center', margin: '28px 0' }}>
-            <Button href={pdfUrl} style={btn}>تنزيل نسخة PDF من العقد</Button>
+            <Button className="fk-btn" href={pdfUrl} style={btn}>تنزيل نسخة PDF من العقد</Button>
             <Text style={hint}>الرابط صالح لمدة 7 أيام</Text>
           </Section>
         )}

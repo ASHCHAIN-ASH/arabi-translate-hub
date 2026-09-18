@@ -3,6 +3,7 @@ import {
   Body, Container, Head, Heading, Html, Preview, Text, Button, Hr, Section,
 } from 'npm:@react-email/components@0.0.22'
 import type { TemplateEntry } from './registry.ts'
+import { HEAD_CSS } from './_head.ts'
 
 const SITE_NAME = "FekrahEdu"
 
@@ -15,10 +16,13 @@ interface QuoteNotificationProps {
 
 const QuoteNotificationEmail = ({ serviceName, trackingId, amount, ordersUrl }: QuoteNotificationProps) => (
   <Html lang="ar" dir="rtl">
-    <Head />
+    <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <style>{HEAD_CSS}</style>
+      </Head>
     <Preview>تم إرسال عرض سعر جديد لطلبك - {SITE_NAME}</Preview>
     <Body dir="rtl" style={main}>
-      <Container dir="rtl" style={container}>
+      <Container dir="rtl" className="fk-shell" style={container}>
         <Section style={headerSection}>
           <Heading style={logo}>{SITE_NAME}</Heading>
         </Section>
@@ -50,7 +54,7 @@ const QuoteNotificationEmail = ({ serviceName, trackingId, amount, ordersUrl }: 
         </Section>
 
         <Section style={buttonSection}>
-          <Button style={button} href={ordersUrl || '#'}>
+          <Button className="fk-btn" style={button} href={ordersUrl || '#'}>
             مراجعة عرض السعر
           </Button>
         </Section>

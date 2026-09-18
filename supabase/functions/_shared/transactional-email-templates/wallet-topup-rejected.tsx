@@ -3,6 +3,7 @@ import {
   Body, Container, Head, Heading, Html, Preview, Text, Button, Hr, Section, Row, Column,
 } from 'npm:@react-email/components@0.0.22'
 import type { TemplateEntry } from './registry.ts'
+import { HEAD_CSS } from './_head.ts'
 
 const SITE_NAME = 'FekrahEdu'
 
@@ -19,14 +20,17 @@ interface Props {
 
 const E = ({ customerName, amount, requestId, rejectedAt, paymentMethod, reason, walletUrl, supportUrl }: Props) => (
   <Html lang="ar" dir="rtl">
-    <Head />
+    <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <style>{HEAD_CSS}</style>
+      </Head>
     <Preview>{`تعذّر اعتماد طلب شحن محفظتك بمبلغ ${amount ?? ''} ر.س — ${SITE_NAME}`}</Preview>
     <Body dir="rtl" style={main}>
-      <Container dir="rtl" style={container}>
+      <Container dir="rtl" className="fk-shell" style={container}>
         <Section style={bankHeader}>
           <Row>
             <Column>
-              <Text style={bankBrand}>🏦 {SITE_NAME}</Text>
+              <Text style={bankBrand}>{SITE_NAME}</Text>
               <Text style={bankTagline}>إشعار حالة طلب</Text>
             </Column>
             <Column align="right">
@@ -108,10 +112,10 @@ const E = ({ customerName, amount, requestId, rejectedAt, paymentMethod, reason,
         </Section>
 
         <Section style={btnSection}>
-          <Button style={btnPrimary} href={walletUrl || 'https://fekrahedu.com/wallet'}>
+          <Button className="fk-btn" style={btnPrimary} href={walletUrl || 'https://fekrahedu.com/wallet'}>
             إعادة تقديم الطلب
           </Button>
-          <Button style={btnSecondary} href={supportUrl || 'https://fekrahedu.com/support/tickets'}>
+          <Button className="fk-btn" style={btnSecondary} href={supportUrl || 'https://fekrahedu.com/support/tickets'}>
             تواصل مع الدعم
           </Button>
         </Section>
