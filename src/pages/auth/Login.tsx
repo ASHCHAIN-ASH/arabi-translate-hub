@@ -13,14 +13,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { WhatsappAuthForm } from '@/components/auth/WhatsappAuthForm';
 import AuthShell from '@/components/auth/AuthShell';
 
-const REMEMBER_KEY = 'edu_remember_email';
-
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [remember, setRemember] = useState(false);
+  const [agreeTerms, setAgreeTerms] = useState(false);
   const [capsOn, setCapsOn] = useState(false);
   const [needsConfirmation, setNeedsConfirmation] = useState(false);
   const [resendingConfirmation, setResendingConfirmation] = useState(false);
@@ -34,14 +32,6 @@ const Login = () => {
     : null;
 
   useEffect(() => {
-    const saved = localStorage.getItem(REMEMBER_KEY);
-    if (saved) {
-      setEmail(saved);
-      setRemember(true);
-    }
-  }, []);
-
-  useEffect(() => {
     if (!authLoading && user) {
       navigate(userRole === 'admin' ? '/adminfekrah' : (nextPath || '/dashboard'), { replace: true });
     }
@@ -51,6 +41,10 @@ const Login = () => {
     e.preventDefault();
     if (!email || !password) {
       toast.error('يرجى إدخال البريد الإلكتروني وكلمة المرور');
+      return;
+    }
+    if (!agreeTerms) {
+      toast.error('يرجى الموافقة على شروط الاستخدام أولاً');
       return;
     }
 
@@ -63,8 +57,6 @@ const Login = () => {
         toast.error(error);
         return;
       }
-      if (remember) localStorage.setItem(REMEMBER_KEY, email);
-      else localStorage.removeItem(REMEMBER_KEY);
       triggerLoginWelcome();
     } catch (error: any) {
       toast.error(error.message || 'خطأ في تسجيل الدخول');
@@ -214,15 +206,22 @@ const Login = () => {
               )}
             </AnimatePresence>
 
-            {/* Remember me */}
+            {/* الموافقة على شروط الاستخدام */}
             <div className="flex items-center gap-2">
               <Checkbox
-                id="remember"
-                checked={remember}
-                onCheckedChange={(v) => setRemember(Boolean(v))}
+                id="agree-terms"
+                checked={agreeTerms}
+                onCheckedChange={(v) => setAgreeTerms(Boolean(v))}
               />
-              <Label htmlFor="remember" className="text-sm text-muted-foreground cursor-pointer select-none">
-                تذكّرني على هذا الجهاز
+              <Label htmlFor="agree-terms" className="text-sm text-muted-foreground cursor-pointer select-none">
+                أوافق على{' '}
+                <button
+                  type="button"
+                  onClick={() => navigate('/terms-of-service')}
+                  className="text-primary hover:underline font-medium"
+                >
+                  شروط الاستخدام
+                </button>
               </Label>
             </div>
 
