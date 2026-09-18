@@ -68,7 +68,7 @@ p, td, h1, h2, h3 { overflow-wrap: anywhere; word-break: break-word; }
 `
 
 export const S = {
-  main: { width: '100%', direction: 'rtl' as const, textAlign: 'right' as const, backgroundColor: '#eef2f7', fontFamily: FONT, margin: 0, padding: '24px 12px' },
+  main: { width: '100%', direction: 'rtl' as const, textAlign: 'right' as const, backgroundColor: '#eef2f7', fontFamily: FONT, margin: 0, padding: '24px 12px', boxSizing: 'border-box' as const },
   container: { direction: 'rtl' as const, textAlign: 'right' as const,
     width: '100%', maxWidth: '620px', margin: '0 auto', backgroundColor: '#ffffff',
     border: '1px solid #cbd5e1', borderRadius: '14px', overflow: 'hidden' as const,

@@ -12,7 +12,7 @@ export const main = { direction: 'rtl' as const, textAlign: 'right' as const,
   backgroundColor: '#f1f5f9',
   fontFamily: "'IBM Plex Sans Arabic', Tahoma, Arial, sans-serif",
   margin: 0,
-  padding: '24px 12px',
+  padding: '24px 12px', boxSizing: 'border-box' as const,
   width: '100%',
 }
 

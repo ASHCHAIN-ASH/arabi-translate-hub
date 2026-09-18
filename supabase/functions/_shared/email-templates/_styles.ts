@@ -60,6 +60,7 @@ export const styles = (p: { primary: string; accent: string; glow: string; tint:
     backgroundColor: '#F4F6FB',
     margin: 0,
     padding: '32px 12px',
+    boxSizing: 'border-box',
     backgroundImage: `radial-gradient(circle at top right, ${p.tint} 0%, #F4F6FB 55%)`,
   } as React.CSSProperties,
 
