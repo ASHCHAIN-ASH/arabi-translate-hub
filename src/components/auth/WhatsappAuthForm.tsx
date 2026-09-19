@@ -65,11 +65,11 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
     };
   }, []);
 
-  const fullPhone = phone ? `966${phone}` : '';
+  const fullPhone = phone;
 
   const requestCode = async () => {
-    if (phone.length !== 9 || !phone.startsWith('5')) {
-      toast.error('أدخل رقم جوال صحيح');
+    if (phone.length < 9 || phone.length > 15) {
+      toast.error('أدخل رقم جوال صحيح مع رمز الدولة');
       return;
     }
 
