@@ -22,13 +22,12 @@ const withTimeout = <T,>(promise: Promise<T>, ms = 20000): Promise<T> =>
     ),
   ]);
 
-// تحويل أي صيغة مُدخلة إلى الرقم المحلي (9 أرقام تبدأ بـ 5)
-const normalizeLocal = (raw: string) => {
+// تحويل أي صيغة مُدخلة إلى رقم دولي (مع رمز الدولة، بجميع الدول)
+const normalizeIntl = (raw: string) => {
   let d = raw.replace(/\D/g, '');
-  if (d.startsWith('00966')) d = d.slice(5);
-  else if (d.startsWith('966')) d = d.slice(3);
+  if (d.startsWith('00')) d = d.slice(2);
   if (d.startsWith('0')) d = d.slice(1);
-  return d.slice(0, 9);
+  return d.slice(0, 15);
 };
 
 export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
