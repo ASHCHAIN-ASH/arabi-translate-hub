@@ -22,13 +22,12 @@ const withTimeout = <T,>(promise: Promise<T>, ms = 20000): Promise<T> =>
     ),
   ]);
 
-// تحويل أي صيغة مُدخلة إلى الرقم المحلي (9 أرقام تبدأ بـ 5)
-const normalizeLocal = (raw: string) => {
+// تحويل أي صيغة مُدخلة إلى رقم دولي (مع رمز الدولة، بجميع الدول)
+const normalizeIntl = (raw: string) => {
   let d = raw.replace(/\D/g, '');
-  if (d.startsWith('00966')) d = d.slice(5);
-  else if (d.startsWith('966')) d = d.slice(3);
+  if (d.startsWith('00')) d = d.slice(2);
   if (d.startsWith('0')) d = d.slice(1);
-  return d.slice(0, 9);
+  return d.slice(0, 15);
 };
 
 export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
@@ -66,11 +65,11 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
     };
   }, []);
 
-  const fullPhone = phone ? `966${phone}` : '';
+  const fullPhone = phone;
 
   const requestCode = async () => {
-    if (phone.length !== 9 || !phone.startsWith('5')) {
-      toast.error('أدخل رقم جوال صحيح');
+    if (phone.length < 9 || phone.length > 15) {
+      toast.error('أدخل رقم جوال صحيح مع رمز الدولة');
       return;
     }
 
@@ -252,23 +251,20 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
             <Label htmlFor="wa-phone" className="flex items-center gap-2 text-slate-700 font-medium">
               <Phone className="w-4 h-4" /> رقم الجوال (واتساب)
             </Label>
-            <div className="mt-2 flex items-center gap-2" dir="ltr">
-              <span className="h-12 shrink-0 rounded-md border-2 border-input bg-muted px-3 flex items-center font-semibold text-slate-700">
-                +966
-              </span>
+            <div className="mt-2" dir="ltr">
               <Input
                 id="wa-phone"
                 type="tel"
                 inputMode="numeric"
                 value={phone}
-                onChange={(e) => setPhone(normalizeLocal(e.target.value))}
-                placeholder="5xxxxxxxx"
+                onChange={(e) => setPhone(normalizeIntl(e.target.value))}
+                placeholder="9665xxxxxxxx"
                 dir="ltr"
-                maxLength={9}
+                maxLength={15}
                 className="h-12 border-2 focus:border-emerald-500"
               />
             </div>
-            <p className="text-xs text-slate-500 mt-1">سنرسل رمز التحقق على واتساب</p>
+            <p className="text-xs text-slate-500 mt-1">أدخل الرقم مع رمز الدولة (مثال: 9665xxxxxxxx) — سنرسل رمز التحقق على واتساب</p>
           </div>
 
           {mode === 'register' && (
