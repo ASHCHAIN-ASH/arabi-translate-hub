@@ -3,6 +3,13 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { journals } from "@/data/journals";
+import coverMedical from "@/assets/journals/cat-medical.jpg";
+import coverEngineering from "@/assets/journals/cat-engineering.jpg";
+import coverEducation from "@/assets/journals/cat-education.jpg";
+import coverBusiness from "@/assets/journals/cat-business.jpg";
+import coverLaw from "@/assets/journals/cat-law.jpg";
+import coverScience from "@/assets/journals/cat-science.jpg";
+import coverMulti from "@/assets/journals/cat-multi.jpg";
 
 export interface CategoryVisual {
   icon: LucideIcon;
@@ -10,6 +17,7 @@ export interface CategoryVisual {
   panelClass: string;
   badgeClass: string;
   gradientClass: string;
+  cover: string;
   slug: string;
   description: string;
 }
@@ -22,7 +30,7 @@ export const categoryVisuals: Record<string, CategoryVisual> = {
     panelClass: "bg-destructive/10 border-destructive/20",
     badgeClass: "bg-destructive/10 text-destructive border-destructive/20",
     gradientClass: "from-destructive/15 via-destructive/5 to-transparent",
-    slug: "medical-health",
+    slug: "medical-health", cover: coverMedical,
     description: "مجلات الطب السريري والصحة العامة والتمريض والعلوم الحيوية الطبية.",
   },
   "الهندسة والتقنية": {
@@ -30,7 +38,7 @@ export const categoryVisuals: Record<string, CategoryVisual> = {
     panelClass: "bg-primary/10 border-primary/20",
     badgeClass: "bg-primary/10 text-primary border-primary/20",
     gradientClass: "from-primary/15 via-primary/5 to-transparent",
-    slug: "engineering-technology",
+    slug: "engineering-technology", cover: coverEngineering,
     description: "مجلات الهندسة بفروعها وعلوم الحاسب والذكاء الاصطناعي والتقنيات الحديثة.",
   },
   "التربية والعلوم الإنسانية": {
@@ -38,7 +46,7 @@ export const categoryVisuals: Record<string, CategoryVisual> = {
     panelClass: "bg-secondary/10 border-secondary/20",
     badgeClass: "bg-secondary/10 text-secondary border-secondary/20",
     gradientClass: "from-secondary/15 via-secondary/5 to-transparent",
-    slug: "education-humanities",
+    slug: "education-humanities", cover: coverEducation,
     description: "مجلات التربية والمناهج وعلم النفس واللغات والدراسات الإنسانية.",
   },
   "الإدارة والاقتصاد": {
@@ -46,7 +54,7 @@ export const categoryVisuals: Record<string, CategoryVisual> = {
     panelClass: "bg-success/10 border-success/20",
     badgeClass: "bg-success/10 text-success border-success/20",
     gradientClass: "from-success/15 via-success/5 to-transparent",
-    slug: "business-economics",
+    slug: "business-economics", cover: coverBusiness,
     description: "مجلات إدارة الأعمال والمحاسبة والتمويل والاقتصاد والتسويق.",
   },
   "القانون والسياسات": {
@@ -54,7 +62,7 @@ export const categoryVisuals: Record<string, CategoryVisual> = {
     panelClass: "bg-warning/10 border-warning/20",
     badgeClass: "bg-warning/10 text-warning border-warning/20",
     gradientClass: "from-warning/15 via-warning/5 to-transparent",
-    slug: "law-policy",
+    slug: "law-policy", cover: coverLaw,
     description: "مجلات القانون والأنظمة والدراسات السياسية والسياسات العامة.",
   },
   "العلوم الطبيعية": {
@@ -62,7 +70,7 @@ export const categoryVisuals: Record<string, CategoryVisual> = {
     panelClass: "bg-accent/10 border-accent/20",
     badgeClass: "bg-accent/10 text-accent border-accent/20",
     gradientClass: "from-accent/15 via-accent/5 to-transparent",
-    slug: "natural-sciences",
+    slug: "natural-sciences", cover: coverScience,
     description: "مجلات الفيزياء والكيمياء والرياضيات والأحياء وعلوم البيئة.",
   },
   [DEFAULT_CATEGORY]: {
@@ -70,7 +78,7 @@ export const categoryVisuals: Record<string, CategoryVisual> = {
     panelClass: "bg-primary/10 border-primary/20",
     badgeClass: "bg-primary/10 text-primary border-primary/20",
     gradientClass: "from-primary/15 via-accent/5 to-transparent",
-    slug: "multidisciplinary",
+    slug: "multidisciplinary", cover: coverMulti,
     description: "مجلات تقبل أبحاثًا من تخصصات متعددة ضمن نطاق واسع.",
   },
 };
