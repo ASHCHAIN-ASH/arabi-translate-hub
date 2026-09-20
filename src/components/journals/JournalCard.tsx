@@ -69,7 +69,7 @@ export default function JournalCard({ journal, index }: { journal: JournalRecord
       <div className="relative flex flex-1 flex-col p-5 pt-4 sm:p-6 sm:pt-4">
 
 
-        <div className="min-h-[7.5rem]">
+        <div className="min-h-0 sm:min-h-[7.5rem]">
           {journal.nameAr && <h3 className="mb-1 text-lg font-bold leading-8 text-foreground">{journal.nameAr}</h3>}
           <p dir="ltr" className="text-left text-base font-semibold leading-7 text-foreground">{journal.name}</p>
           {journal.publisher && <p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">{journal.publisher}</p>}
