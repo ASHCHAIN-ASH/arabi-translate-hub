@@ -7391,6 +7391,17 @@ export type Database = {
         }
         Returns: number
       }
+      notify_admin_wa: {
+        Args: {
+          _entity_id?: string
+          _entity_type?: string
+          _event: string
+          _message: string
+          _title: string
+          _url: string
+        }
+        Returns: undefined
+      }
       notify_student_whatsapp: {
         Args: {
           _dedupe_key?: string
