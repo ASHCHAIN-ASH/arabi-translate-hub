@@ -1,4 +1,5 @@
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "framer-motion";
+import type { PointerEvent } from "react";
 import { ArrowLeft, BookOpenCheck, ExternalLink, FileCheck2, LibraryBig, Search, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -11,7 +12,7 @@ export function JournalPublishingBanner() {
   const imageX = useSpring(useTransform(pointerX, [-0.5, 0.5], [10, -10]), { stiffness: 120, damping: 20 });
   const imageY = useSpring(useTransform(pointerY, [-0.5, 0.5], [8, -8]), { stiffness: 120, damping: 20 });
 
-  const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+  const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
     if (reduceMotion) return;
     const bounds = event.currentTarget.getBoundingClientRect();
     pointerX.set((event.clientX - bounds.left) / bounds.width - 0.5);
@@ -131,7 +132,7 @@ export function JournalPublishingBanner() {
                 <p className="text-[10px] text-muted-foreground">وجهتك المختارة</p>
                 <p className="text-xs font-bold">رابط رسمي موثوق</p>
               </div>
-            </div>
+            </motion.div>
           </div>
         </motion.div>
       </div>
