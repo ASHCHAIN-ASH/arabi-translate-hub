@@ -1198,7 +1198,9 @@ export const uploadedJournals: JournalRecord[] = [
       "نشر دولي"
     ],
     source: "uploaded",
-    category: "الطب والصحة"
+    category: "الطب والصحة",
+    featured: true,
+    featuredRank: 3
   },
   {
     id: "uploaded-96",
