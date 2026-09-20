@@ -34,7 +34,7 @@ export function JournalPublishingBanner() {
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
           onPointerMove={handlePointerMove}
           onPointerLeave={resetPointer}
-          className="group relative isolate grid min-h-[420px] overflow-hidden rounded-lg border border-primary/25 bg-deep-violet shadow-strong lg:grid-cols-[minmax(0,1.02fr)_minmax(420px,.98fr)]"
+          className="group relative isolate grid overflow-hidden overflow-hidden rounded-lg border border-primary/25 bg-deep-violet shadow-strong lg:grid-cols-[minmax(0,1.02fr)_minmax(420px,.98fr)]"
         >
           <div className="absolute inset-0 academic-grid opacity-10" aria-hidden="true" />
           <motion.div
@@ -44,7 +44,7 @@ export function JournalPublishingBanner() {
             transition={{ duration: 28, repeat: Infinity, ease: "linear" }}
           />
 
-          <div className="relative z-10 flex flex-col justify-center p-6 sm:p-9 lg:p-12">
+          <div className="relative z-10 flex flex-col justify-center p-6 sm:p-9 lg:min-h-[420px] lg:p-12">
             <motion.div
               initial={reduceMotion ? false : { opacity: 0, x: 22 }}
               whileInView={reduceMotion ? undefined : { opacity: 1, x: 0 }}
@@ -92,7 +92,7 @@ export function JournalPublishingBanner() {
             </motion.div>
           </div>
 
-          <div className="relative order-first min-h-[270px] overflow-hidden border-b border-deep-violet-foreground/15 lg:order-none lg:min-h-full lg:border-b-0 lg:border-r">
+          <div className="relative order-first min-h-[240px] sm:min-h-[290px] overflow-hidden border-b border-deep-violet-foreground/15 lg:order-none lg:min-h-full lg:border-b-0 lg:border-r">
             <motion.img
               src={journalPublishingImage}
               alt="مجلة علمية مفتوحة في مكتبة أكاديمية"
