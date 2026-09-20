@@ -39,7 +39,7 @@ const NationalDayPromoPopup = () => {
           <button
             aria-label="إغلاق العرض"
             onClick={dismiss}
-            className="absolute inset-0 bg-saudi-green/40 backdrop-blur-sm"
+            className="absolute inset-0 bg-foreground/50 backdrop-blur-sm"
           />
 
           <motion.div
