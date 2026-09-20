@@ -678,7 +678,6 @@
 }
 .national-marquee-track {
   animation: national-marquee 38s linear infinite;
-  will-change: transform;
 }
 .national-marquee:hover .national-marquee-track {
   animation-play-state: paused;
