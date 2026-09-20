@@ -670,3 +670,29 @@
     background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 50%, hsl(var(--accent)) 100%);
   }
 }
+
+/* ── شريط اليوم الوطني المتحرك ── */
+@keyframes national-marquee {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+.national-marquee-track {
+  animation: national-marquee 38s linear infinite;
+  will-change: transform;
+}
+.national-marquee:hover .national-marquee-track {
+  animation-play-state: paused;
+}
+@keyframes national-shine {
+  0% { transform: translateX(-120%); }
+  60%, 100% { transform: translateX(420%); }
+}
+.national-shine {
+  animation: national-shine 7s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .national-marquee-track,
+  .national-shine {
+    animation: none !important;
+  }
+}
