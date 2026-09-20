@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { JournalRecord } from "@/data/journals";
 import { getVisual } from "./journalVisuals";
+import JournalLogo from "./JournalLogo";
 
 export default function JournalCard({ journal, index }: { journal: JournalRecord; index: number }) {
   const reduceMotion = useReducedMotion();
