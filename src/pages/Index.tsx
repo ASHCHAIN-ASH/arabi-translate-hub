@@ -1161,9 +1161,7 @@ const Index = () => {
         <ServiceSteps />
       </Suspense>
 
-      <Suspense fallback={<LoadingSpinner />}>
-        <ServicesShowcase />
-      </Suspense>
+      {/* قسم الخدمات — محذوف بناءً على طلب العميل */}
 
       {/* كاروسيل قصص النجاح — مخفي مؤقتًا */}
 
