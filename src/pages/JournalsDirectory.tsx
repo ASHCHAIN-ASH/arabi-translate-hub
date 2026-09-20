@@ -145,16 +145,16 @@ const JournalsDirectory = () => {
     const term = normalize(query);
     return journals.filter((journal) => {
       const searchable = normalize([journal.name, journal.nameAr, journal.issn, journal.publisher, journal.category, ...(journal.subjects || [])].filter(Boolean).join(" "));
-      return (!term || searchable.includes(term)) && (source === ALL || journal.source === source) && (category === ALL || journal.category === category) && (issnState === ALL || (issnState === "available" ? Boolean(journal.issn) : !journal.issn));
+      return (!term || searchable.includes(term)) && (category === ALL || journal.category === category) && (issnState === ALL || (issnState === "available" ? Boolean(journal.issn) : !journal.issn));
     });
-  }, [category, issnState, query, source]);
+  }, [category, issnState, query]);
 
   const pageCount = Math.max(1, Math.ceil(filteredJournals.length / PAGE_SIZE));
   const visibleJournals = filteredJournals.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-  const hasFilters = Boolean(query || source !== ALL || category !== ALL || issnState !== ALL);
-  useEffect(() => setPage(1), [query, source, category, issnState]);
+  const hasFilters = Boolean(query || category !== ALL || issnState !== ALL);
+  useEffect(() => setPage(1), [query, category, issnState]);
   useEffect(() => { if (page > pageCount) setPage(pageCount); }, [page, pageCount]);
-  const clearFilters = () => { setQuery(""); setSource(ALL); setCategory(ALL); setIssnState(ALL); };
+  const clearFilters = () => { setQuery(""); setCategory(ALL); setIssnState(ALL); };
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
