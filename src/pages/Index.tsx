@@ -17,6 +17,7 @@ import { FloatingWhatsAppButton } from "@/components/FloatingWhatsAppButton";
 import Footer from "@/components/Footer";
 import { InteractiveAcademicSystems } from "@/components/home/InteractiveAcademicSystems";
 import { TwinklingStars } from "@/components/home/TwinklingStars";
+import { JournalPublishingBanner } from "@/components/home/JournalPublishingBanner";
 
 // Import academic service images
 import academicTranslationImg from "@/assets/academic-service-translation.jpg";
@@ -455,12 +456,7 @@ const Index = () => {
         </div>
       </section>
 
-
-
-
-
-
-
+      <JournalPublishingBanner />
       {/* قسم الخدمات الأكاديمية */}
       <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-slate-50 via-blue-50/40 to-purple-50/30 dark:from-slate-950 dark:via-slate-900/95 dark:to-slate-950 relative overflow-hidden" dir="rtl">
         {/* شبكة الخلفية المتحركة */}
