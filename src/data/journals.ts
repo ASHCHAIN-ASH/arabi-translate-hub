@@ -1111,6 +1111,27 @@ export const uploadedJournals: JournalRecord[] = [
     website: "https://mudarrisziyo.uz/index.php/innovatsiya",
     source: "uploaded",
     category: "متعددة التخصصات"
+  },
+  {
+    id: "uploaded-92",
+    name: "Journal of Intelligent Decision Making and Information Science",
+    nameAr: "مجلة اتخاذ القرار الذكي وعلوم المعلومات",
+    issn: "2709-337X",
+    website: "https://jidmis.com",
+    publisher: "Intelligent Decision Making and Information Science",
+    subjects: [
+      "اتخاذ القرار الذكي",
+      "علوم المعلومات",
+      "الذكاء الاصطناعي",
+      "تحليل البيانات"
+    ],
+    features: [
+      "مجلة علمية محكمة",
+      "نشر دولي",
+      "تخصصات الذكاء الاصطناعي"
+    ],
+    source: "uploaded",
+    category: "الهندسة والتقنية"
   }
 ];
 
