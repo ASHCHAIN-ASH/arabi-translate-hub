@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import {
-  ArrowLeft, BookOpen, BookOpenCheck, ChevronLeft, ExternalLink, FileCheck2,
+  ArrowLeft, BookOpen, BookOpenCheck, CheckCircle2, ChevronLeft, ExternalLink, FileCheck2,
   Filter, Globe2, LibraryBig, Microscope, Search, ShieldCheck, Sparkles, X,
 } from "lucide-react";
 import { Link } from "react-router-dom";
