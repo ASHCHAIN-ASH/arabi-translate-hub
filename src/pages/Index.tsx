@@ -418,7 +418,6 @@ const Index = () => {
         </div>
       </section>
 
-      <JournalPublishingBanner />
       <ServicesShowcase />
 
       {/* قسم مميزات الجودة - مخفي مؤقتًا */}
@@ -711,6 +710,8 @@ const Index = () => {
         </div>
       </section>
       )}
+
+      <JournalPublishingBanner />
 
       {/* Institutional Partnership Banner */}
       <InstitutionalPartnershipBanner />
