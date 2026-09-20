@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { ExternalLink, MessageCircle } from "lucide-react";
+import { MessageCircle, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { JournalRecord } from "@/data/journals";
@@ -39,7 +39,7 @@ export default function JournalCard({ journal, index }: { journal: JournalRecord
       viewport={{ once: true, margin: "-55px" }}
       transition={{ duration: 0.45, delay: Math.min(index * 0.045, 0.28) }}
       whileHover={reduceMotion ? undefined : { y: -7 }}
-      className="group relative flex h-full flex-col overflow-hidden rounded-lg border border-border/80 bg-card shadow-soft transition-[box-shadow,border-color] duration-300 hover:border-primary/30 hover:shadow-strong"
+      className={`group relative flex h-full flex-col overflow-hidden rounded-lg border ${journal.featured ? "border-primary/50 ring-1 ring-primary/25" : "border-border/80"} bg-card shadow-soft transition-[box-shadow,border-color] duration-300 hover:border-primary/30 hover:shadow-strong`}
     >
       <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-l from-primary via-secondary to-accent" />
       <div className="absolute -left-10 -top-10 h-28 w-28 rounded-full bg-primary/5 transition-transform duration-500 group-hover:scale-150" aria-hidden="true" />
@@ -52,7 +52,18 @@ export default function JournalCard({ journal, index }: { journal: JournalRecord
           >
             <Icon className={`h-7 w-7 ${visual.iconClass}`} aria-hidden="true" />
           </motion.div>
-          <Badge variant="outline" className={visual.badgeClass}>{journal.category}</Badge>
+          <div className="flex flex-col items-end gap-2">
+            <Badge variant="outline" className={visual.badgeClass}>{journal.category}</Badge>
+            {journal.featured && (
+              <motion.span
+                animate={reduceMotion ? undefined : { scale: [1, 1.05, 1] }}
+                transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+                className="inline-flex items-center gap-1 rounded-full bg-gradient-to-l from-primary to-accent px-2.5 py-1 text-[11px] font-bold text-primary-foreground shadow-primary"
+              >
+                <Sparkles className="h-3 w-3" aria-hidden="true" /> مجلة مميزة
+              </motion.span>
+            )}
+          </div>
         </div>
 
         <div className="min-h-[7.5rem]">
@@ -80,12 +91,7 @@ export default function JournalCard({ journal, index }: { journal: JournalRecord
 
         <div className="mt-auto space-y-3 border-t border-border pt-4">
           <span dir="ltr" className="block min-w-0 truncate text-left text-xs text-muted-foreground" title={host}>{host}</span>
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-            <Button asChild size="sm" className="gap-2 shadow-primary">
-              <a href={journal.website} target="_blank" rel="noopener noreferrer">
-                زيارة المجلة <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-              </a>
-            </Button>
+          <div className="grid grid-cols-1 gap-2">
             <Button asChild size="sm" variant="outline" className="gap-2 border-success/30 bg-success/5 text-success hover:bg-success/10 hover:text-success">
               <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" aria-label={`استفسار عبر واتساب عن ${journal.nameAr || journal.name}`}>
                 <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" /> استفسار واتساب
