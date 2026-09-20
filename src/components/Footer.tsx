@@ -45,62 +45,6 @@ const Footer = () => {
         <div className="absolute top-1/2 left-1/3 w-12 h-12 bg-green-500/20 rounded-full"></div>
       </div>
 
-      {/* Company Header Section */}
-      <div className="relative z-10 bg-gradient-to-r from-primary/10 to-blue-600/10 py-8 md:py-12 border-b border-white/10">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-6 md:mb-8"
-          >
-            <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-white/10 rounded-full mb-4 md:mb-6">
-              <Building2 className="h-8 w-8 md:h-10 md:w-10 text-white" />
-            </div>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4 font-arabic-title">وكالة FekrahEdu للحلول التعليمية المتقدمة</h2>
-            <p className="text-base md:text-lg lg:text-xl opacity-90 max-w-3xl mx-auto leading-relaxed">شريكك الموثوق للحصول على أفضل الحلول التعليمية والتقنية المتقدمة في المملكة العربية السعودية</p>
-          </motion.div>
-          
-          {/* Company Info Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1, duration: 0.5 }}
-              className="bg-white/5 backdrop-blur-sm rounded-lg p-4 md:p-6 text-center hover:bg-white/10 transition-all duration-300 border border-white/10"
-            >
-              <MapPin className="h-8 w-8 md:h-10 md:w-10 mx-auto mb-3 text-blue-400" />
-              <h4 className="font-semibold text-base md:text-lg mb-2">موقعنا</h4>
-              <p className="text-sm opacity-90">جدة، المملكة العربية السعودية</p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-              className="bg-white/5 backdrop-blur-sm rounded-lg p-4 md:p-6 text-center hover:bg-white/10 transition-all duration-300 border border-white/10"
-            >
-              <Clock className="h-8 w-8 md:h-10 md:w-10 mx-auto mb-3 text-green-400" />
-              <h4 className="font-semibold text-base md:text-lg mb-2">ساعات العمل الرسمية</h4>
-              <p className="text-sm opacity-90 mb-1">الأحد - الخميس</p>
-              <p className="text-sm md:text-base font-semibold text-green-400">9:00 ص - 5:00 م</p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.5 }}
-              className="bg-white/5 backdrop-blur-sm rounded-lg p-4 md:p-6 text-center hover:bg-white/10 transition-all duration-300 border border-white/10"
-            >
-              <Headphones className="h-8 w-8 md:h-10 md:w-10 mx-auto mb-3 text-purple-400" />
-              <h4 className="font-semibold text-base md:text-lg mb-2">خدمة العملاء</h4>
-              <p className="text-sm md:text-base font-semibold text-purple-400 mb-1">متاحة 24/7</p>
-              <p className="text-sm opacity-90">على مدار الساعة طوال أيام الأسبوع</p>
-            </motion.div>
-          </div>
-        </div>
-      </div>
-
       {/* العضوية الحصرية */}
       <div className="relative z-10 border-b border-white/10 bg-primary/10">
         <div className="container mx-auto px-4 py-6 sm:px-6 md:py-8 lg:px-8">
