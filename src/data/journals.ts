@@ -16,6 +16,7 @@ export interface JournalRecord {
   source: JournalSource;
   category: string;
   featured?: boolean;
+  featuredRank?: number;
 }
 
 export const existingJournals: JournalRecord[] = [
@@ -1176,7 +1177,8 @@ export const uploadedJournals: JournalRecord[] = [
     ],
     source: "uploaded",
     category: "العلوم الطبيعية",
-    featured: true
+    featured: true,
+    featuredRank: 2
   },
   {
     id: "uploaded-95",
@@ -1258,7 +1260,8 @@ export const uploadedJournals: JournalRecord[] = [
     ],
     source: "uploaded",
     category: "الطب والصحة",
-    featured: true
+    featured: true,
+    featuredRank: 1
   },
   {
     id: "uploaded-99",
@@ -1423,5 +1426,7 @@ export const uploadedJournals: JournalRecord[] = [
 ];
 
 export const journals: JournalRecord[] = [...existingJournals, ...uploadedJournals].sort(
-  (a, b) => Number(Boolean(b.featured)) - Number(Boolean(a.featured))
+  (a, b) =>
+    Number(Boolean(b.featured)) - Number(Boolean(a.featured)) ||
+    (a.featuredRank ?? 999) - (b.featuredRank ?? 999)
 );
