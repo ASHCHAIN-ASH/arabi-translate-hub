@@ -46,6 +46,8 @@ const JournalsDirectory = () => {
           </div>
         </section>
 
+        <JournalsStatsBanner />
+
         <section className="relative z-10 -mt-3 pb-12">
           <div className="container mx-auto grid gap-4 px-4 md:grid-cols-3">
             {featurePanels.map((feature, index) => {
