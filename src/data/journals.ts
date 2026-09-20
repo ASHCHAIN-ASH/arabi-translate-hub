@@ -1175,7 +1175,8 @@ export const uploadedJournals: JournalRecord[] = [
       "نشر دولي"
     ],
     source: "uploaded",
-    category: "العلوم الطبيعية"
+    category: "العلوم الطبيعية",
+    featured: true
   },
   {
     id: "uploaded-95",
