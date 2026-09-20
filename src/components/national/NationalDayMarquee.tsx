@@ -60,7 +60,7 @@ const NationalDayMarquee = ({ className = "" }: { className?: string }) => {
   return (
     <div
       dir="rtl"
-      style={{ "--nm-shift": `${shift}px` } as React.CSSProperties}
+      style={{ "--nm-shift": `${shift}px` } as CSSProperties}
       className={`national-marquee relative flex items-stretch overflow-hidden rounded-2xl border border-saudi-gold/40 bg-gradient-to-l from-saudi-green via-[hsl(120_45%_16%)] to-[hsl(120_60%_9%)] shadow-soft ${className}`}
     >
       {/* نقشة خلفية خفيفة */}
