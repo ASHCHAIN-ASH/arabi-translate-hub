@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { categorySummaries } from "@/components/journals/journalVisuals";
+import JournalsStatsBanner from "@/components/journals/JournalsStatsBanner";
 import { journals } from "@/data/journals";
 
 const featurePanels = [
@@ -44,6 +45,8 @@ const JournalsDirectory = () => {
             </motion.div>
           </div>
         </section>
+
+        <JournalsStatsBanner />
 
         <section className="relative z-10 -mt-3 pb-12">
           <div className="container mx-auto grid gap-4 px-4 md:grid-cols-3">
