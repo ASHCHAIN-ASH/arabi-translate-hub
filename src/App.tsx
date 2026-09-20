@@ -1,7 +1,5 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-import BonusDropBanner from "@/components/bonus/BonusDropBanner";
-import NationalDayPromoPopup from "@/components/NationalDayPromoPopup";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { lazy, Suspense } from "react";
@@ -14,6 +12,7 @@ import RouteIndexingGuard from "@/components/RouteIndexingGuard";
 import ContentProtection from "@/components/ContentProtection";
 import LoginWelcomeOverlay from "@/components/LoginWelcomeOverlay";
 import ReferralTracker from "@/components/marketing/ReferralTracker";
+import DeferredGlobalFeatures from "@/components/DeferredGlobalFeatures";
 
 const SimpleLogin = lazy(() => import("./pages/SimpleLogin"));
 const Login = lazy(() => import("./pages/auth/Login"));
@@ -95,7 +94,6 @@ const FinancingAdmin = lazy(() => import("./pages/admin/FinancingAdmin"));
 const FinancingAdminDetails = lazy(() => import("./pages/admin/FinancingAdminDetails"));
 const FinancingAuditTrail = lazy(() => import("./pages/admin/FinancingAuditTrail"));
 const VerifyContract = lazy(() => import("./pages/VerifyContract"));
-import InstallPwaPrompt from "./components/InstallPwaPrompt";
 const AdminServices = lazy(() => import("./pages/admin/AdminServices"));
 const AdminOrders = lazy(() => import("./pages/admin/AdminOrders"));
 const AdminInvoices = lazy(() => import("./pages/admin/AdminInvoices"));
@@ -208,7 +206,7 @@ const ResearchProposalService = lazy(() => import("./pages/research/ResearchProp
 const ReferencesProvision = lazy(() => import("./pages/research/ReferencesProvision"));
 const HomeworkAssistance = lazy(() => import("./pages/research/HomeworkAssistance"));
 const ResearchJourney = lazy(() => import("./pages/research/ResearchJourney"));
-import OrderForm from "./components/OrderForm";
+const OrderForm = lazy(() => import("./components/OrderForm"));
 const TermsOfService = lazy(() => import("./pages/TermsOfService"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const ColorShowcase = lazy(() => import("./pages/ColorShowcase"));
@@ -258,9 +256,7 @@ const App = () => (
         <SimpleAuthProvider>
           <ReferralTracker />
           <LoginWelcomeOverlay />
-          <BonusDropBanner />
-          <NationalDayPromoPopup />
-          <InstallPwaPrompt />
+          <DeferredGlobalFeatures />
           <PageThemeProvider>
           <Suspense fallback={<div className="min-h-[55vh] bg-background" aria-label="جارٍ تحميل الصفحة" />} >
           <Routes>
