@@ -10,7 +10,7 @@ import {
   GraduationCap, BookOpen, Users, Award, 
   ArrowRight, PlayCircle, Building2, Globe, CheckCircle,
   Star, TrendingUp, Shield, Clock, Languages, Target,
-  Sparkles, ChevronRight, Zap, Heart, Brain, MessageCircle, Quote
+  Sparkles, ChevronRight, Zap, Heart, Brain, MessageCircle, Quote, BarChart3
 } from "lucide-react";
 import { InstitutionalPartnershipBanner } from "@/components/InstitutionalPartnershipBanner";
 import { FloatingWhatsAppButton } from "@/components/FloatingWhatsAppButton";
