@@ -348,8 +348,8 @@ const Footer = () => {
             <div className="flex items-center gap-2 md:gap-3 mt-2 lg:mt-0 mx-auto lg:mx-0">
               <div className="relative flex-shrink-0">
                 <img 
-                  src="/assets/national-day-logo-original.webp" 
-                  alt="عزنا بطبعنا - اليوم الوطني السعودي ٩٥"
+                  src="/assets/national-day-logo-96.webp" 
+                  alt="عزنا بطبعنا - اليوم الوطني السعودي ٩٦"
                   className="h-8 w-auto md:h-10 drop-shadow-lg opacity-80 hover:opacity-100 transition-opacity"
                 />
               </div>
@@ -358,7 +358,7 @@ const Footer = () => {
                   🇸🇦 فخورون بوطننا الغالي
                 </p>
                 <p className="text-xs text-yellow-400 font-bold whitespace-nowrap">
-                  عزنا بطبعنا - اليوم الوطني ٩٥
+                  عزنا بطبعنا - اليوم الوطني ٩٦
                 </p>
               </div>
             </div>
