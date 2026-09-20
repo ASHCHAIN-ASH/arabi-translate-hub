@@ -41,19 +41,29 @@ export default function JournalCard({ journal, index }: { journal: JournalRecord
       whileHover={reduceMotion ? undefined : { y: -7 }}
       className={`group relative flex h-full flex-col overflow-hidden rounded-lg border ${journal.featured ? "border-primary/50 ring-1 ring-primary/25" : "border-border/80"} bg-card shadow-soft transition-[box-shadow,border-color] duration-300 hover:border-primary/30 hover:shadow-strong`}
     >
-      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-l from-primary via-secondary to-accent" />
-      <div className="absolute -left-10 -top-10 h-28 w-28 rounded-full bg-primary/5 transition-transform duration-500 group-hover:scale-150" aria-hidden="true" />
-      <div className="relative flex flex-1 flex-col p-5 sm:p-6">
-        <div className="mb-5 flex items-start justify-between gap-3">
+      <div className="relative h-28 w-full overflow-hidden">
+        <img
+          src={visual.cover}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          width={1152}
+          height={576}
+          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-card via-card/55 to-card/10" aria-hidden="true" />
+        <div className={`absolute inset-0 bg-gradient-to-l ${visual.gradientClass}`} aria-hidden="true" />
+        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-l from-primary via-secondary to-accent" />
+        <div className="absolute inset-x-4 bottom-3 flex items-end justify-between gap-3">
           <motion.div
             whileHover={reduceMotion ? undefined : { rotate: [0, -8, 8, 0], scale: 1.08 }}
             transition={{ duration: 0.45 }}
-            className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border ${visual.panelClass}`}
+            className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border backdrop-blur-md ${visual.panelClass}`}
           >
             <Icon className={`h-7 w-7 ${visual.iconClass}`} aria-hidden="true" />
           </motion.div>
           <div className="flex flex-col items-end gap-2">
-            <Badge variant="outline" className={visual.badgeClass}>{journal.category}</Badge>
+            <Badge variant="outline" className={`backdrop-blur-md ${visual.badgeClass}`}>{journal.category}</Badge>
             {journal.featured && (
               <motion.span
                 animate={reduceMotion ? undefined : { scale: [1, 1.05, 1] }}
@@ -65,6 +75,9 @@ export default function JournalCard({ journal, index }: { journal: JournalRecord
             )}
           </div>
         </div>
+      </div>
+      <div className="relative flex flex-1 flex-col p-5 pt-4 sm:p-6 sm:pt-4">
+
 
         <div className="min-h-[7.5rem]">
           {journal.nameAr && <h3 className="mb-1 text-lg font-bold leading-8 text-foreground">{journal.nameAr}</h3>}
