@@ -136,7 +136,6 @@ function JournalCard({ journal, index }: { journal: JournalRecord; index: number
 const JournalsDirectory = () => {
   const reduceMotion = useReducedMotion();
   const [query, setQuery] = useState("");
-  const [source, setSource] = useState<JournalSource | typeof ALL>(ALL);
   const [category, setCategory] = useState(ALL);
   const [issnState, setIssnState] = useState(ALL);
   const [page, setPage] = useState(1);
