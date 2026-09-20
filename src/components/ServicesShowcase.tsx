@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { 
   Languages, BookOpen, Users, FileText, Microscope,
   GraduationCap, Shield, Clock, Award, Star, CheckCircle,
-  ArrowRight, Sparkles, Target, Brain, TrendingUp
+  ArrowRight, Target, Brain, TrendingUp
 } from "lucide-react";
 import { UNIFIED_STATS, STATS_LABELS } from "@/constants/academicStats";
 
@@ -121,17 +121,6 @@ const ServicesShowcase = () => {
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <motion.div
-            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600/10 to-purple-600/10 border border-blue-200 dark:border-blue-700 rounded-full text-blue-700 dark:text-blue-300 text-sm font-medium mb-6"
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-            <Sparkles className="h-4 w-4" />
-            خدمات أكاديمية متكاملة
-          </motion.div>
-
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-slate-800 dark:text-white">
             نقدم لكم أفضل{" "}
             <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
