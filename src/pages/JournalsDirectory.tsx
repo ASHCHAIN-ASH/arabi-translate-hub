@@ -1,27 +1,19 @@
-import { useEffect, useMemo, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import {
   ArrowLeft, BookOpen, BookOpenCheck, CheckCircle2, ChevronLeft, ExternalLink, FileCheck2,
-  Filter, Globe2, LibraryBig, Microscope, Search, ShieldCheck, Sparkles, X,
+  Globe2, LibraryBig, Microscope, Search, ShieldCheck, Sparkles,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import JournalCard from "@/components/journals/JournalCard";
 import { categorySummaries } from "@/components/journals/journalVisuals";
 import { journals } from "@/data/journals";
 
-const PAGE_SIZE = 12;
-const ALL = "all";
-const normalize = (value: string) => value.toLocaleLowerCase("ar").replace(/[()\s-]/g, "");
-
 const featurePanels = [
-  { icon: Search, title: "بحث ذكي وسريع", text: "ابحث بالاسم أو الناشر أو رقم ISSN من مكان واحد.", className: "border-primary/20 bg-primary/5 text-primary" },
-  { icon: Filter, title: "أقسام رئيسية منظمة", text: "لكل تخصص قسم مستقل بصفحته الخاصة بمجلاته.", className: "border-secondary/20 bg-secondary/5 text-secondary" },
+  { icon: LibraryBig, title: "أقسام رئيسية منظمة", text: "لكل تخصص قسم مستقل يفتح صفحته الخاصة بمجلاته.", className: "border-primary/20 bg-primary/5 text-primary" },
+  { icon: Search, title: "بحث داخل كل قسم", text: "ابحث بالاسم أو الناشر أو رقم ISSN داخل صفحة القسم.", className: "border-secondary/20 bg-secondary/5 text-secondary" },
   { icon: ExternalLink, title: "وصول مباشر", text: "انتقل إلى الموقع الرسمي للمجلة لمراجعة أحدث متطلباتها.", className: "border-accent/20 bg-accent/5 text-accent" },
 ];
 
