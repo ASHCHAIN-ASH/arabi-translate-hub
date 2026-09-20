@@ -17,6 +17,7 @@ import {
   Search, Sparkles, Bot, Zap, Bell
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import NationalDayMarquee from '@/components/national/NationalDayMarquee';
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar
@@ -172,6 +173,11 @@ const AdminDashboard = () => {
       <AdminAIChat open={chatOpen} onClose={() => { setChatOpen(false); setChatQuery(undefined); }} initialQuery={chatQuery} />
 
       <motion.div className="space-y-6" variants={stagger} initial="hidden" animate="show">
+        {/* شريط اليوم الوطني المتحرك */}
+        <motion.div variants={fadeUp}>
+          <NationalDayMarquee />
+        </motion.div>
+
         {/* Hero Header مع Gradient جريء */}
         <motion.div variants={fadeUp} className="relative overflow-hidden rounded-3xl">
           <div className="absolute inset-0 bg-gradient-to-br from-violet-600 via-fuchsia-600 to-pink-600" />
