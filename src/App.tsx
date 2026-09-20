@@ -1,6 +1,7 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import BonusDropBanner from "@/components/bonus/BonusDropBanner";
+import NationalDayPromoPopup from "@/components/NationalDayPromoPopup";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { lazy, Suspense } from "react";
@@ -258,6 +259,7 @@ const App = () => (
           <ReferralTracker />
           <LoginWelcomeOverlay />
           <BonusDropBanner />
+          <NationalDayPromoPopup />
           <InstallPwaPrompt />
           <PageThemeProvider>
           <Suspense fallback={<div className="min-h-[55vh] bg-background" aria-label="جارٍ تحميل الصفحة" />} >
