@@ -418,8 +418,6 @@ const Index = () => {
         </div>
       </section>
 
-      <StudyAbroadSlider />
-
       <ServicesShowcase />
 
       {/* قسم مميزات الجودة - مخفي مؤقتًا */}
@@ -714,6 +712,8 @@ const Index = () => {
       )}
 
       <JournalPublishingBanner />
+
+      <StudyAbroadSlider />
 
       {/* Institutional Partnership Banner */}
       <InstitutionalPartnershipBanner />
