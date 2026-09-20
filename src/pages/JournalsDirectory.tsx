@@ -1,646 +1,378 @@
-import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { 
-  ExternalLink, BookOpen, Globe, Award, Star, Users, TrendingUp,
-  FileText, Calendar, Eye, Target, Check, ChevronLeft, Zap, Diamond,
-  Crown, Shield, Microscope, Stethoscope, Calculator, Scale, Heart,
-  Building2, Factory, Car, Plane, Computer, Network, Database, Code, Phone
+import { useEffect, useMemo, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import {
+  ArrowLeft,
+  BookOpenCheck,
+  CheckCircle2,
+  ExternalLink,
+  FileCheck2,
+  Filter,
+  Globe2,
+  LibraryBig,
+  Search,
+  ShieldCheck,
+  Sparkles,
+  X,
 } from "lucide-react";
-import { memo } from "react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { journals, type JournalRecord, type JournalSource } from "@/data/journals";
 
-// Journal card component with performance optimizations
-const JournalCard = memo(({ journal, index }: { journal: any, index: number }) => {
-  const IconComponent = journal.icon;
+const PAGE_SIZE = 12;
+const ALL = "all";
+
+const normalize = (value: string) => value.toLocaleLowerCase("ar").replace(/[()\s-]/g, "");
+
+const sourceLabels: Record<JournalSource, string> = {
+  existing: "القائمة الأساسية",
+  uploaded: "القائمة المضافة",
+};
+
+function JournalCard({ journal, index }: { journal: JournalRecord; index: number }) {
+  const reduceMotion = useReducedMotion();
+  const host = useMemo(() => {
+    try {
+      return new URL(journal.website).hostname.replace(/^www\./, "");
+    } catch {
+      return journal.website;
+    }
+  }, [journal.website]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 50, scale: 0.9 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ 
-        duration: 0.6, 
-        delay: index * 0.1,
-        ease: [0.25, 0.46, 0.45, 0.94]
-      }}
-      whileHover={{ 
-        scale: 1.02,
-        y: -5,
-        transition: { duration: 0.2 }
-      }}
-      className="h-full group"
+    <motion.article
+      initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+      whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.4, delay: Math.min(index * 0.035, 0.25) }}
+      className="group flex h-full flex-col overflow-hidden rounded-lg border border-border bg-card shadow-sm transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-medium"
     >
-      <Card className="h-full border-0 bg-gradient-to-br from-white/95 via-white to-gray-50/30 backdrop-blur-sm shadow-lg hover:shadow-2xl transition-all duration-500 transform-gpu overflow-hidden relative">
-        {/* Color accent bar */}
-        <div 
-          className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r opacity-80"
-          style={{ backgroundColor: journal.color }}
-        />
-        
-        {/* Decorative elements */}
-        <div className="absolute top-4 right-4 w-16 h-16 rounded-full border border-gray-100/50 opacity-30 group-hover:opacity-50 transition-opacity" />
-        <div className="absolute bottom-4 left-4 w-10 h-10 rounded-full border border-gray-100/50 opacity-20 group-hover:opacity-40 transition-opacity" />
-
-        <CardContent className="p-6 relative z-10">
-          <div className="space-y-4">
-            {/* Journal Icon and Title */}
-            <div className="flex items-start gap-4">
-              <motion.div 
-                className="relative w-16 h-16 flex-shrink-0"
-                whileHover={{ rotate: [0, -5, 5, 0] }}
-                transition={{ duration: 0.5 }}
-              >
-                <div className="absolute inset-0 rounded-xl bg-white shadow-lg group-hover:shadow-xl transition-shadow" />
-                <div className="absolute inset-2 rounded-xl bg-white shadow-inner flex items-center justify-center overflow-hidden"
-                  style={{ backgroundColor: `${journal.color}15` }}>
-                  <IconComponent 
-                    className="w-8 h-8 transition-all duration-300"
-                    style={{ color: journal.color }}
-                  />
-                </div>
-                {/* Glow effect */}
-                <div 
-                  className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-20 transition-opacity duration-300 blur-sm"
-                  style={{ backgroundColor: journal.color }}
-                />
-              </motion.div>
-
-              <div className="flex-1 min-w-0">
-                <h3 className="font-bold text-lg text-gray-800 leading-tight line-clamp-2 mb-2">
-                  {journal.nameAr}
-                </h3>
-                <p className="text-sm text-gray-600 font-medium line-clamp-2 mb-2">
-                  {journal.nameEn}
-                </p>
-                
-                {/* Impact Factor and Ratings */}
-                <div className="flex flex-wrap items-center gap-2 text-sm">
-                  {journal.impactFactor && (
-                    <Badge 
-                      variant="secondary" 
-                      className="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 border-emerald-200"
-                    >
-                      <TrendingUp className="h-3 w-3 mr-1" />
-                      IF: {journal.impactFactor}
-                    </Badge>
-                  )}
-                  {journal.quartile && (
-                    <Badge 
-                      variant="outline" 
-                      className="text-xs px-2 py-1"
-                      style={{ 
-                        color: journal.color,
-                        backgroundColor: `${journal.color}15`,
-                        borderColor: `${journal.color}30`
-                      }}
-                    >
-                      {journal.quartile}
-                    </Badge>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Journal Details */}
-            <div className="space-y-3">
-              {/* Publisher and ISSN */}
-              <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
-                <div className="flex items-center gap-1">
-                  <Building2 className="h-3 w-3" />
-                  <span>{journal.publisher}</span>
-                </div>
-                {journal.issn && (
-                  <>
-                    <span>•</span>
-                    <span className="font-mono text-xs">{journal.issn}</span>
-                  </>
-                )}
-              </div>
-
-              {/* Journal Metrics */}
-              <div className="grid grid-cols-2 gap-3 text-sm">
-                {journal.citescore && (
-                  <div className="flex items-center gap-2">
-                    <Eye className="h-3 w-3 text-blue-500" />
-                    <span className="text-gray-600">CiteScore: <span className="font-semibold text-blue-600">{journal.citescore}</span></span>
-                  </div>
-                )}
-                {journal.sjr && (
-                  <div className="flex items-center gap-2">
-                    <Award className="h-3 w-3 text-purple-500" />
-                    <span className="text-gray-600">SJR: <span className="font-semibold text-purple-600">{journal.sjr}</span></span>
-                  </div>
-                )}
-              </div>
-
-              {/* Subject Areas */}
-              {journal.subjects && (
-                <div className="space-y-2">
-                  <div className="flex items-center gap-1 text-xs font-medium text-gray-600">
-                    <Target className="h-3 w-3" />
-                    <span>المجالات المتخصصة</span>
-                  </div>
-                  <div className="flex flex-wrap gap-1">
-                    {journal.subjects.slice(0, 3).map((subject: string, idx: number) => (
-                      <Badge 
-                        key={idx}
-                        variant="outline" 
-                        className="text-xs px-2 py-1 bg-gray-50/50 border-gray-200 hover:bg-gray-100/50 transition-colors"
-                      >
-                        {subject}
-                      </Badge>
-                    ))}
-                    {journal.subjects.length > 3 && (
-                      <Badge variant="outline" className="text-xs px-2 py-1 bg-gray-50/50">
-                        +{journal.subjects.length - 3} أخرى
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Features */}
-              {journal.features && (
-                <div className="space-y-2">
-                  <div className="flex items-center gap-1 text-xs font-medium text-gray-600">
-                    <Check className="h-3 w-3" />
-                    <span>المميزات</span>
-                  </div>
-                  <div className="flex flex-wrap gap-1">
-                    {journal.features.slice(0, 2).map((feature: string, idx: number) => (
-                      <div key={idx} className="flex items-center gap-1 text-xs text-green-600 bg-green-50 px-2 py-1 rounded-full">
-                        <Check className="h-2 w-2" />
-                        <span>{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex gap-2 pt-2">
-              <motion.div className="flex-1" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Button
-                  asChild
-                  size="sm"
-                  className="w-full text-white font-medium shadow-md hover:shadow-lg transition-all duration-300 relative overflow-hidden"
-                  style={{ 
-                    background: `linear-gradient(135deg, ${journal.color}, ${journal.color}CC)`,
-                  }}
-                >
-                  <a 
-                    href={journal.website} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 relative z-10"
-                  >
-                    <ExternalLink className="h-3 w-3" />
-                    زيارة المجلة
-                    <div className="absolute inset-0 bg-white/10 translate-x-full group-hover:translate-x-0 transition-transform duration-300 skew-x-12" />
-                  </a>
-                </Button>
-              </motion.div>
-              
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button
-                  asChild
-                  size="sm"
-                  variant="outline"
-                  className="px-3 border-2 hover:bg-primary/5"
-                  style={{ borderColor: journal.color }}
-                >
-                  <Link to="/order-now" className="flex items-center gap-1">
-                    <span className="text-xs">اطلب النشر</span>
-                    <ChevronLeft className="h-3 w-3" />
-                  </Link>
-                </Button>
-              </motion.div>
-            </div>
+      <div className="h-1 bg-gradient-to-l from-primary via-secondary to-accent" />
+      <div className="flex flex-1 flex-col p-5 sm:p-6">
+        <div className="mb-5 flex items-start justify-between gap-3">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md border border-primary/15 bg-primary/5 text-primary">
+            <LibraryBig className="h-5 w-5" aria-hidden="true" />
           </div>
-        </CardContent>
-      </Card>
-    </motion.div>
-  );
-});
+          <Badge variant="outline" className="border-border bg-muted/50 text-muted-foreground">
+            {sourceLabels[journal.source]}
+          </Badge>
+        </div>
 
-// Section Header Component
-const SectionHeader = ({ title, description, icon: Icon, color }: { title: string, description: string, icon: any, color: string }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 30 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ duration: 0.6 }}
-    className="text-center mb-12"
-  >
-    <div className="flex items-center justify-center gap-3 mb-4">
-      <div 
-        className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"
-        style={{ backgroundColor: `${color}15` }}
-      >
-        <Icon className="h-6 w-6" style={{ color }} />
+        <div className="min-h-[7.25rem]">
+          {journal.nameAr && (
+            <h2 className="mb-1 text-lg font-bold leading-8 text-foreground">{journal.nameAr}</h2>
+          )}
+          <p dir="ltr" className="text-left text-base font-semibold leading-7 text-foreground">
+            {journal.name}
+          </p>
+          {journal.publisher && (
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">{journal.publisher}</p>
+          )}
+        </div>
+
+        <div className="my-5 grid grid-cols-2 gap-2 border-y border-border py-4 text-sm">
+          <div>
+            <span className="block text-xs text-muted-foreground">التصنيف</span>
+            <span className="mt-1 block font-semibold text-foreground">{journal.category}</span>
+          </div>
+          <div>
+            <span className="block text-xs text-muted-foreground">E-ISSN / ISSN</span>
+            <span dir="ltr" className="mt-1 block text-right font-mono font-semibold text-foreground">
+              {journal.issn || "غير مدوّن"}
+            </span>
+          </div>
+        </div>
+
+        {journal.subjects && journal.subjects.length > 0 && (
+          <div className="mb-5 flex min-h-7 flex-wrap gap-1.5">
+            {journal.subjects.slice(0, 3).map((subject) => (
+              <Badge key={subject} variant="secondary" className="font-normal">
+                {subject}
+              </Badge>
+            ))}
+          </div>
+        )}
+
+        <div className="mt-auto flex items-center justify-between gap-3">
+          <span dir="ltr" className="min-w-0 truncate text-left text-xs text-muted-foreground" title={host}>
+            {host}
+          </span>
+          <Button asChild size="sm" variant="outline" className="shrink-0 gap-2">
+            <a href={journal.website} target="_blank" rel="noopener noreferrer">
+              الموقع الرسمي
+              <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+            </a>
+          </Button>
+        </div>
       </div>
-      <h2 className="text-3xl font-bold text-gray-900">{title}</h2>
-    </div>
-    <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">{description}</p>
-  </motion.div>
-);
+    </motion.article>
+  );
+}
 
 const JournalsDirectory = () => {
-  // Arabic/Regional Journals
-  const arabicJournals = [
-    {
-      nameAr: "المجلة العربية للبحوث التربوية",
-      nameEn: "Arab Journal of Educational Research",
-      icon: BookOpen,
-      website: "https://ajer.org.sa",
-      publisher: "الجمعية السعودية للعلوم التربوية",
-      issn: "2357-0407",
-      impactFactor: "1.25",
-      quartile: "Q2",
-      citescore: "2.1",
-      sjr: "0.45",
-      color: "#2563EB",
-      subjects: ["التربية", "علم النفس التربوي", "تقنيات التعليم", "المناهج", "الإدارة التربوية"],
-      features: ["محكمة دولياً", "النشر المفتوح", "سرعة التحكيم"]
-    },
-    {
-      nameAr: "المجلة السعودية للعلوم الطبية",
-      nameEn: "Saudi Medical Journal",
-      icon: Stethoscope,
-      website: "https://smj.org.sa",
-      publisher: "الجمعية السعودية الطبية",
-      issn: "0379-5284",
-      impactFactor: "2.45",
-      quartile: "Q1",
-      citescore: "3.2",
-      sjr: "0.78",
-      color: "#DC2626",
-      subjects: ["الطب العام", "الطب الباطني", "الجراحة", "طب الأطفال", "النساء والولادة"],
-      features: ["معتمدة ISI", "سرعة النشر", "تحكيم مزدوج"]
-    },
-    {
-      nameAr: "مجلة جامعة الملك سعود للعلوم الهندسية",
-      nameEn: "Journal of King Saud University - Engineering Sciences",
-      icon: Factory,
-      website: "https://jksues.org",
-      publisher: "جامعة الملك سعود",
-      issn: "1018-3639",
-      impactFactor: "3.82",
-      quartile: "Q1",
-      citescore: "4.5",
-      sjr: "1.12",
-      color: "#7C3AED",
-      subjects: ["الهندسة المدنية", "الهندسة الميكانيكية", "الهندسة الكهربائية", "الهندسة الكيميائية", "هندسة الحاسوب"],
-      features: ["Scopus", "Web of Science", "النشر المفتوح"]
-    },
-    {
-      nameAr: "المجلة العربية للعلوم الإدارية",
-      nameEn: "Arab Journal of Administrative Sciences",
-      icon: Building2,
-      website: "https://ajas.ku.edu.kw",
-      publisher: "جامعة الكويت",
-      issn: "1029-855X",
-      impactFactor: "1.65",
-      quartile: "Q2",
-      citescore: "2.8",
-      sjr: "0.62",
-      color: "#059669",
-      subjects: ["إدارة الأعمال", "التسويق", "المحاسبة", "الموارد البشرية", "ريادة الأعمال"],
-      features: ["محكمة عربياً", "تحكيم سريع", "نشر إلكتروني"]
-    },
-    {
-      nameAr: "مجلة الدراسات الإسلامية",
-      nameEn: "Journal of Islamic Studies",
-      icon: BookOpen,
-      website: "https://jis.org",
-      publisher: "الجامعة الإسلامية بالمدينة المنورة",
-      issn: "1658-6301",
-      impactFactor: "0.85",
-      quartile: "Q3",
-      citescore: "1.4",
-      color: "#16A34A",
-      subjects: ["الدراسات الإسلامية", "الفقه", "العقيدة", "الحديث", "التفسير"],
-      features: ["تحكيم شرعي", "نشر متعدد اللغات", "أرشيف رقمي"]
-    },
-    {
-      nameAr: "المجلة العربية لعلوم الحاسوب",
-      nameEn: "Arab Journal of Computer Science",
-      icon: Computer,
-      website: "https://ajcs.org",
-      publisher: "الجمعية العربية لعلوم الحاسوب",
-      issn: "2518-5985",
-      impactFactor: "2.15",
-      quartile: "Q2",
-      citescore: "3.1",
-      sjr: "0.89",
-      color: "#3B82F6",
-      subjects: ["علوم الحاسوب", "الذكاء الاصطناعي", "أمن المعلومات", "هندسة البرمجيات", "قواعد البيانات"],
-      features: ["مفهرسة دولياً", "مراجعة سريعة", "النشر المفتوح"]
-    }
-  ];
+  const reduceMotion = useReducedMotion();
+  const [query, setQuery] = useState("");
+  const [source, setSource] = useState<JournalSource | typeof ALL>(ALL);
+  const [category, setCategory] = useState(ALL);
+  const [issnState, setIssnState] = useState(ALL);
+  const [page, setPage] = useState(1);
 
-  // International Journals
-  const internationalJournals = [
-    {
-      nameAr: "مجلة الطبيعة",
-      nameEn: "Nature",
-      icon: Microscope,
-      website: "https://nature.com",
-      publisher: "Nature Publishing Group",
-      issn: "0028-0836",
-      impactFactor: "69.504",
-      quartile: "Q1",
-      citescore: "60.8",
-      sjr: "18.32",
-      color: "#DC2626",
-      subjects: ["العلوم الطبيعية", "الفيزياء", "الكيمياء", "البيولوجيا", "علوم الأرض"],
-      features: ["أعلى تأثير عالمياً", "مراجعة صارمة", "نشر سريع"]
-    },
-    {
-      nameAr: "مجلة العلوم",
-      nameEn: "Science",
-      icon: Microscope,
-      website: "https://science.org",
-      publisher: "American Association for the Advancement of Science",
-      issn: "0036-8075",
-      impactFactor: "63.714",
-      quartile: "Q1",
-      citescore: "58.5",
-      sjr: "17.45",
-      color: "#7C3AED",
-      subjects: ["العلوم متعددة التخصصات", "الطب", "الهندسة", "علوم الحاسوب", "البيئة"],
-      features: ["مجلة رائدة عالمياً", "تحكيم دولي", "نشر أسبوعي"]
-    },
-    {
-      nameAr: "مجلة لانست الطبية",
-      nameEn: "The Lancet",
-      icon: Stethoscope,
-      website: "https://thelancet.com",
-      publisher: "Elsevier",
-      issn: "0140-6736",
-      impactFactor: "202.731",
-      quartile: "Q1",
-      citescore: "71.4",
-      sjr: "9.13",
-      color: "#DC2626",
-      subjects: ["الطب العام", "الصحة العامة", "الطب الباطني", "الجراحة", "طب الأطفال"],
-      features: ["أعرق مجلة طبية", "تأثير عالمي", "مراجعة صارمة"]
-    },
-    {
-      nameAr: "مجلة الإدارة الأكاديمية",
-      nameEn: "Academy of Management Journal",
-      icon: Building2,
-      website: "https://aom.org/amj",
-      publisher: "Academy of Management",
-      issn: "0001-4273",
-      impactFactor: "9.408",
-      quartile: "Q1",
-      citescore: "12.8",
-      sjr: "4.52",
-      color: "#059669",
-      subjects: ["إدارة الأعمال", "السلوك التنظيمي", "الاستراتيجية", "القيادة", "الابتكار"],
-      features: ["رائدة في الإدارة", "تحكيم متقدم", "تأثير أكاديمي عالي"]
-    },
-    {
-      nameAr: "مجلة هارفارد للأعمال",
-      nameEn: "Harvard Business Review",
-      icon: Diamond,
-      website: "https://hbr.org",
-      publisher: "Harvard Business School",
-      issn: "0017-8012",
-      impactFactor: "4.65",
-      quartile: "Q1",
-      citescore: "6.2",
-      sjr: "2.18",
-      color: "#B91C1C",
-      subjects: ["استراتيجية الأعمال", "القيادة", "الإدارة", "التسويق", "الابتكار"],
-      features: ["مرجع عالمي", "خبراء دوليون", "تطبيق عملي"]
-    },
-    {
-      nameAr: "مجلة آي تريبل إي للحاسوب",
-      nameEn: "IEEE Computer",
-      icon: Computer,
-      website: "https://computer.org",
-      publisher: "IEEE Computer Society",
-      issn: "0018-9162",
-      impactFactor: "3.872",
-      quartile: "Q1",
-      citescore: "5.1",
-      sjr: "1.85",
-      color: "#3B82F6",
-      subjects: ["علوم الحاسوب", "هندسة البرمجيات", "الذكاء الاصطناعي", "الأمن السيبراني", "الحوسبة السحابية"],
-      features: ["معيار التقنية", "مراجعة تقنية", "تطبيقات عملية"]
-    },
-    {
-      nameAr: "مجلة الرياضيات التطبيقية",
-      nameEn: "Journal of Applied Mathematics",
-      icon: Calculator,
-      website: "https://hindawi.com/journals/jam",
-      publisher: "Hindawi",
-      issn: "1110-757X",
-      impactFactor: "1.182",
-      quartile: "Q2",
-      citescore: "2.4",
-      sjr: "0.75",
-      color: "#F59E0B",
-      subjects: ["الرياضيات التطبيقية", "الإحصاء", "البحوث العملياتية", "النمذجة الرياضية", "التحليل العددي"],
-      features: ["نشر مفتوح", "مراجعة سريعة", "تطبيقات متنوعة"]
-    },
-    {
-      nameAr: "مجلة القانون الدولي",
-      nameEn: "International Law Journal",
-      icon: Scale,
-      website: "https://ilj.org",
-      publisher: "Oxford University Press",
-      issn: "0020-7853",
-      impactFactor: "2.156",
-      quartile: "Q1",
-      citescore: "3.8",
-      sjr: "1.24",
-      color: "#8B5CF6",
-      subjects: ["القانون الدولي", "حقوق الإنسان", "القانون التجاري", "القانون البيئي", "التحكيم الدولي"],
-      features: ["مرجع قانوني", "خبراء دوليون", "تحليل معمق"]
-    }
-  ];
+  const categories = useMemo(
+    () => [...new Set(journals.map((journal) => journal.category))].sort((a, b) => a.localeCompare(b, "ar")),
+    [],
+  );
+
+  const filteredJournals = useMemo(() => {
+    const term = normalize(query);
+    return journals.filter((journal) => {
+      const searchable = normalize(
+        [journal.name, journal.nameAr, journal.issn, journal.publisher, journal.category, ...(journal.subjects || [])]
+          .filter(Boolean)
+          .join(" "),
+      );
+      return (
+        (!term || searchable.includes(term)) &&
+        (source === ALL || journal.source === source) &&
+        (category === ALL || journal.category === category) &&
+        (issnState === ALL || (issnState === "available" ? Boolean(journal.issn) : !journal.issn))
+      );
+    });
+  }, [category, issnState, query, source]);
+
+  const pageCount = Math.max(1, Math.ceil(filteredJournals.length / PAGE_SIZE));
+  const visibleJournals = filteredJournals.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const hasFilters = Boolean(query || source !== ALL || category !== ALL || issnState !== ALL);
+
+  useEffect(() => setPage(1), [query, source, category, issnState]);
+  useEffect(() => {
+    if (page > pageCount) setPage(pageCount);
+  }, [page, pageCount]);
+
+  const clearFilters = () => {
+    setQuery("");
+    setSource(ALL);
+    setCategory(ALL);
+    setIssnState(ALL);
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50/30" dir="rtl">
+    <div className="min-h-screen bg-background" dir="rtl">
+      <SEO
+        title="دليل المجلات العلمية | FekrahEdu"
+        description="دليل منظم للبحث في المجلات العلمية والوصول إلى مواقعها الرسمية، مع تصفية حسب المجال وتوفر رقم ISSN."
+        url="https://fekrahedu.com/journals"
+      />
       <Header />
-      
-      {/* Hero Section */}
-      <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-purple-500/5 to-emerald-500/10" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.1),transparent_50%)] animate-pulse" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(168,85,247,0.1),transparent_50%)] animate-pulse" style={{ animationDelay: '1s' }} />
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center max-w-4xl mx-auto"
-          >
+
+      <main>
+        <section className="relative overflow-hidden border-b border-border bg-deep-violet text-deep-violet-foreground">
+          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-l from-accent via-primary-light to-secondary-light" />
+          <div className="container relative mx-auto grid min-h-[430px] items-center gap-10 px-4 py-16 lg:grid-cols-[1.2fr_.8fr] lg:py-20">
             <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="flex items-center justify-center gap-4 mb-6"
+              initial={reduceMotion ? false : { opacity: 0, y: 20 }}
+              animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+              transition={{ duration: 0.55 }}
+              className="max-w-3xl"
             >
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-2xl">
-                <BookOpen className="h-8 w-8 text-white" />
+              <div className="mb-6 inline-flex items-center gap-2 border border-deep-violet-foreground/20 bg-deep-violet-foreground/10 px-3 py-2 text-sm font-semibold">
+                <BookOpenCheck className="h-4 w-4" aria-hidden="true" />
+                مرجع بحثي منظم للوصول المباشر
               </div>
-              <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-blue-500 rounded-2xl flex items-center justify-center shadow-2xl">
-                <Globe className="h-8 w-8 text-white" />
+              <h1 className="text-4xl font-bold leading-[1.35] sm:text-5xl lg:text-6xl">دليل المجلات العلمية</h1>
+              <p className="mt-5 max-w-2xl text-lg leading-9 text-deep-violet-foreground/80">
+                ابحث بالاسم أو رقم ISSN، صفِّ النتائج حسب المجال، وانتقل مباشرة إلى الموقع الرسمي للمجلة.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Button asChild size="lg" className="gap-2 bg-background text-foreground hover:bg-muted">
+                  <Link to="/research/journal-publication">
+                    مساعدة في اختيار المجلة
+                    <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+                  </Link>
+                </Button>
+                <Button asChild size="lg" variant="outline" className="border-deep-violet-foreground/30 bg-transparent text-deep-violet-foreground hover:bg-deep-violet-foreground/10 hover:text-deep-violet-foreground">
+                  <a href="#directory">تصفح الدليل</a>
+                </Button>
               </div>
             </motion.div>
 
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-emerald-600 bg-clip-text text-transparent">
-                دليل المجلات العلمية
-              </span>
-            </h1>
-            
-            <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">
-              دليلك الشامل للمجلات العلمية المحكمة العربية والدولية المعتمدة للنشر الأكاديمي
-            </p>
-
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12"
+              initial={reduceMotion ? false : { opacity: 0, scale: 0.94 }}
+              animate={reduceMotion ? undefined : { opacity: 1, scale: 1 }}
+              transition={{ duration: 0.55, delay: 0.1 }}
+              className="hidden lg:block"
+              aria-hidden="true"
             >
-              <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300" asChild>
-                <Link to="/order-now" className="flex items-center gap-2">
-                  <span className="text-lg">اطلب خدمة النشر</span>
-                  <ChevronLeft className="h-5 w-5" />
-                </Link>
-              </Button>
-              
-              <Button size="lg" variant="outline" className="border-2 border-blue-200 text-blue-700 px-8 py-4 rounded-xl hover:bg-blue-50 transition-all duration-300" asChild>
-                <Link to="/research/journal-publication" className="flex items-center gap-2">
-                  <FileText className="h-5 w-5" />
-                  <span className="text-lg">خدمات النشر</span>
-                </Link>
-              </Button>
-            </motion.div>
-
-            {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.8 }}
-              className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto"
-            >
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/50">
-                <div className="text-3xl font-bold text-blue-600 mb-2">+150</div>
-                <div className="text-gray-600 font-medium">مجلة علمية محكمة</div>
-              </div>
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/50">
-                <div className="text-3xl font-bold text-purple-600 mb-2">+50</div>
-                <div className="text-gray-600 font-medium">تخصص أكاديمي</div>
-              </div>
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/50">
-                <div className="text-3xl font-bold text-emerald-600 mb-2">98%</div>
-                <div className="text-gray-600 font-medium">معدل نجاح النشر</div>
+              <div className="relative mx-auto h-72 max-w-sm">
+                <div className="absolute inset-8 rotate-3 rounded-lg border border-deep-violet-foreground/20 bg-deep-violet-foreground/5" />
+                <div className="absolute inset-4 -rotate-2 rounded-lg border border-deep-violet-foreground/20 bg-deep-violet-foreground/10" />
+                <div className="absolute inset-0 flex flex-col justify-between rounded-lg border border-deep-violet-foreground/30 bg-deep-violet-foreground/10 p-7 backdrop-blur-sm">
+                  <div className="flex items-center justify-between">
+                    <LibraryBig className="h-10 w-10" />
+                    <Globe2 className="h-7 w-7 text-accent-light" />
+                  </div>
+                  <div className="space-y-3">
+                    <div className="h-2 w-full rounded-full bg-deep-violet-foreground/20" />
+                    <div className="h-2 w-4/5 rounded-full bg-deep-violet-foreground/20" />
+                    <div className="h-2 w-3/5 rounded-full bg-deep-violet-foreground/20" />
+                  </div>
+                  <div className="flex items-center gap-2 text-sm font-semibold">
+                    <FileCheck2 className="h-4 w-4 text-accent-light" />
+                    بيانات مرتبة وروابط مباشرة
+                  </div>
+                </div>
               </div>
             </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Arabic Journals Section */}
-      <section className="py-20 bg-white/50">
-        <div className="container mx-auto px-4">
-          <SectionHeader 
-            title="المجلات العربية والإقليمية" 
-            description="أهم المجلات العلمية المحكمة في المنطقة العربية والخليجية المعتمدة للنشر الأكاديمي والبحثي"
-            icon={BookOpen}
-            color="#2563EB"
-          />
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-            {arabicJournals.map((journal, index) => (
-              <JournalCard key={journal.nameEn} journal={journal} index={index} />
-            ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* International Journals Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <SectionHeader 
-            title="المجلات الدولية المرموقة" 
-            description="أبرز المجلات العلمية الدولية ذات التأثير العالي والمعتمدة في أهم قواعد البيانات العلمية"
-            icon={Globe}
-            color="#7C3AED"
-          />
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-            {internationalJournals.map((journal, index) => (
-              <JournalCard key={journal.nameEn} journal={journal} index={index} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Call to Action Section */}
-      <section className="py-20 bg-gradient-to-br from-blue-600 via-purple-600 to-emerald-600 relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/20" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1),transparent_70%)]" />
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="text-center max-w-4xl mx-auto"
-          >
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
-                <Zap className="h-6 w-6 text-white" />
+        <section id="directory" className="scroll-mt-24 border-b border-border bg-muted/40 py-8">
+          <div className="container mx-auto px-4">
+            <div className="mb-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+              <div>
+                <div className="mb-2 flex items-center gap-2 text-primary">
+                  <Filter className="h-4 w-4" aria-hidden="true" />
+                  <span className="text-sm font-semibold">البحث والتصفية</span>
+                </div>
+                <h2 className="text-2xl font-bold text-foreground">اعثر على المجلة المناسبة</h2>
               </div>
+              <p className="text-sm text-muted-foreground" aria-live="polite">
+                عرض {filteredJournals.length.toLocaleString("ar-SA")} نتيجة
+              </p>
             </div>
-            
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              ابدأ رحلتك في النشر العلمي
-            </h2>
-            
-            <p className="text-xl text-white/90 mb-8 leading-relaxed">
-              احصل على الدعم الكامل من خبرائنا لنشر بحثك في أفضل المجلات العلمية المحكمة
-            </p>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-            >
-              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300" asChild>
-                <Link to="/order-now" className="flex items-center gap-2">
-                  <span className="text-lg font-semibold">اطلب استشارة مجانية</span>
-                  <ChevronLeft className="h-5 w-5" />
+            <div className="grid gap-3 lg:grid-cols-[minmax(280px,1.6fr)_repeat(3,minmax(155px,.7fr))_auto]">
+              <div className="relative">
+                <Search className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
+                <Input
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="ابحث باسم المجلة أو ISSN أو الناشر"
+                  className="h-12 bg-background pr-10"
+                  aria-label="البحث في دليل المجلات"
+                />
+              </div>
+              <Select value={source} onValueChange={(value) => setSource(value as JournalSource | typeof ALL)}>
+                <SelectTrigger className="h-12 bg-background text-right" aria-label="تصفية حسب المصدر">
+                  <SelectValue placeholder="كل القوائم" />
+                </SelectTrigger>
+                <SelectContent dir="rtl">
+                  <SelectItem value={ALL}>كل القوائم</SelectItem>
+                  <SelectItem value="existing">القائمة الأساسية</SelectItem>
+                  <SelectItem value="uploaded">القائمة المضافة</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={category} onValueChange={setCategory}>
+                <SelectTrigger className="h-12 bg-background text-right" aria-label="تصفية حسب المجال">
+                  <SelectValue placeholder="كل المجالات" />
+                </SelectTrigger>
+                <SelectContent dir="rtl">
+                  <SelectItem value={ALL}>كل المجالات</SelectItem>
+                  {categories.map((item) => <SelectItem key={item} value={item}>{item}</SelectItem>)}
+                </SelectContent>
+              </Select>
+              <Select value={issnState} onValueChange={setIssnState}>
+                <SelectTrigger className="h-12 bg-background text-right" aria-label="تصفية حسب رقم ISSN">
+                  <SelectValue placeholder="حالة ISSN" />
+                </SelectTrigger>
+                <SelectContent dir="rtl">
+                  <SelectItem value={ALL}>جميع سجلات ISSN</SelectItem>
+                  <SelectItem value="available">رقم ISSN متوفر</SelectItem>
+                  <SelectItem value="missing">غير مدوّن</SelectItem>
+                </SelectContent>
+              </Select>
+              {hasFilters && (
+                <Button variant="ghost" className="h-12 gap-2" onClick={clearFilters}>
+                  <X className="h-4 w-4" aria-hidden="true" />
+                  مسح
+                </Button>
+              )}
+            </div>
+          </div>
+        </section>
+
+        <section className="py-12 sm:py-16">
+          <div className="container mx-auto px-4">
+            {visibleJournals.length > 0 ? (
+              <>
+                <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+                  {visibleJournals.map((journal, index) => (
+                    <JournalCard key={journal.id} journal={journal} index={index} />
+                  ))}
+                </div>
+
+                {pageCount > 1 && (
+                  <nav className="mt-10 flex flex-wrap items-center justify-center gap-2" aria-label="صفحات دليل المجلات">
+                    <Button variant="outline" disabled={page === 1} onClick={() => setPage((value) => Math.max(1, value - 1))}>
+                      السابق
+                    </Button>
+                    <span className="min-w-28 text-center text-sm font-semibold text-foreground">
+                      صفحة {page.toLocaleString("ar-SA")} من {pageCount.toLocaleString("ar-SA")}
+                    </span>
+                    <Button variant="outline" disabled={page === pageCount} onClick={() => setPage((value) => Math.min(pageCount, value + 1))}>
+                      التالي
+                    </Button>
+                  </nav>
+                )}
+              </>
+            ) : (
+              <div className="mx-auto max-w-xl border border-dashed border-border bg-muted/30 px-6 py-14 text-center">
+                <Search className="mx-auto h-9 w-9 text-muted-foreground" aria-hidden="true" />
+                <h2 className="mt-4 text-xl font-bold text-foreground">لا توجد نتائج مطابقة</h2>
+                <p className="mt-2 text-muted-foreground">جرّب اسمًا آخر أو امسح خيارات التصفية.</p>
+                <Button variant="outline" className="mt-5" onClick={clearFilters}>عرض جميع المجلات</Button>
+              </div>
+            )}
+          </div>
+        </section>
+
+        <section className="border-y border-border bg-muted/40 py-12">
+          <div className="container mx-auto px-4">
+            <div className="grid items-center gap-8 lg:grid-cols-[1fr_auto]">
+              <div className="flex items-start gap-4">
+                <div className="mt-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-warning/10 text-warning">
+                  <ShieldCheck className="h-5 w-5" aria-hidden="true" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-foreground">تحقّق قبل إرسال بحثك</h2>
+                  <p className="mt-2 max-w-3xl leading-7 text-muted-foreground">
+                    يعرض الدليل بيانات وروابط مرجعية. تحقّق دائمًا من حالة الفهرسة ونطاق المجلة ورسومها وسياساتها عبر موقعها الرسمي وقواعد البيانات المعتمدة قبل التقديم.
+                  </p>
+                </div>
+              </div>
+              <Button asChild className="gap-2">
+                <Link to="/research/journal-publication">
+                  <Sparkles className="h-4 w-4" aria-hidden="true" />
+                  اطلب مراجعة متخصصة
                 </Link>
               </Button>
-              
-              <Button size="lg" variant="outline" className="border-2 border-white/30 text-white px-8 py-4 rounded-xl hover:bg-white/10 backdrop-blur-sm transition-all duration-300" asChild>
-                <Link to="/contact" className="flex items-center gap-2">
-                  <Phone className="h-5 w-5" />
-                  <span className="text-lg">تواصل معنا</span>
-                </Link>
-              </Button>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-deep-violet py-14 text-deep-violet-foreground">
+          <div className="container mx-auto flex flex-col items-start justify-between gap-7 px-4 md:flex-row md:items-center">
+            <div>
+              <span className="text-sm font-semibold text-accent-light">خدمة النشر العلمي</span>
+              <h2 className="mt-2 text-3xl font-bold">لست متأكدًا من المجلة المناسبة؟</h2>
+              <p className="mt-3 max-w-2xl leading-7 text-deep-violet-foreground/75">
+                نراجع تخصص البحث ومتطلبات النشر ونساعدك في تحديد الخيارات الأقرب لموضوعك.
+              </p>
+            </div>
+            <Button asChild size="lg" className="shrink-0 gap-2 bg-background text-foreground hover:bg-muted">
+              <Link to="/order-now">
+                اطلب خدمة النشر
+                <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </Button>
+          </div>
+        </section>
+      </main>
+
       <Footer />
     </div>
   );
