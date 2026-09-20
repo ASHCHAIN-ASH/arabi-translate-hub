@@ -15,51 +15,67 @@ const ServicesShowcase = () => {
   const services = [
     {
       id: 1,
-      title: "خدمات الترجمة الأكاديمية",
+      title: "الترجمة الأكاديمية",
       description: "ترجمة احترافية للأبحاث والرسائل العلمية بدقة عالية وحفاظ على المصطلحات الأكاديمية",
       icon: Languages,
       color: "from-blue-600 to-indigo-600",
-      route: "/services/translation-services"
+      route: "/translation-services"
     },
     {
       id: 2,
-      title: "الدعم الأكاديمي المتخصص",
-      description: "إرشاد ودعم في إعداد الأبحاث والرسائل والمقالات العلمية وفق المعايير الأكاديمية العالمية",
-      icon: BookOpen,
-      color: "from-emerald-600 to-teal-600",
-      route: "/services/academic-writing"
+      title: "خدمات البحث العلمي",
+      description: "دعم شامل للباحثين في جميع مراحل البحث العلمي من الفكرة حتى النتائج",
+      icon: Brain,
+      color: "from-purple-600 to-pink-600",
+      route: "/research-services"
     },
     {
       id: 3,
-      title: "الاستشارات الأكاديمية",
-      description: "استشارات متخصصة لطلاب الدراسات العليا والباحثين في جميع المجالات",
-      icon: GraduationCap,
-      color: "from-purple-600 to-pink-600",
-      route: "/services/consultation-services"
+      title: "المراجعة والتدقيق",
+      description: "مراجعة لغوية ومنهجية متخصصة للأبحاث العلمية قبل التسليم أو النشر",
+      icon: CheckCircle,
+      color: "from-emerald-600 to-teal-600",
+      route: "/services/editing-services"
     },
     {
       id: 4,
-      title: "التحليل الإحصائي المتقدم",
-      description: "تحليل البيانات الإحصائية وإعداد التقارير العلمية باستخدام أحدث البرامج",
-      icon: Microscope,
+      title: "النشر الأكاديمي",
+      description: "مساعدة شاملة في نشر الأبحاث في المجلات العلمية المحكمة المرموقة",
+      icon: FileText,
       color: "from-amber-600 to-orange-600",
-      route: "/services/statistical-analysis"
+      route: "/research/journal-publication"
     },
     {
       id: 5,
-      title: "خدمات النشر العلمي",
-      description: "مساعدة شاملة في نشر الأبحاث في المجلات العلمية المحكمة المرموقة",
-      icon: FileText,
-      color: "from-rose-600 to-red-600",
-      route: "/services/publishing-services"
+      title: "التحليل الإحصائي",
+      description: "تحليل البيانات وإعداد التقارير العلمية باستخدام SPSS وAMOS وأحدث البرامج",
+      icon: Microscope,
+      color: "from-cyan-600 to-blue-600",
+      route: "/services/statistical-analysis"
     },
     {
       id: 6,
+      title: "الاستشارات الأكاديمية",
+      description: "استشارات متخصصة لطلاب الدراسات العليا والباحثين في جميع المجالات",
+      icon: GraduationCap,
+      color: "from-violet-600 to-purple-600",
+      route: "/services/consultation-services"
+    },
+    {
+      id: 7,
+      title: "الكتابة الأكاديمية",
+      description: "إعداد الأبحاث والرسائل والمقالات العلمية وفق المعايير الأكاديمية العالمية",
+      icon: BookOpen,
+      color: "from-rose-600 to-red-600",
+      route: "/services/academic-writing"
+    },
+    {
+      id: 8,
       title: "التدريب والتطوير",
       description: "برامج تدريبية متخصصة لتطوير المهارات البحثية والأكاديمية",
       icon: Users,
-      color: "from-cyan-600 to-blue-600",
-      route: "/services/consultation-services"
+      color: "from-teal-600 to-emerald-600",
+      route: "/research/training-courses"
     }
   ];
 
