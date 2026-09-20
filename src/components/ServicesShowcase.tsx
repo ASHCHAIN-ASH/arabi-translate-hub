@@ -113,10 +113,11 @@ const ServicesShowcase = () => {
                   isWide ? "lg:col-span-3" : "lg:col-span-2"
                 }`}
               >
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
                   onClick={() => navigate(service.route)}
-                  className="flex h-full w-full flex-col text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+                  className="flex h-full w-full flex-col items-stretch justify-start whitespace-normal rounded-none p-0 text-right hover:bg-card focus-visible:ring-inset"
                   aria-label={`استكشف ${service.title}`}
                 >
                   <div className={`relative w-full overflow-hidden ${isWide ? "aspect-[16/8] sm:aspect-[16/7]" : "aspect-[16/9]"}`}>
@@ -159,7 +160,7 @@ const ServicesShowcase = () => {
                       <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" aria-hidden="true" />
                     </span>
                   </div>
-                </button>
+                </Button>
               </motion.article>
             );
           })}

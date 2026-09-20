@@ -20,10 +20,6 @@ import { TwinklingStars } from "@/components/home/TwinklingStars";
 import { JournalPublishingBanner } from "@/components/home/JournalPublishingBanner";
 
 // Import academic service images
-import academicTranslationImg from "@/assets/academic-service-translation.jpg";
-import academicResearchImg from "@/assets/academic-service-research.jpg";
-import academicEditingImg from "@/assets/academic-service-editing.jpg";
-import academicPublishingImg from "@/assets/academic-service-publishing.jpg";
 import ServicesShowcase from "@/components/ServicesShowcase";
 
 // Real photography for supporting sections and testimonials
@@ -72,40 +68,7 @@ const Index = () => {
   ];
 
   // خدمات أكاديمية مع صور حقيقية
-  const academicServices = [
-    {
-      icon: Languages,
-      title: "الترجمة الأكاديمية",
-      description: "ترجمة احترافية للأبحاث والرسائل العلمية بدقة عالية",
-      link: "/translation-services",
-      color: "from-blue-600 to-indigo-600",
-      image: academicTranslationImg
-    },
-    {
-      icon: Brain,
-      title: "خدمات البحث العلمي",
-      description: "دعم شامل للباحثين في جميع مراحل البحث العلمي",
-      link: "/research-services",
-      color: "from-purple-600 to-pink-600",
-      image: academicResearchImg
-    },
-    {
-      icon: CheckCircle,
-      title: "المراجعة والتدقيق",
-      description: "مراجعة لغوية ومنهجية متخصصة للأبحاث العلمية",
-      link: "/services/editing-services",
-      color: "from-emerald-600 to-teal-600",
-      image: academicEditingImg
-    },
-    {
-      icon: Target,
-      title: "النشر الأكاديمي",
-      description: "مساعدة في نشر الأبحاث في المجلات العلمية المحكمة",
-      link: "/research/journal-publication",
-      color: "from-amber-600 to-orange-600",
-      image: academicPublishingImg
-    }
-  ];
+
 
   // مميزات الجودة
   const qualityFeatures = [
