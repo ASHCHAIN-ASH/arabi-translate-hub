@@ -15,6 +15,7 @@ export interface JournalRecord {
   features?: string[];
   source: JournalSource;
   category: string;
+  featured?: boolean;
 }
 
 export const existingJournals: JournalRecord[] = [
@@ -414,7 +415,8 @@ export const uploadedJournals: JournalRecord[] = [
     issn: "2993-2149",
     website: "https://grnjournal.us/index.php/AJPMHS",
     source: "uploaded",
-    category: "الطب والصحة"
+    category: "الطب والصحة",
+    featured: true
   },
   {
     id: "uploaded-5",
@@ -1419,4 +1421,6 @@ export const uploadedJournals: JournalRecord[] = [
   }
 ];
 
-export const journals: JournalRecord[] = [...existingJournals, ...uploadedJournals];
+export const journals: JournalRecord[] = [...existingJournals, ...uploadedJournals].sort(
+  (a, b) => Number(Boolean(b.featured)) - Number(Boolean(a.featured))
+);
