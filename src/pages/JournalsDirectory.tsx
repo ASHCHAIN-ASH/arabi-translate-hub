@@ -87,7 +87,7 @@ function JournalCard({ journal, index }: { journal: JournalRecord; index: number
           >
             <Icon className={`h-7 w-7 ${visual.iconClass}`} aria-hidden="true" />
           </motion.div>
-          <Badge variant="outline" className={visual.badgeClass}>{sourceLabels[journal.source]}</Badge>
+          <Badge variant="outline" className={visual.badgeClass}>{journal.category}</Badge>
         </div>
 
         <div className="min-h-[7.5rem]">
