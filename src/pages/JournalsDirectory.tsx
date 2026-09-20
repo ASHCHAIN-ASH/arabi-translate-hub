@@ -1,133 +1,29 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import {
-  ArrowLeft, Atom, BookOpen, BookOpenCheck, BriefcaseBusiness, CheckCircle2,
-  ChevronLeft, ExternalLink, FileCheck2, Filter, Gavel, Globe2, GraduationCap,
-  HeartPulse, Languages, LibraryBig, MessageCircle, Microscope, Search, ShieldCheck, Sparkles,
-  Stethoscope, X, Zap,
+  ArrowLeft, BookOpen, BookOpenCheck, ChevronLeft, ExternalLink, FileCheck2,
+  Filter, Globe2, LibraryBig, Microscope, Search, ShieldCheck, Sparkles, X,
 } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { journals, type JournalRecord } from "@/data/journals";
+import JournalCard from "@/components/journals/JournalCard";
+import { categorySummaries } from "@/components/journals/journalVisuals";
+import { journals } from "@/data/journals";
 
 const PAGE_SIZE = 12;
 const ALL = "all";
 const normalize = (value: string) => value.toLocaleLowerCase("ar").replace(/[()\s-]/g, "");
 
-
-const categoryVisuals: Record<string, { icon: LucideIcon; iconClass: string; panelClass: string; badgeClass: string }> = {
-  "الطب والصحة": { icon: Stethoscope, iconClass: "text-destructive", panelClass: "bg-destructive/10 border-destructive/20", badgeClass: "bg-destructive/10 text-destructive border-destructive/20" },
-  "الهندسة والتقنية": { icon: Zap, iconClass: "text-primary", panelClass: "bg-primary/10 border-primary/20", badgeClass: "bg-primary/10 text-primary border-primary/20" },
-  "التربية والعلوم الإنسانية": { icon: GraduationCap, iconClass: "text-secondary", panelClass: "bg-secondary/10 border-secondary/20", badgeClass: "bg-secondary/10 text-secondary border-secondary/20" },
-  "الإدارة والاقتصاد": { icon: BriefcaseBusiness, iconClass: "text-success", panelClass: "bg-success/10 border-success/20", badgeClass: "bg-success/10 text-success border-success/20" },
-  "القانون والسياسات": { icon: Gavel, iconClass: "text-warning", panelClass: "bg-warning/10 border-warning/20", badgeClass: "bg-warning/10 text-warning border-warning/20" },
-  "العلوم الطبيعية": { icon: Atom, iconClass: "text-accent", panelClass: "bg-accent/10 border-accent/20", badgeClass: "bg-accent/10 text-accent border-accent/20" },
-  "متعددة التخصصات": { icon: Globe2, iconClass: "text-primary", panelClass: "bg-primary/10 border-primary/20", badgeClass: "bg-primary/10 text-primary border-primary/20" },
-};
-
 const featurePanels = [
   { icon: Search, title: "بحث ذكي وسريع", text: "ابحث بالاسم أو الناشر أو رقم ISSN من مكان واحد.", className: "border-primary/20 bg-primary/5 text-primary" },
-  { icon: Filter, title: "تصفية حسب المجال", text: "رتّب الخيارات حسب التخصص والقائمة وتوفر رقم ISSN.", className: "border-secondary/20 bg-secondary/5 text-secondary" },
+  { icon: Filter, title: "أقسام رئيسية منظمة", text: "لكل تخصص قسم مستقل بصفحته الخاصة بمجلاته.", className: "border-secondary/20 bg-secondary/5 text-secondary" },
   { icon: ExternalLink, title: "وصول مباشر", text: "انتقل إلى الموقع الرسمي للمجلة لمراجعة أحدث متطلباتها.", className: "border-accent/20 bg-accent/5 text-accent" },
 ];
-
-function JournalCard({ journal, index }: { journal: JournalRecord; index: number }) {
-  const reduceMotion = useReducedMotion();
-  const visual = categoryVisuals[journal.category] || categoryVisuals["متعددة التخصصات"];
-  const Icon = visual.icon;
-  const host = useMemo(() => {
-    try { return new URL(journal.website).hostname.replace(/^www\./, ""); }
-    catch { return journal.website; }
-  }, [journal.website]);
-
-  const whatsappUrl = useMemo(() => {
-    const lines = [
-      "السلام عليكم، أرغب بالاستفسار عن النشر في هذه المجلة:",
-      "",
-      journal.nameAr ? `• الاسم بالعربية: ${journal.nameAr}` : "",
-      `• اسم المجلة: ${journal.name}`,
-      journal.publisher ? `• الناشر: ${journal.publisher}` : "",
-      `• المجال: ${journal.category}`,
-      `• رقم ISSN: ${journal.issn || "غير مدوّن"}`,
-      `• رابط المجلة: ${journal.website}`,
-      "",
-      "أرجو إفادتي بتفاصيل خدمة النشر والرسوم والمدة.",
-    ].filter(Boolean);
-    return `https://wa.me/966593799355?text=${encodeURIComponent(lines.join("\n"))}`;
-  }, [journal]);
-
-  return (
-    <motion.article
-      initial={reduceMotion ? false : { opacity: 0, y: 24, scale: 0.97 }}
-      whileInView={reduceMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: "-55px" }}
-      transition={{ duration: 0.45, delay: Math.min(index * 0.045, 0.28) }}
-      whileHover={reduceMotion ? undefined : { y: -7 }}
-      className="group relative flex h-full flex-col overflow-hidden rounded-lg border border-border/80 bg-card shadow-soft transition-[box-shadow,border-color] duration-300 hover:border-primary/30 hover:shadow-strong"
-    >
-      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-l from-primary via-secondary to-accent" />
-      <div className="absolute -left-10 -top-10 h-28 w-28 rounded-full bg-primary/5 transition-transform duration-500 group-hover:scale-150" aria-hidden="true" />
-      <div className="relative flex flex-1 flex-col p-5 sm:p-6">
-        <div className="mb-5 flex items-start justify-between gap-3">
-          <motion.div
-            whileHover={reduceMotion ? undefined : { rotate: [0, -8, 8, 0], scale: 1.08 }}
-            transition={{ duration: 0.45 }}
-            className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border ${visual.panelClass}`}
-          >
-            <Icon className={`h-7 w-7 ${visual.iconClass}`} aria-hidden="true" />
-          </motion.div>
-          <Badge variant="outline" className={visual.badgeClass}>{journal.category}</Badge>
-        </div>
-
-        <div className="min-h-[7.5rem]">
-          {journal.nameAr && <h2 className="mb-1 text-lg font-bold leading-8 text-foreground">{journal.nameAr}</h2>}
-          <p dir="ltr" className="text-left text-base font-semibold leading-7 text-foreground">{journal.name}</p>
-          {journal.publisher && <p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">{journal.publisher}</p>}
-        </div>
-
-        <div className="my-5 grid grid-cols-2 gap-3 rounded-md bg-muted/50 p-3 text-sm">
-          <div className="min-w-0">
-            <span className="block text-xs text-muted-foreground">المجال</span>
-            <span className="mt-1 block truncate font-semibold text-foreground" title={journal.category}>{journal.category}</span>
-          </div>
-          <div className="border-r border-border pr-3">
-            <span className="block text-xs text-muted-foreground">E-ISSN / ISSN</span>
-            <span dir="ltr" className="mt-1 block text-right font-mono font-semibold text-foreground">{journal.issn || "غير مدوّن"}</span>
-          </div>
-        </div>
-
-        {journal.subjects && journal.subjects.length > 0 && (
-          <div className="mb-5 flex min-h-7 flex-wrap gap-1.5">
-            {journal.subjects.slice(0, 3).map((subject) => <Badge key={subject} variant="secondary" className="font-normal">{subject}</Badge>)}
-          </div>
-        )}
-
-        <div className="mt-auto space-y-3 border-t border-border pt-4">
-          <span dir="ltr" className="block min-w-0 truncate text-left text-xs text-muted-foreground" title={host}>{host}</span>
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-            <Button asChild size="sm" className="gap-2 shadow-primary">
-              <a href={journal.website} target="_blank" rel="noopener noreferrer">
-                زيارة المجلة <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-              </a>
-            </Button>
-            <Button asChild size="sm" variant="outline" className="gap-2 border-success/30 bg-success/5 text-success hover:bg-success/10 hover:text-success">
-              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" aria-label={`استفسار عبر واتساب عن ${journal.nameAr || journal.name}`}>
-                <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" /> استفسار واتساب
-              </a>
-            </Button>
-          </div>
-        </div>
-      </div>
-    </motion.article>
-  );
-}
 
 const JournalsDirectory = () => {
   const reduceMotion = useReducedMotion();
