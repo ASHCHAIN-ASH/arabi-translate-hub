@@ -50,3 +50,6 @@ project_id = "kziujhdqogqeehtxgpax"
 
   [functions.ticket-notify]
     verify_jwt = false
+
+  [functions.admin-notify]
+    verify_jwt = false
