@@ -13,6 +13,7 @@ import DashboardRecentOrders from '@/components/client/DashboardRecentOrders';
 import DashboardRecentContracts from '@/components/client/DashboardRecentContracts';
 import DashboardRecentInvoices from '@/components/client/DashboardRecentInvoices';
 import DashboardActiveTickets from '@/components/client/DashboardActiveTickets';
+import NationalDayMarquee from '@/components/national/NationalDayMarquee';
 
 
 const ClientDashboard = () => {
