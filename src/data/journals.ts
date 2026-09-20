@@ -1132,6 +1132,28 @@ export const uploadedJournals: JournalRecord[] = [
     ],
     source: "uploaded",
     category: "الهندسة والتقنية"
+  },
+  {
+    id: "uploaded-93",
+    name: "Natural Resources for Human Health",
+    nameAr: "الموارد الطبيعية لصحة الإنسان",
+    issn: "2583-1194",
+    website: "https://www.nrfhh.com",
+    publisher: "Natural Resources for Human Health",
+    subjects: [
+      "علم الأحياء",
+      "الكيمياء الطبية",
+      "الكيمياء الزراعية والغذائية",
+      "الطب التقليدي",
+      "تطبيقات الموارد الطبيعية"
+    ],
+    features: [
+      "مجلة علمية محكمة",
+      "نشر فصلي",
+      "وصول مفتوح"
+    ],
+    source: "uploaded",
+    category: "العلوم الطبيعية"
   }
 ];
 
