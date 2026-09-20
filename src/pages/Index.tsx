@@ -15,6 +15,7 @@ import {
 import { InstitutionalPartnershipBanner } from "@/components/InstitutionalPartnershipBanner";
 import { FloatingWhatsAppButton } from "@/components/FloatingWhatsAppButton";
 import Footer from "@/components/Footer";
+import { InteractiveAcademicSystems } from "@/components/home/InteractiveAcademicSystems";
 import { TwinklingStars } from "@/components/home/TwinklingStars";
 import { JournalPublishingBanner } from "@/components/home/JournalPublishingBanner";
 import { StudyAbroadSlider } from "@/components/home/StudyAbroadSlider";
@@ -293,7 +294,7 @@ const Index = () => {
         </div>
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 gap-8 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             {/* المحتوى النصي */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
@@ -397,6 +398,19 @@ const Index = () => {
               </motion.div>
             </motion.div>
 
+
+            {/* الجانب البصري — منظومة أكاديمية تفاعلية */}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.7, delay: 0.3 }}
+              className="group relative flex justify-center mt-8 lg:mt-0"
+            >
+              <div className="relative w-[min(88vw,360px)] sm:w-full sm:max-w-[430px] lg:max-w-[520px] aspect-[4/5] lg:aspect-[5/6]">
+                <div className="absolute -inset-6 bg-gradient-to-br from-blue-400/30 via-indigo-400/20 to-purple-400/30 dark:from-blue-500/20 dark:via-indigo-500/15 dark:to-purple-500/20 rounded-[2rem] blur-3xl" />
+                <InteractiveAcademicSystems />
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
