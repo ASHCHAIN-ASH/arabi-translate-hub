@@ -27,26 +27,8 @@ const featurePanels = [
 
 const JournalsDirectory = () => {
   const reduceMotion = useReducedMotion();
-  const [query, setQuery] = useState("");
-  const [category, setCategory] = useState(ALL);
-  const [issnState, setIssnState] = useState(ALL);
-  const [page, setPage] = useState(1);
+  const totalJournals = journals.length;
 
-  const categories = useMemo(() => [...new Set(journals.map((journal) => journal.category))].sort((a, b) => a.localeCompare(b, "ar")), []);
-  const filteredJournals = useMemo(() => {
-    const term = normalize(query);
-    return journals.filter((journal) => {
-      const searchable = normalize([journal.name, journal.nameAr, journal.issn, journal.publisher, journal.category, ...(journal.subjects || [])].filter(Boolean).join(" "));
-      return (!term || searchable.includes(term)) && (category === ALL || journal.category === category) && (issnState === ALL || (issnState === "available" ? Boolean(journal.issn) : !journal.issn));
-    });
-  }, [category, issnState, query]);
-
-  const pageCount = Math.max(1, Math.ceil(filteredJournals.length / PAGE_SIZE));
-  const visibleJournals = filteredJournals.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-  const hasFilters = Boolean(query || category !== ALL || issnState !== ALL);
-  useEffect(() => setPage(1), [query, category, issnState]);
-  useEffect(() => { if (page > pageCount) setPage(pageCount); }, [page, pageCount]);
-  const clearFilters = () => { setQuery(""); setCategory(ALL); setIssnState(ALL); };
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
