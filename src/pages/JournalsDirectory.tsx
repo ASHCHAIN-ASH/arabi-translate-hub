@@ -80,6 +80,53 @@ const JournalsDirectory = () => {
           </div>
         </section>
 
+        <section id="categories" className="scroll-mt-24 py-8 sm:py-12">
+          <div className="container mx-auto px-4">
+            <motion.div initial={reduceMotion ? false : { opacity: 0, y: 18 }} whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8 text-center">
+              <div className="mx-auto mb-3 flex w-fit items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-sm font-semibold text-primary">
+                <LibraryBig className="h-4 w-4" aria-hidden="true" />الأقسام الرئيسية
+              </div>
+              <h2 className="text-3xl font-bold text-foreground sm:text-4xl">تصفّح المجلات حسب التخصص</h2>
+              <p className="mx-auto mt-4 max-w-2xl leading-8 text-muted-foreground">لكل تخصص صفحة مستقلة تعرض مجلاته مع بحث داخلي وروابط رسمية وزر استفسار مباشر عبر واتساب.</p>
+            </motion.div>
+
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {categorySummaries.map((item, index) => {
+                const CategoryIcon = item.visual.icon;
+                return (
+                  <motion.div
+                    key={item.slug}
+                    initial={reduceMotion ? false : { opacity: 0, y: 22 }}
+                    whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{ duration: .4, delay: Math.min(index * .07, .35) }}
+                    whileHover={reduceMotion ? undefined : { y: -7 }}
+                    className="h-full"
+                  >
+                    <Link
+                      to={`/journals/${item.slug}`}
+                      className={`group relative flex h-full flex-col overflow-hidden rounded-lg border border-border/80 bg-gradient-to-bl p-6 shadow-soft transition-[box-shadow,border-color] duration-300 hover:border-primary/30 hover:shadow-strong ${item.visual.gradientClass}`}
+                    >
+                      <div className="mb-4 flex items-center justify-between gap-3">
+                        <span className={`flex h-14 w-14 items-center justify-center rounded-lg border transition-transform duration-500 group-hover:scale-110 ${item.visual.panelClass}`}>
+                          <CategoryIcon className={`h-7 w-7 ${item.visual.iconClass}`} aria-hidden="true" />
+                        </span>
+                        <span className={`rounded-full border px-3 py-1 text-sm font-bold ${item.visual.badgeClass}`}>{item.count.toLocaleString("ar-SA")} مجلة</span>
+                      </div>
+                      <h3 className="text-xl font-bold text-foreground">{item.name}</h3>
+                      <p className="mt-2 flex-1 text-sm leading-7 text-muted-foreground">{item.visual.description}</p>
+                      <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-primary">
+                        تصفّح مجلات القسم
+                        <ChevronLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" aria-hidden="true" />
+                      </span>
+                    </Link>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
         <section id="directory" className="scroll-mt-24 py-8">
           <div className="container mx-auto px-4">
             <motion.div initial={reduceMotion ? false : { opacity: 0, y: 16 }} whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }} viewport={{ once: true }} className="rounded-lg border border-primary/15 bg-card p-4 shadow-medium sm:p-6">
