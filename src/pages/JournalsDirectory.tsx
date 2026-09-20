@@ -3,7 +3,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import {
   ArrowLeft, Atom, BookOpen, BookOpenCheck, BriefcaseBusiness, CheckCircle2,
   ChevronLeft, ExternalLink, FileCheck2, Filter, Gavel, Globe2, GraduationCap,
-  HeartPulse, Languages, LibraryBig, Microscope, Search, ShieldCheck, Sparkles,
+  HeartPulse, Languages, LibraryBig, MessageCircle, Microscope, Search, ShieldCheck, Sparkles,
   Stethoscope, X, Zap,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
