@@ -147,7 +147,7 @@ const ServicesShowcase = () => {
                         {service.title}
                       </h3>
                       {service.subtitle && (
-                        <span className="rounded-md bg-warning/15 px-2.5 py-1 text-xs font-bold text-warning-foreground">
+                        <span className="rounded-md border border-warning bg-warning px-3 py-1 text-xs font-black text-foreground shadow-sm">
                           {service.subtitle}
                         </span>
                       )}
