@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type LucideIcon } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import {
   ArrowLeft, Atom, BookOpen, BookOpenCheck, BriefcaseBusiness, CheckCircle2,
@@ -6,6 +6,7 @@ import {
   HeartPulse, Languages, LibraryBig, Microscope, Search, ShieldCheck, Sparkles,
   Stethoscope, X, Zap,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
