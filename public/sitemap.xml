@@ -1,404 +1,813 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
-
-  <!-- ============ CORE PAGES ============ -->
   <url>
     <loc>https://fekrahedu.com/</loc>
-    <lastmod>2026-04-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/" />
-    <image:image>
-      <image:loc>https://fekrahedu.com/fekrahedu-share.jpg?v=1</image:loc>
-      <image:title>FekrahEdu - وكالة الحلول التعليمية المتقدمة</image:title>
-    </image:image>
   </url>
-
   <url>
     <loc>https://fekrahedu.com/about-us</loc>
-    <lastmod>2026-04-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/about-us" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/about-us" />
   </url>
-
   <url>
     <loc>https://fekrahedu.com/contact-us</loc>
-    <lastmod>2026-04-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/contact-us" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/contact-us" />
   </url>
-
+  <url>
+    <loc>https://fekrahedu.com/contact</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/contact" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/contact" />
+  </url>
   <url>
     <loc>https://fekrahedu.com/services</loc>
-    <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/services" />
   </url>
-
-  <url>
-    <loc>https://fekrahedu.com/pricing</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/order-now</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- ============ BLOG ============ -->
-  <url>
-    <loc>https://fekrahedu.com/blog</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- ============ TRANSLATION SERVICES ============ -->
-  <url>
-    <loc>https://fekrahedu.com/translation-services</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/academic-translation</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/legal-translation</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/medical-translation</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/technical-translation</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/business-translation</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/instant-translation</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/media-translation</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/literary-translation</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- ============ RESEARCH SERVICES ============ -->
   <url>
     <loc>https://fekrahedu.com/research-services</loc>
-    <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research-services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research-services" />
   </url>
-
   <url>
-    <loc>https://fekrahedu.com/research/services-hub</loc>
-    <lastmod>2026-04-26</lastmod>
+    <loc>https://fekrahedu.com/translation-services</loc>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.95</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/translation-services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/translation-services" />
   </url>
-
-  <url>
-    <loc>https://fekrahedu.com/research/academic</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/research/scientific</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/research/business</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/research/social</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/research/legal</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/research/medical</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/research/academic-writing-service</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/research/proofreading-service</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/research/statistical-spss-service</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/research/proposal-service</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/research/powerpoint-service</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/research/paper-review-service</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/research/consultation-service</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/research/other-student-services</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.75</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/research/book-summarization</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.75</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/research/assignment-execution</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.75</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/research/ebook-creation</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.75</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/research/research-proposal</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/research/references-provision</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.75</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/research/homework-assistance</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.75</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/research/journey</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- ============ MEMBERSHIP & PROGRAMS ============ -->
-  <url>
-    <loc>https://fekrahedu.com/fekrahedu-membership</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/academic-competitions</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.75</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/spin-the-wheel</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/study-to-earn</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://fekrahedu.com/institutional-partnerships</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
-  </url>
-
-  <!-- ============ DIRECTORIES & RESOURCES ============ -->
-  <url>
-    <loc>https://fekrahedu.com/universities</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
   <url>
     <loc>https://fekrahedu.com/journals</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/journals" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/journals" />
   </url>
-
   <url>
-    <loc>https://fekrahedu.com/client-guide</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://fekrahedu.com/blog</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/blog" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/blog" />
   </url>
-
   <url>
-    <loc>https://fekrahedu.com/payment-methods</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://fekrahedu.com/pricing</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/pricing" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/pricing" />
   </url>
-
   <url>
-    <loc>https://fekrahedu.com/careers</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.65</priority>
+    <loc>https://fekrahedu.com/order-now</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/order-now" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/order-now" />
   </url>
-
   <url>
-    <loc>https://fekrahedu.com/license-request</loc>
-    <lastmod>2026-04-26</lastmod>
+    <loc>https://fekrahedu.com/order-tracking</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/order-tracking" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/order-tracking" />
   </url>
-
-  <!-- ============ INFO & POLICY PAGES ============ -->
   <url>
     <loc>https://fekrahedu.com/faq</loc>
-    <lastmod>2026-04-26</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/faq" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/faq" />
   </url>
-
   <url>
-    <loc>https://fekrahedu.com/academic-integrity</loc>
-    <lastmod>2026-04-26</lastmod>
+    <loc>https://fekrahedu.com/universities</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.65</priority>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/universities" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/universities" />
   </url>
-
   <url>
-    <loc>https://fekrahedu.com/intellectual-property</loc>
-    <lastmod>2026-04-26</lastmod>
+    <loc>https://fekrahedu.com/careers</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/careers" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/careers" />
   </url>
-
+  <url>
+    <loc>https://fekrahedu.com/client-guide</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/client-guide" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/client-guide" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/payment-methods</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/payment-methods" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/payment-methods" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/institutional-partnerships</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/institutional-partnerships" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/institutional-partnerships" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/license-request</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/license-request" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/license-request" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/academic-integrity</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/academic-integrity" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/academic-integrity" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/intellectual-property</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/intellectual-property" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/intellectual-property" />
+  </url>
   <url>
     <loc>https://fekrahedu.com/privacy-policy</loc>
-    <lastmod>2026-04-26</lastmod>
     <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.4</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/privacy-policy" />
   </url>
-
   <url>
     <loc>https://fekrahedu.com/terms-of-service</loc>
-    <lastmod>2026-04-26</lastmod>
     <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.4</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/terms-of-service" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/terms-of-service" />
   </url>
-
+  <url>
+    <loc>https://fekrahedu.com/spin-the-wheel</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/spin-the-wheel" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/spin-the-wheel" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/membership</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/membership" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/membership" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/fekrahedu-membership</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/fekrahedu-membership" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/fekrahedu-membership" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/fekrahedu-paylater</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/fekrahedu-paylater" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/fekrahedu-paylater" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/academic-competitions</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/academic-competitions" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/academic-competitions" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/study-to-earn</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/study-to-earn" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/study-to-earn" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/admission-services</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/admission-services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/admission-services" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/academic/expertise</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/academic/expertise" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/academic/expertise" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/academic/methodology</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/academic/methodology" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/academic/methodology" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/academic/quality</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/academic/quality" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/academic/quality" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/academic/security</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/academic/security" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/academic/security" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/academic/timeline</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/academic/timeline" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/academic/timeline" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/academic/translation</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/academic/translation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/academic/translation" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/assessments</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/assessments" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/assessments" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/academic-translation</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/academic-translation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/academic-translation" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/business-translation</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/business-translation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/business-translation" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/instant-translation</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/instant-translation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/instant-translation" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/legal-translation</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/legal-translation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/legal-translation" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/literary-translation</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/literary-translation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/literary-translation" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/media-translation</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/media-translation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/media-translation" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/medical-translation</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/medical-translation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/medical-translation" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/technical-translation</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/technical-translation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/technical-translation" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/services/audio-translation</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/services/audio-translation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/services/audio-translation" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/services/document-translation</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/services/document-translation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/services/document-translation" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/services/text-translation</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/services/text-translation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/services/text-translation" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/services/video-translation</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/services/video-translation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/services/video-translation" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/services/website-translation</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/services/website-translation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/services/website-translation" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/services/translation-services</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/services/translation-services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/services/translation-services" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/services/academic-writing</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/services/academic-writing" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/services/academic-writing" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/services/consultation-services</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/services/consultation-services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/services/consultation-services" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/services/custom-services</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/services/custom-services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/services/custom-services" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/services/editing-services</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/services/editing-services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/services/editing-services" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/services/editing/academic-review</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/services/editing/academic-review" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/services/editing/academic-review" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/services/editing/developmental-editing</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/services/editing/developmental-editing" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/services/editing/developmental-editing" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/services/editing/final-proofreading</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/services/editing/final-proofreading" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/services/editing/final-proofreading" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/services/editing/language-proofreading</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/services/editing/language-proofreading" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/services/editing/language-proofreading" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/services/editing/style-review</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/services/editing/style-review" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/services/editing/style-review" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/services/editing/technical-editing</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/services/editing/technical-editing" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/services/editing/technical-editing" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/services/publishing-services</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/services/publishing-services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/services/publishing-services" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/services/statistical-analysis</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/services/statistical-analysis" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/services/statistical-analysis" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/academic</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/academic" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/academic" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/academic-consultation</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/academic-consultation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/academic-consultation" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/academic-writing-service</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/academic-writing-service" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/academic-writing-service" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/admission-services</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/admission-services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/admission-services" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/ai-methodology-review</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/ai-methodology-review" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/ai-methodology-review" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/annotated-publishing</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/annotated-publishing" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/annotated-publishing" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/assignment-execution</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/assignment-execution" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/assignment-execution" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/book-summarization</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/book-summarization" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/book-summarization" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/business</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/business" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/business" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/consultation-service</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/consultation-service" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/consultation-service" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/ebook-creation</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/ebook-creation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/ebook-creation" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/formatting</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/formatting" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/formatting" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/global-peer-review</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/global-peer-review" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/global-peer-review" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/homework-assistance</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/homework-assistance" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/homework-assistance" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/journal-publication</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/journal-publication" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/journal-publication" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/journey</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/journey" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/journey" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/language-review</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/language-review" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/language-review" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/legal</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/legal" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/legal" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/medical</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/medical" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/medical" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/other-student-services</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/other-student-services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/other-student-services" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/paper-review-service</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/paper-review-service" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/paper-review-service" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/plagiarism-check</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/plagiarism-check" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/plagiarism-check" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/powerpoint-service</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/powerpoint-service" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/powerpoint-service" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/proofreading-service</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/proofreading-service" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/proofreading-service" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/proposal-service</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/proposal-service" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/proposal-service" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/publication</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/publication" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/publication" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/references</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/references" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/references" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/references-provision</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/references-provision" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/references-provision" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/research-evaluation</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/research-evaluation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/research-evaluation" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/research-plan</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/research-plan" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/research-plan" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/research-proposal</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/research-proposal" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/research-proposal" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/research-tools</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/research-tools" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/research-tools" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/scientific</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/scientific" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/scientific" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/services-hub</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/services-hub" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/services-hub" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/smart-editor</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/smart-editor" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/smart-editor" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/social</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/social" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/social" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/statistical-analysis</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/statistical-analysis" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/statistical-analysis" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/statistical-spss-service</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/statistical-spss-service" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/statistical-spss-service" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/theoretical-framework</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/theoretical-framework" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/theoretical-framework" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/thesis-titles</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/thesis-titles" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/thesis-titles" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/research/training-courses</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/research/training-courses" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/research/training-courses" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/journals/medical-health</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/journals/medical-health" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/journals/medical-health" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/journals/engineering-technology</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/journals/engineering-technology" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/journals/engineering-technology" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/journals/education-humanities</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/journals/education-humanities" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/journals/education-humanities" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/journals/business-economics</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/journals/business-economics" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/journals/business-economics" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/journals/law-policy</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/journals/law-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/journals/law-policy" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/journals/natural-sciences</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/journals/natural-sciences" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/journals/natural-sciences" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/journals/multidisciplinary</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/journals/multidisciplinary" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/journals/multidisciplinary" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/blog/translation-industry-news-q1-2026</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/blog/translation-industry-news-q1-2026" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/blog/translation-industry-news-q1-2026" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/blog/spss-statistical-analysis-basics</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/blog/spss-statistical-analysis-basics" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/blog/spss-statistical-analysis-basics" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/blog/publish-in-scopus-step-by-step</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/blog/publish-in-scopus-step-by-step" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/blog/publish-in-scopus-step-by-step" />
+  </url>
+  <url>
+    <loc>https://fekrahedu.com/blog/academic-translation-guide-2026</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar-SA" href="https://fekrahedu.com/blog/academic-translation-guide-2026" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fekrahedu.com/blog/academic-translation-guide-2026" />
+  </url>
 </urlset>
