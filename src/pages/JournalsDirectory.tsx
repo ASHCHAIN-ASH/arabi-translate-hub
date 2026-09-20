@@ -39,7 +39,7 @@ const JournalsDirectory = () => {
             <motion.h1 initial={reduceMotion ? false : { opacity: 0, y: 20 }} animate={reduceMotion ? undefined : { opacity: 1, y: 0 }} transition={{ delay: .1 }} className="text-4xl font-bold leading-[1.35] text-shimmer sm:text-5xl lg:text-6xl">دليل المجلات العلمية</motion.h1>
             <motion.p initial={reduceMotion ? false : { opacity: 0, y: 20 }} animate={reduceMotion ? undefined : { opacity: 1, y: 0 }} transition={{ delay: .2 }} className="mx-auto mt-5 max-w-3xl text-lg leading-9 text-muted-foreground sm:text-xl">{totalJournals.toLocaleString("ar-SA")} مجلة علمية عربية ودولية موزّعة على أقسام رئيسية — اختر القسم المناسب لتخصصك وادخل إلى صفحته لتصفّح مجلاته.</motion.p>
             <motion.div initial={reduceMotion ? false : { opacity: 0, y: 18 }} animate={reduceMotion ? undefined : { opacity: 1, y: 0 }} transition={{ delay: .3 }} className="mt-8 flex flex-wrap justify-center gap-3">
-              <Button asChild size="lg" className="gap-2 shadow-primary"><a href="#directory">استكشف الدليل <ChevronLeft className="h-4 w-4" /></a></Button>
+              <Button asChild size="lg" className="gap-2 shadow-primary"><a href="#categories">تصفّح الأقسام الرئيسية <ChevronLeft className="h-4 w-4" /></a></Button>
               <Button asChild size="lg" variant="outline" className="gap-2 bg-background/80"><Link to="/research/journal-publication"><Sparkles className="h-4 w-4" />مساعدة في اختيار المجلة</Link></Button>
             </motion.div>
           </div>
