@@ -225,6 +225,7 @@ const ContactUs = lazy(() => import("./pages/ContactUs"));
 const PaymentMethods = lazy(() => import("./pages/PaymentMethods"));
 const Universities = lazy(() => import("./pages/Universities"));
 const JournalsDirectory = lazy(() => import("./pages/JournalsDirectory"));
+const JournalCategory = lazy(() => import("./pages/JournalCategory"));
 const InstitutionalPartnerships = lazy(() => import("./pages/InstitutionalPartnerships"));
 import BackToTopButton from "./components/BackToTopButton";
 
@@ -329,6 +330,7 @@ const App = () => (
             <Route path="/payment/return" element={<PaymentReturn />} />
             <Route path="/universities" element={<Universities />} />
             <Route path="/journals" element={<JournalsDirectory />} />
+            <Route path="/journals/:slug" element={<JournalCategory />} />
             <Route path="/contract-management" element={<Navigate to="/client/contracts" replace />} />
             <Route path="/careers" element={<Careers />} />
             <Route path="/contact" element={<ContactUs />} />
