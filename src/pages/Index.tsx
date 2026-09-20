@@ -23,7 +23,6 @@ import { JournalPublishingBanner } from "@/components/home/JournalPublishingBann
 import ServicesShowcase from "@/components/ServicesShowcase";
 
 // Real photography for supporting sections and testimonials
-import heroCollabImg from "@/assets/home-students-collaboration.jpg";
 import testimonialProfessorImg from "@/assets/home-testimonial-professor.jpg";
 import testimonialStudentFemaleImg from "@/assets/home-testimonial-student-female.jpg";
 import testimonialResearcherMaleImg from "@/assets/home-testimonial-researcher-male.jpg";

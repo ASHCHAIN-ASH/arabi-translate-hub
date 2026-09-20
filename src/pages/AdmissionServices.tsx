@@ -95,7 +95,7 @@ const AdmissionServices = () => {
     <div className="min-h-screen bg-background" dir="rtl">
       <SEO
         title="خدمات الدراسة بالخارج (ابتعاث) | FekrahEdu"
-        description="خطتك للدراسة بالخارج من اختيار الجامعة والتخصص حتى القبول وإرشادات ما بعد القبول، مع خيار الدفع بعد الحصول على القبول."
+        description="خطتك للدراسة بالخارج من اختيار الجامعة والتخصص حتى القبول وإرشادات ما بعد القبول، مع رسوم قبول رمزية مستقلة وأتعاب واضحة لتجهيز الملف."
         keywords="الدراسة بالخارج, ابتعاث, قبول جامعي, جامعات تركيا, جامعات مصر, جامعات الأردن, مقارنة الجامعات"
         url="https://fekrahedu.com/admission-services"
       />
@@ -149,10 +149,10 @@ const AdmissionServices = () => {
                 <Banknote className="h-8 w-8" />
               </div>
               <div>
-                <p className="mb-1 text-sm font-black text-warning-foreground">عرض يضمن وضوح الالتزام</p>
-                <h2 className="text-2xl font-black text-foreground sm:text-3xl">ادفع بعد الحصول على القبول</h2>
+                <p className="mb-1 text-sm font-black text-warning-foreground">رسوم واضحة ومستقلة</p>
+                <h2 className="text-2xl font-black text-foreground sm:text-3xl">رسوم قبول رمزية وأتعاب تجهيز ملف مستقلة</h2>
                 <p className="mt-3 max-w-3xl leading-7 text-muted-foreground">
-                  يوقّع الطالب عقدًا إلكترونيًا لضمان جدية الطلب، يوضّح الخدمة والمبلغ المستحق وموعد سداده بعد صدور القبول الجامعي والتحقق منه.
+                  رسوم القبول الجامعي رمزية ومستقلة، بينما يوضّح العقد الإلكتروني أتعاب FekrahEdu مقابل تجهيز الملف والتقديم والمتابعة، بما يضمن جدية الطلب ووضوح الالتزام.
                 </p>
               </div>
               <Button onClick={() => openAdmissionPlatform({ service: "pay-after-acceptance" })} className="h-12 gap-2 px-6">
@@ -221,7 +221,7 @@ const AdmissionServices = () => {
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid overflow-hidden rounded-lg border border-border bg-card shadow-strong lg:grid-cols-[0.8fr_1.2fr]">
               <div className="relative min-h-72">
-                <img src={admissionDesk} alt="مقارنة خيارات القبول الجامعي" className="absolute inset-0 h-full w-full object-cover" />
+                <img src={admissionDesk} alt="مقارنة خيارات القبول الجامعي" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-foreground/90 to-foreground/15" />
                 <div className="absolute inset-x-0 bottom-0 p-7 text-primary-foreground">
                   <Scale className="h-10 w-10" />
@@ -293,7 +293,7 @@ const AdmissionServices = () => {
                 <ShieldCheck className="h-10 w-10 text-success" />
                 <h2 className="mt-5 text-3xl font-black text-card-foreground">عقد واضح يحفظ حقوق الطرفين</h2>
                 <div className="mt-6 space-y-4">
-                  {["تحديد الجامعات والخدمات المطلوبة", "توضيح مبلغ الخدمة وموعد استحقاقه", "إثبات صدور القبول والتحقق منه قبل الدفع", "توقيع إلكتروني لضمان الجدية والشفافية"].map((item) => (
+                  {["تحديد الجامعات والخدمات المطلوبة", "فصل رسوم القبول الرمزية عن أتعاب تجهيز الملف", "توضيح أتعاب FekrahEdu ومراحل الخدمة", "توقيع إلكتروني لضمان الجدية والشفافية"].map((item) => (
                     <div key={item} className="flex items-start gap-3">
                       <ClipboardCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
                       <span className="font-bold leading-7 text-card-foreground">{item}</span>

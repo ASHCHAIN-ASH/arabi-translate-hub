@@ -5,8 +5,6 @@
  * tokenize by Unicode word boundaries → count.
  */
 
-import mammoth from 'mammoth';
-
 export interface WordCountResult {
   words: number;
   characters: number;
@@ -112,6 +110,7 @@ const extractDocxText = async (
   onProgress?.(20);
   const buffer = await file.arrayBuffer();
   onProgress?.(60);
+  const { default: mammoth } = await import('mammoth');
   const result = await mammoth.extractRawText({ arrayBuffer: buffer });
   onProgress?.(95);
   return result.value || '';

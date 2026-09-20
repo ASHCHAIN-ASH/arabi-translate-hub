@@ -10,8 +10,6 @@
  *  - Edge function `analyze-translation-file` (server fallback)
  */
 
-import mammoth from 'mammoth';
-
 export type Language = 'ar' | 'en' | 'mixed' | 'unknown';
 export type Domain = 'general' | 'academic' | 'legal' | 'medical' | 'technical';
 export type Confidence = 'high' | 'medium' | 'low';
@@ -309,6 +307,7 @@ const extractDocxText = async (file: File, onProgress?: (p: number) => void): Pr
   onProgress?.(20);
   const buffer = await file.arrayBuffer();
   onProgress?.(60);
+  const { default: mammoth } = await import('mammoth');
   const r = await mammoth.extractRawText({ arrayBuffer: buffer });
   onProgress?.(95);
   return r.value || '';
