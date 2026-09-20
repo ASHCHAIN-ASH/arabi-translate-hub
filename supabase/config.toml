@@ -47,3 +47,6 @@ project_id = "kziujhdqogqeehtxgpax"
 
   [functions.financing-whatsapp-notify]
     verify_jwt = false
+
+  [functions.ticket-notify]
+    verify_jwt = false
