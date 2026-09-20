@@ -1,52 +1,26 @@
-import { useEffect, useMemo, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import {
   ArrowLeft, BookOpen, BookOpenCheck, CheckCircle2, ChevronLeft, ExternalLink, FileCheck2,
-  Filter, Globe2, LibraryBig, Microscope, Search, ShieldCheck, Sparkles, X,
+  Globe2, LibraryBig, Microscope, Search, ShieldCheck, Sparkles,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import JournalCard from "@/components/journals/JournalCard";
 import { categorySummaries } from "@/components/journals/journalVisuals";
 import { journals } from "@/data/journals";
 
-const PAGE_SIZE = 12;
-const ALL = "all";
-const normalize = (value: string) => value.toLocaleLowerCase("ar").replace(/[()\s-]/g, "");
-
 const featurePanels = [
-  { icon: Search, title: "بحث ذكي وسريع", text: "ابحث بالاسم أو الناشر أو رقم ISSN من مكان واحد.", className: "border-primary/20 bg-primary/5 text-primary" },
-  { icon: Filter, title: "أقسام رئيسية منظمة", text: "لكل تخصص قسم مستقل بصفحته الخاصة بمجلاته.", className: "border-secondary/20 bg-secondary/5 text-secondary" },
+  { icon: LibraryBig, title: "أقسام رئيسية منظمة", text: "لكل تخصص قسم مستقل يفتح صفحته الخاصة بمجلاته.", className: "border-primary/20 bg-primary/5 text-primary" },
+  { icon: Search, title: "بحث داخل كل قسم", text: "ابحث بالاسم أو الناشر أو رقم ISSN داخل صفحة القسم.", className: "border-secondary/20 bg-secondary/5 text-secondary" },
   { icon: ExternalLink, title: "وصول مباشر", text: "انتقل إلى الموقع الرسمي للمجلة لمراجعة أحدث متطلباتها.", className: "border-accent/20 bg-accent/5 text-accent" },
 ];
 
 const JournalsDirectory = () => {
   const reduceMotion = useReducedMotion();
-  const [query, setQuery] = useState("");
-  const [category, setCategory] = useState(ALL);
-  const [issnState, setIssnState] = useState(ALL);
-  const [page, setPage] = useState(1);
+  const totalJournals = journals.length;
 
-  const categories = useMemo(() => [...new Set(journals.map((journal) => journal.category))].sort((a, b) => a.localeCompare(b, "ar")), []);
-  const filteredJournals = useMemo(() => {
-    const term = normalize(query);
-    return journals.filter((journal) => {
-      const searchable = normalize([journal.name, journal.nameAr, journal.issn, journal.publisher, journal.category, ...(journal.subjects || [])].filter(Boolean).join(" "));
-      return (!term || searchable.includes(term)) && (category === ALL || journal.category === category) && (issnState === ALL || (issnState === "available" ? Boolean(journal.issn) : !journal.issn));
-    });
-  }, [category, issnState, query]);
-
-  const pageCount = Math.max(1, Math.ceil(filteredJournals.length / PAGE_SIZE));
-  const visibleJournals = filteredJournals.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-  const hasFilters = Boolean(query || category !== ALL || issnState !== ALL);
-  useEffect(() => setPage(1), [query, category, issnState]);
-  useEffect(() => { if (page > pageCount) setPage(pageCount); }, [page, pageCount]);
-  const clearFilters = () => { setQuery(""); setCategory(ALL); setIssnState(ALL); };
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
@@ -63,9 +37,9 @@ const JournalsDirectory = () => {
               <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-gradient-to-br from-accent to-success text-accent-foreground shadow-accent"><Globe2 className="h-7 w-7" /></div>
             </motion.div>
             <motion.h1 initial={reduceMotion ? false : { opacity: 0, y: 20 }} animate={reduceMotion ? undefined : { opacity: 1, y: 0 }} transition={{ delay: .1 }} className="text-4xl font-bold leading-[1.35] text-shimmer sm:text-5xl lg:text-6xl">دليل المجلات العلمية</motion.h1>
-            <motion.p initial={reduceMotion ? false : { opacity: 0, y: 20 }} animate={reduceMotion ? undefined : { opacity: 1, y: 0 }} transition={{ delay: .2 }} className="mx-auto mt-5 max-w-3xl text-lg leading-9 text-muted-foreground sm:text-xl">استكشف المجلات العلمية العربية والدولية ضمن دليل حديث ومنظم، وابحث بسهولة حسب التخصص أو الاسم أو رقم ISSN.</motion.p>
+            <motion.p initial={reduceMotion ? false : { opacity: 0, y: 20 }} animate={reduceMotion ? undefined : { opacity: 1, y: 0 }} transition={{ delay: .2 }} className="mx-auto mt-5 max-w-3xl text-lg leading-9 text-muted-foreground sm:text-xl">{totalJournals.toLocaleString("ar-SA")} مجلة علمية عربية ودولية موزّعة على أقسام رئيسية — اختر القسم المناسب لتخصصك وادخل إلى صفحته لتصفّح مجلاته.</motion.p>
             <motion.div initial={reduceMotion ? false : { opacity: 0, y: 18 }} animate={reduceMotion ? undefined : { opacity: 1, y: 0 }} transition={{ delay: .3 }} className="mt-8 flex flex-wrap justify-center gap-3">
-              <Button asChild size="lg" className="gap-2 shadow-primary"><a href="#directory">استكشف الدليل <ChevronLeft className="h-4 w-4" /></a></Button>
+              <Button asChild size="lg" className="gap-2 shadow-primary"><a href="#categories">تصفّح الأقسام الرئيسية <ChevronLeft className="h-4 w-4" /></a></Button>
               <Button asChild size="lg" variant="outline" className="gap-2 bg-background/80"><Link to="/research/journal-publication"><Sparkles className="h-4 w-4" />مساعدة في اختيار المجلة</Link></Button>
             </motion.div>
           </div>
@@ -124,29 +98,6 @@ const JournalsDirectory = () => {
                 );
               })}
             </div>
-          </div>
-        </section>
-
-        <section id="directory" className="scroll-mt-24 py-8">
-          <div className="container mx-auto px-4">
-            <motion.div initial={reduceMotion ? false : { opacity: 0, y: 16 }} whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }} viewport={{ once: true }} className="rounded-lg border border-primary/15 bg-card p-4 shadow-medium sm:p-6">
-              <div className="mb-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
-                <div><div className="mb-2 flex items-center gap-2 text-primary"><Filter className="h-4 w-4" /><span className="text-sm font-semibold">البحث والتصفية</span></div><h2 className="text-2xl font-bold text-foreground">اعثر على المجلة المناسبة</h2></div>
-                <p className="rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary" aria-live="polite">عرض {filteredJournals.length.toLocaleString("ar-SA")} نتيجة</p>
-              </div>
-              <div className="grid gap-3 lg:grid-cols-[minmax(280px,1.8fr)_repeat(2,minmax(165px,.8fr))_auto]">
-                <div className="relative"><Search className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" /><Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="ابحث باسم المجلة أو ISSN أو الناشر" className="h-12 border-primary/20 bg-background pr-10" aria-label="البحث في دليل المجلات" /></div>
-                <Select value={category} onValueChange={setCategory}><SelectTrigger className="h-12 bg-background text-right" aria-label="تصفية حسب المجال"><SelectValue /></SelectTrigger><SelectContent dir="rtl"><SelectItem value={ALL}>كل المجالات</SelectItem>{categories.map((item) => <SelectItem key={item} value={item}>{item}</SelectItem>)}</SelectContent></Select>
-                <Select value={issnState} onValueChange={setIssnState}><SelectTrigger className="h-12 bg-background text-right" aria-label="تصفية حسب رقم ISSN"><SelectValue /></SelectTrigger><SelectContent dir="rtl"><SelectItem value={ALL}>جميع سجلات ISSN</SelectItem><SelectItem value="available">رقم ISSN متوفر</SelectItem><SelectItem value="missing">غير مدوّن</SelectItem></SelectContent></Select>
-                {hasFilters && <Button variant="ghost" className="h-12 gap-2" onClick={clearFilters}><X className="h-4 w-4" />مسح</Button>}
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        <section className="bg-gradient-to-b from-background via-muted/30 to-background py-10 sm:py-14">
-          <div className="container mx-auto px-4">
-            {visibleJournals.length ? <><div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">{visibleJournals.map((journal, index) => <JournalCard key={journal.id} journal={journal} index={index} />)}</div>{pageCount > 1 && <nav className="mt-12 flex flex-wrap items-center justify-center gap-3" aria-label="صفحات دليل المجلات"><Button variant="outline" disabled={page === 1} onClick={() => setPage(v => Math.max(1, v - 1))}>السابق</Button><span className="rounded-full bg-primary/10 px-5 py-2 text-sm font-semibold text-primary">صفحة {page.toLocaleString("ar-SA")} من {pageCount.toLocaleString("ar-SA")}</span><Button variant="outline" disabled={page === pageCount} onClick={() => setPage(v => Math.min(pageCount, v + 1))}>التالي</Button></nav>}</> : <div className="mx-auto max-w-xl rounded-lg border border-dashed border-primary/30 bg-primary/5 px-6 py-14 text-center"><Search className="mx-auto h-10 w-10 text-primary" /><h2 className="mt-4 text-xl font-bold">لا توجد نتائج مطابقة</h2><p className="mt-2 text-muted-foreground">جرّب اسمًا آخر أو امسح خيارات التصفية.</p><Button variant="outline" className="mt-5" onClick={clearFilters}>عرض جميع المجلات</Button></div>}
           </div>
         </section>
 
