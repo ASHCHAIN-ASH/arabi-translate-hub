@@ -10,6 +10,7 @@ import SEO from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { categorySummaries } from "@/components/journals/journalVisuals";
 import JournalsStatsBanner from "@/components/journals/JournalsStatsBanner";
+import JournalCard from "@/components/journals/JournalCard";
 import { journals } from "@/data/journals";
 
 const featurePanels = [
@@ -21,6 +22,7 @@ const featurePanels = [
 const JournalsDirectory = () => {
   const reduceMotion = useReducedMotion();
   const totalJournals = journals.length;
+  const featuredJournals = journals.filter((j) => j.featured);
 
 
   return (
@@ -47,6 +49,30 @@ const JournalsDirectory = () => {
         </section>
 
         <JournalsStatsBanner />
+
+        {featuredJournals.length > 0 && (
+          <section className="py-12 sm:py-14">
+            <div className="container mx-auto px-4">
+              <motion.div
+                initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+                whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="mb-8 text-center"
+              >
+                <div className="mx-auto mb-3 flex w-fit items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-sm font-semibold text-primary">
+                  <Sparkles className="h-4 w-4" aria-hidden="true" />اختيارات مميزة
+                </div>
+                <h2 className="text-3xl font-bold text-foreground sm:text-4xl">المجلات المميزة</h2>
+                <p className="mx-auto mt-4 max-w-2xl leading-8 text-muted-foreground">مجلات مختارة بعناية ننصح بها لجودة التحكيم وسمعة النشر.</p>
+              </motion.div>
+              <div className="mx-auto grid max-w-4xl gap-5 sm:grid-cols-2">
+                {featuredJournals.map((journal, index) => (
+                  <JournalCard key={journal.id} journal={journal} index={index} />
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
 
         <section className="relative z-10 -mt-3 pb-12">
           <div className="container mx-auto grid gap-4 px-4 md:grid-cols-3">
