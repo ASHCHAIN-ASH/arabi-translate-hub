@@ -3,7 +3,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import {
   ArrowLeft, Atom, BookOpen, BookOpenCheck, BriefcaseBusiness, CheckCircle2,
   ChevronLeft, ExternalLink, FileCheck2, Filter, Gavel, Globe2, GraduationCap,
-  HeartPulse, Languages, LibraryBig, Microscope, Search, ShieldCheck, Sparkles,
+  HeartPulse, Languages, LibraryBig, MessageCircle, Microscope, Search, ShieldCheck, Sparkles,
   Stethoscope, X, Zap,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -51,6 +51,22 @@ function JournalCard({ journal, index }: { journal: JournalRecord; index: number
     catch { return journal.website; }
   }, [journal.website]);
 
+  const whatsappUrl = useMemo(() => {
+    const lines = [
+      "السلام عليكم، أرغب بالاستفسار عن النشر في هذه المجلة:",
+      "",
+      journal.nameAr ? `• الاسم بالعربية: ${journal.nameAr}` : "",
+      `• اسم المجلة: ${journal.name}`,
+      journal.publisher ? `• الناشر: ${journal.publisher}` : "",
+      `• المجال: ${journal.category}`,
+      `• رقم ISSN: ${journal.issn || "غير مدوّن"}`,
+      `• رابط المجلة: ${journal.website}`,
+      "",
+      "أرجو إفادتي بتفاصيل خدمة النشر والرسوم والمدة.",
+    ].filter(Boolean);
+    return `https://wa.me/966593799355?text=${encodeURIComponent(lines.join("\n"))}`;
+  }, [journal]);
+
   return (
     <motion.article
       initial={reduceMotion ? false : { opacity: 0, y: 24, scale: 0.97 }}
@@ -97,13 +113,20 @@ function JournalCard({ journal, index }: { journal: JournalRecord; index: number
           </div>
         )}
 
-        <div className="mt-auto flex items-center justify-between gap-3 border-t border-border pt-4">
-          <span dir="ltr" className="min-w-0 truncate text-left text-xs text-muted-foreground" title={host}>{host}</span>
-          <Button asChild size="sm" className="shrink-0 gap-2 shadow-primary">
-            <a href={journal.website} target="_blank" rel="noopener noreferrer">
-              زيارة المجلة <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-            </a>
-          </Button>
+        <div className="mt-auto space-y-3 border-t border-border pt-4">
+          <span dir="ltr" className="block min-w-0 truncate text-left text-xs text-muted-foreground" title={host}>{host}</span>
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <Button asChild size="sm" className="gap-2 shadow-primary">
+              <a href={journal.website} target="_blank" rel="noopener noreferrer">
+                زيارة المجلة <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+              </a>
+            </Button>
+            <Button asChild size="sm" variant="outline" className="gap-2 border-success/30 bg-success/5 text-success hover:bg-success/10 hover:text-success">
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" aria-label={`استفسار عبر واتساب عن ${journal.nameAr || journal.name}`}>
+                <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" /> استفسار واتساب
+              </a>
+            </Button>
+          </div>
         </div>
       </div>
     </motion.article>
