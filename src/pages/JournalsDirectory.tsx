@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { categorySummaries } from "@/components/journals/journalVisuals";
+import JournalsStatsBanner from "@/components/journals/JournalsStatsBanner";
 import { journals } from "@/data/journals";
 
 const featurePanels = [
