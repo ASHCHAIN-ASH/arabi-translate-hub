@@ -15,16 +15,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { journals, type JournalRecord, type JournalSource } from "@/data/journals";
+import { journals, type JournalRecord } from "@/data/journals";
 
 const PAGE_SIZE = 12;
 const ALL = "all";
 const normalize = (value: string) => value.toLocaleLowerCase("ar").replace(/[()\s-]/g, "");
 
-const sourceLabels: Record<JournalSource, string> = {
-  existing: "القائمة الأساسية",
-  uploaded: "القائمة المضافة",
-};
 
 const categoryVisuals: Record<string, { icon: LucideIcon; iconClass: string; panelClass: string; badgeClass: string }> = {
   "الطب والصحة": { icon: Stethoscope, iconClass: "text-destructive", panelClass: "bg-destructive/10 border-destructive/20", badgeClass: "bg-destructive/10 text-destructive border-destructive/20" },
@@ -87,7 +83,7 @@ function JournalCard({ journal, index }: { journal: JournalRecord; index: number
           >
             <Icon className={`h-7 w-7 ${visual.iconClass}`} aria-hidden="true" />
           </motion.div>
-          <Badge variant="outline" className={visual.badgeClass}>{sourceLabels[journal.source]}</Badge>
+          <Badge variant="outline" className={visual.badgeClass}>{journal.category}</Badge>
         </div>
 
         <div className="min-h-[7.5rem]">
@@ -136,7 +132,6 @@ function JournalCard({ journal, index }: { journal: JournalRecord; index: number
 const JournalsDirectory = () => {
   const reduceMotion = useReducedMotion();
   const [query, setQuery] = useState("");
-  const [source, setSource] = useState<JournalSource | typeof ALL>(ALL);
   const [category, setCategory] = useState(ALL);
   const [issnState, setIssnState] = useState(ALL);
   const [page, setPage] = useState(1);
@@ -146,16 +141,16 @@ const JournalsDirectory = () => {
     const term = normalize(query);
     return journals.filter((journal) => {
       const searchable = normalize([journal.name, journal.nameAr, journal.issn, journal.publisher, journal.category, ...(journal.subjects || [])].filter(Boolean).join(" "));
-      return (!term || searchable.includes(term)) && (source === ALL || journal.source === source) && (category === ALL || journal.category === category) && (issnState === ALL || (issnState === "available" ? Boolean(journal.issn) : !journal.issn));
+      return (!term || searchable.includes(term)) && (category === ALL || journal.category === category) && (issnState === ALL || (issnState === "available" ? Boolean(journal.issn) : !journal.issn));
     });
-  }, [category, issnState, query, source]);
+  }, [category, issnState, query]);
 
   const pageCount = Math.max(1, Math.ceil(filteredJournals.length / PAGE_SIZE));
   const visibleJournals = filteredJournals.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-  const hasFilters = Boolean(query || source !== ALL || category !== ALL || issnState !== ALL);
-  useEffect(() => setPage(1), [query, source, category, issnState]);
+  const hasFilters = Boolean(query || category !== ALL || issnState !== ALL);
+  useEffect(() => setPage(1), [query, category, issnState]);
   useEffect(() => { if (page > pageCount) setPage(pageCount); }, [page, pageCount]);
-  const clearFilters = () => { setQuery(""); setSource(ALL); setCategory(ALL); setIssnState(ALL); };
+  const clearFilters = () => { setQuery(""); setCategory(ALL); setIssnState(ALL); };
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
@@ -196,9 +191,8 @@ const JournalsDirectory = () => {
                 <div><div className="mb-2 flex items-center gap-2 text-primary"><Filter className="h-4 w-4" /><span className="text-sm font-semibold">البحث والتصفية</span></div><h2 className="text-2xl font-bold text-foreground">اعثر على المجلة المناسبة</h2></div>
                 <p className="rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary" aria-live="polite">عرض {filteredJournals.length.toLocaleString("ar-SA")} نتيجة</p>
               </div>
-              <div className="grid gap-3 lg:grid-cols-[minmax(280px,1.6fr)_repeat(3,minmax(155px,.7fr))_auto]">
+              <div className="grid gap-3 lg:grid-cols-[minmax(280px,1.8fr)_repeat(2,minmax(165px,.8fr))_auto]">
                 <div className="relative"><Search className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" /><Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="ابحث باسم المجلة أو ISSN أو الناشر" className="h-12 border-primary/20 bg-background pr-10" aria-label="البحث في دليل المجلات" /></div>
-                <Select value={source} onValueChange={(v) => setSource(v as JournalSource | typeof ALL)}><SelectTrigger className="h-12 bg-background text-right" aria-label="تصفية حسب المصدر"><SelectValue /></SelectTrigger><SelectContent dir="rtl"><SelectItem value={ALL}>كل القوائم</SelectItem><SelectItem value="existing">القائمة الأساسية</SelectItem><SelectItem value="uploaded">القائمة المضافة</SelectItem></SelectContent></Select>
                 <Select value={category} onValueChange={setCategory}><SelectTrigger className="h-12 bg-background text-right" aria-label="تصفية حسب المجال"><SelectValue /></SelectTrigger><SelectContent dir="rtl"><SelectItem value={ALL}>كل المجالات</SelectItem>{categories.map((item) => <SelectItem key={item} value={item}>{item}</SelectItem>)}</SelectContent></Select>
                 <Select value={issnState} onValueChange={setIssnState}><SelectTrigger className="h-12 bg-background text-right" aria-label="تصفية حسب رقم ISSN"><SelectValue /></SelectTrigger><SelectContent dir="rtl"><SelectItem value={ALL}>جميع سجلات ISSN</SelectItem><SelectItem value="available">رقم ISSN متوفر</SelectItem><SelectItem value="missing">غير مدوّن</SelectItem></SelectContent></Select>
                 {hasFilters && <Button variant="ghost" className="h-12 gap-2" onClick={clearFilters}><X className="h-4 w-4" />مسح</Button>}
