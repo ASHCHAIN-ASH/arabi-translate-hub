@@ -15,7 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { journals, type JournalRecord, type JournalSource } from "@/data/journals";
+import { journals, type JournalRecord } from "@/data/journals";
 
 const PAGE_SIZE = 12;
 const ALL = "all";
