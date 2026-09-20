@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { 
   Languages, BookOpen, Users, FileText, Microscope,
   GraduationCap, Shield, Clock, Award, Star, CheckCircle,
-  ArrowRight, Target, Brain, TrendingUp
+  ArrowRight, Sparkles, Target, Brain, TrendingUp
 } from "lucide-react";
 import { UNIFIED_STATS, STATS_LABELS } from "@/constants/academicStats";
 
