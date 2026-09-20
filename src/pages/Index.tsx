@@ -24,6 +24,10 @@ import academicTranslationImg from "@/assets/academic-service-translation.jpg";
 import academicResearchImg from "@/assets/academic-service-research.jpg";
 import academicEditingImg from "@/assets/academic-service-editing.jpg";
 import academicPublishingImg from "@/assets/academic-service-publishing.jpg";
+import academicStatisticsImg from "@/assets/academic-service-statistics.jpg";
+import academicConsultationImg from "@/assets/academic-service-consultation.jpg";
+import academicWritingImg from "@/assets/academic-service-writing.jpg";
+import academicTrainingImg from "@/assets/academic-service-training.jpg";
 
 // Real photography for supporting sections and testimonials
 import heroCollabImg from "@/assets/home-students-collaboration.jpg";
@@ -104,6 +108,38 @@ const Index = () => {
       link: "/research/journal-publication",
       color: "from-amber-600 to-orange-600",
       image: academicPublishingImg
+    },
+    {
+      icon: BarChart3,
+      title: "التحليل الإحصائي",
+      description: "تحليل البيانات وإعداد التقارير باستخدام SPSS وAMOS وأحدث البرامج",
+      link: "/services/statistical-analysis",
+      color: "from-cyan-600 to-blue-600",
+      image: academicStatisticsImg
+    },
+    {
+      icon: GraduationCap,
+      title: "الاستشارات الأكاديمية",
+      description: "استشارات متخصصة لطلاب الدراسات العليا والباحثين في كل التخصصات",
+      link: "/services/consultation-services",
+      color: "from-violet-600 to-purple-600",
+      image: academicConsultationImg
+    },
+    {
+      icon: BookOpen,
+      title: "الكتابة الأكاديمية",
+      description: "إعداد الأبحاث والرسائل والمقالات وفق المعايير الأكاديمية العالمية",
+      link: "/services/academic-writing",
+      color: "from-rose-600 to-red-600",
+      image: academicWritingImg
+    },
+    {
+      icon: Users,
+      title: "التدريب والتطوير",
+      description: "برامج تدريبية متخصصة لتطوير المهارات البحثية والأكاديمية",
+      link: "/research/training-courses",
+      color: "from-teal-600 to-emerald-600",
+      image: academicTrainingImg
     }
   ];
 
