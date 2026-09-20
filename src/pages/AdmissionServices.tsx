@@ -106,7 +106,6 @@ const AdmissionServices = () => {
           <img
             src={universityCampus}
             alt="حرم جامعي دولي ضمن خدمات الدراسة بالخارج"
-            fetchpriority="high"
             className="absolute inset-0 -z-20 h-full w-full object-cover"
           />
           <div className="absolute inset-0 -z-10 bg-gradient-to-l from-foreground/95 via-foreground/80 to-foreground/45" />
