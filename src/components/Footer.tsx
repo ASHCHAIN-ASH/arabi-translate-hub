@@ -226,7 +226,7 @@ const Footer = () => {
             <ul className="space-y-2 md:space-y-3">
               {[
                 { name: 'دليل الجامعات', href: '/universities', icon: Building2 },
-                { name: 'القبول بالجامعات', href: '/admission-services', icon: GraduationCap },
+                { name: 'الدراسة بالخارج (ابتعاث)', href: '/admission-services', icon: GraduationCap },
                 { name: 'دليل المجلات العلمية', href: '/journals', icon: Award },
                 
                 { name: 'الوظائف', href: '/careers', icon: Briefcase },

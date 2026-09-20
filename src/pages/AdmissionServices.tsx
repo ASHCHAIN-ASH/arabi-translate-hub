@@ -1,319 +1,322 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import {
-  GraduationCap,
   ArrowLeft,
-  Handshake,
-  Sparkles,
-  Globe,
-  ShieldCheck,
-  BookOpenCheck,
+  BadgeCheck,
+  Banknote,
+  Building2,
+  Check,
+  ClipboardCheck,
   FileCheck2,
+  Globe2,
+  GraduationCap,
+  Landmark,
+  MapPin,
   Plane,
+  Scale,
+  ShieldCheck,
+  Sparkles,
+  Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
 import admissionDesk from "@/assets/admission-acceptance-desk.jpg";
 import universityCampus from "@/assets/admission-university-campus.jpg";
 
 const ADMISSION_URL = "https://fekrah-global.com/ar/auth/register";
-const COUNTDOWN_SECONDS = 12;
 
-const HEADLINE = "رحلتك الدراسية تبدأ من هنا";
-const PARAGRAPH =
-  "في «فكرة»، نحرص على بناء شراكات موثوقة مع الجهات والخدمات التي يحتاجها الطالب طوال رحلته الدراسية. نوفّر لك حلولاً متكاملة تسهّل كل مرحلة، من البداية حتى تحقيق أهدافك الأكاديمية، لأن راحتك وثقتك هما أساس ما نقدّمه.";
-
-const partnerPillars = [
-  { icon: Handshake, label: "شراكات موثوقة" },
-  { icon: Globe, label: "جامعات حول العالم" },
-  { icon: ShieldCheck, label: "رحلة دراسية آمنة" },
+const destinations = [
+  { title: "الجامعات التركية", description: "متابعة متخصصة للحصول على قبول جامعي في تركيا.", icon: Landmark },
+  { title: "الجامعات المصرية", description: "اختيار الجامعة والبرنامج وتجهيز طلب القبول في مصر.", icon: Building2 },
+  { title: "الجامعات الأردنية", description: "دعم كامل للتقديم والمتابعة في الجامعات الأردنية.", icon: GraduationCap },
+  { title: "دول أخرى", description: "خيارات دولية أخرى تُحدد حسب مؤهلاتك وميزانيتك.", icon: Globe2 },
 ];
 
-/** خطوات الرحلة بأيقونات متحركة */
-const journeySteps = [
-  { icon: FileCheck2, label: "تجهيز الملف" },
-  { icon: BookOpenCheck, label: "القبول الجامعي" },
-  { icon: Plane, label: "بدء الرحلة" },
+const admissionTypes = [
+  "قبول البكالوريوس",
+  "قبول الماجستير",
+  "قبول الدكتوراه",
+  "قبول اللغة والتحضيري",
+  "القبول للطلاب المحولين",
+  "القبول لمن لديهم فجوة دراسية",
+  "القبول للطلاب الحاصلين على معدلات منخفضة",
 ];
 
-/** هوك كتابة حرفًا بحرف مع مؤشر وامض */
-const useTypewriter = (
-  text: string,
-  { start, speed = 45, reduceMotion }: { start: boolean; speed?: number; reduceMotion: boolean | null }
-) => {
-  const [typed, setTyped] = useState(0);
+const admissionJourney = [
+  "اختيار الجامعة المناسبة حسب المعدل",
+  "نصيحة من مختص فكرة لاختيار التخصص المناسب",
+  "التحقق من شروط القبول مع مختص فكرة",
+  "تجهيز وتقديم طلب القبول ومتابعته حتى صدوره",
+  "اختيار أكثر من جامعة لرفع فرص القبول",
+];
 
-  useEffect(() => {
-    if (reduceMotion) {
-      setTyped(text.length);
-      return;
-    }
-    if (!start) return;
-    if (typed >= text.length) return;
-    // إيقاف أطول قليلًا بعد علامات الترقيم حتى تُقرأ الجملة براحة
-    const prevChar = text[typed - 1];
-    const pause =
-      prevChar === "." ? speed * 6 : prevChar === "،" ? speed * 3 : 0;
-    const t = window.setTimeout(() => setTyped((p) => p + 1), speed + pause);
-    return () => window.clearTimeout(t);
-  }, [typed, start, text, speed, reduceMotion]);
+const additionalServices = [
+  "الاستشارة الدراسية",
+  "اختيار الدولة المناسبة",
+  "اختيار المدينة",
+  "اختيار الجامعة",
+  "اختيار التخصص",
+  "مقارنة تكاليف الدراسة",
+  "مقارنة تكاليف المعيشة",
+  "متطلبات التأشيرة",
+  "السكن الجامعي",
+  "التأمين",
+  "المواصلات",
+  "فتح حساب بنكي عند الحاجة",
+  "تجهيز ملف السفر",
+  "قائمة المستندات المطلوبة",
+  "إرشادات الوصول والاستقرار",
+];
 
-  return {
-    output: text.slice(0, typed),
-    done: typed >= text.length,
-  };
+const openAdmissionPlatform = (params?: Record<string, string>) => {
+  const url = new URL(ADMISSION_URL);
+  Object.entries(params ?? {}).forEach(([key, value]) => url.searchParams.set(key, value));
+  window.location.href = url.toString();
 };
-
-const Caret = () => (
-  <motion.span
-    aria-hidden="true"
-    className="inline-block w-[3px] h-[1em] align-[-0.15em] bg-primary rounded-full ms-1"
-    animate={{ opacity: [1, 0, 1] }}
-    transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-  />
-);
 
 const AdmissionServices = () => {
   const reduceMotion = useReducedMotion();
-  const [secondsLeft, setSecondsLeft] = useState(COUNTDOWN_SECONDS);
-  const countdownStarted = useRef(false);
+  const [firstUniversity, setFirstUniversity] = useState("");
+  const [secondUniversity, setSecondUniversity] = useState("");
+  const canCompare = firstUniversity.trim().length > 1 && secondUniversity.trim().length > 1;
 
-  // مراحل الكتابة: العنوان ثم الفقرة
-  const headline = useTypewriter(HEADLINE, { start: true, speed: 110, reduceMotion });
-  const paragraph = useTypewriter(PARAGRAPH, {
-    start: headline.done,
-    speed: 55,
-    reduceMotion,
-  });
-
-  // العدّاد يبدأ بعد انتهاء الكتابة فقط
-  useEffect(() => {
-    if (!paragraph.done || countdownStarted.current) return;
-    countdownStarted.current = true;
-    const timer = window.setInterval(() => {
-      setSecondsLeft((prev) => (prev > 0 ? prev - 1 : 0));
-    }, 1000);
-    return () => window.clearInterval(timer);
-  }, [paragraph.done]);
-
-  useEffect(() => {
-    if (secondsLeft === 0 && countdownStarted.current) {
-      window.location.href = ADMISSION_URL;
-    }
-  }, [secondsLeft]);
-
-  const floatingIcons = useMemo(
-    () => [
-      { Icon: BookOpenCheck, top: "18%", right: "12%", delay: 0 },
-      { Icon: FileCheck2, top: "30%", right: "82%", delay: 0.6 },
-      { Icon: Plane, top: "62%", right: "10%", delay: 1.2 },
-      { Icon: Globe, top: "70%", right: "80%", delay: 1.8 },
-      { Icon: GraduationCap, top: "12%", right: "48%", delay: 2.4 },
-    ],
-    []
-  );
+  const requestComparison = () => {
+    if (!canCompare) return;
+    openAdmissionPlatform({
+      service: "university-comparison",
+      university_one: firstUniversity.trim(),
+      university_two: secondUniversity.trim(),
+    });
+  };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col" dir="rtl">
+    <div className="min-h-screen bg-background" dir="rtl">
+      <SEO
+        title="خدمات الدراسة بالخارج (ابتعاث) | FekrahEdu"
+        description="خطتك للدراسة بالخارج من اختيار الجامعة والتخصص حتى القبول وإرشادات ما بعد القبول، مع خيار الدفع بعد الحصول على القبول."
+        keywords="الدراسة بالخارج, ابتعاث, قبول جامعي, جامعات تركيا, جامعات مصر, جامعات الأردن, مقارنة الجامعات"
+        url="https://fekrahedu.com/admission-services"
+      />
       <Header />
 
-      <main className="flex-1 relative overflow-hidden">
-        {/* خلفية متحركة */}
-        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-          <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-background to-accent/5" />
-          <motion.div
-            className="absolute top-1/4 right-1/4 w-72 h-72 rounded-full bg-primary/15 blur-3xl"
-            animate={reduceMotion ? undefined : { scale: [1, 1.25, 1], opacity: [0.5, 0.8, 0.5] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+      <main className="overflow-hidden">
+        <section className="relative isolate min-h-[670px] border-b border-border">
+          <img
+            src={universityCampus}
+            alt="حرم جامعي دولي ضمن خدمات الدراسة بالخارج"
+            className="absolute inset-0 -z-20 h-full w-full object-cover"
           />
-          <motion.div
-            className="absolute bottom-1/4 left-1/4 w-80 h-80 rounded-full bg-accent/15 blur-3xl"
-            animate={reduceMotion ? undefined : { scale: [1.2, 1, 1.2], opacity: [0.6, 0.9, 0.6] }}
-            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-          />
-          {/* أيقونات عائمة متحركة */}
-          {floatingIcons.map(({ Icon, top, right, delay }, i) => (
+          <div className="absolute inset-0 -z-10 bg-gradient-to-l from-foreground/95 via-foreground/80 to-foreground/45" />
+          <div className="container mx-auto flex min-h-[670px] items-center px-4 py-20 sm:px-6 lg:px-8">
             <motion.div
-              key={i}
-              className="absolute w-12 h-12 rounded-2xl bg-card/80 backdrop-blur border border-border shadow-lg flex items-center justify-center"
-              style={{ top, right }}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={
-                reduceMotion
-                  ? { opacity: 0.6, scale: 1 }
-                  : { opacity: [0.35, 0.7, 0.35], scale: 1, y: [0, -14, 0], rotate: [0, 6, -6, 0] }
-              }
-              transition={{
-                opacity: { duration: 4, repeat: Infinity, delay },
-                y: { duration: 5, repeat: Infinity, ease: "easeInOut", delay },
-                rotate: { duration: 6, repeat: Infinity, ease: "easeInOut", delay },
-                scale: { type: "spring", stiffness: 160, damping: 12, delay },
-              }}
+              initial={reduceMotion ? false : { opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7 }}
+              className="max-w-3xl text-primary-foreground"
             >
-              <Icon className="w-6 h-6 text-primary" />
-            </motion.div>
-          ))}
-        </div>
-
-        <div className="relative z-10 container mx-auto px-4 py-14 md:py-20 max-w-5xl">
-          {/* شارة */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-6"
-          >
-            <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 text-sm font-semibold text-primary">
-              <Handshake className="w-4 h-4" />
-              القبول الجامعي
-            </span>
-          </motion.div>
-
-          {/* الأيقونة الرئيسية */}
-          <motion.div
-            initial={{ scale: 0, rotate: -30 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ type: "spring", stiffness: 160, damping: 14 }}
-            className="relative mx-auto mb-8 w-24 h-24 rounded-3xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-2xl shadow-primary/30"
-          >
-            <motion.div
-              animate={reduceMotion ? undefined : { y: [0, -5, 0] }}
-              transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <GraduationCap className="w-12 h-12 text-primary-foreground" />
-            </motion.div>
-            <motion.span
-              className="absolute -top-2 -left-2"
-              animate={reduceMotion ? undefined : { rotate: [0, 360] }}
-              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-            >
-              <Sparkles className="w-6 h-6 text-secondary" />
-            </motion.span>
-          </motion.div>
-
-          {/* العنوان — يُكتب حرفًا بحرف */}
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground leading-snug mb-6 text-center min-h-[3.5rem]">
-            {headline.output}
-            {!headline.done && <Caret />}
-          </h1>
-
-          {/* الفقرة — تُكتب حرفًا بحرف بعد العنوان */}
-          <p className="text-lg sm:text-xl leading-relaxed text-muted-foreground mb-10 text-center max-w-3xl mx-auto min-h-[7rem]">
-            {paragraph.output}
-            {headline.done && !paragraph.done && <Caret />}
-          </p>
-
-          {/* صور حقيقية للقبول الجامعي */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12 max-w-4xl mx-auto">
-            {[
-              { src: admissionDesk, alt: "خطاب قبول جامعي وقبعة تخرج على مكتب دراسي" },
-              { src: universityCampus, alt: "حرم جامعي عريق ببرج ساعة ومساحات خضراء" },
-            ].map((img, i) => (
-              <motion.figure
-                key={img.src}
-                initial={{ opacity: 0, y: 30, scale: 0.96 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ delay: 0.3 + i * 0.2, duration: 0.6, ease: "easeOut" }}
-                whileHover={reduceMotion ? undefined : { y: -6, scale: 1.02 }}
-                className="relative rounded-3xl overflow-hidden border border-border shadow-xl shadow-primary/10 group"
-              >
-                <img
-                  src={img.src}
-                  alt={img.alt}
-                  loading="lazy"
-                  width={1024}
-                  height={768}
-                  className="w-full h-56 sm:h-64 object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
-              </motion.figure>
-            ))}
-          </div>
-
-          {/* خطوات الرحلة بأيقونات متحركة */}
-          <div className="flex items-center justify-center gap-2 sm:gap-4 mb-12" dir="rtl">
-            {journeySteps.map(({ icon: Icon, label }, i) => (
-              <div key={label} className="flex items-center gap-2 sm:gap-4">
-                <motion.div
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.6 + i * 0.25, type: "spring", stiffness: 180, damping: 12 }}
-                  className="flex flex-col items-center gap-2"
-                >
-                  <motion.div
-                    className="w-14 h-14 rounded-2xl bg-card border border-border shadow-md flex items-center justify-center"
-                    animate={reduceMotion ? undefined : { y: [0, -6, 0] }}
-                    transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut", delay: i * 0.4 }}
-                  >
-                    <Icon className="w-7 h-7 text-primary" />
-                  </motion.div>
-                  <span className="text-xs sm:text-sm font-medium text-foreground">{label}</span>
-                </motion.div>
-                {i < journeySteps.length - 1 && (
-                  <motion.div
-                    initial={{ scaleX: 0 }}
-                    animate={{ scaleX: 1 }}
-                    transition={{ delay: 0.75 + i * 0.25, duration: 0.4 }}
-                    className="w-8 sm:w-14 h-0.5 bg-gradient-to-l from-primary/60 to-secondary/60 rounded-full origin-right"
-                  />
-                )}
-              </div>
-            ))}
-          </div>
-
-          {/* الركائز */}
-          <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
-            {partnerPillars.map(({ icon: Icon, label }, i) => (
-              <motion.span
-                key={label}
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1 + i * 0.15, duration: 0.5 }}
-                className="inline-flex items-center gap-2 rounded-full bg-card border border-border px-4 py-2 text-sm font-medium text-foreground shadow-sm"
-              >
-                <Icon className="w-4 h-4 text-secondary" />
-                {label}
-              </motion.span>
-            ))}
-          </div>
-
-          {/* التحويل إلى موقع القبول */}
-          <AnimatePresence>
-            {paragraph.done && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9, y: 16 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ type: "spring", stiffness: 140, damping: 12 }}
-                className="space-y-4 text-center"
-              >
-                <Button
-                  size="lg"
-                  className="text-lg px-8 py-6 rounded-2xl shadow-xl shadow-primary/25 gap-2"
-                  onClick={() => (window.location.href = ADMISSION_URL)}
-                >
-                  الانتقال إلى منصة القبول الجامعي
-                  <ArrowLeft className="w-5 h-5" />
+              <span className="mb-5 inline-flex items-center gap-2 rounded-md border border-primary-foreground/25 bg-background/15 px-4 py-2 text-sm font-bold backdrop-blur-md">
+                <Plane className="h-4 w-4" /> خدمات الدراسة بالخارج (ابتعاث)
+              </span>
+              <h1 className="text-4xl font-black leading-tight sm:text-5xl lg:text-6xl">
+                خطتك للدراسة بالخارج من A إلى Z
+              </h1>
+              <p className="mt-6 max-w-2xl text-lg leading-9 text-primary-foreground/85 sm:text-xl">
+                نساعدك في اختيار الدولة والجامعة والتخصص، وتجهيز الملف والتقديم والمتابعة حتى تحصل على قبولك الجامعي.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Button size="lg" onClick={() => openAdmissionPlatform({ service: "study-abroad" })} className="h-13 gap-2 px-7 text-base">
+                  ابدأ طلب الدراسة بالخارج <ArrowLeft className="h-5 w-5" />
                 </Button>
+                <Button size="lg" variant="outline" asChild className="h-13 border-primary-foreground/35 bg-background/15 px-7 text-base text-primary-foreground hover:bg-background/25 hover:text-primary-foreground">
+                  <a href="#compare">قارن بين جامعتين</a>
+                </Button>
+              </div>
+            </motion.div>
+          </div>
+        </section>
 
-                <div className="flex flex-col items-center gap-2">
-                  <p className="text-sm text-muted-foreground">
-                    سيتم تحويلك تلقائيًا إلى موقع القبول خلال{" "}
-                    <span className="font-bold text-primary tabular-nums">{secondsLeft}</span>{" "}
-                    ثوانٍ
-                  </p>
-                  <div className="w-48 h-1.5 rounded-full bg-muted overflow-hidden">
-                    <motion.div
-                      className="h-full rounded-full bg-gradient-to-l from-primary to-secondary"
-                      initial={{ width: "100%" }}
-                      animate={{ width: `${(secondsLeft / COUNTDOWN_SECONDS) * 100}%` }}
-                      transition={{ duration: 0.9, ease: "linear" }}
-                    />
+        <section className="border-b border-border bg-warning/10 py-8">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={reduceMotion ? false : { opacity: 0, scale: 0.98 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="grid items-center gap-6 rounded-lg border-2 border-warning bg-card p-6 shadow-medium md:grid-cols-[auto_1fr_auto] md:p-8"
+            >
+              <div className="flex h-16 w-16 items-center justify-center rounded-md bg-warning text-foreground">
+                <Banknote className="h-8 w-8" />
+              </div>
+              <div>
+                <p className="mb-1 text-sm font-black text-warning-foreground">عرض يضمن وضوح الالتزام</p>
+                <h2 className="text-2xl font-black text-foreground sm:text-3xl">ادفع بعد الحصول على القبول</h2>
+                <p className="mt-3 max-w-3xl leading-7 text-muted-foreground">
+                  يوقّع الطالب عقدًا إلكترونيًا لضمان جدية الطلب، يوضّح الخدمة والمبلغ المستحق وموعد سداده بعد صدور القبول الجامعي والتحقق منه.
+                </p>
+              </div>
+              <Button onClick={() => openAdmissionPlatform({ service: "pay-after-acceptance" })} className="h-12 gap-2 px-6">
+                ابدأ ووقّع العقد <FileCheck2 className="h-5 w-5" />
+              </Button>
+            </motion.div>
+          </div>
+        </section>
+
+        <section className="py-16 sm:py-20">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto mb-10 max-w-3xl text-center">
+              <span className="text-sm font-black text-primary">وجهات متعددة، متابعة واحدة</span>
+              <h2 className="mt-3 text-3xl font-black text-foreground sm:text-4xl">أين تريد أن تبدأ رحلتك؟</h2>
+              <p className="mt-4 leading-8 text-muted-foreground">نراجع فرصك ونرشّح الخيارات الأنسب بدل التقديم العشوائي.</p>
+            </div>
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {destinations.map(({ title, description, icon: Icon }, index) => (
+                <motion.article
+                  key={title}
+                  initial={reduceMotion ? false : { opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.25 }}
+                  transition={{ delay: index * 0.07 }}
+                  className="rounded-lg border border-border bg-card p-6 shadow-soft transition-transform duration-300 hover:-translate-y-1"
+                >
+                  <Icon className="h-9 w-9 text-primary" />
+                  <h3 className="mt-5 text-xl font-black text-card-foreground">{title}</h3>
+                  <p className="mt-3 text-sm leading-7 text-muted-foreground">{description}</p>
+                </motion.article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="border-y border-border bg-muted/35 py-16 sm:py-20">
+          <div className="container mx-auto grid gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
+            <div>
+              <span className="text-sm font-black text-primary">قبول يناسب حالتك</span>
+              <h2 className="mt-3 text-3xl font-black text-foreground">خيارات القبول المتاحة</h2>
+              <div className="mt-7 grid gap-3 sm:grid-cols-2">
+                {admissionTypes.map((item) => (
+                  <div key={item} className="flex items-start gap-3 rounded-md border border-border bg-card p-4">
+                    <BadgeCheck className="mt-0.5 h-5 w-5 shrink-0 text-success" />
+                    <span className="font-bold leading-7 text-card-foreground">{item}</span>
                   </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <span className="text-sm font-black text-primary">متابعة مع مختص فكرة</span>
+              <h2 className="mt-3 text-3xl font-black text-foreground">رحلة القبول خطوة بخطوة</h2>
+              <div className="mt-7 space-y-3">
+                {admissionJourney.map((item, index) => (
+                  <div key={item} className="flex items-center gap-4 border-b border-border bg-background px-4 py-4 last:border-b-0">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary font-black text-primary-foreground">{index + 1}</span>
+                    <span className="font-bold leading-7 text-foreground">{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="compare" className="scroll-mt-24 py-16 sm:py-20">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid overflow-hidden rounded-lg border border-border bg-card shadow-strong lg:grid-cols-[0.8fr_1.2fr]">
+              <div className="relative min-h-72">
+                <img src={admissionDesk} alt="مقارنة خيارات القبول الجامعي" className="absolute inset-0 h-full w-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-foreground/90 to-foreground/15" />
+                <div className="absolute inset-x-0 bottom-0 p-7 text-primary-foreground">
+                  <Scale className="h-10 w-10" />
+                  <h2 className="mt-4 text-3xl font-black">قارن بين جامعتين</h2>
+                  <p className="mt-3 leading-7 text-primary-foreground/80">يستلم مختص فكرة طلبك ويقارن الشروط والتخصص والتكلفة والموقع بما يناسبك.</p>
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+              </div>
+              <div className="p-6 sm:p-9">
+                <p className="mb-6 leading-8 text-muted-foreground">أدخل اسمي الجامعتين، ثم أكمل الطلب في منصة القبول ليجهّز المختص مقارنة موثقة.</p>
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <label className="space-y-2 font-bold text-foreground">
+                    <span>الجامعة الأولى</span>
+                    <input
+                      value={firstUniversity}
+                      onChange={(event) => setFirstUniversity(event.target.value)}
+                      placeholder="مثال: جامعة إسطنبول"
+                      className="h-12 w-full rounded-md border border-input bg-background px-4 font-normal outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-ring/25"
+                    />
+                  </label>
+                  <label className="space-y-2 font-bold text-foreground">
+                    <span>الجامعة الثانية</span>
+                    <input
+                      value={secondUniversity}
+                      onChange={(event) => setSecondUniversity(event.target.value)}
+                      placeholder="مثال: جامعة القاهرة"
+                      className="h-12 w-full rounded-md border border-input bg-background px-4 font-normal outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-ring/25"
+                    />
+                  </label>
+                </div>
+                <Button onClick={requestComparison} disabled={!canCompare} className="mt-6 h-12 w-full gap-2 sm:w-auto">
+                  أرسل طلب المقارنة للمختص <ArrowLeft className="h-5 w-5" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="border-y border-border bg-muted/35 py-16 sm:py-20">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto mb-10 max-w-3xl text-center">
+              <span className="inline-flex items-center gap-2 text-sm font-black text-primary"><Globe2 className="h-4 w-4" /> خدمات إضافية</span>
+              <h2 className="mt-3 text-3xl font-black text-foreground sm:text-4xl">كل ما تحتاجه قبل السفر والاستقرار</h2>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {additionalServices.map((item) => (
+                <div key={item} className="flex items-center gap-3 rounded-md border border-border bg-card px-4 py-4 shadow-soft">
+                  <Check className="h-5 w-5 shrink-0 text-success" />
+                  <span className="font-bold text-card-foreground">{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="py-16 sm:py-20">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid gap-6 lg:grid-cols-2">
+              <article className="relative overflow-hidden rounded-lg border-2 border-primary bg-primary p-7 text-primary-foreground shadow-strong sm:p-9">
+                <Sparkles className="h-10 w-10" />
+                <span className="mt-5 inline-flex rounded-md bg-primary-foreground/15 px-3 py-1 text-xs font-black">الخدمة المميزة المقترحة</span>
+                <h2 className="mt-4 text-3xl font-black">باقة القبول الجامعي الكامل</h2>
+                <p className="mt-4 text-lg leading-8 text-primary-foreground/85">اختيار الجامعة + تجهيز الملف + التقديم + المتابعة + القبول + إرشادات ما بعد القبول.</p>
+                <Button variant="secondary" size="lg" onClick={() => openAdmissionPlatform({ package: "full-admission" })} className="mt-7 gap-2">
+                  اطلب الباقة الكاملة <ArrowLeft className="h-5 w-5" />
+                </Button>
+              </article>
+
+              <article className="rounded-lg border border-border bg-card p-7 shadow-medium sm:p-9">
+                <ShieldCheck className="h-10 w-10 text-success" />
+                <h2 className="mt-5 text-3xl font-black text-card-foreground">عقد واضح يحفظ حقوق الطرفين</h2>
+                <div className="mt-6 space-y-4">
+                  {["تحديد الجامعات والخدمات المطلوبة", "توضيح مبلغ الخدمة وموعد استحقاقه", "إثبات صدور القبول والتحقق منه قبل الدفع", "توقيع إلكتروني لضمان الجدية والشفافية"].map((item) => (
+                    <div key={item} className="flex items-start gap-3">
+                      <ClipboardCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                      <span className="font-bold leading-7 text-card-foreground">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section className="border-t border-border bg-foreground py-14 text-primary-foreground">
+          <div className="container mx-auto flex flex-col items-center justify-between gap-7 px-4 text-center sm:px-6 lg:flex-row lg:px-8 lg:text-right">
+            <div>
+              <span className="inline-flex items-center gap-2 text-sm font-black text-secondary"><Users className="h-4 w-4" /> مختصو فكرة معك في كل مرحلة</span>
+              <h2 className="mt-3 text-3xl font-black">ابدأ خطتك للدراسة بالخارج اليوم</h2>
+              <p className="mt-3 text-primary-foreground/70">اختر خدماتك ووجهتك، وسنتابع معك حتى الحصول على القبول.</p>
+            </div>
+            <Button size="lg" onClick={() => openAdmissionPlatform({ service: "study-abroad" })} className="h-13 shrink-0 gap-2 px-8 text-base">
+              الانتقال إلى منصة الدراسة بالخارج <ArrowLeft className="h-5 w-5" />
+            </Button>
+          </div>
+        </section>
       </main>
 
       <Footer />
