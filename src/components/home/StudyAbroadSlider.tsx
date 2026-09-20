@@ -131,7 +131,7 @@ export function StudyAbroadSlider() {
                 </div>
               </div>
 
-              <div className="order-2 flex flex-col justify-center p-5 sm:p-8 lg:order-1 lg:p-10 xl:p-12">
+              <div className="order-2 flex flex-col justify-center px-5 pb-14 pt-5 sm:px-8 sm:pb-14 sm:pt-8 lg:order-1 lg:p-10 xl:p-12">
                 <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-primary">
                   <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
                     <ActiveIcon className="h-5 w-5" />
