@@ -5,21 +5,23 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import nationalDayImage from "@/assets/saudi-national-day-banner.jpg";
 
-const STORAGE_KEY = "fekrah-national-day-2026-v2-dismissed";
+const STORAGE_KEY = "fekrah-national-day-2026-dismissed-at";
 const SHOW_DELAY_MS = 3500;
+const REOPEN_AFTER_MS = 10 * 60 * 1000; // 10 دقائق
 
 const NationalDayPromoPopup = () => {
   const reduceMotion = useReducedMotion();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (localStorage.getItem(STORAGE_KEY)) return;
+    const dismissedAt = Number(localStorage.getItem(STORAGE_KEY) || 0);
+    if (dismissedAt && Date.now() - dismissedAt < REOPEN_AFTER_MS) return;
     const timer = setTimeout(() => setVisible(true), SHOW_DELAY_MS);
     return () => clearTimeout(timer);
   }, []);
 
   const dismiss = () => {
-    localStorage.setItem(STORAGE_KEY, "1");
+    localStorage.setItem(STORAGE_KEY, String(Date.now()));
     setVisible(false);
   };
 
