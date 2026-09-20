@@ -33,7 +33,6 @@ import testimonialResearcherMaleImg from "@/assets/home-testimonial-researcher-m
 import partnershipHandshakeImg from "@/assets/home-partnership-handshake.jpg";
 import qualityResearcherImg from "@/assets/home-quality-researcher.jpg";
 import qualityResearchDetailImg from "@/assets/home-quality-research-detail.jpg";
-import ctaCampusSunsetImg from "@/assets/home-cta-campus-sunset.jpg";
 import inquiryTeamImg from "@/assets/home-inquiry-team.jpg";
 
 // Lazy loading للمكونات الثقيلة لتحسين الأداء
