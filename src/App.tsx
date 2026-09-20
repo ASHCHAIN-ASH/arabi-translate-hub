@@ -225,6 +225,7 @@ const ContactUs = lazy(() => import("./pages/ContactUs"));
 const PaymentMethods = lazy(() => import("./pages/PaymentMethods"));
 const Universities = lazy(() => import("./pages/Universities"));
 const JournalsDirectory = lazy(() => import("./pages/JournalsDirectory"));
+const JournalCategory = lazy(() => import("./pages/JournalCategory"));
 const InstitutionalPartnerships = lazy(() => import("./pages/InstitutionalPartnerships"));
 import BackToTopButton from "./components/BackToTopButton";
 
