@@ -34,7 +34,6 @@ import inquiryTeamImg from "@/assets/home-inquiry-team.jpg";
 
 // Lazy loading للمكونات الثقيلة لتحسين الأداء
 // const ServicesShowcase = lazy(() => import("@/components/ServicesShowcase")); // القسم محذوف مؤقتًا — الكود محفوظ
-const ServiceSteps = lazy(() => import("@/components/ServiceSteps"));
 
 
 
@@ -910,11 +909,6 @@ const Index = () => {
         </div>
       </section>
       )}
-
-      {/* Suspense Sections مع Lazy Loading */}
-      <Suspense fallback={<LoadingSpinner />}>
-        <ServiceSteps />
-      </Suspense>
 
       {/* قسم الخدمات — محذوف بناءً على طلب العميل */}
 
