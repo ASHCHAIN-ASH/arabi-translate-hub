@@ -1,6 +1,4 @@
 // مولّد PDF رسمي لإقرارات التمويل — تصميم بنكي رسمي مع دعم كامل للعربية
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
 import { supabase } from '@/data/legacy/client';
 import { FINANCING_ACK_TITLES_AR, type FinancingAcknowledgmentType } from '@/lib/financing';
 
@@ -186,6 +184,10 @@ export async function downloadAcknowledgmentPdf(params: {
   applicationCode?: string;
   userId?: string;
 }) {
+  const [{ default: html2canvas }, { default: jsPDF }] = await Promise.all([
+    import('html2canvas'),
+    import('jspdf'),
+  ]);
   const { applicationId, ackType, applicationCode, userId } = params;
 
   let q = supabase

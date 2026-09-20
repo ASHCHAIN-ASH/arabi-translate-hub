@@ -1,5 +1,4 @@
-// CSV/XLSX parser using SheetJS for Excel and Papa Parse for CSV
-import * as XLSX from 'xlsx';
+// CSV/XLSX parser; SheetJS is loaded only when an Excel file is selected.
 
 export interface ParsedData {
   columns: string[];
@@ -15,6 +14,7 @@ export async function parseFile(file: File): Promise<ParsedData> {
     return parseCSV(text, file.name, file.size);
   }
   if (ext === 'xlsx' || ext === 'xls') {
+    const XLSX = await import('xlsx');
     const buf = await file.arrayBuffer();
     const wb = XLSX.read(buf, { type: 'array' });
     const sheet = wb.Sheets[wb.SheetNames[0]];

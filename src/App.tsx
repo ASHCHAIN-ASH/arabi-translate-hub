@@ -9,7 +9,6 @@ import { SimpleAuthProvider } from "@/components/SimpleAuthProvider";
 import SimpleProtectedRoute from "@/components/SimpleProtectedRoute";
 import ScrollToTop from "@/components/ScrollToTop";
 import RouteIndexingGuard from "@/components/RouteIndexingGuard";
-import ContentProtection from "@/components/ContentProtection";
 import LoginWelcomeOverlay from "@/components/LoginWelcomeOverlay";
 import ReferralTracker from "@/components/marketing/ReferralTracker";
 import DeferredGlobalFeatures from "@/components/DeferredGlobalFeatures";
@@ -228,7 +227,15 @@ const JournalCategory = lazy(() => import("./pages/JournalCategory"));
 const InstitutionalPartnerships = lazy(() => import("./pages/InstitutionalPartnerships"));
 import BackToTopButton from "./components/BackToTopButton";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60_000,
+      gcTime: 10 * 60_000,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const LegacyContractRedirect = () => {
   const { id } = useParams();
