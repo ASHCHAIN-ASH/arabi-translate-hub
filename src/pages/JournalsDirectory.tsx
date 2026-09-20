@@ -51,6 +51,22 @@ function JournalCard({ journal, index }: { journal: JournalRecord; index: number
     catch { return journal.website; }
   }, [journal.website]);
 
+  const whatsappUrl = useMemo(() => {
+    const lines = [
+      "السلام عليكم، أرغب بالاستفسار عن النشر في هذه المجلة:",
+      "",
+      journal.nameAr ? `• الاسم بالعربية: ${journal.nameAr}` : "",
+      `• اسم المجلة: ${journal.name}`,
+      journal.publisher ? `• الناشر: ${journal.publisher}` : "",
+      `• المجال: ${journal.category}`,
+      `• رقم ISSN: ${journal.issn || "غير مدوّن"}`,
+      `• رابط المجلة: ${journal.website}`,
+      "",
+      "أرجو إفادتي بتفاصيل خدمة النشر والرسوم والمدة.",
+    ].filter(Boolean);
+    return `https://wa.me/966593799355?text=${encodeURIComponent(lines.join("\n"))}`;
+  }, [journal]);
+
   return (
     <motion.article
       initial={reduceMotion ? false : { opacity: 0, y: 24, scale: 0.97 }}
