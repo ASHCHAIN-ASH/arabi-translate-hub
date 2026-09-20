@@ -18,6 +18,7 @@ import Footer from "@/components/Footer";
 import { InteractiveAcademicSystems } from "@/components/home/InteractiveAcademicSystems";
 import { TwinklingStars } from "@/components/home/TwinklingStars";
 import { JournalPublishingBanner } from "@/components/home/JournalPublishingBanner";
+import { StudyAbroadSlider } from "@/components/home/StudyAbroadSlider";
 
 // Import academic service images
 import ServicesShowcase from "@/components/ServicesShowcase";
@@ -417,6 +418,8 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      <StudyAbroadSlider />
 
       <ServicesShowcase />
 
