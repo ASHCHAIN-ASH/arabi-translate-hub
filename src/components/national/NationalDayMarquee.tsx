@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Flag, Sparkles } from "lucide-react";
 
@@ -24,8 +25,8 @@ const Diamond = () => (
   />
 );
 
-const PhraseGroup = () => (
-  <div className="flex shrink-0 items-center gap-3 pl-3" aria-hidden="true">
+const PhraseGroup = ({ innerRef }: { innerRef?: (node: HTMLDivElement | null) => void }) => (
+  <div ref={innerRef} className="flex shrink-0 items-center gap-3 pl-3" aria-hidden="true">
     {PHRASES.map((phrase, index) => (
       <span key={index} className="flex items-center gap-3">
         <span
@@ -43,10 +44,23 @@ const PhraseGroup = () => (
 
 const NationalDayMarquee = ({ className = "" }: { className?: string }) => {
   const reduceMotion = useReducedMotion();
+  const [shift, setShift] = useState(0);
+  const groupRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const node = groupRef.current;
+    if (!node) return;
+    const measure = () => setShift(Math.round(node.getBoundingClientRect().width));
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div
       dir="rtl"
+      style={{ "--nm-shift": `${shift}px` } as React.CSSProperties}
       className={`national-marquee relative flex items-stretch overflow-hidden rounded-2xl border border-saudi-gold/40 bg-gradient-to-l from-saudi-green via-[hsl(120_45%_16%)] to-[hsl(120_60%_9%)] shadow-soft ${className}`}
     >
       {/* نقشة خلفية خفيفة */}
@@ -91,6 +105,7 @@ const NationalDayMarquee = ({ className = "" }: { className?: string }) => {
           </div>
         ) : (
           <div className="national-marquee-track flex w-max">
+            <PhraseGroup innerRef={(node) => { groupRef.current = node; }} />
             <PhraseGroup />
             <PhraseGroup />
           </div>

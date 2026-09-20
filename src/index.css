@@ -672,12 +672,13 @@
 }
 
 /* ── شريط اليوم الوطني المتحرك ── */
+/* التحريك بالتخطيط (margin-right) بدل transform كي تبقى الحروف حادة أثناء الحركة */
 @keyframes national-marquee {
-  from { transform: translateX(-50%); }
-  to { transform: translateX(0); }
+  from { margin-right: 0; }
+  to { margin-right: calc(var(--nm-shift, 0px) * -1); }
 }
 .national-marquee-track {
-  animation: national-marquee 38s linear infinite;
+  animation: national-marquee 40s linear infinite;
 }
 .national-marquee:hover .national-marquee-track {
   animation-play-state: paused;
