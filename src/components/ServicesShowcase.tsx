@@ -1,317 +1,183 @@
-import { motion } from "framer-motion";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { motion, useReducedMotion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { 
-  Languages, BookOpen, Users, FileText, Microscope,
-  GraduationCap, Shield, Clock, Award, Star, CheckCircle,
-  ArrowRight, Sparkles, Target, Brain, TrendingUp
+import {
+  ArrowLeft,
+  BookOpenCheck,
+  BriefcaseBusiness,
+  GraduationCap,
+  Languages,
+  Plane,
 } from "lucide-react";
-import { UNIFIED_STATS, STATS_LABELS } from "@/constants/academicStats";
+import { Button } from "@/components/ui/button";
+
+import translationImage from "@/assets/academic-service-translation.jpg";
+import studentsImage from "@/assets/home-students-collaboration.jpg";
+import businessImage from "@/assets/real-business-services.jpg";
+import admissionImage from "@/assets/university-admission-background.jpg";
+import publishingImage from "@/assets/academic-service-publishing.jpg";
+
+const services = [
+  {
+    title: "خدمات الترجمة",
+    description: "ترجمة أكاديمية ومهنية دقيقة للأبحاث والوثائق والمحتوى المتخصص.",
+    image: translationImage,
+    icon: Languages,
+    route: "/translation-services",
+    accent: "bg-primary",
+    eyebrow: "دقة لغوية",
+  },
+  {
+    title: "خدمات الطلاب",
+    description: "دعم دراسي منظم يساعد الطالب في مهامه ومشاريعه ومسيرته الأكاديمية.",
+    image: studentsImage,
+    icon: GraduationCap,
+    route: "/research/other-student-services",
+    accent: "bg-success",
+    eyebrow: "دعم أكاديمي",
+  },
+  {
+    title: "خدمات الأعمال",
+    description: "حلول احترافية للتقارير ودراسات الأعمال والمحتوى المؤسسي المتخصص.",
+    image: businessImage,
+    icon: BriefcaseBusiness,
+    route: "/research/business",
+    accent: "bg-secondary",
+    eyebrow: "حلول مؤسسية",
+  },
+  {
+    title: "خدمات الدراسة بالخارج",
+    subtitle: "الابتعاث",
+    description: "إرشاد للقبولات الجامعية وتجهيز ملف التقديم لبدء رحلتك الدولية بثقة.",
+    image: admissionImage,
+    icon: Plane,
+    route: "/admission-services",
+    accent: "bg-warning",
+    eyebrow: "قبول وابتعاث",
+  },
+  {
+    title: "خدمات النشر العلمي",
+    description: "دعم متكامل لتهيئة الأبحاث واختيار المجلات ومتابعة رحلة النشر العلمي.",
+    image: publishingImage,
+    icon: BookOpenCheck,
+    route: "/services/publishing-services",
+    accent: "bg-destructive",
+    eyebrow: "بحث ونشر",
+  },
+];
 
 const ServicesShowcase = () => {
   const navigate = useNavigate();
-  
-  const services = [
-    {
-      id: 1,
-      title: "خدمات الترجمة الأكاديمية",
-      description: "ترجمة احترافية للأبحاث والرسائل العلمية بدقة عالية وحفاظ على المصطلحات الأكاديمية",
-      icon: Languages,
-      color: "from-blue-600 to-indigo-600",
-      route: "/services/translation-services"
-    },
-    {
-      id: 2,
-      title: "الدعم الأكاديمي المتخصص",
-      description: "إرشاد ودعم في إعداد الأبحاث والرسائل والمقالات العلمية وفق المعايير الأكاديمية العالمية",
-      icon: BookOpen,
-      color: "from-emerald-600 to-teal-600",
-      route: "/services/academic-writing"
-    },
-    {
-      id: 3,
-      title: "الاستشارات الأكاديمية",
-      description: "استشارات متخصصة لطلاب الدراسات العليا والباحثين في جميع المجالات",
-      icon: GraduationCap,
-      color: "from-purple-600 to-pink-600",
-      route: "/services/consultation-services"
-    },
-    {
-      id: 4,
-      title: "التحليل الإحصائي المتقدم",
-      description: "تحليل البيانات الإحصائية وإعداد التقارير العلمية باستخدام أحدث البرامج",
-      icon: Microscope,
-      color: "from-amber-600 to-orange-600",
-      route: "/services/statistical-analysis"
-    },
-    {
-      id: 5,
-      title: "خدمات النشر العلمي",
-      description: "مساعدة شاملة في نشر الأبحاث في المجلات العلمية المحكمة المرموقة",
-      icon: FileText,
-      color: "from-rose-600 to-red-600",
-      route: "/services/publishing-services"
-    },
-    {
-      id: 6,
-      title: "التدريب والتطوير",
-      description: "برامج تدريبية متخصصة لتطوير المهارات البحثية والأكاديمية",
-      icon: Users,
-      color: "from-cyan-600 to-blue-600",
-      route: "/services/consultation-services"
-    }
-  ];
-
-  const features = [
-    { icon: Shield, text: "أمان وسرية تامة", color: "text-blue-600" },
-    { icon: Clock, text: "التزام بالمواعيد", color: "text-emerald-600" },
-    { icon: Award, text: "جودة مضمونة", color: "text-amber-600" },
-    { icon: Star, text: "خدمة متميزة", color: "text-purple-600" }
-  ];
-
-  // إحصائيات موحدة - نفس الأرقام في جميع أقسام الموقع
-  const stats = [
-    { number: `+${UNIFIED_STATS.researchCompleted.toLocaleString()}` , label: STATS_LABELS.researchCompleted, icon: CheckCircle },
-    { number: `+${UNIFIED_STATS.expertsCount.toLocaleString()}` , label: STATS_LABELS.expertsCount, icon: Brain },
-    { number: `+${UNIFIED_STATS.specializationsCount.toLocaleString()}` , label: STATS_LABELS.specializationsCount, icon: Target },
-    { number: `${UNIFIED_STATS.satisfactionRate}%` , label: STATS_LABELS.satisfactionRate, icon: TrendingUp }
-  ];
+  const reduceMotion = useReducedMotion();
 
   return (
-    <section className="py-20 bg-gradient-to-br from-sky-50 via-blue-50 to-indigo-50 dark:from-slate-950 dark:via-blue-950 dark:to-indigo-950 relative overflow-hidden">
-      
-      {/* خلفية أكاديمية متطورة */}
-      <div className="absolute inset-0 opacity-20">
-        <motion.div 
-          className="absolute top-20 left-20 w-96 h-96 bg-blue-400/30 rounded-full blur-3xl"
-          animate={{ 
-            scale: [1, 1.3, 1],
-            opacity: [0.2, 0.4, 0.2]
-          }}
-          transition={{ duration: 10, repeat: Infinity }}
-        />
-        <motion.div 
-          className="absolute bottom-20 right-20 w-80 h-80 bg-purple-400/30 rounded-full blur-3xl"
-          animate={{ 
-            scale: [1, 1.4, 1],
-            opacity: [0.2, 0.4, 0.2]
-          }}
-          transition={{ duration: 12, repeat: Infinity, delay: 2 }}
-        />
-      </div>
+    <section
+      aria-labelledby="services-heading"
+      className="relative overflow-hidden border-y border-border/70 bg-muted/35 py-16 sm:py-20 lg:py-24"
+      dir="rtl"
+    >
+      <div className="pointer-events-none absolute inset-0 opacity-60 [background-image:linear-gradient(to_right,hsl(var(--border)/.45)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/.45)_1px,transparent_1px)] [background-size:72px_72px] [mask-image:linear-gradient(to_bottom,transparent,black_18%,black_82%,transparent)]" />
 
-      {/* شبكة نقاط */}
-      <div className="absolute inset-0 opacity-5">
-        <div 
-          className="w-full h-full"
-          style={{
-            backgroundImage: 'radial-gradient(circle at 2px 2px, currentColor 1px, transparent 0)',
-            backgroundSize: '50px 50px'
-          }}
-        />
-      </div>
-
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* العنوان */}
-        <motion.div 
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 30 }}
+      <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={reduceMotion ? false : { opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+          className="mx-auto mb-10 max-w-3xl text-center sm:mb-14"
         >
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-slate-800 dark:text-white">
-            نقدم لكم أفضل{" "}
-            <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              الخدمات الأكاديمية
-            </span>
+          <div className="mb-5 inline-flex items-center gap-2 rounded-md border border-primary/20 bg-primary/5 px-4 py-2 text-sm font-bold text-primary shadow-sm">
+            <span className="h-2 w-2 rounded-full bg-accent" />
+            منظومة خدمات FekrahEdu
+          </div>
+          <h2 id="services-heading" className="text-3xl font-black leading-tight text-foreground sm:text-4xl lg:text-5xl">
+            نقدم لكم <span className="text-primary">أفضل الخدمات</span>
           </h2>
-          
-          <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto leading-relaxed">
-            مجموعة شاملة من الخدمات المتخصصة لدعم رحلتك الأكاديمية والبحثية بجودة عالمية
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg">
+            خمسة مسارات متخصصة تجمع احتياجاتك الأكاديمية والمهنية في مكان واحد، بخدمة واضحة ومتابعة منظمة.
           </p>
-
-          {/* المزايا السريعة */}
-          <motion.div 
-            className="flex flex-wrap justify-center gap-4 mt-8"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            viewport={{ once: true }}
-          >
-            {features.map((feature, index) => {
-              const IconComponent = feature.icon;
-              return (
-                <motion.div
-                  key={index}
-                  className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 rounded-full shadow-sm border border-slate-200 dark:border-slate-700"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.4, delay: 0.5 + index * 0.1 }}
-                  viewport={{ once: true }}
-                  whileHover={{ scale: 1.05, y: -2 }}
-                >
-                  <IconComponent className={`h-4 w-4 ${feature.color}`} />
-                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{feature.text}</span>
-                </motion.div>
-              );
-            })}
-          </motion.div>
         </motion.div>
 
-        {/* شبكة الخدمات */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-6 lg:gap-6">
           {services.map((service, index) => {
-            const IconComponent = service.icon;
+            const Icon = service.icon;
+            const isWide = index < 2;
+
             return (
-              <motion.div
-                key={service.id}
-                initial={{ opacity: 0, y: 40 }}
+              <motion.article
+                key={service.title}
+                initial={reduceMotion ? false : { opacity: 0, y: 36 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ 
-                  duration: 0.6, 
-                  delay: index * 0.1,
-                  type: "spring",
-                  stiffness: 100
-                }}
-                viewport={{ once: true }}
-                whileHover={{ y: -12, scale: 1.02 }}
-                className="group"
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.55, delay: reduceMotion ? 0 : index * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                className={`group min-w-0 overflow-hidden rounded-lg border border-border bg-card shadow-medium transition-[transform,box-shadow,border-color] duration-500 hover:-translate-y-2 hover:border-primary/35 hover:shadow-strong ${
+                  isWide ? "lg:col-span-3" : "lg:col-span-2"
+                }`}
               >
-                <Card className="h-full hover:shadow-2xl transition-all duration-300 border-0 bg-white dark:bg-slate-800 overflow-hidden cursor-pointer"
+                <Button
+                  type="button"
+                  variant="ghost"
                   onClick={() => navigate(service.route)}
+                  className="flex h-full w-full flex-col items-stretch justify-start whitespace-normal rounded-none p-0 text-right hover:bg-card focus-visible:ring-inset"
+                  aria-label={`استكشف ${service.title}`}
                 >
-                  {/* خط علوي متدرج */}
-                  <div className={`absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r ${service.color}`} />
-                  
-                  {/* خلفية تفاعلية */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
-                  
-                  <CardContent className="p-8 relative">
-                    {/* الأيقونة */}
-                    <motion.div 
-                      className={`w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br ${service.color} flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all`}
-                      whileHover={{ 
-                        rotate: [0, -5, 5, 0],
-                        scale: 1.1
-                      }}
-                      transition={{ duration: 0.5 }}
-                    >
-                      <IconComponent className="h-10 w-10 text-white" />
-                    </motion.div>
-                    
-                    {/* المحتوى */}
-                    <h3 className="text-2xl font-bold mb-4 text-slate-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                      {service.title}
-                    </h3>
-                    
-                    <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
+                  <div className={`relative w-full overflow-hidden ${isWide ? "aspect-[16/8] sm:aspect-[16/7]" : "aspect-[16/9]"}`}>
+                    <img
+                      src={service.image}
+                      alt=""
+                      loading="lazy"
+                      className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/10 to-transparent" />
+                    <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-4 sm:p-5">
+                      <span className="rounded-md border border-primary-foreground/25 bg-background/85 px-3 py-1.5 text-xs font-bold text-foreground backdrop-blur-md">
+                        {service.eyebrow}
+                      </span>
+                      <motion.span
+                        whileHover={reduceMotion ? undefined : { rotate: -7, scale: 1.08 }}
+                        className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-md ${service.accent} text-primary-foreground shadow-lg`}
+                      >
+                        <Icon className="h-6 w-6" aria-hidden="true" />
+                      </motion.span>
+                    </div>
+                  </div>
+
+                  <div className="flex w-full flex-1 flex-col p-5 sm:p-6">
+                    <div className="mb-3 flex flex-wrap items-center gap-2">
+                      <h3 className="text-xl font-black leading-snug text-card-foreground sm:text-2xl">
+                        {service.title}
+                      </h3>
+                      {service.subtitle && (
+                        <span className="rounded-md bg-warning/15 px-2.5 py-1 text-xs font-bold text-warning-foreground">
+                          {service.subtitle}
+                        </span>
+                      )}
+                    </div>
+                    <p className="mb-6 flex-1 text-sm leading-7 text-muted-foreground sm:text-base">
                       {service.description}
                     </p>
-
-                    {/* زر المزيد */}
-                    <Button
-                      variant="ghost"
-                      className="group-hover:bg-slate-100 dark:group-hover:bg-slate-700 transition-all p-0 h-auto"
-                    >
-                      <span className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-medium" dir="rtl">
-                        <ArrowRight className="h-4 w-4 group-hover:-translate-x-1 transition-transform rotate-180" />
-                        عرض الخدمات
-                      </span>
-                    </Button>
-
-                    {/* علامة التحقق */}
-                    <motion.div 
-                      className="absolute top-6 left-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                      initial={{ scale: 0 }}
-                      whileInView={{ scale: 1 }}
-                      transition={{ duration: 0.3, delay: index * 0.1 + 0.3 }}
-                      viewport={{ once: true }}
-                    >
-                      <div className={`w-8 h-8 bg-gradient-to-br ${service.color} rounded-full flex items-center justify-center shadow-lg`}>
-                        <CheckCircle className="h-5 w-5 text-white" />
-                      </div>
-                    </motion.div>
-                  </CardContent>
-                </Card>
-              </motion.div>
+                    <span className="inline-flex items-center gap-2 font-bold text-primary">
+                      استكشف الخدمات
+                      <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" aria-hidden="true" />
+                    </span>
+                  </div>
+                </Button>
+              </motion.article>
             );
           })}
         </div>
 
-        {/* الإحصائيات — مخفية مؤقتًا */}
-        {false && (
-        <motion.div 
-          className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-3xl p-8 md:p-12 relative overflow-hidden"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+        <motion.div
+          initial={reduceMotion ? false : { opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
+          transition={{ delay: 0.45 }}
+          className="mt-10 flex justify-center"
         >
-          {/* خلفية متحركة */}
-          <div className="absolute inset-0">
-            <motion.div
-              className="absolute top-0 right-0 w-80 h-80 bg-white/10 rounded-full blur-3xl"
-              animate={{ scale: [1, 1.2, 1], x: [0, 30, 0], y: [0, 20, 0] }}
-              transition={{ duration: 10, repeat: Infinity }}
-            />
-            <motion.div
-              className="absolute bottom-0 left-0 w-96 h-96 bg-purple-300/10 rounded-full blur-3xl"
-              animate={{ scale: [1, 1.3, 1], x: [0, -20, 0], y: [0, -30, 0] }}
-              transition={{ duration: 12, repeat: Infinity, delay: 1 }}
-            />
-          </div>
-
-          <div className="relative z-10">
-            <motion.div
-              className="text-center mb-12"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-            >
-              <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                إنجازاتنا بالأرقام
-              </h3>
-              <p className="text-lg text-white/90">
-                أرقام تعكس التزامنا بالتميز الأكاديمي
-              </p>
-            </motion.div>
-
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-              {stats.map((stat, index) => {
-                const IconComponent = stat.icon;
-                return (
-                  <motion.div 
-                    key={index}
-                    className="text-center p-6 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    viewport={{ once: true }}
-                    whileHover={{ y: -8, scale: 1.05 }}
-                  >
-                    <motion.div 
-                      className="flex justify-center mb-4"
-                      whileHover={{ rotate: 360 }}
-                      transition={{ duration: 0.6 }}
-                    >
-                      <IconComponent className="h-10 w-10 text-white" />
-                    </motion.div>
-                    <div className="text-4xl font-bold text-white mb-2">
-                      {stat.number}
-                    </div>
-                    <div className="text-sm text-white/80 font-medium">
-                      {stat.label}
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
+          <Button size="lg" onClick={() => navigate("/services")} className="h-12 px-7 text-base shadow-primary">
+            عرض جميع الخدمات
+            <ArrowLeft className="h-5 w-5" aria-hidden="true" />
+          </Button>
         </motion.div>
-        )}
       </div>
     </section>
   );
