@@ -1256,6 +1256,166 @@ export const uploadedJournals: JournalRecord[] = [
     ],
     source: "uploaded",
     category: "الطب والصحة"
+  },
+  {
+    id: "uploaded-99",
+    name: "Journal of Economics and Development",
+    nameAr: "مجلة الاقتصاد والتنمية",
+    issn: "1859-0020",
+    website: "https://www.emerald.com/insight/publication/issn/1859-0020",
+    publisher: "Emerald Publishing",
+    subjects: [
+      "الاقتصاد",
+      "التنمية الاقتصادية",
+      "السياسات الاقتصادية"
+    ],
+    features: [
+      "مجلة علمية محكمة",
+      "ناشر دولي (Emerald)",
+      "مفهرسة في Scopus"
+    ],
+    source: "uploaded",
+    category: "الإدارة والاقتصاد"
+  },
+  {
+    id: "uploaded-100",
+    name: "Journal of Economics, Finance and Administrative Science",
+    nameAr: "مجلة الاقتصاد والتمويل والعلوم الإدارية",
+    issn: "2077-1886",
+    website: "https://www.emerald.com/insight/publication/issn/2077-1886",
+    publisher: "Emerald Publishing",
+    subjects: [
+      "الاقتصاد",
+      "التمويل",
+      "العلوم الإدارية"
+    ],
+    features: [
+      "مجلة علمية محكمة",
+      "ناشر دولي (Emerald)",
+      "مفهرسة في Scopus"
+    ],
+    source: "uploaded",
+    category: "الإدارة والاقتصاد"
+  },
+  {
+    id: "uploaded-101",
+    name: "Journal of Business and Socio-economic Development",
+    nameAr: "مجلة الأعمال والتنمية الاجتماعية والاقتصادية",
+    issn: "2635-053X",
+    website: "https://www.emerald.com/insight/publication/issn/2635-053x",
+    publisher: "Emerald Publishing",
+    subjects: [
+      "إدارة الأعمال",
+      "التنمية الاجتماعية والاقتصادية",
+      "ريادة الأعمال"
+    ],
+    features: [
+      "مجلة علمية محكمة",
+      "ناشر دولي (Emerald)",
+      "وصول مفتوح"
+    ],
+    source: "uploaded",
+    category: "الإدارة والاقتصاد"
+  },
+  {
+    id: "uploaded-102",
+    name: "International Journal of Industrial Engineering and Operations Management",
+    nameAr: "المجلة الدولية للهندسة الصناعية وإدارة العمليات",
+    issn: "2690-6108",
+    website: "https://www.emerald.com/insight/publication/issn/2690-6108",
+    publisher: "Emerald Publishing",
+    subjects: [
+      "الهندسة الصناعية",
+      "إدارة العمليات",
+      "سلاسل الإمداد"
+    ],
+    features: [
+      "مجلة علمية محكمة",
+      "ناشر دولي (Emerald)",
+      "مفهرسة دوليًا"
+    ],
+    source: "uploaded",
+    category: "الهندسة والتقنية"
+  },
+  {
+    id: "uploaded-103",
+    name: "Sultan Qaboos University Medical Journal",
+    nameAr: "المجلة الطبية لجامعة السلطان قابوس",
+    issn: "1029-4066",
+    website: "https://journals.squ.edu.om/index.php/squmj",
+    publisher: "جامعة السلطان قابوس",
+    subjects: [
+      "الطب",
+      "العلوم الصحية",
+      "الأبحاث السريرية"
+    ],
+    features: [
+      "مجلة علمية محكمة",
+      "وصول مفتوح",
+      "مفهرسة في PubMed"
+    ],
+    source: "uploaded",
+    category: "الطب والصحة"
+  },
+  {
+    id: "uploaded-104",
+    name: "Eastern Mediterranean Health Journal",
+    nameAr: "مجلة الصحة لإقليم شرق المتوسط",
+    issn: "1020-3397",
+    website: "https://www.emro.who.int/eastern-mediterranean-health-journal/",
+    publisher: "منظمة الصحة العالمية — المكتب الإقليمي لشرق المتوسط (WHO/EMRO)",
+    subjects: [
+      "الصحة العامة",
+      "الطب",
+      "السياسات الصحية"
+    ],
+    features: [
+      "مجلة علمية محكمة",
+      "إصدار منظمة الصحة العالمية",
+      "وصول مفتوح"
+    ],
+    source: "uploaded",
+    category: "الطب والصحة"
+  },
+  {
+    id: "uploaded-105",
+    name: "Arabian Journal for Science and Engineering",
+    nameAr: "المجلة العربية للعلوم والهندسة",
+    issn: "2193-567X",
+    website: "https://link.springer.com/journal/13369",
+    publisher: "Springer — جامعة الملك فهد للبترول والمعادن",
+    subjects: [
+      "العلوم",
+      "الهندسة",
+      "التقنية"
+    ],
+    features: [
+      "مجلة علمية محكمة",
+      "ناشر دولي (Springer)",
+      "مفهرسة في Scopus"
+    ],
+    source: "uploaded",
+    category: "الهندسة والتقنية"
+  },
+  {
+    id: "uploaded-106",
+    name: "Education and Information Technologies",
+    nameAr: "مجلة تقنيات التعليم والمعلومات",
+    issn: "1360-2357",
+    website: "https://link.springer.com/journal/10639",
+    publisher: "Springer",
+    subjects: [
+      "تقنيات التعليم",
+      "التعلم الإلكتروني",
+      "تكنولوجيا المعلومات في التعليم"
+    ],
+    features: [
+      "مجلة علمية محكمة",
+      "ناشر دولي (Springer)",
+      "مفهرسة في Scopus"
+    ],
+    source: "uploaded",
+    category: "التربية والعلوم الإنسانية"
   }
 ];
 
