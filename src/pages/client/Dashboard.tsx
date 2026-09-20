@@ -62,6 +62,15 @@ const ClientDashboard = () => {
   return (
     <ClientLayout>
       <div className="p-3 sm:p-5 lg:p-6 space-y-5" dir="rtl">
+        {/* شريط اليوم الوطني المتحرك */}
+        <motion.div
+          initial={{ opacity: 0, y: -14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+        >
+          <NationalDayMarquee />
+        </motion.div>
+
         {/* Hero — animated */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
