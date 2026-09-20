@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { BadgePercent, Sparkles, X } from "lucide-react";
+import { ArrowUpLeft, BadgePercent, Sparkles, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import nationalDayImage from "@/assets/saudi-national-day-banner.jpg";
 
 const STORAGE_KEY = "fekrah-national-day-2026-dismissed";
-const SHOW_DELAY_MS = 4000;
+const SHOW_DELAY_MS = 3500;
 
 const NationalDayPromoPopup = () => {
   const reduceMotion = useReducedMotion();
@@ -25,60 +26,88 @@ const NationalDayPromoPopup = () => {
   return (
     <AnimatePresence>
       {visible && (
-        <motion.aside
+        <motion.div
+          className="fixed inset-0 z-[80] flex items-center justify-center p-4 sm:p-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           role="dialog"
-          aria-label="عرض اليوم الوطني"
+          aria-modal="true"
+          aria-label="عرض اليوم الوطني السعودي"
           dir="rtl"
-          initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 40, scale: 0.96 }}
-          animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
-          exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.96 }}
-          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed bottom-5 left-5 z-[70] w-[min(92vw,340px)] overflow-hidden rounded-2xl border border-saudi-gold/30 bg-gradient-to-br from-saudi-green via-[hsl(140,70%,22%)] to-saudi-green text-saudi-white shadow-elegant"
         >
-          <div className="pointer-events-none absolute -left-8 -top-8 h-28 w-28 rounded-full bg-saudi-gold/20 blur-2xl" aria-hidden="true" />
           <button
-            onClick={dismiss}
             aria-label="إغلاق العرض"
-            className="absolute left-3 top-3 rounded-full p-1.5 text-saudi-white/70 transition-colors hover:bg-saudi-white/10 hover:text-saudi-white"
+            onClick={dismiss}
+            className="absolute inset-0 bg-saudi-green/40 backdrop-blur-sm"
+          />
+
+          <motion.div
+            initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 40, scale: 0.92 }}
+            animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
+            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.95 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="relative w-full max-w-md overflow-hidden rounded-3xl border border-saudi-gold/30 bg-card shadow-elegant"
           >
-            <X className="h-4 w-4" />
-          </button>
+            <button
+              onClick={dismiss}
+              aria-label="إغلاق"
+              className="absolute left-3 top-3 z-10 rounded-full bg-saudi-green/70 p-1.5 text-saudi-white backdrop-blur transition-colors hover:bg-saudi-green"
+            >
+              <X className="h-4 w-4" />
+            </button>
 
-          <div className="relative p-5">
-            <div className="flex items-center gap-2 text-xs font-semibold text-saudi-gold">
-              <Sparkles className="h-4 w-4" />
-              عرض اليوم الوطني السعودي
-            </div>
-
-            <div className="mt-3 flex items-center gap-3">
+            <div className="relative h-44 sm:h-52">
+              <img
+                src={nationalDayImage}
+                alt="احتفالات اليوم الوطني السعودي"
+                className="h-full w-full object-cover"
+                width={1024}
+                height={640}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent" aria-hidden="true" />
               <motion.div
-                animate={reduceMotion ? undefined : { rotate: [0, -6, 6, 0] }}
-                transition={{ duration: 2.4, repeat: Infinity, repeatDelay: 3 }}
-                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-saudi-white/10 ring-1 ring-saudi-gold/40"
+                animate={reduceMotion ? undefined : { rotate: [0, -8, 8, 0] }}
+                transition={{ duration: 2.4, repeat: Infinity, repeatDelay: 2.5 }}
+                className="absolute bottom-3 right-4 flex h-12 w-12 items-center justify-center rounded-xl bg-saudi-green shadow-lg ring-1 ring-saudi-gold/50"
               >
                 <BadgePercent className="h-6 w-6 text-saudi-gold" />
               </motion.div>
-              <div>
-                <p className="text-2xl font-extrabold leading-tight">خصم 20%</p>
-                <p className="text-xs text-saudi-white/80">على جميع خدمات FekrahEdu</p>
-              </div>
             </div>
 
-            <p className="mt-3 rounded-lg bg-saudi-white/5 p-2 text-[11px] leading-5 text-saudi-white/70">
-              يشمل العرض جميع الخدمات عدا رسوم النشر في المجلات العلمية.
-            </p>
+            <div className="p-5 pt-2 text-center sm:p-6 sm:pt-3">
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-saudi-green/10 px-3 py-1 text-xs font-bold text-saudi-green">
+                <Sparkles className="h-3.5 w-3.5" />
+                بمناسبة اليوم الوطني السعودي
+              </div>
 
-            <Button
-              asChild
-              size="sm"
-              className="mt-4 w-full gap-2 bg-saudi-gold font-bold text-saudi-green shadow-md hover:bg-saudi-gold/90"
-            >
-              <Link to="/order-now" onClick={dismiss}>
-                اطلب خدمتك الآن
-              </Link>
-            </Button>
-          </div>
-        </motion.aside>
+              <h2 className="mt-3 text-2xl font-extrabold leading-snug text-foreground sm:text-3xl">
+                دام عزّك يا وطن
+              </h2>
+              <p className="mt-2 text-sm leading-7 text-muted-foreground">
+                نحتفل معكم بمسيرة وطنٍ شامخ، ونشارككم الفرحة بخصم{" "}
+                <span className="font-extrabold text-saudi-green">20%</span> على جميع خدمات FekrahEdu الأكاديمية.
+              </p>
+
+              <p className="mt-3 rounded-xl border border-border bg-muted/50 px-3 py-2 text-[11px] leading-5 text-muted-foreground">
+                يشمل العرض جميع الخدمات عدا رسوم النشر في المجلات العلمية.
+              </p>
+
+              <motion.div whileHover={reduceMotion ? undefined : { scale: 1.03 }} whileTap={reduceMotion ? undefined : { scale: 0.97 }} className="mt-4">
+                <Button
+                  asChild
+                  size="lg"
+                  className="w-full gap-2 bg-saudi-green font-bold text-saudi-white shadow-md hover:bg-saudi-green/90"
+                >
+                  <Link to="/order-now" onClick={dismiss}>
+                    اطلب خدمتك الآن
+                    <ArrowUpLeft className="h-4 w-4" />
+                  </Link>
+                </Button>
+              </motion.div>
+            </div>
+          </motion.div>
+        </motion.div>
       )}
     </AnimatePresence>
   );
