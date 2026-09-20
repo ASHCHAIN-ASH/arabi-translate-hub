@@ -109,29 +109,6 @@ const JournalsDirectory = () => {
           </div>
         </section>
 
-        <section id="directory" className="scroll-mt-24 py-8">
-          <div className="container mx-auto px-4">
-            <motion.div initial={reduceMotion ? false : { opacity: 0, y: 16 }} whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }} viewport={{ once: true }} className="rounded-lg border border-primary/15 bg-card p-4 shadow-medium sm:p-6">
-              <div className="mb-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
-                <div><div className="mb-2 flex items-center gap-2 text-primary"><Filter className="h-4 w-4" /><span className="text-sm font-semibold">البحث والتصفية</span></div><h2 className="text-2xl font-bold text-foreground">اعثر على المجلة المناسبة</h2></div>
-                <p className="rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary" aria-live="polite">عرض {filteredJournals.length.toLocaleString("ar-SA")} نتيجة</p>
-              </div>
-              <div className="grid gap-3 lg:grid-cols-[minmax(280px,1.8fr)_repeat(2,minmax(165px,.8fr))_auto]">
-                <div className="relative"><Search className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" /><Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="ابحث باسم المجلة أو ISSN أو الناشر" className="h-12 border-primary/20 bg-background pr-10" aria-label="البحث في دليل المجلات" /></div>
-                <Select value={category} onValueChange={setCategory}><SelectTrigger className="h-12 bg-background text-right" aria-label="تصفية حسب المجال"><SelectValue /></SelectTrigger><SelectContent dir="rtl"><SelectItem value={ALL}>كل المجالات</SelectItem>{categories.map((item) => <SelectItem key={item} value={item}>{item}</SelectItem>)}</SelectContent></Select>
-                <Select value={issnState} onValueChange={setIssnState}><SelectTrigger className="h-12 bg-background text-right" aria-label="تصفية حسب رقم ISSN"><SelectValue /></SelectTrigger><SelectContent dir="rtl"><SelectItem value={ALL}>جميع سجلات ISSN</SelectItem><SelectItem value="available">رقم ISSN متوفر</SelectItem><SelectItem value="missing">غير مدوّن</SelectItem></SelectContent></Select>
-                {hasFilters && <Button variant="ghost" className="h-12 gap-2" onClick={clearFilters}><X className="h-4 w-4" />مسح</Button>}
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        <section className="bg-gradient-to-b from-background via-muted/30 to-background py-10 sm:py-14">
-          <div className="container mx-auto px-4">
-            {visibleJournals.length ? <><div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">{visibleJournals.map((journal, index) => <JournalCard key={journal.id} journal={journal} index={index} />)}</div>{pageCount > 1 && <nav className="mt-12 flex flex-wrap items-center justify-center gap-3" aria-label="صفحات دليل المجلات"><Button variant="outline" disabled={page === 1} onClick={() => setPage(v => Math.max(1, v - 1))}>السابق</Button><span className="rounded-full bg-primary/10 px-5 py-2 text-sm font-semibold text-primary">صفحة {page.toLocaleString("ar-SA")} من {pageCount.toLocaleString("ar-SA")}</span><Button variant="outline" disabled={page === pageCount} onClick={() => setPage(v => Math.min(pageCount, v + 1))}>التالي</Button></nav>}</> : <div className="mx-auto max-w-xl rounded-lg border border-dashed border-primary/30 bg-primary/5 px-6 py-14 text-center"><Search className="mx-auto h-10 w-10 text-primary" /><h2 className="mt-4 text-xl font-bold">لا توجد نتائج مطابقة</h2><p className="mt-2 text-muted-foreground">جرّب اسمًا آخر أو امسح خيارات التصفية.</p><Button variant="outline" className="mt-5" onClick={clearFilters}>عرض جميع المجلات</Button></div>}
-          </div>
-        </section>
-
         <section className="py-16">
           <div className="container mx-auto px-4">
             <div className="grid gap-5 lg:grid-cols-2">
