@@ -330,6 +330,7 @@ const App = () => (
             <Route path="/payment/return" element={<PaymentReturn />} />
             <Route path="/universities" element={<Universities />} />
             <Route path="/journals" element={<JournalsDirectory />} />
+            <Route path="/journals/:slug" element={<JournalCategory />} />
             <Route path="/contract-management" element={<Navigate to="/client/contracts" replace />} />
             <Route path="/careers" element={<Careers />} />
             <Route path="/contact" element={<ContactUs />} />
