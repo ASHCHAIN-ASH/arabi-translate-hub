@@ -1154,6 +1154,108 @@ export const uploadedJournals: JournalRecord[] = [
     ],
     source: "uploaded",
     category: "العلوم الطبيعية"
+  },
+  {
+    id: "uploaded-94",
+    name: "Genetics and Molecular Research",
+    nameAr: "أبحاث الوراثة والبيولوجيا الجزيئية",
+    issn: "1676-5680",
+    website: "https://geneticsmr.com",
+    publisher: "Genetics and Molecular Research",
+    subjects: [
+      "الوراثة",
+      "البيولوجيا الجزيئية",
+      "علم الأحياء",
+      "دراسات الإنسان والكائنات النموذجية"
+    ],
+    features: [
+      "مجلة علمية محكمة",
+      "تغطية شاملة لعلوم الحياة",
+      "نشر دولي"
+    ],
+    source: "uploaded",
+    category: "العلوم الطبيعية"
+  },
+  {
+    id: "uploaded-95",
+    name: "Acta Medica Iranica",
+    nameAr: "المجلة الطبية الإيرانية",
+    issn: "0044-6025",
+    website: "https://acta.tums.ac.ir",
+    publisher: "جامعة طهران للعلوم الطبية (TUMS)",
+    subjects: [
+      "الطب",
+      "العلوم الصحية",
+      "الأبحاث السريرية"
+    ],
+    features: [
+      "مجلة علمية محكمة",
+      "مفهرسة دوليًا",
+      "نشر دولي"
+    ],
+    source: "uploaded",
+    category: "الطب والصحة"
+  },
+  {
+    id: "uploaded-96",
+    name: "Journal of Rare Cardiovascular Diseases",
+    nameAr: "مجلة أمراض القلب والأوعية الدموية النادرة",
+    issn: "2300-5505",
+    website: "https://jrcd.eu",
+    publisher: "Journal of Rare Cardiovascular Diseases",
+    subjects: [
+      "أمراض القلب النادرة",
+      "الأوعية الدموية",
+      "الحالات السريرية"
+    ],
+    features: [
+      "مجلة علمية محكمة",
+      "تقارير حالات سريرية",
+      "نشر دولي"
+    ],
+    source: "uploaded",
+    category: "الطب والصحة"
+  },
+  {
+    id: "uploaded-97",
+    name: "Journal of Information Systems Engineering and Business Intelligence",
+    nameAr: "مجلة هندسة نظم المعلومات وذكاء الأعمال",
+    issn: "2443-2555",
+    website: "https://e-journal.unair.ac.id/JISEBI",
+    publisher: "جامعة إيرلانغا (Universitas Airlangga)",
+    subjects: [
+      "نظم المعلومات",
+      "ذكاء الأعمال",
+      "هندسة البرمجيات",
+      "تحليل البيانات"
+    ],
+    features: [
+      "مجلة علمية محكمة",
+      "وصول مفتوح",
+      "تخصصات تقنية المعلومات"
+    ],
+    source: "uploaded",
+    category: "الهندسة والتقنية"
+  },
+  {
+    id: "uploaded-98",
+    name: "International Journal of Medicine in Developing Countries",
+    nameAr: "المجلة الدولية للطب في الدول النامية",
+    issn: "2258-1899",
+    website: "https://www.ejmanager.com/my/ijmdc",
+    publisher: "International Journal of Medicine in Developing Countries",
+    subjects: [
+      "الطب",
+      "العلوم الصحية",
+      "الصحة العامة"
+    ],
+    features: [
+      "مجلة علمية محكمة",
+      "وصول مفتوح",
+      "نشر دولي"
+    ],
+    source: "uploaded",
+    category: "الطب والصحة"
   }
 ];
 
