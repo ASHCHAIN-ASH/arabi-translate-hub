@@ -65,7 +65,7 @@ const JournalsDirectory = () => {
                 <h2 className="text-3xl font-bold text-foreground sm:text-4xl">المجلات المميزة</h2>
                 <p className="mx-auto mt-4 max-w-2xl leading-8 text-muted-foreground">مجلات مختارة بعناية ننصح بها لجودة التحكيم وسمعة النشر.</p>
               </motion.div>
-              <div className="mx-auto grid max-w-4xl gap-5 sm:grid-cols-2">
+              <div className="mx-auto grid max-w-6xl gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {featuredJournals.map((journal, index) => (
                   <JournalCard key={journal.id} journal={journal} index={index} />
                 ))}
