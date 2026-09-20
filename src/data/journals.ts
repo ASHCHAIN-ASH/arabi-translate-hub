@@ -415,8 +415,7 @@ export const uploadedJournals: JournalRecord[] = [
     issn: "2993-2149",
     website: "https://grnjournal.us/index.php/AJPMHS",
     source: "uploaded",
-    category: "الطب والصحة",
-    featured: true
+    category: "الطب والصحة"
   },
   {
     id: "uploaded-5",
@@ -1257,7 +1256,8 @@ export const uploadedJournals: JournalRecord[] = [
       "نشر دولي"
     ],
     source: "uploaded",
-    category: "الطب والصحة"
+    category: "الطب والصحة",
+    featured: true
   },
   {
     id: "uploaded-99",
