@@ -25,10 +25,12 @@ import {
   Crown,
   GraduationCap,
   Calculator,
-  Newspaper
+  Newspaper,
+  ArrowLeft
 } from "lucide-react";
 const fekrahLogoUrl = "/fekrah-logo.jpg";
 import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 
 
 const Footer = () => {
@@ -96,6 +98,38 @@ const Footer = () => {
               <p className="text-sm opacity-90">على مدار الساعة طوال أيام الأسبوع</p>
             </motion.div>
           </div>
+        </div>
+      </div>
+
+      {/* العضوية الحصرية */}
+      <div className="relative z-10 border-b border-white/10 bg-primary/10">
+        <div className="container mx-auto px-4 py-6 sm:px-6 md:py-8 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.45 }}
+            className="flex flex-col items-center justify-between gap-5 border-y border-white/10 py-5 text-center md:flex-row md:text-right"
+          >
+            <div className="flex flex-col items-center gap-4 md:flex-row">
+              <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border border-yellow-400/30 bg-yellow-400/10">
+                <Crown className="h-6 w-6 text-yellow-400" aria-hidden="true" />
+              </div>
+              <div>
+                <p className="mb-1 text-xs font-bold text-yellow-400">عضوية FekrahEdu</p>
+                <h2 className="text-xl font-bold text-white md:text-2xl">عضوية حصرية ومتميزة</h2>
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-white/70">
+                  خصومات حصرية، أولوية في تنفيذ الطلبات، ودعم أكاديمي مخصص للأعضاء.
+                </p>
+              </div>
+            </div>
+            <Button asChild className="w-full flex-shrink-0 bg-primary text-primary-foreground sm:w-auto">
+              <a href="/fekrahedu-membership">
+                اكتشف العضوية
+                <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+              </a>
+            </Button>
+          </motion.div>
         </div>
       </div>
 
