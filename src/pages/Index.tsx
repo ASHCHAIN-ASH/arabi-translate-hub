@@ -34,7 +34,6 @@ import inquiryTeamImg from "@/assets/home-inquiry-team.jpg";
 
 // Lazy loading للمكونات الثقيلة لتحسين الأداء
 // const ServicesShowcase = lazy(() => import("@/components/ServicesShowcase")); // القسم محذوف مؤقتًا — الكود محفوظ
-const FekrahEduMembershipBanner = lazy(() => import("@/components/FekrahEduMembershipBanner"));
 const ServiceSteps = lazy(() => import("@/components/ServiceSteps"));
 
 
@@ -913,10 +912,6 @@ const Index = () => {
       )}
 
       {/* Suspense Sections مع Lazy Loading */}
-      <Suspense fallback={<LoadingSpinner />}>
-        <FekrahEduMembershipBanner />
-      </Suspense>
-
       <Suspense fallback={<LoadingSpinner />}>
         <ServiceSteps />
       </Suspense>
