@@ -21,10 +21,6 @@ const PAGE_SIZE = 12;
 const ALL = "all";
 const normalize = (value: string) => value.toLocaleLowerCase("ar").replace(/[()\s-]/g, "");
 
-const sourceLabels: Record<JournalSource, string> = {
-  existing: "القائمة الأساسية",
-  uploaded: "القائمة المضافة",
-};
 
 const categoryVisuals: Record<string, { icon: LucideIcon; iconClass: string; panelClass: string; badgeClass: string }> = {
   "الطب والصحة": { icon: Stethoscope, iconClass: "text-destructive", panelClass: "bg-destructive/10 border-destructive/20", badgeClass: "bg-destructive/10 text-destructive border-destructive/20" },
