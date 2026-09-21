@@ -415,7 +415,8 @@ const Footer = () => {
             <div className="flex items-center justify-center gap-2">
               <Award className="h-4 w-4 flex-shrink-0 text-yellow-400" aria-hidden="true" />
               <span className="text-xs md:text-sm font-medium text-white/80">
-                فِكرة (FekrahEdu) إحدى مشاريع <span className="font-bold text-white">أش القابضة</span>
+                فِكرة (FekrahEdu) إحدى مشاريع{' '}
+                <span dir="ltr" className="font-bold text-white tracking-wide">ASH HOLDING</span>
               </span>
             </div>
           </motion.div>
