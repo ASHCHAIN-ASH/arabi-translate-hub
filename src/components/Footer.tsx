@@ -389,6 +389,38 @@ const Footer = () => {
           </div>
         </motion.div>
       </div>
+
+      {/* بيانات الشركة النظامية */}
+      <div className="relative z-10 mt-8 md:mt-10 border-t border-white/10 bg-black/25">
+        <div className="container mx-auto px-4 py-5 sm:px-6 md:py-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.45 }}
+            className="flex flex-col items-center justify-center gap-3 text-center lg:flex-row lg:flex-wrap lg:gap-x-8 lg:gap-y-3"
+          >
+            <div className="flex items-center justify-center gap-2">
+              <Building2 className="h-4 w-4 flex-shrink-0 text-blue-400" aria-hidden="true" />
+              <span className="text-xs md:text-sm text-white/70">رقم السجل التجاري</span>
+              <span dir="ltr" className="text-xs md:text-sm font-bold text-white tabular-nums">7039030916</span>
+            </div>
+            <span className="hidden h-4 w-px bg-white/15 lg:block" aria-hidden="true"></span>
+            <div className="flex items-center justify-center gap-2">
+              <Shield className="h-4 w-4 flex-shrink-0 text-green-400" aria-hidden="true" />
+              <span className="text-xs md:text-sm text-white/70">الرقم الضريبي</span>
+              <span dir="ltr" className="text-xs md:text-sm font-bold text-white tabular-nums">312206352700003</span>
+            </div>
+            <span className="hidden h-4 w-px bg-white/15 lg:block" aria-hidden="true"></span>
+            <div className="flex items-center justify-center gap-2">
+              <Award className="h-4 w-4 flex-shrink-0 text-yellow-400" aria-hidden="true" />
+              <span className="text-xs md:text-sm font-medium text-white/80">
+                فِكرة (FekrahEdu) إحدى مشاريع <span className="font-bold text-white">أش القابضة</span>
+              </span>
+            </div>
+          </motion.div>
+        </div>
+      </div>
     </footer>
   );
 };
