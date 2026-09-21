@@ -99,8 +99,8 @@ const createOrderStatusEmailTemplate = (data: OrderStatusEmailRequest): string =
         .footer p { margin: 5px 0; color: #6b7280; font-size: 14px; }
     </style>
 </head>
-<body>
-    <div class="container">
+<body dir="rtl" style="direction: rtl; text-align: right;">
+    <div class="container" dir="rtl" style="direction: rtl; text-align: right;">
         <div class="header">
             <h1>🎓 تحديث حالة طلبكم</h1>
             <p>مرحباً ${data.clientName}، لديكم تحديث جديد</p>

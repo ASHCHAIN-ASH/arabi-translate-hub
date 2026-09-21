@@ -107,7 +107,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // إضافة الفوتر الاحترافي لجميع الإيميلات
     const professionalFooter = `
-      <div style="margin-top: 40px; padding: 30px 20px; border-top: 3px solid #1a365d; background-color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+      <div dir="rtl" style="direction: rtl; text-align: right; margin-top: 40px; padding: 30px 20px; border-top: 3px solid #1a365d; background-color: #f8fafc; font-family: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, Arial, sans-serif;">
         <!-- Company Header -->
         <div style="text-align: center; margin-bottom: 25px;">
           <h2 style="margin: 0; color: #1a365d; font-size: 24px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">
@@ -121,7 +121,7 @@ const handler = async (req: Request): Promise<Response> => {
 
         <!-- Contact Information Grid -->
         <div style="max-width: 600px; margin: 0 auto;">
-          <table style="width: 100%; border-collapse: collapse;">
+          <table dir="rtl" align="right" style="direction: rtl; text-align: right; width: 100%; border-collapse: collapse;">
             <tr>
               <td style="width: 50%; padding: 15px; vertical-align: top;">
                 <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); height: 100%;">
@@ -210,6 +210,9 @@ const handler = async (req: Request): Promise<Response> => {
     if (emailContent && !emailContent.includes('FekrahEdu')) {
       emailContent += professionalFooter;
     }
+
+    // لا تعتمد على وسمَي html/body؛ بعض برامج البريد تزيلهما عند العرض.
+    emailContent = `<div dir="rtl" style="direction: rtl; text-align: right; width: 100%; font-family: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, Arial, sans-serif;">${emailContent}</div>`;
 
     // إرسال البريد الإلكتروني فوراً
     console.log("Sending email to:", to);

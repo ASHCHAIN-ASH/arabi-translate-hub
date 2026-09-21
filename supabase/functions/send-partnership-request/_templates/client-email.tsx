@@ -36,13 +36,16 @@ export const ClientEmail = ({
       <Head>
         <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
         <style>{`
-          @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;600;700&display=swap');
-          * { 
+          html, body, table, tbody, tr, td, th, div, section, p, h1, h2, h3, a, span {
+            direction: rtl !important;
+          }
+          * {
             font-family: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, Arial, sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
           }
-          body { direction: rtl; text-align: right; }
+          body, td, th, p, h1, h2, h3 { text-align: right; }
+          table { border-spacing: 0; }
           .button-hover:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4) !important;
@@ -50,8 +53,8 @@ export const ClientEmail = ({
         `}</style>
       </Head>
       <Preview>🎉 شكراً لاهتمامك بالشراكة المؤسسية مع FekrahEdu</Preview>
-      <Body style={main}>
-        <Container style={container}>
+      <Body dir="rtl" style={main}>
+        <Container dir="rtl" align="right" style={container}>
           
           {/* Premium Header with Gradient */}
           <Section style={header}>
@@ -311,6 +314,8 @@ const main = {
 };
 
 const container = {
+  direction: 'rtl' as const,
+  textAlign: 'right' as const,
   margin: '0 auto',
   maxWidth: '600px',
   backgroundColor: '#ffffff',

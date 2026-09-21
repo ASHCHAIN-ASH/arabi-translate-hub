@@ -127,8 +127,8 @@ const handler = async (req: Request): Promise<Response> => {
             }
           </style>
         </head>
-        <body>
-          <div class="container">
+        <body dir="rtl" style="direction: rtl; text-align: right;">
+          <div class="container" dir="rtl" style="direction: rtl; text-align: right;">
             <div class="header">
               <h1>🎓 مرحباً بك في FekrahEdu</h1>
               <p>أهلاً وسهلاً ${user_name}</p>

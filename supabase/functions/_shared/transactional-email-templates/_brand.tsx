@@ -34,10 +34,10 @@ export const fmt = (v: unknown) => {
 const FONT = "'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, Arial, sans-serif"
 
 const CSS = `
-html, body, table, tbody, tr, td, p, h1, h2, h3, a, span { direction: rtl !important; }
+html, body, table, tbody, thead, tfoot, tr, td, th, div, section, p, h1, h2, h3, a, span { direction: rtl !important; }
 body, table, td, p, h1, h2, h3 { font-family: ${FONT} !important; }
 table { border-spacing: 0; }
-td, p, h1, h2, h3 { text-align: right; }
+td, th, p, h1, h2, h3 { text-align: right; }
 img { max-width: 100%; }
 a { overflow-wrap: anywhere; word-break: break-word; }
 p, td, h1, h2, h3 { overflow-wrap: anywhere; word-break: break-word; }
@@ -90,7 +90,7 @@ export const S = {
   footerBox: { padding: '16px 28px 30px', textAlign: 'center' as const, backgroundColor: '#f8fafc' },
   footerText: { fontSize: '12px', color: '#94a3b8', margin: '4px 0 0', lineHeight: '1.8' },
   footerLink: { color: '#1d4ed8', textDecoration: 'none', fontSize: '12px', fontWeight: 700 as const },
-  tbl: { width: '100%', borderCollapse: 'collapse' as const },
+  tbl: { width: '100%', direction: 'rtl' as const, textAlign: 'right' as const, borderCollapse: 'collapse' as const },
   tdLabel: { padding: '10px 12px', fontSize: '13px', color: '#64748b', textAlign: 'right' as const, borderBottom: '1px solid #e2e8f0', fontWeight: '600' as const },
   tdValue: { padding: '10px 12px', fontSize: '13px', color: '#0f172a', textAlign: 'right' as const, borderBottom: '1px solid #e2e8f0', fontWeight: '700' as const, overflowWrap: 'anywhere' as const },
 }
@@ -169,7 +169,7 @@ export function BrandEmail({ preview, accent = 'blue', tagline, badge, cta, fall
       </Head>
       <Preview>{preview}</Preview>
       <Body dir="rtl" style={S.main}>
-        <Container dir="rtl" style={S.container} className="fk-card fk-shell">
+        <Container dir="rtl" align="right" style={S.container} className="fk-card fk-shell">
           <Section
             className="fk-bar"
             style={{ background: `linear-gradient(90deg, ${a.from} 0%, ${a.to} 50%, ${a.from} 100%)`, height: '6px', lineHeight: '6px', fontSize: '1px' }}
@@ -177,12 +177,12 @@ export function BrandEmail({ preview, accent = 'blue', tagline, badge, cta, fall
             <Text style={{ margin: 0, fontSize: '1px', lineHeight: '6px', color: 'transparent' }}>.</Text>
           </Section>
 
-          <Section className="fk-pad" style={{ background: `linear-gradient(135deg, ${a.from} 0%, ${a.to} 100%)`, padding: '22px 28px' }}>
-            <Row dir="rtl">
-              <Column style={{ width: '54px' }}>
+          <Section dir="rtl" className="fk-pad" style={{ direction: 'rtl', textAlign: 'right', background: `linear-gradient(135deg, ${a.from} 0%, ${a.to} 100%)`, padding: '22px 28px' }}>
+            <Row dir="rtl" style={{ direction: 'rtl', textAlign: 'right' }}>
+              <Column align="right" style={{ width: '54px', direction: 'rtl', textAlign: 'right' }}>
                 <Img src={LOGO_URL} width="46" height="46" alt={SITE_NAME} style={S.logo} />
               </Column>
-              <Column>
+              <Column align="right" style={{ direction: 'rtl', textAlign: 'right' }}>
                 <Text style={S.brand}>{SITE_NAME}</Text>
                 <Text style={S.tagline}>{tagline || 'منصّة الخدمات الأكاديمية والبحثية'}</Text>
               </Column>

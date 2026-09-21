@@ -43,11 +43,11 @@ export const AdmissionAdminEmail = ({
   hasScholarship,
   applicationNumber,
 }: AdmissionAdminEmailProps) => (
-  <Html dir="rtl">
-    <Head />
+  <Html lang="ar" dir="rtl">
+    <Head><style>{rtlCss}</style></Head>
     <Preview>طلب قبول جامعي جديد - FekrahEdu</Preview>
-    <Body style={main}>
-      <Container style={container}>
+    <Body dir="rtl" style={main}>
+      <Container dir="rtl" align="right" style={container}>
         {/* Header */}
         <Section style={header}>
           <Heading style={h1}>FekrahEdu</Heading>
@@ -161,15 +161,25 @@ const main = {
   backgroundColor: '#f6f9fc',
   fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
   direction: 'rtl' as const,
+  textAlign: 'right' as const,
 }
 
 const container = {
+  direction: 'rtl' as const,
+  textAlign: 'right' as const,
   backgroundColor: '#ffffff',
   margin: '0 auto',
   padding: '20px 0 48px',
   marginBottom: '64px',
   maxWidth: '700px',
 }
+
+const rtlCss = `
+  html, body, table, tbody, tr, td, th, div, section, p, h1, h2, h3, a, span { direction: rtl !important; }
+  body, table, td, th, p, h1, h2, h3 { font-family: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, Arial, sans-serif !important; }
+  td, th, p, h1, h2, h3 { text-align: right; }
+  table { border-spacing: 0; }
+`
 
 const header = {
   backgroundColor: '#dc2626',
