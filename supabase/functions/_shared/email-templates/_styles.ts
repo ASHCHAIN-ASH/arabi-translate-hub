@@ -27,9 +27,9 @@ export const renderHeadCss = (palette: { primary: string; accent: string; glow: 
   @keyframes pulseGlow { 0%, 100% { box-shadow: 0 8px 24px ${palette.glow}; } 50% { box-shadow: 0 12px 36px ${palette.glow}; } }
   @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
   @keyframes drawLine { from { stroke-dashoffset: 100; } to { stroke-dashoffset: 0; } }
-  html, body, table, tbody, tr, td, p, a, h1, h2, h3, h4, span { direction: rtl !important; }
+  html, body, table, tbody, thead, tfoot, tr, td, th, div, section, p, a, h1, h2, h3, h4, span { direction: rtl !important; }
   body, table, td, p, a, h1, h2, h3, h4 { font-family: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, Arial, sans-serif !important; }
-  td, p, h1, h2, h3, h4 { text-align: right; }
+  td, th, p, h1, h2, h3, h4 { text-align: right; }
   table { border-spacing: 0; }
   a, p, td, h1, h2, h3, h4 { overflow-wrap: anywhere; word-break: break-word; }
   img { max-width: 100%; height: auto; }
@@ -65,6 +65,8 @@ export const styles = (p: { primary: string; accent: string; glow: string; tint:
   } as React.CSSProperties,
 
   shell: {
+    direction: 'rtl',
+    textAlign: 'right',
     width: '100%',
     maxWidth: '620px',
     margin: '0 auto',
@@ -76,6 +78,7 @@ export const styles = (p: { primary: string; accent: string; glow: string; tint:
   } as React.CSSProperties,
 
   hero: {
+    direction: 'rtl',
     background: `linear-gradient(135deg, ${p.primary} 0%, ${p.accent} 100%)`,
     padding: '40px 36px 56px',
     textAlign: 'center' as const,
@@ -83,6 +86,7 @@ export const styles = (p: { primary: string; accent: string; glow: string; tint:
   } as React.CSSProperties,
 
   brandRow: {
+    direction: 'rtl',
     textAlign: 'center',
     marginBottom: '18px',
   } as React.CSSProperties,
@@ -203,6 +207,7 @@ export const styles = (p: { primary: string; accent: string; glow: string; tint:
   } as React.CSSProperties,
 
   footer: {
+    direction: 'rtl',
     padding: '24px 36px 28px',
     textAlign: 'center' as const,
   } as React.CSSProperties,
