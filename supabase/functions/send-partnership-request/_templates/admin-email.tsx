@@ -61,18 +61,21 @@ export const AdminEmail = ({
       <Head>
         <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
         <style>{`
-          @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;600;700&display=swap');
-          * { 
+          html, body, table, tbody, tr, td, th, div, section, p, h1, h2, h3, a, span {
+            direction: rtl !important;
+          }
+          * {
             font-family: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, Arial, sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
           }
-          body { direction: rtl; text-align: right; }
+          body, td, th, p, h1, h2, h3 { text-align: right; }
+          table { border-spacing: 0; }
         `}</style>
       </Head>
       <Preview>🚨 طلب شراكة مؤسسية عاجل من {institutionName} - يتطلب المراجعة الفورية</Preview>
-      <Body style={main}>
-        <Container style={container}>
+      <Body dir="rtl" style={main}>
+        <Container dir="rtl" align="right" style={container}>
           
           {/* Urgent Alert Header */}
           <Section style={alertHeader}>
@@ -353,6 +356,8 @@ const main = {
 };
 
 const container = {
+  direction: 'rtl' as const,
+  textAlign: 'right' as const,
   margin: '0 auto',
   maxWidth: '700px',
   backgroundColor: '#ffffff',
