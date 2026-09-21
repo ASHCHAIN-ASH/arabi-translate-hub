@@ -221,6 +221,8 @@ const getBaseEmailCSS = () => `
     display: flex;
     justify-content: space-between;
     align-items: center;
+    direction: rtl;
+    text-align: right;
     padding: 20px;
     margin-bottom: 15px;
     background: white;
