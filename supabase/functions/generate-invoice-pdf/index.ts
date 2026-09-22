@@ -9,17 +9,18 @@ const corsHeaders = {
 
 // === بيانات المنصة الرسمية ===
 const PLATFORM = {
-  nameAr: "FekrahEdu",
-  nameEn: "FekrahEdu Agency",
-  legal: "تتبع لشركة علي صالح الشهري القابضة",
+  nameAr: "فِكرة (FekrahEdu)",
+  nameEn: "FekrahEdu",
+  legal: "إحدى مشاريع ASH HOLDING",
   domain: "fekrahedu.com",
   website: "https://fekrahedu.com",
   email: "info@fekrahedu.com",
-  whatsapp1: "0559600824",
-  whatsapp2: "0559600824",
+  whatsapp1: "0593799355",
+  whatsapp2: "0555812567",
   address: "المملكة العربية السعودية — الرياض",
-  cr: "—", // السجل التجاري (يمكن إضافته لاحقاً)
-  vatNumber: "—", // الرقم الضريبي (يمكن إضافته لاحقاً عبر متغير بيئة)
+  cr: "7039030916",
+  vatNumber: "312206352700003",
+  logo: "https://fekrahedu.com/fekrah-logo.jpg",
 };
 
 // VAT rate (KSA = 15%)
