@@ -362,16 +362,17 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
 
     <div class="totals-wrap">
       <div class="totals-note">
-        <div class="nt-title">🛡️ فاتورة موثّقة إلكترونياً (متوافقة مع زاتكا)</div>
-        صادرة من منصة <strong>${COMPANY.name}</strong> ومحفوظة في سجلاتنا الرقمية. يمكنك التحقق من صحتها بمسح رمز QR أدناه أو من خلال لوحة عميلك.
+        <div class="nt-title">🛡️ ${taxEnabled ? 'فاتورة ضريبية موثّقة إلكترونياً (متوافقة مع زاتكا)' : 'فاتورة موثّقة إلكترونياً'}</div>
+        صادرة من منصة <strong>${COMPANY.name}</strong> — إحدى مشاريع ${COMPANY.holding}، ومحفوظة في سجلاتنا الرقمية.${taxEnabled ? ' يمكنك التحقق من صحتها بمسح رمز QR أدناه أو من خلال لوحة عميلك.' : ''}
         <div style="margin-top:12px;display:flex;align-items:center;gap:12px;padding:10px;background:#fff;border:1px dashed #c7d2fe;border-radius:10px">
-          <img src="${qrImg}" alt="QR" width="92" height="92" style="border-radius:6px;background:#fff" />
+          ${taxEnabled ? `<img src="${qrImg}" alt="QR" width="92" height="92" style="border-radius:6px;background:#fff" />` : ''}
           <div style="font-size:10.5px;color:var(--muted);line-height:1.7">
-            <div style="font-weight:700;color:var(--ink);margin-bottom:3px">رمز التحقق ZATCA</div>
+            <div style="font-weight:700;color:var(--ink);margin-bottom:3px">${taxEnabled ? 'رمز التحقق ZATCA' : 'بيانات المنشأة'}</div>
             البائع: ${COMPANY.name}<br/>
-            الرقم الضريبي: ${COMPANY.vatNumber}<br/>
-            الإجمالي: ${fmt(invoice.total_amount)}<br/>
-            ض.ق.م: ${fmt(computedVat)}
+            الرقم الضريبي: <span dir="ltr">${COMPANY.vatNumber}</span><br/>
+            السجل التجاري: <span dir="ltr">${COMPANY.crNumber}</span><br/>
+            الجوال: <span dir="ltr">${COMPANY.phoneIntl}</span><br/>
+            الإجمالي: ${fmt(invoice.total_amount)}${taxEnabled ? `<br/>ض.ق.م: ${fmt(computedVat)}` : ''}
           </div>
         </div>
       </div>
