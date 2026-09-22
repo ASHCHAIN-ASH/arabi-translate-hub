@@ -220,6 +220,7 @@ export default function AdminInvoices() {
                           )}
                         </div>
                         {inv.customer_email && <div className="text-xs text-muted-foreground">{inv.customer_email}</div>}
+                        <InvoiceTags inv={inv} />
                       </TableCell>
                       <TableCell className="text-sm">{inv.issue_date}</TableCell>
                       <TableCell className="font-bold">{InvoiceService.formatCurrency(inv.total_amount, inv.currency)}</TableCell>
@@ -233,7 +234,7 @@ export default function AdminInvoices() {
                             <Mail className="w-4 h-4" />
                             <span className="hidden xl:inline mr-1">إرسال</span>
                           </Button>
-                          <RowActions inv={inv} onSend={() => handleSend(inv)} onEdit={() => { setEditing(inv); setFormOpen(true); }} onPay={() => setPaymentFor(inv)} onDelete={() => handleDelete(inv)} onPrint={() => handlePrint(inv)} onDownload={() => handleDownload(inv)} />
+                          <RowActions inv={inv} onSend={() => handleSend(inv)} onDelete={() => handleDelete(inv)} onPrint={() => handlePrint(inv)} onDownload={() => handleDownload(inv)} onMarkPaid={() => handleMarkPaid(inv)} onMarkUnpaid={() => handleMarkUnpaid(inv)} />
                         </div>
                       </TableCell>
                     </TableRow>
