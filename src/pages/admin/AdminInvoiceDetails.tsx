@@ -11,9 +11,6 @@ import { toast } from 'sonner';
 import { supabase } from '@/data/legacy/client';
 import { InvoiceService, type Invoice, type InvoiceItem, type InvoicePayment, type InvoiceTimelineEntry } from '@/utils/invoiceService';
 import { openInvoicePrintWindow, downloadInvoiceAsPDF } from '@/utils/invoicePdf';
-import InvoiceFormDialog from '@/components/admin/invoices/InvoiceFormDialog';
-import PaymentDialog from '@/components/admin/invoices/PaymentDialog';
-import SendInvoiceDialog from '@/components/admin/invoices/SendInvoiceDialog';
 import EmailHistoryPanel from '@/components/admin/email/EmailHistoryPanel';
 import { InvoiceEmailService } from '@/utils/invoiceEmailService';
 
