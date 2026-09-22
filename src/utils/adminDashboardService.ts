@@ -143,14 +143,21 @@ export class AdminDashboardService {
         const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
         const end = new Date(d.getFullYear(), d.getMonth() + 1, 1);
         
-        const { data } = await supabase.from('payment_transactions').select('amount')
-          .eq('status', 'completed')
-          .gte('created_at', d.toISOString())
-          .lt('created_at', end.toISOString());
+        const [{ data }, { data: invPays }] = await Promise.all([
+          supabase.from('payment_transactions').select('amount')
+            .eq('status', 'completed')
+            .gte('created_at', d.toISOString())
+            .lt('created_at', end.toISOString()),
+          supabase.from('invoice_payments').select('amount')
+            .gte('created_at', d.toISOString())
+            .lt('created_at', end.toISOString()),
+        ]);
 
         months.push({
           month: monthNames[d.getMonth()],
-          revenue: data?.reduce((sum, p) => sum + (p.amount || 0), 0) || 0
+          revenue:
+            (data?.reduce((sum, p) => sum + Number(p.amount || 0), 0) || 0) +
+            (invPays?.reduce((sum, p) => sum + Number(p.amount || 0), 0) || 0)
         });
       }
 
