@@ -286,22 +286,24 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
   <div class="header">
     <div class="header-row">
       <div class="brand">
-        <div class="brand-mark">M</div>
+        <div class="brand-mark">ف</div>
         <div class="brand-text">
           <div class="brand-name">${COMPANY.name}</div>
-          <div class="brand-en">${COMPANY.nameEn}</div>
+          <div class="brand-en">إحدى مشاريع ${COMPANY.holding}</div>
           <div class="brand-meta">
             ${COMPANY.address}<br/>
-            ${COMPANY.email}<span class="dot">•</span>${COMPANY.phone}<br/>
-            ${COMPANY.website}<br/>
-            <span style="display:inline-block;margin-top:6px;padding:3px 8px;background:#eef2ff;border:1px solid #c7d2fe;border-radius:6px;font-weight:600;color:#3730a3;font-feature-settings:'tnum'">الرقم الضريبي: ${COMPANY.vatNumber}</span>
-            <span style="display:inline-block;margin-top:6px;margin-right:4px;padding:3px 8px;background:#fef3c7;border:1px solid #fde68a;border-radius:6px;font-weight:600;color:#92400e;font-feature-settings:'tnum'">س.ت: ${COMPANY.crNumber}</span>
+            ${COMPANY.email}<span class="dot">•</span>${COMPANY.website}
+          </div>
+          <div class="legal-ids">
+            <span class="lid lid-tax"><span class="lid-k">الرقم الضريبي</span><span class="lid-v" dir="ltr">${COMPANY.vatNumber}</span></span>
+            <span class="lid lid-cr"><span class="lid-k">السجل التجاري</span><span class="lid-v" dir="ltr">${COMPANY.crNumber}</span></span>
+            <span class="lid lid-phone"><span class="lid-k">جوال / واتساب</span><span class="lid-v" dir="ltr">${COMPANY.phoneIntl}</span></span>
           </div>
         </div>
       </div>
       <div class="doc-title">
-        <div class="doc-eyebrow">Tax Invoice</div>
-        <h1>فاتورة ضريبية</h1>
+        <div class="doc-eyebrow">${docTitleEn}</div>
+        <h1>${docTitleAr}</h1>
         <div class="doc-num">رقم: ${escapeHtml(invoice.invoice_number)}</div>
         <div>
           <span class="badge ${badgeClass(invoice.status)}">${InvoiceService.statusLabel(invoice.status)}</span>
