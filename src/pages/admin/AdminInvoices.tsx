@@ -134,7 +134,8 @@ export default function AdminInvoices() {
           </div>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" onClick={load}><RefreshCw className="w-4 h-4 ml-1" />تحديث</Button>
-            <Button onClick={() => { setEditing(null); setFormOpen(true); }}><Plus className="w-4 h-4 ml-1" />فاتورة جديدة</Button>
+            <Button variant="outline" size="sm" onClick={exportCsv}><FileSpreadsheet className="w-4 h-4 ml-1" />تصدير Excel</Button>
+            <Button asChild><Link to="/adminfekrah/invoices/new"><Plus className="w-4 h-4 ml-1" />فاتورة جديدة</Link></Button>
           </div>
         </div>
 
