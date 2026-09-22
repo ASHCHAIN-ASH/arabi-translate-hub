@@ -62,12 +62,14 @@ export default function AdminInvoices() {
 
   const filtered = useMemo(() => invoices.filter((i) => {
     if (statusFilter !== 'all' && i.status !== statusFilter) return false;
+    if (payFilter === 'paid' && !PAID_STATES.includes(i.status)) return false;
+    if (payFilter === 'unpaid' && !UNPAID_STATES.includes(i.status)) return false;
     if (search) {
       const q = search.toLowerCase();
       return i.invoice_number.toLowerCase().includes(q) || (i.customer_name ?? '').toLowerCase().includes(q) || (i.customer_email ?? '').toLowerCase().includes(q);
     }
     return true;
-  }), [invoices, search, statusFilter]);
+  }), [invoices, search, statusFilter, payFilter]);
 
   const stats = useMemo(() => ({
     total: invoices.length,
