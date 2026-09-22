@@ -53,3 +53,6 @@ project_id = "kziujhdqogqeehtxgpax"
 
   [functions.admin-notify]
     verify_jwt = false
+
+  [functions.invoice-public-pay]
+    verify_jwt = false

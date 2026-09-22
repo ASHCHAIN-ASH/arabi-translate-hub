@@ -3033,6 +3033,7 @@ export type Database = {
           paid_at: string | null
           pdf_generated_at: string | null
           pdf_storage_path: string | null
+          public_pay_token: string | null
           publication_id: string | null
           remaining_amount: number | null
           sent_at: string | null
@@ -3066,6 +3067,7 @@ export type Database = {
           paid_at?: string | null
           pdf_generated_at?: string | null
           pdf_storage_path?: string | null
+          public_pay_token?: string | null
           publication_id?: string | null
           remaining_amount?: number | null
           sent_at?: string | null
@@ -3099,6 +3101,7 @@ export type Database = {
           paid_at?: string | null
           pdf_generated_at?: string | null
           pdf_storage_path?: string | null
+          public_pay_token?: string | null
           publication_id?: string | null
           remaining_amount?: number | null
           sent_at?: string | null
@@ -3552,7 +3555,7 @@ export type Database = {
           status: string
           succeeded_at: string | null
           updated_at: string
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           amount: number
@@ -3579,7 +3582,7 @@ export type Database = {
           status?: string
           succeeded_at?: string | null
           updated_at?: string
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           amount?: number
@@ -3606,7 +3609,7 @@ export type Database = {
           status?: string
           succeeded_at?: string | null
           updated_at?: string
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: []
       }
