@@ -38,9 +38,6 @@ export default function AdminInvoiceDetails() {
   const [timeline, setTimeline] = useState<InvoiceTimelineEntry[]>([]);
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [editOpen, setEditOpen] = useState(false);
-  const [payOpen, setPayOpen] = useState(false);
-  const [sendOpen, setSendOpen] = useState(false);
 
   const load = async () => {
     if (!id) return;
@@ -75,7 +72,7 @@ export default function AdminInvoiceDetails() {
     return () => { supabase.removeChannel(ch); };
   }, [id]);
 
-  const handleSend = () => setSendOpen(true);
+  const handleSend = () => navigate(`/adminfekrah/invoices/${id}/send`);
   const [sendingReminder, setSendingReminder] = useState(false);
   const sendReminder = async () => {
     if (!invoice) return;
@@ -295,9 +292,6 @@ export default function AdminInvoiceDetails() {
         </div>
       </div>
 
-      <InvoiceFormDialog open={editOpen} onOpenChange={setEditOpen} invoice={invoice} onSaved={load} />
-      <PaymentDialog open={payOpen} onOpenChange={setPayOpen} invoice={invoice} onSaved={load} />
-      <SendInvoiceDialog open={sendOpen} onOpenChange={setSendOpen} invoice={invoice} onSent={load} />
     </AdminLayout>
   );
 }
