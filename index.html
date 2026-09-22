@@ -25,6 +25,37 @@
     <title>FekrahEdu | المساعدة الأكاديمية والإرشاد العلمي</title>
     <meta name="description" content="منصة مهنية متخصصة في المساعدة الأكاديمية، الإرشاد العلمي، مراجعة الأبحاث، التدقيق اللغوي، والاستشارات البحثية وفق معايير النزاهة الأكاديمية." />
     <meta name="author" content="FekrahEdu" />
+    <link rel="canonical" href="https://fekrahedu.com/" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <script>
+      (function () {
+        try {
+          var host = window.location.hostname || '';
+          var isOfficial = /(^|\.)fekrahedu\.com$/i.test(host);
+          var isLocal = /^(localhost|127\.0\.0\.1|0\.0\.0\.0)$/i.test(host);
+          if (isOfficial || isLocal) return;
+
+          // Any non-official host (preview/staging) must never be indexed
+          var m = document.querySelector('meta[name="robots"]');
+          if (!m) {
+            m = document.createElement('meta');
+            m.setAttribute('name', 'robots');
+            document.head.appendChild(m);
+          }
+          m.setAttribute('content', 'noindex, nofollow, noarchive, nosnippet, noimageindex');
+
+          var g = document.createElement('meta');
+          g.setAttribute('name', 'googlebot');
+          g.setAttribute('content', 'noindex, nofollow');
+          document.head.appendChild(g);
+
+          // Redirect real visitors (not the editor iframe) to the official domain
+          if (window.top === window.self) {
+            window.location.replace('https://fekrahedu.com' + window.location.pathname + window.location.search + window.location.hash);
+          }
+        } catch (e) {}
+      })();
+    </script>
     <meta name="keywords" content="مساعدة أكاديمية, إرشاد علمي, مراجعة بحث علمي, تدقيق لغوي, استشارات أكاديمية, دعم بحثي, كيف أكتب بحث جامعي, تحسين البحث الأكاديمي, مراجعة الرسائل العلمية" />
     
     <!-- FekrahEdu Favicon + PWA Manifest -->

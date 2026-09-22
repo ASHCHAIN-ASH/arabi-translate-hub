@@ -25,6 +25,11 @@ const SEO = ({
   schema,
   noIndex = false
 }: SEOProps) => {
+  // Only the official domain may be indexed; any preview/staging host is blocked
+  const host = typeof window !== "undefined" ? window.location.hostname : "";
+  const isOfficialHost = !host || /(^|\.)fekrahedu\.com$/i.test(host) || /^(localhost|127\.0\.0\.1|0\.0\.0\.0)$/i.test(host);
+  const blockIndex = noIndex || !isOfficialHost;
+
   const siteName = "FekrahEdu - وكالة الحلول التعليمية المتقدمة";
   const twitterHandle = "@FekrahEdu";
 
@@ -108,10 +113,10 @@ const SEO = ({
       {/* Additional SEO Meta Tags */}
       <meta
         name="robots"
-        content={noIndex ? "noindex, nofollow" : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"}
+        content={blockIndex ? "noindex, nofollow, noarchive, nosnippet, noimageindex" : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"}
       />
-      <meta name="googlebot" content={noIndex ? "noindex, nofollow" : "index, follow"} />
-      <meta name="bingbot" content={noIndex ? "noindex, nofollow" : "index, follow"} />
+      <meta name="googlebot" content={blockIndex ? "noindex, nofollow" : "index, follow"} />
+      <meta name="bingbot" content={blockIndex ? "noindex, nofollow" : "index, follow"} />
       <meta name="rating" content="general" />
       <meta name="distribution" content="global" />
       <meta name="revisit-after" content="7 days" />
