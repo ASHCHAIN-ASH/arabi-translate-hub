@@ -185,6 +185,30 @@ export default function AdminInvoiceDetails() {
           </div>
         </div>
 
+        {/* رابط الدفع المباشر بدون تسجيل */}
+        {payLink && invoice.remaining_amount > 0 && (
+          <Card className="border-0 shadow-md bg-primary/5">
+            <CardContent className="p-4 flex flex-col lg:flex-row lg:items-center gap-3">
+              <div className="flex items-center gap-2 text-sm font-bold text-primary shrink-0">
+                <LinkIcon className="w-4 h-4" /> رابط الدفع المباشر (بدون تسجيل دخول)
+              </div>
+              <code dir="ltr" className="flex-1 min-w-0 truncate rounded-lg bg-background border px-3 py-2 text-xs">{payLink}</code>
+              <div className="flex flex-wrap gap-2">
+                <Button size="sm" variant="outline" onClick={copyPayLink}><Copy className="w-4 h-4 ml-1" />نسخ</Button>
+                <Button size="sm" variant="outline" asChild><a href={payLink} target="_blank" rel="noreferrer">فتح</a></Button>
+                {invoice.customer_phone && (
+                  <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white" onClick={sendPayLinkWhatsapp} disabled={sendingLink}>
+                    <MessageCircle className={`w-4 h-4 ml-1 ${sendingLink ? 'animate-pulse' : ''}`} />
+                    إرسال الرابط واتساب
+                  </Button>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main */}
           <div className="lg:col-span-2 space-y-6">
