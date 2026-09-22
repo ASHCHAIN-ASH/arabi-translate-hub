@@ -14,7 +14,7 @@ const COMPANY = {
   address: 'المملكة العربية السعودية — الرياض',
   email: 'info@fekrahedu.com',
   phone: '0593799355',
-  phoneIntl: '+966 59 379 9355',
+  phoneIntl: '0593799355',
   website: 'fekrahedu.com',
   vatNumber: '312206352700003',
   crNumber: '7039030916',
@@ -378,7 +378,6 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
             البائع: ${COMPANY.name}<br/>
             الرقم الضريبي: <span dir="ltr">${COMPANY.vatNumber}</span><br/>
             السجل التجاري: <span dir="ltr">${COMPANY.crNumber}</span><br/>
-            الجوال: <span dir="ltr">${COMPANY.phoneIntl}</span><br/>
             الإجمالي: ${fmt(invoice.total_amount)}${taxEnabled ? `<br/>ض.ق.م: ${fmt(computedVat)}` : ''}
           </div>
         </div>
@@ -406,14 +405,12 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
     <div class="thanks">شكراً لثقتكم بـ ${COMPANY.name} 🌟</div>
     <div class="legal">
       هذه الفاتورة صادرة إلكترونياً ولا تحتاج إلى توقيع أو ختم.<br/>
-      للاستفسارات: ${COMPANY.email} • <span dir="ltr">${COMPANY.phoneIntl}</span>
+      للاستفسارات: ${COMPANY.email} • جوال / واتساب: <span dir="ltr">${COMPANY.phoneIntl}</span>
     </div>
     <div class="legal-strip">
       <span>السجل التجاري: <b dir="ltr">${COMPANY.crNumber}</b></span>
       <span class="sep">•</span>
       <span>الرقم الضريبي: <b dir="ltr">${COMPANY.vatNumber}</b></span>
-      <span class="sep">•</span>
-      <span>جوال / واتساب: <b dir="ltr">${COMPANY.phoneIntl}</b></span>
       <span class="sep">•</span>
       <span>${COMPANY.name} إحدى مشاريع <b>${COMPANY.holding}</b></span>
     </div>
