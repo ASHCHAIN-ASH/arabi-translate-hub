@@ -263,6 +263,9 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
   .footer .thanks { font-size: 14px; color: var(--primary-2); font-weight: 700; margin-bottom: 6px; }
   .footer .legal { font-size: 11px; color: var(--muted); line-height: 1.8; }
   .footer .stamp { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 6px 14px; background: #fff; border: 1px dashed var(--line); border-radius: 999px; font-size: 10px; color: var(--muted); letter-spacing: .5px; }
+  .footer .legal-strip { margin-top: 10px; padding: 9px 12px; background: #fff; border: 1px solid var(--line); border-radius: 10px; font-size: 10.5px; color: var(--ink-2); display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; line-height: 1.9; }
+  .footer .legal-strip b { font-feature-settings: "tnum"; letter-spacing: .4px; color: var(--ink); }
+  .footer .legal-strip .sep { color: var(--muted-2); }
 
   /* ACTIONS BAR */
   .actions { position: fixed; top: 14px; left: 14px; display: flex; gap: 8px; z-index: 1000; }
@@ -278,6 +281,10 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
     .header { padding: 18px 22px 14px; }
     .body { padding: 14px 22px 4px; }
     .footer { padding: 12px 22px 16px; }
+  }
+  @media print {
+    table.items tr, .section, .totals-wrap, .footer { page-break-inside: avoid; }
+    table.items thead { display: table-header-group; }
   }
   @page { size: A4; margin: 10mm; }
 </style>
