@@ -108,7 +108,7 @@ export default function AdminInvoiceDetails() {
   const copyPayLink = async () => {
     if (!payLink) return toast.error('رابط الدفع غير متاح لهذه الفاتورة');
     await navigator.clipboard.writeText(payLink);
-    toast.success('تم نسخ رابط الدفع المباشر');
+    toast.success('تم نسخ رابط سداد الفاتورة');
   };
 
   const [sendingLink, setSendingLink] = useState(false);
@@ -118,7 +118,7 @@ export default function AdminInvoiceDetails() {
     setSendingLink(true);
     try {
       const amount = Number(invoice.remaining_amount || 0).toLocaleString('en-US');
-      const text = `مرحباً ${invoice.customer_name || ''} 👋\n\nفاتورتك رقم ${invoice.invoice_number} من فِكرة (FekrahEdu)\nالمبلغ المستحق: ${amount} ر.س\n\nيمكنك السداد مباشرة بالبطاقة من هذا الرابط بدون إنشاء حساب:\n${payLink}\n\nشكراً لثقتك 🤍`;
+      const text = `مرحباً ${invoice.customer_name || ''} 👋\n\nفاتورتك رقم ${invoice.invoice_number} من فِكرة (FekrahEdu)\nالمبلغ المستحق: ${amount} ر.س\n\nللسداد: افتح الرابط وسجّل الدخول إلى حسابك ثم أكمل الدفع داخل الموقع:\n${payLink}\n\nشكراً لثقتك 🤍`;
       const { data, error } = await supabase.functions.invoke('whatsapp-send', {
         body: { to: invoice.customer_phone, message: text },
       });
@@ -185,12 +185,12 @@ export default function AdminInvoiceDetails() {
           </div>
         </div>
 
-        {/* رابط الدفع المباشر بدون تسجيل */}
+        {/* رابط سداد الفاتورة — يفتح بعد تسجيل الدخول */}
         {payLink && invoice.remaining_amount > 0 && (
           <Card className="border-0 shadow-md bg-primary/5">
             <CardContent className="p-4 flex flex-col lg:flex-row lg:items-center gap-3">
               <div className="flex items-center gap-2 text-sm font-bold text-primary shrink-0">
-                <LinkIcon className="w-4 h-4" /> رابط الدفع المباشر (بدون تسجيل دخول)
+                <LinkIcon className="w-4 h-4" /> رابط سداد الفاتورة (يتطلب تسجيل الدخول)
               </div>
               <code dir="ltr" className="flex-1 min-w-0 truncate rounded-lg bg-background border px-3 py-2 text-xs">{payLink}</code>
               <div className="flex flex-wrap gap-2">
