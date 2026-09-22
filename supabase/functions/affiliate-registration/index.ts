@@ -468,7 +468,7 @@ const handler = async (req: Request): Promise<Response> => {
           <div class="footer">
             <p class="company-name">🎯 FekrahEdu</p>
             <p>للحلول التعليمية والأكاديمية المتقدمة</p>
-            <p>📞 0559600824 | 📧 legal@fekrahedu.com</p>
+            <p>📞 0593799355 | 📧 legal@fekrahedu.com</p>
             <p>🌐 www.fekrahedu.com</p>
             <p style="margin-top: 15px; font-size: 12px; opacity: 0.8;">
               &copy; 2024 جميع الحقوق محفوظة
@@ -495,7 +495,7 @@ const handler = async (req: Request): Promise<Response> => {
 شكراً لانضمامك إلى فريقنا!
 
 FekrahEdu
-📞 0559600824 | 📧 legal@fekrahedu.com
+📞 0593799355 | 📧 legal@fekrahedu.com
     `;
 
     // إرسال بريد العميل بشكل متزامن والتبليغ عن أي خطأ
@@ -854,7 +854,7 @@ FekrahEdu
           <div class="footer">
             <p><strong>نظام إدارة التسويق بالعمولة</strong></p>
             <p>FekrahEdu للحلول التعليمية المتقدمة</p>
-            <p>📞 0559600824 | 📧 legal@fekrahedu.com</p>
+            <p>📞 0593799355 | 📧 legal@fekrahedu.com</p>
             <p style="margin-top: 15px; font-size: 12px; opacity: 0.8;">
               تم إرسال هذا التنبيه تلقائياً من نظام إدارة الشركاء
             </p>

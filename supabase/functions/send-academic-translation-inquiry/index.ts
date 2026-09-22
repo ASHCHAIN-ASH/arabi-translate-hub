@@ -405,8 +405,8 @@ const handler = async (req: Request): Promise<Response> => {
               <div class="contact-info">
                 <h3>📞 معلومات التواصل العاجل</h3>
                 <p><strong>البريد الإلكتروني:</strong> <span class="ltr">info@fekrahedu.com</span></p>
-                <p><strong>الهاتف:</strong> <span class="ltr">0559600824</span></p>
-                <p><strong>واتساب:</strong> <span class="ltr">0559600824</span></p>
+                <p><strong>الهاتف:</strong> <span class="ltr">0593799355</span></p>
+                <p><strong>واتساب:</strong> <span class="ltr">0593799355</span></p>
                 <p><strong>أوقات العمل:</strong> الأحد - الخميس، 10:00 ص - 7:00 م</p>
               </div>
             </div>
@@ -645,8 +645,8 @@ const handler = async (req: Request): Promise<Response> => {
               <div class="contact-info">
                 <h3>📞 معلومات التواصل:</h3>
                 <p><strong>البريد الإلكتروني:</strong> <span class="ltr">info@fekrahedu.com</span></p>
-                <p><strong>الهاتف:</strong> <span class="ltr">0559600824</span></p>
-                <p><strong>واتساب:</strong> <span class="ltr">0559600824</span></p>
+                <p><strong>الهاتف:</strong> <span class="ltr">0593799355</span></p>
+                <p><strong>واتساب:</strong> <span class="ltr">0593799355</span></p>
                 <p><strong>أوقات العمل:</strong> الأحد - الخميس، 10:00 ص - 7:00 م</p>
               </div>
             </div>

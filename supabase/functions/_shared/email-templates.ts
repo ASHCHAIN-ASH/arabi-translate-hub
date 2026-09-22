@@ -574,7 +574,7 @@ export const generateClientEmailTemplate = (
             </div>
             <div class="contact-item">
               <span class="contact-icon">📱</span>
-              <div class="contact-text">0559600824</div>
+              <div class="contact-text">0593799355</div>
             </div>
             <div class="contact-item">
               <span class="contact-icon">🌐</span>
@@ -614,7 +614,7 @@ export const generateClientEmailTemplate = (
     
     للتواصل:
     📧 legal@fekrahedu.com
-    📱 0559600824
+    📱 0593799355
     🌐 www.fekrahedu.com
     
     © 2024 FekrahEdu للحلول التعليمية المتقدمة
@@ -750,7 +750,7 @@ export const generateAdminEmailTemplate = (
             نظام الإدارة المتقدم - FekrahEdu
           </p>
           <p style="font-size: 14px; opacity: 0.8;">
-            📧 legal@fekrahedu.com | 📱 0559600824 | 🌐 fekrahedu.com
+            📧 legal@fekrahedu.com | 📱 0593799355 | 🌐 fekrahedu.com
           </p>
         </div>
       </div>
@@ -770,7 +770,7 @@ export const generateAdminEmailTemplate = (
     ${data.additionalInfo || ''}
     
     النظام الإداري - FekrahEdu
-    📧 legal@fekrahedu.com | 📱 0559600824
+    📧 legal@fekrahedu.com | 📱 0593799355
   `;
   
   return {

@@ -154,7 +154,7 @@ const handler = async (req: Request): Promise<Response> => {
               
               <div className="info-row">
                 <span class="label">رقم الهاتف:</span>
-                <span class="value">0559600824</span>
+                <span class="value">0593799355</span>
               </div>
               
               <div class="info-row">
@@ -296,8 +296,8 @@ const handler = async (req: Request): Promise<Response> => {
               <div class="contact-info">
                 <h3 style="color: #1f2937; margin-bottom: 15px;">معلومات التواصل السريع:</h3>
                 <p>📧 البريد الإلكتروني: info@fekrahedu.com</p>
-                <p>📞 الهاتف: 0559600824</p>
-                <p>💬 الواتساب: 0559600824</p>
+                <p>📞 الهاتف: 0593799355</p>
+                <p>💬 الواتساب: 0593799355</p>
                 <p>⏰ ساعات العمل: السبت - الخميس، 10 صباحاً - 6 مساءً</p>
                 <p>📍 العنوان: المملكة العربية السعودية</p>
               </div>

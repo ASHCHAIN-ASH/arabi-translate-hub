@@ -563,7 +563,7 @@ const handler = async (req: Request): Promise<Response> => {
                  📧 البريد الإلكتروني: ${departmentEmail}
               </div>
               <div class="contact-item">
-                📱 جوال/واتساب: 0559600824
+                📱 جوال/واتساب: 0593799355
               </div>
               <div class="contact-item">
                 🌐 الموقع الإلكتروني: www.fekrahedu.com
