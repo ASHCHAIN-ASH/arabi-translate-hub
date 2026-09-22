@@ -73,7 +73,10 @@ Deno.serve(async (req) => {
       .select("item_name, quantity, unit_price, total_price")
       .eq("invoice_id", invoice.id);
 
-    const invoiceUrl = `${SITE_URL}/invoices/${invoice.id}/pay`;
+    // رابط الدفع المباشر بدون تسجيل دخول (يفضَّل)، مع التراجع لصفحة العميل
+    const invoiceUrl = invoice.public_pay_token
+      ? `${SITE_URL}/pay/${invoice.public_pay_token}`
+      : `${SITE_URL}/invoices/${invoice.id}/pay`;
     const currency = invoice.currency || "SAR";
     const remaining = Number(
       invoice.remaining_amount ??

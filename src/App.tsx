@@ -32,6 +32,7 @@ const Index = lazy(() => import("./pages/Index"));
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 const PaymentReturn = lazy(() => import("./pages/PaymentReturn"));
+const PublicInvoicePay = lazy(() => import("./pages/PublicInvoicePay"));
 const ContractSignByToken = lazy(() => import("./pages/ContractSignByToken"));
 
 const TranslationServices = lazy(() => import("./pages/TranslationServices"));
@@ -336,6 +337,7 @@ const App = () => (
            <Route path="/institutional-partnerships" element={<InstitutionalPartnerships />} />
             <Route path="/payment-methods" element={<PaymentMethods />} />
             <Route path="/payment/return" element={<PaymentReturn />} />
+            <Route path="/pay/:token" element={<PublicInvoicePay />} />
             <Route path="/universities" element={<Universities />} />
             <Route path="/journals" element={<JournalsDirectory />} />
             <Route path="/journals/:slug" element={<JournalCategory />} />

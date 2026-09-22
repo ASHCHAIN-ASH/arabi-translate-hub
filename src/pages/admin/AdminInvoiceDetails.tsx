@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ArrowRight, Edit, Printer, Download, CreditCard, Send, FileText, User, Package, Clock, Loader2, Trash2, MessageCircle } from 'lucide-react';
+import { ArrowRight, Edit, Printer, Download, CreditCard, Send, FileText, User, Package, Clock, Loader2, Trash2, MessageCircle, Link as LinkIcon, Copy } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/data/legacy/client';
 import { InvoiceService, type Invoice, type InvoiceItem, type InvoicePayment, type InvoiceTimelineEntry } from '@/utils/invoiceService';
@@ -102,6 +102,34 @@ export default function AdminInvoiceDetails() {
     } finally { setSendingWa(false); }
   };
 
+  const payToken = (invoice as any)?.public_pay_token as string | undefined;
+  const payLink = payToken ? `${window.location.origin}/pay/${payToken}` : '';
+
+  const copyPayLink = async () => {
+    if (!payLink) return toast.error('رابط الدفع غير متاح لهذه الفاتورة');
+    await navigator.clipboard.writeText(payLink);
+    toast.success('تم نسخ رابط الدفع المباشر');
+  };
+
+  const [sendingLink, setSendingLink] = useState(false);
+  const sendPayLinkWhatsapp = async () => {
+    if (!invoice || !payLink) return;
+    if (!invoice.customer_phone) { toast.error('لا يوجد رقم جوال للعميل'); return; }
+    setSendingLink(true);
+    try {
+      const amount = Number(invoice.remaining_amount || 0).toLocaleString('en-US');
+      const text = `مرحباً ${invoice.customer_name || ''} 👋\n\nفاتورتك رقم ${invoice.invoice_number} من فِكرة (FekrahEdu)\nالمبلغ المستحق: ${amount} ر.س\n\nيمكنك السداد مباشرة بالبطاقة من هذا الرابط بدون إنشاء حساب:\n${payLink}\n\nشكراً لثقتك 🤍`;
+      const { data, error } = await supabase.functions.invoke('whatsapp-send', {
+        body: { to: invoice.customer_phone, message: text },
+      });
+      if (error) throw error;
+      if (data && data.success === false) throw new Error(data.error || 'فشل الإرسال');
+      toast.success('تم إرسال رابط الدفع للعميل عبر واتساب');
+    } catch (e: any) {
+      toast.error('تعذّر إرسال الرابط', { description: e?.message });
+    } finally { setSendingLink(false); }
+  };
+
   const handleDelete = async () => {
     if (!invoice) return;
     if (!confirm(`حذف الفاتورة ${invoice.invoice_number}؟`)) return;
@@ -156,6 +184,30 @@ export default function AdminInvoiceDetails() {
             <Button size="sm" variant="outline" className="text-destructive" onClick={handleDelete}><Trash2 className="w-4 h-4" /></Button>
           </div>
         </div>
+
+        {/* رابط الدفع المباشر بدون تسجيل */}
+        {payLink && invoice.remaining_amount > 0 && (
+          <Card className="border-0 shadow-md bg-primary/5">
+            <CardContent className="p-4 flex flex-col lg:flex-row lg:items-center gap-3">
+              <div className="flex items-center gap-2 text-sm font-bold text-primary shrink-0">
+                <LinkIcon className="w-4 h-4" /> رابط الدفع المباشر (بدون تسجيل دخول)
+              </div>
+              <code dir="ltr" className="flex-1 min-w-0 truncate rounded-lg bg-background border px-3 py-2 text-xs">{payLink}</code>
+              <div className="flex flex-wrap gap-2">
+                <Button size="sm" variant="outline" onClick={copyPayLink}><Copy className="w-4 h-4 ml-1" />نسخ</Button>
+                <Button size="sm" variant="outline" asChild><a href={payLink} target="_blank" rel="noreferrer">فتح</a></Button>
+                {invoice.customer_phone && (
+                  <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white" onClick={sendPayLinkWhatsapp} disabled={sendingLink}>
+                    <MessageCircle className={`w-4 h-4 ml-1 ${sendingLink ? 'animate-pulse' : ''}`} />
+                    إرسال الرابط واتساب
+                  </Button>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main */}
