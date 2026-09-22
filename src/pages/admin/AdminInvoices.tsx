@@ -170,8 +170,22 @@ export default function AdminInvoices() {
                 <SelectItem value="cancelled">ملغاة</SelectItem>
               </SelectContent>
             </Select>
+            <div className="flex gap-1 bg-muted/50 rounded-lg p-1">
+              {([['all', 'الكل'], ['paid', 'مدفوعة'], ['unpaid', 'غير مدفوعة']] as const).map(([k, label]) => (
+                <Button
+                  key={k}
+                  size="sm"
+                  variant={payFilter === k ? 'default' : 'ghost'}
+                  className="flex-1 md:flex-none"
+                  onClick={() => setPayFilter(k)}
+                >
+                  {label}
+                </Button>
+              ))}
+            </div>
           </CardContent>
         </Card>
+
 
         <Card className="border-0 shadow-md hidden lg:block">
           <CardContent className="p-0">
