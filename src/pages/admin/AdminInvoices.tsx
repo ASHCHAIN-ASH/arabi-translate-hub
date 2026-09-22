@@ -341,14 +341,39 @@ function EmptyState() {
     </div>
   );
 }
-function RowActions({ inv, onEdit, onPay, onDelete, onPrint, onDownload, onSend }: any) {
+function InvoiceTags({ inv }: { inv: Invoice }) {
+  const guest = inv.is_guest || !inv.user_id;
+  const taxed = inv.tax_enabled || Number(inv.tax_amount ?? 0) > 0;
+  return (
+    <div className="flex flex-wrap items-center gap-1 mt-1">
+      {guest && (
+        <Badge variant="outline" className="text-[10px] gap-1 border-sky-500/30 text-sky-600 bg-sky-500/5">
+          <UserX className="w-3 h-3" />عميل غير مسجّل
+        </Badge>
+      )}
+      <Badge variant="outline" className="text-[10px] gap-1">
+        <Percent className="w-3 h-3" />
+        {taxed ? `ضريبية ${Number(inv.tax_rate ?? 15)}%${inv.tax_inclusive ? ' (شاملة)' : ''}` : 'بدون ضريبة'}
+      </Badge>
+    </div>
+  );
+}
+function RowActions({ inv, onDelete, onPrint, onDownload, onSend, onMarkPaid, onMarkUnpaid }: any) {
+  const isPaid = inv.status === 'paid';
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild><Button variant="ghost" size="icon"><MoreVertical className="w-4 h-4" /></Button></DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem asChild><Link to={`/adminfekrah/invoices/${inv.id}`}><Eye className="w-4 h-4 ml-2" />التفاصيل</Link></DropdownMenuItem>
-        <DropdownMenuItem onClick={onEdit}><Edit className="w-4 h-4 ml-2" />تعديل</DropdownMenuItem>
-        <DropdownMenuItem onClick={onPay}><CreditCard className="w-4 h-4 ml-2" />دفعة</DropdownMenuItem>
+        <DropdownMenuItem asChild><Link to={`/adminfekrah/invoices/${inv.id}/edit`}><Edit className="w-4 h-4 ml-2" />تعديل</Link></DropdownMenuItem>
+        <DropdownMenuItem asChild><Link to={`/adminfekrah/invoices/${inv.id}/payment`}><CreditCard className="w-4 h-4 ml-2" />دفعة</Link></DropdownMenuItem>
+        <DropdownMenuSeparator />
+        {isPaid ? (
+          <DropdownMenuItem onClick={onMarkUnpaid}><Undo2 className="w-4 h-4 ml-2" />تعليم كغير مدفوعة</DropdownMenuItem>
+        ) : (
+          <DropdownMenuItem onClick={onMarkPaid}><CheckCircle2 className="w-4 h-4 ml-2" />تعليم كمدفوعة</DropdownMenuItem>
+        )}
+        <DropdownMenuSeparator />
         <DropdownMenuItem onClick={onSend}>
           <Mail className="w-4 h-4 ml-2" />
           إرسال بالبريد
