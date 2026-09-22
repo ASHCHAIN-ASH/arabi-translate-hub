@@ -108,10 +108,10 @@ const SEO = ({
       {/* Additional SEO Meta Tags */}
       <meta
         name="robots"
-        content={noIndex ? "noindex, nofollow" : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"}
+        content={blockIndex ? "noindex, nofollow, noarchive, nosnippet, noimageindex" : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"}
       />
-      <meta name="googlebot" content={noIndex ? "noindex, nofollow" : "index, follow"} />
-      <meta name="bingbot" content={noIndex ? "noindex, nofollow" : "index, follow"} />
+      <meta name="googlebot" content={blockIndex ? "noindex, nofollow" : "index, follow"} />
+      <meta name="bingbot" content={blockIndex ? "noindex, nofollow" : "index, follow"} />
       <meta name="rating" content="general" />
       <meta name="distribution" content="global" />
       <meta name="revisit-after" content="7 days" />
