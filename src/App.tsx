@@ -337,6 +337,7 @@ const App = () => (
            <Route path="/institutional-partnerships" element={<InstitutionalPartnerships />} />
             <Route path="/payment-methods" element={<PaymentMethods />} />
             <Route path="/payment/return" element={<PaymentReturn />} />
+            <Route path="/pay/:token" element={<PublicInvoicePay />} />
             <Route path="/universities" element={<Universities />} />
             <Route path="/journals" element={<JournalsDirectory />} />
             <Route path="/journals/:slug" element={<JournalCategory />} />
