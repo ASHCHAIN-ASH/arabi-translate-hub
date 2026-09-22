@@ -75,8 +75,9 @@ export class AdminDashboardService {
         .gte('created_at', startOfDay.toISOString());
 
       const { count: overdueCount } = await supabase.from('invoices').select('*', { count: 'exact', head: true })
-        .neq('status', 'paid')
-        .not('due_date', 'is', null);
+        .not('status', 'in', '("paid","cancelled","draft")')
+        .not('due_date', 'is', null)
+        .lt('due_date', new Date().toISOString().slice(0, 10));
 
       const { count: paidCount } = await supabase.from('invoices').select('*', { count: 'exact', head: true })
         .eq('status', 'paid');
