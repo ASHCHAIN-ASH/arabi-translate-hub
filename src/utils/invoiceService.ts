@@ -282,6 +282,34 @@ export const InvoiceService = {
     if (error) throw error;
   },
 
+  /** تعليم الفاتورة كمدفوعة بالكامل */
+  async markPaid(invoice: Invoice): Promise<void> {
+    const { error } = await supabase
+      .from('invoices')
+      .update({
+        paid_amount: invoice.total_amount,
+        remaining_amount: 0,
+        status: 'paid',
+        paid_at: new Date().toISOString(),
+      } as any)
+      .eq('id', invoice.id);
+    if (error) throw error;
+  },
+
+  /** إرجاع الفاتورة إلى حالة غير مدفوعة */
+  async markUnpaid(invoice: Invoice): Promise<void> {
+    const { error } = await supabase
+      .from('invoices')
+      .update({
+        paid_amount: 0,
+        remaining_amount: invoice.total_amount,
+        status: invoice.sent_at ? 'sent' : 'pending',
+        paid_at: null,
+      } as any)
+      .eq('id', invoice.id);
+    if (error) throw error;
+  },
+
   async remove(id: string): Promise<void> {
     const { error } = await supabase.from('invoices').delete().eq('id', id);
     if (error) throw error;
