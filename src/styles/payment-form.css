@@ -1,0 +1,155 @@
+/* تنسيق نموذج الدفع — مظهر بوابة الدفع الرسمي بهوية فِكرة، بدون أي علامة تجارية للمزوّد */
+
+.mysr-form {
+  direction: ltr;
+  font-family: inherit;
+}
+
+/* إخفاء علامة المزوّد وإشعارات الإعداد */
+.mysr-form .mysr-form-footer,
+.mysr-form .mysr-form-configNotice {
+  display: none !important;
+}
+
+/* الحاوية */
+.mysr-form .mysr-form-body,
+.mysr-form form {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 14px;
+  padding: 18px;
+}
+
+/* تبويبات طرق الدفع */
+.mysr-form .mysr-form-tabs,
+.mysr-form .mysr-methods {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.mysr-form .mysr-form-tab,
+.mysr-form .mysr-method {
+  flex: 1;
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--muted) / 0.4);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: hsl(var(--foreground));
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.mysr-form .mysr-form-tab:hover,
+.mysr-form .mysr-method:hover {
+  border-color: hsl(var(--primary) / 0.5);
+}
+
+.mysr-form .mysr-form-tab.active,
+.mysr-form .mysr-form-tab[aria-selected="true"],
+.mysr-form .mysr-method.active {
+  border-color: hsl(var(--primary));
+  background: hsl(var(--primary) / 0.08);
+  color: hsl(var(--primary));
+}
+
+/* الحقول */
+.mysr-form label,
+.mysr-form .mysr-form-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: hsl(var(--muted-foreground));
+  margin-bottom: 6px;
+  display: block;
+}
+
+.mysr-form input[type="text"],
+.mysr-form input[type="tel"],
+.mysr-form input[type="number"],
+.mysr-form input[type="email"],
+.mysr-form .mysr-form-input,
+.mysr-form select {
+  width: 100%;
+  height: 46px;
+  border: 1px solid hsl(var(--border));
+  border-radius: 10px;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  padding: 0 12px;
+  font-size: 0.95rem;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.mysr-form input:focus,
+.mysr-form select:focus {
+  outline: none;
+  border-color: hsl(var(--primary));
+  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.15);
+}
+
+.mysr-form .mysr-form-group,
+.mysr-form .mysr-form-field {
+  margin-bottom: 14px;
+}
+
+/* زر الدفع */
+.mysr-form button[type="submit"],
+.mysr-form .mysr-button,
+.mysr-form .mysr-form-submit {
+  width: 100%;
+  height: 50px;
+  border: none;
+  border-radius: 12px;
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: filter 0.18s ease, transform 0.18s ease;
+}
+
+.mysr-form button[type="submit"]:hover,
+.mysr-form .mysr-button:hover {
+  filter: brightness(1.06);
+}
+
+.mysr-form button[type="submit"]:active {
+  transform: translateY(1px);
+}
+
+.mysr-form button[type="submit"]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* رسائل الخطأ */
+.mysr-form .mysr-form-error,
+.mysr-form .invalid-feedback,
+.mysr-form .error {
+  color: hsl(var(--destructive));
+  font-size: 0.8125rem;
+  margin-top: 4px;
+}
+
+/* Apple Pay */
+.mysr-form apple-pay-button,
+.mysr-form .apple-pay-button {
+  --apple-pay-button-height: 50px;
+  --apple-pay-button-border-radius: 12px;
+  width: 100%;
+  height: 50px;
+}
+
+/* تجاوب */
+@media (max-width: 480px) {
+  .mysr-form .mysr-form-body,
+  .mysr-form form {
+    padding: 14px;
+  }
+  .mysr-form .mysr-form-tabs,
+  .mysr-form .mysr-methods {
+    flex-wrap: wrap;
+  }
+}
