@@ -265,6 +265,7 @@ export default function AdminInvoices() {
                     )}
                   </div>
                   <div className="text-xs text-muted-foreground">{inv.issue_date}</div>
+                  <InvoiceTags inv={inv} />
                   <div className="mt-1"><EmailCell log={emailLogs[inv.id]} /></div>
                 </div>
                 <div className="grid grid-cols-3 gap-2 text-xs bg-muted/40 rounded-md p-2">
