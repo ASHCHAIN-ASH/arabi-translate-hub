@@ -32,6 +32,7 @@ const Index = lazy(() => import("./pages/Index"));
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 const PaymentReturn = lazy(() => import("./pages/PaymentReturn"));
+const PublicInvoicePay = lazy(() => import("./pages/PublicInvoicePay"));
 const ContractSignByToken = lazy(() => import("./pages/ContractSignByToken"));
 
 const TranslationServices = lazy(() => import("./pages/TranslationServices"));
