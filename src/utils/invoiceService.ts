@@ -199,10 +199,18 @@ export const InvoiceService = {
 
   async create(input: CreateInvoiceInput): Promise<Invoice> {
     const items = input.items.map((it) => ({ ...it, total_price: computeItemTotal(it) }));
-    const subtotal = items.reduce((s, it) => s + it.total_price, 0);
-    const discount = input.discount_amount ?? 0;
-    const tax = input.tax_amount ?? 0;
-    const total = Math.max(0, subtotal - discount + tax);
+    const itemsTotal = items.reduce((s, it) => s + it.total_price, 0);
+    const taxSettings: TaxSettings = {
+      taxEnabled: input.tax_enabled ?? false,
+      taxRate: input.tax_rate ?? DEFAULT_VAT_RATE,
+      taxInclusive: input.tax_inclusive ?? false,
+    };
+    const totals = computeInvoiceTotals(itemsTotal, input.discount_amount ?? 0, taxSettings);
+    const subtotal = totals.subtotal;
+    const discount = totals.discount;
+    const tax = totals.tax;
+    const total = totals.total;
+
 
     const { data: inv, error } = await supabase
       .from('invoices')
