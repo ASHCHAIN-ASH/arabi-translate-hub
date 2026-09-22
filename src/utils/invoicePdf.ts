@@ -399,7 +399,16 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
     <div class="thanks">شكراً لثقتكم بـ ${COMPANY.name} 🌟</div>
     <div class="legal">
       هذه الفاتورة صادرة إلكترونياً ولا تحتاج إلى توقيع أو ختم.<br/>
-      للاستفسارات: ${COMPANY.email} • ${COMPANY.phone}
+      للاستفسارات: ${COMPANY.email} • <span dir="ltr">${COMPANY.phoneIntl}</span>
+    </div>
+    <div class="legal-strip">
+      <span>السجل التجاري: <b dir="ltr">${COMPANY.crNumber}</b></span>
+      <span class="sep">•</span>
+      <span>الرقم الضريبي: <b dir="ltr">${COMPANY.vatNumber}</b></span>
+      <span class="sep">•</span>
+      <span>جوال / واتساب: <b dir="ltr">${COMPANY.phoneIntl}</b></span>
+      <span class="sep">•</span>
+      <span>${COMPANY.name} إحدى مشاريع <b>${COMPANY.holding}</b></span>
     </div>
     <div class="stamp">🔒 وثيقة رقمية موقّعة • ${COMPANY.website}</div>
   </div>
