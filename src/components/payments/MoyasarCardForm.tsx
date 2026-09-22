@@ -90,7 +90,12 @@ const MoyasarCardForm: React.FC<MoyasarCardFormProps> = ({
           description: data.description,
           publishable_api_key: data.publishable_key,
           callback_url: data.callback_url,
-          methods: ['creditcard'],
+          methods: ['creditcard', 'applepay', 'stcpay'],
+          apple_pay: {
+            country: 'SA',
+            label: 'FekrahEdu',
+            validate_merchant_url: 'https://api.moyasar.com/v1/applepay/initiate',
+          },
           language: 'ar',
           metadata: { order: data.internal_order_number },
         });
