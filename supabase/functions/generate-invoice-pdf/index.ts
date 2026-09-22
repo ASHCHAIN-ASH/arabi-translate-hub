@@ -16,7 +16,7 @@ const PLATFORM = {
   website: "https://fekrahedu.com",
   email: "info@fekrahedu.com",
   whatsapp1: "0593799355",
-  address: "المملكة العربية السعودية — الرياض",
+  address: "المملكة العربية السعودية",
   cr: "7039030916",
   vatNumber: "312206352700003",
   logo: "https://fekrahedu.com/fekrah-logo.jpg",
