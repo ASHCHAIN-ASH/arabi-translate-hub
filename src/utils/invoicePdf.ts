@@ -11,7 +11,7 @@ import { InvoiceService } from './invoiceService';
 const COMPANY = {
   name: 'فِكرة (FekrahEdu)',
   nameEn: 'FekrahEdu',
-  address: 'المملكة العربية السعودية — الرياض',
+  address: 'المملكة العربية السعودية',
   email: 'info@fekrahedu.com',
   phone: '0593799355',
   phoneIntl: '0593799355',
