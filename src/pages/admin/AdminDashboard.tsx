@@ -145,6 +145,16 @@ const AdminDashboard = () => {
       up: stats.overdueInvoices === 0
     },
     {
+      label: 'إجمالي الفواتير',
+      sublabel: `محصّل: ${stats.totalCollected.toLocaleString('en-US')} ر.س`,
+      value: stats.totalInvoices,
+      icon: FileText,
+      gradient: 'from-blue-500 via-indigo-500 to-sky-500',
+      bgGradient: 'from-blue-500/10 to-sky-500/10',
+      trend: stats.totalInvoices > 0 ? `${stats.totalInvoices} فاتورة` : '0',
+      up: stats.totalInvoices > 0
+    },
+    {
       label: 'نسبة التحصيل',
       sublabel: 'الأداء العام',
       value: stats.collectionRate,
@@ -235,7 +245,7 @@ const AdminDashboard = () => {
         </motion.div>
 
         {/* Stats Grid - Bold & Colorful */}
-        <motion.div variants={fadeUp} className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <motion.div variants={fadeUp} className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4">
           {statCards.map((stat, i) => (
             <motion.div
               key={i}

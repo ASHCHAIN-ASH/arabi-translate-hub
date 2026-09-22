@@ -2,6 +2,8 @@ import { supabase } from '@/data/legacy/client';
 
 export interface DashboardStats {
   totalSales: number;
+  totalInvoices: number;
+  totalCollected: number;
   newOrders: number;
   overdueInvoices: number;
   collectionRate: number;
@@ -55,12 +57,18 @@ export class AdminDashboardService {
       startOfMonth.setDate(1);
       startOfMonth.setHours(0, 0, 0, 0);
 
-      // Sum ALL completed payments this month
-      const { data: salesData } = await supabase.from('payment_transactions').select('amount')
-        .eq('status', 'completed')
-        .gte('created_at', startOfMonth.toISOString());
+      // Sum ALL completed payments this month (gateway + manually recorded invoice payments)
+      const [{ data: salesData }, { data: invoicePaymentsData }] = await Promise.all([
+        supabase.from('payment_transactions').select('amount')
+          .eq('status', 'completed')
+          .gte('created_at', startOfMonth.toISOString()),
+        supabase.from('invoice_payments').select('amount')
+          .gte('created_at', startOfMonth.toISOString()),
+      ]);
 
-      const totalSales = salesData?.reduce((sum, p) => sum + (p.amount || 0), 0) || 0;
+      const totalSales =
+        (salesData?.reduce((sum, p) => sum + Number(p.amount || 0), 0) || 0) +
+        (invoicePaymentsData?.reduce((sum, p) => sum + Number(p.amount || 0), 0) || 0);
 
       const startOfDay = new Date();
       startOfDay.setHours(0, 0, 0, 0);
@@ -69,8 +77,9 @@ export class AdminDashboardService {
         .gte('created_at', startOfDay.toISOString());
 
       const { count: overdueCount } = await supabase.from('invoices').select('*', { count: 'exact', head: true })
-        .neq('status', 'paid')
-        .not('due_date', 'is', null);
+        .not('status', 'in', '("paid","cancelled","draft")')
+        .not('due_date', 'is', null)
+        .lt('due_date', new Date().toISOString().slice(0, 10));
 
       const { count: paidCount } = await supabase.from('invoices').select('*', { count: 'exact', head: true })
         .eq('status', 'paid');
@@ -104,8 +113,13 @@ export class AdminDashboardService {
         monthlyGrowth = Math.round(((thisMonthOrders || 0) - prevMonthOrders) / prevMonthOrders * 100);
       }
 
+      const { data: allInvoicesAmounts } = await supabase.from('invoices').select('paid_amount');
+      const totalCollected = allInvoicesAmounts?.reduce((sum, i) => sum + Number(i.paid_amount || 0), 0) || 0;
+
       return {
         totalSales,
+        totalInvoices: totalInvoicesCount || 0,
+        totalCollected,
         newOrders: newOrdersCount || 0,
         overdueInvoices: overdueCount || 0,
         collectionRate,
@@ -129,14 +143,21 @@ export class AdminDashboardService {
         const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
         const end = new Date(d.getFullYear(), d.getMonth() + 1, 1);
         
-        const { data } = await supabase.from('payment_transactions').select('amount')
-          .eq('status', 'completed')
-          .gte('created_at', d.toISOString())
-          .lt('created_at', end.toISOString());
+        const [{ data }, { data: invPays }] = await Promise.all([
+          supabase.from('payment_transactions').select('amount')
+            .eq('status', 'completed')
+            .gte('created_at', d.toISOString())
+            .lt('created_at', end.toISOString()),
+          supabase.from('invoice_payments').select('amount')
+            .gte('created_at', d.toISOString())
+            .lt('created_at', end.toISOString()),
+        ]);
 
         months.push({
           month: monthNames[d.getMonth()],
-          revenue: data?.reduce((sum, p) => sum + (p.amount || 0), 0) || 0
+          revenue:
+            (data?.reduce((sum, p) => sum + Number(p.amount || 0), 0) || 0) +
+            (invPays?.reduce((sum, p) => sum + Number(p.amount || 0), 0) || 0)
         });
       }
 
