@@ -7,16 +7,16 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
-import { FileText, Plus, Search, RefreshCw, Eye, Edit, Trash2, Download, Printer, CreditCard, MoreVertical, TrendingUp, Clock, CheckCircle2, Mail, Loader2 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { FileText, Plus, Search, RefreshCw, Eye, Edit, Trash2, Download, Printer, CreditCard, MoreVertical, TrendingUp, Clock, CheckCircle2, Mail, FileSpreadsheet, UserX, Undo2, Percent } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { supabase } from '@/data/legacy/client';
 import { InvoiceService, type Invoice } from '@/utils/invoiceService';
 import { openInvoicePrintWindow, downloadInvoiceAsPDF } from '@/utils/invoicePdf';
-import InvoiceFormDialog from '@/components/admin/invoices/InvoiceFormDialog';
-import PaymentDialog from '@/components/admin/invoices/PaymentDialog';
-import SendInvoiceDialog from '@/components/admin/invoices/SendInvoiceDialog';
 import { InvoiceEmailService, EMAIL_STATUS_AR, type EmailLogEntry } from '@/utils/invoiceEmailService';
+
+const PAID_STATES = ['paid'];
+const UNPAID_STATES = ['pending', 'sent', 'partially_paid', 'overdue'];
 
 export default function AdminInvoices() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
