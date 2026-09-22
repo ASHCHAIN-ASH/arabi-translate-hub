@@ -231,6 +231,10 @@ export const InvoiceService = {
         terms: input.terms ?? null,
         currency: input.currency ?? 'SAR',
         status: input.status ?? 'pending',
+        tax_enabled: taxSettings.taxEnabled,
+        tax_rate: taxSettings.taxRate,
+        tax_inclusive: taxSettings.taxInclusive,
+        is_guest: input.is_guest ?? !input.user_id,
       } as any)
       .select()
       .single();
@@ -258,11 +262,17 @@ export const InvoiceService = {
 
     if (items) {
       const recomputed = items.map((it: any) => ({ ...it, total_price: computeItemTotal(it) }));
-      const subtotal = recomputed.reduce((s: number, it: any) => s + it.total_price, 0);
-      const discount = invoicePatch.discount_amount ?? 0;
-      const tax = invoicePatch.tax_amount ?? 0;
-      invoicePatch.subtotal = subtotal;
-      invoicePatch.total_amount = Math.max(0, subtotal - discount + tax);
+      const itemsTotal = recomputed.reduce((s: number, it: any) => s + it.total_price, 0);
+      const totals = computeInvoiceTotals(itemsTotal, invoicePatch.discount_amount ?? 0, {
+        taxEnabled: invoicePatch.tax_enabled ?? false,
+        taxRate: invoicePatch.tax_rate ?? DEFAULT_VAT_RATE,
+        taxInclusive: invoicePatch.tax_inclusive ?? false,
+      });
+      invoicePatch.subtotal = totals.subtotal;
+      invoicePatch.discount_amount = totals.discount;
+      invoicePatch.tax_amount = totals.tax;
+      invoicePatch.total_amount = totals.total;
+
 
       await supabase.from('invoice_items').delete().eq('invoice_id', id);
       await supabase.from('invoice_items').insert(recomputed.map((it: any) => ({ ...it, invoice_id: id })));
