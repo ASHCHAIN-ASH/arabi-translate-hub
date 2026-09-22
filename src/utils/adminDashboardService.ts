@@ -55,12 +55,18 @@ export class AdminDashboardService {
       startOfMonth.setDate(1);
       startOfMonth.setHours(0, 0, 0, 0);
 
-      // Sum ALL completed payments this month
-      const { data: salesData } = await supabase.from('payment_transactions').select('amount')
-        .eq('status', 'completed')
-        .gte('created_at', startOfMonth.toISOString());
+      // Sum ALL completed payments this month (gateway + manually recorded invoice payments)
+      const [{ data: salesData }, { data: invoicePaymentsData }] = await Promise.all([
+        supabase.from('payment_transactions').select('amount')
+          .eq('status', 'completed')
+          .gte('created_at', startOfMonth.toISOString()),
+        supabase.from('invoice_payments').select('amount')
+          .gte('created_at', startOfMonth.toISOString()),
+      ]);
 
-      const totalSales = salesData?.reduce((sum, p) => sum + (p.amount || 0), 0) || 0;
+      const totalSales =
+        (salesData?.reduce((sum, p) => sum + Number(p.amount || 0), 0) || 0) +
+        (invoicePaymentsData?.reduce((sum, p) => sum + Number(p.amount || 0), 0) || 0);
 
       const startOfDay = new Date();
       startOfDay.setHours(0, 0, 0, 0);
