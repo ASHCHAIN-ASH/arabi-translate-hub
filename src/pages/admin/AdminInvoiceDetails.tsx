@@ -154,8 +154,11 @@ export default function AdminInvoiceDetails() {
                 إرسال PDF واتساب
               </Button>
             )}
-            <Button size="sm" variant="outline" onClick={() => setEditOpen(true)}><Edit className="w-4 h-4 ml-1" />تعديل</Button>
-            {invoice.remaining_amount > 0 && <Button size="sm" onClick={() => setPayOpen(true)}><CreditCard className="w-4 h-4 ml-1" />دفعة</Button>}
+            <Button size="sm" variant="outline" asChild><Link to={`/adminfekrah/invoices/${invoice.id}/edit`}><Edit className="w-4 h-4 ml-1" />تعديل</Link></Button>
+            {invoice.remaining_amount > 0 && <Button size="sm" asChild><Link to={`/adminfekrah/invoices/${invoice.id}/payment`}><CreditCard className="w-4 h-4 ml-1" />دفعة</Link></Button>}
+            {invoice.status === 'paid'
+              ? <Button size="sm" variant="outline" onClick={async () => { try { await InvoiceService.markUnpaid(invoice); toast.success('تم تعليمها كغير مدفوعة'); load(); } catch (e: any) { toast.error('تعذر التحديث', { description: e.message }); } }}>تعليم كغير مدفوعة</Button>
+              : <Button size="sm" variant="outline" onClick={async () => { try { await InvoiceService.markPaid(invoice); toast.success('تم تعليمها كمدفوعة'); load(); } catch (e: any) { toast.error('تعذر التحديث', { description: e.message }); } }}>تعليم كمدفوعة</Button>}
             <Button size="sm" variant="outline" className="text-destructive" onClick={handleDelete}><Trash2 className="w-4 h-4" /></Button>
           </div>
         </div>
@@ -217,7 +220,9 @@ export default function AdminInvoiceDetails() {
                 <div className="p-4 bg-muted/40 space-y-2 text-sm">
                   <div className="flex justify-between"><span>المجموع الفرعي</span><span className="font-medium">{InvoiceService.formatCurrency(invoice.subtotal, invoice.currency)}</span></div>
                   {invoice.discount_amount > 0 && <div className="flex justify-between"><span>الخصم</span><span className="text-red-600">- {InvoiceService.formatCurrency(invoice.discount_amount, invoice.currency)}</span></div>}
-                  {invoice.tax_amount > 0 && <div className="flex justify-between"><span>ضريبة القيمة المضافة</span><span>{InvoiceService.formatCurrency(invoice.tax_amount, invoice.currency)}</span></div>}
+                  {invoice.tax_amount > 0
+                    ? <div className="flex justify-between"><span>ضريبة القيمة المضافة {Number(invoice.tax_rate ?? 15)}%{invoice.tax_inclusive ? ' (شاملة)' : ''}</span><span>{InvoiceService.formatCurrency(invoice.tax_amount, invoice.currency)}</span></div>
+                    : <div className="flex justify-between text-muted-foreground"><span>الضريبة</span><span>بدون ضريبة</span></div>}
                   <Separator />
                   <div className="flex justify-between text-base font-bold text-primary"><span>الإجمالي</span><span>{InvoiceService.formatCurrency(invoice.total_amount, invoice.currency)}</span></div>
                   <div className="flex justify-between text-emerald-600"><span>المدفوع</span><span className="font-bold">{InvoiceService.formatCurrency(invoice.paid_amount, invoice.currency)}</span></div>
