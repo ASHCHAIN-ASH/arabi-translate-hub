@@ -147,7 +147,7 @@ const handler = async (req: Request): Promise<Response> => {
                   </h4>
                   <p style="margin: 8px 0; color: #4a5568; font-size: 14px;">
                     <strong>الواتساب:</strong><br>
-                    <a href="https://wa.me/966559600824" style="color: #38a169; text-decoration: none; font-weight: 600;">0559600824</a>
+                    <a href="https://wa.me/966559600824" style="color: #38a169; text-decoration: none; font-weight: 600;">0593799355</a>
                   </p>
                   <p style="margin: 8px 0; color: #4a5568; font-size: 14px;">
                     <strong>خدمة العملاء:</strong><br>

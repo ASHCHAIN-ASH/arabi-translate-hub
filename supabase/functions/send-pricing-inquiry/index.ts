@@ -301,7 +301,7 @@ const handler = async (req: Request): Promise<Response> => {
                 </div>
                  <div class="contact-item">
                    <strong>📱 خدمة المبيعات</strong><br>
-                   <a href="tel:+966559600824">0559600824</a>
+                   <a href="tel:+966559600824">0593799355</a>
                  </div>
                 <div class="contact-item">
                   <strong>🌐 الموقع الإلكتروني</strong><br>
@@ -500,7 +500,7 @@ const handler = async (req: Request): Promise<Response> => {
             <div class="footer">
               <h4>🏢 معلومات الشركة</h4>
               <div class="contact-item">📧 <a href="mailto:info@fekrahedu.com">info@fekrahedu.com</a></div>
-              <div class="contact-item">📱 <a href="tel:+966559600824">0559600824</a></div>
+              <div class="contact-item">📱 <a href="tel:+966559600824">0593799355</a></div>
               <div class="contact-item">🌐 <a href="https://fekrahedu.com">www.fekrahedu.com</a></div>
               <div class="contact-item">📍 الرياض، المملكة العربية السعودية</div>
               <p style="margin-top: 20px; font-size: 12px; opacity: 0.8;">

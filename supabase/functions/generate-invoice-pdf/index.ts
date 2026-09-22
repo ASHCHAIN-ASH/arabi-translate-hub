@@ -9,17 +9,18 @@ const corsHeaders = {
 
 // === بيانات المنصة الرسمية ===
 const PLATFORM = {
-  nameAr: "FekrahEdu",
-  nameEn: "FekrahEdu Agency",
-  legal: "تتبع لشركة علي صالح الشهري القابضة",
+  nameAr: "فِكرة (FekrahEdu)",
+  nameEn: "FekrahEdu",
+  legal: "إحدى مشاريع ASH HOLDING",
   domain: "fekrahedu.com",
   website: "https://fekrahedu.com",
   email: "info@fekrahedu.com",
-  whatsapp1: "0559600824",
-  whatsapp2: "0559600824",
+  whatsapp1: "0593799355",
+  whatsapp2: "0555812567",
   address: "المملكة العربية السعودية — الرياض",
-  cr: "—", // السجل التجاري (يمكن إضافته لاحقاً)
-  vatNumber: "—", // الرقم الضريبي (يمكن إضافته لاحقاً عبر متغير بيئة)
+  cr: "7039030916",
+  vatNumber: "312206352700003",
+  logo: "https://fekrahedu.com/fekrah-logo.jpg",
 };
 
 // VAT rate (KSA = 15%)
@@ -496,7 +497,7 @@ function buildInvoiceHTML(inv: any, lastPayment: any): string {
 
   <header class="brand">
     <div class="brand-left">
-      <div class="logo">MEP</div>
+      <img class="logo" src="${PLATFORM.logo}" alt="FekrahEdu" style="object-fit:cover;background:#fff" />
       <div class="brand-text">
         <h1>${esc(PLATFORM.nameAr)}</h1>
         <div class="en">${esc(PLATFORM.nameEn.toUpperCase())}</div>
@@ -533,7 +534,7 @@ function buildInvoiceHTML(inv: any, lastPayment: any): string {
 
   <div class="parties">
     <div class="party">
-      <div class="head"><div class="icon">M</div><div class="ttl">البائع / مُصدِر الفاتورة</div></div>
+      <div class="head"><div class="icon">ف</div><div class="ttl">البائع / مُصدِر الفاتورة</div></div>
       <table>
         <tr><td class="k">الجهة:</td><td class="v">${esc(PLATFORM.nameAr)}</td></tr>
         <tr><td class="k">الكيان:</td><td class="v" style="font-size:11px">${esc(PLATFORM.legal)}</td></tr>
@@ -610,6 +611,7 @@ function buildInvoiceHTML(inv: any, lastPayment: any): string {
       <div class="url">${esc(PLATFORM.domain)}</div>
       <div>${esc(PLATFORM.email)}</div>
       <div>${esc(PLATFORM.whatsapp1)}</div>
+      <div style="font-size:10px">س.ت ${esc(PLATFORM.cr)} • الرقم الضريبي ${esc(PLATFORM.vatNumber)}</div>
     </div>
   </footer>
 </div>

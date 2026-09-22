@@ -11,7 +11,7 @@ const corsHeaders = {
 
 const SITE_URL = "https://fekrahedu.com";
 const REGISTER_URL = `${SITE_URL}/auth`;
-const CONTACT_PHONE = "0559600824";
+const CONTACT_PHONE = "0593799355";
 
 const HUMAN_KEYWORDS = [
   "موظف", "بشر", "ادمن", "إدمن", "محادثه مع موظف", "كلمني موظف",

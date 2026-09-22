@@ -280,7 +280,7 @@ async function handleMigration(supabase: any): Promise<Response> {
           email: 'customer@example.com',
           email_normalized: 'customer@example.com',
           full_name: 'عميل تجريبي',
-          phone: '0559600824',
+          phone: '0593799355',
           role: 'customer',
           status: 'active',
           password_hash: '$2a$06$Ymdta.TsNIzaoB2c6/WFLeSxLaWOaWhWnCnGDKJxGoKmQ0v54vHE2', // Ali@@#@@1409

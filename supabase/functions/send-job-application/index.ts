@@ -181,7 +181,7 @@ const handler = async (req: Request): Promise<Response> => {
                             <a href="mailto:info@fekrahedu.com" class="contact-link">📧 info@fekrahedu.com</a>
                         </div>
                         <div class="contact-info">
-                            <a href="tel:0559600824" class="contact-link">📱 0559600824</a>
+                            <a href="tel:0593799355" class="contact-link">📱 0593799355</a>
                         </div>
                     </div>
                 </div>

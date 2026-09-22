@@ -211,7 +211,7 @@ export const ClientEmail = ({
                               <div>
                                 <Text style={contactLabel}>واتساب (متوفر 24 ساعة)</Text>
                                 <Link href="https://wa.me/966559600824" style={contactValue}>
-                                  0559600824
+                                  0593799355
                                 </Link>
                               </div>
                             </td>
@@ -224,7 +224,7 @@ export const ClientEmail = ({
                               <div>
                                 <Text style={contactLabel}>الهاتف</Text>
                                 <Text style={contactValuePlain}>
-                                  0559600824
+                                  0593799355
                                 </Text>
                               </div>
                             </td>
