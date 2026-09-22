@@ -111,8 +111,13 @@ export class AdminDashboardService {
         monthlyGrowth = Math.round(((thisMonthOrders || 0) - prevMonthOrders) / prevMonthOrders * 100);
       }
 
+      const { data: allInvoicesAmounts } = await supabase.from('invoices').select('paid_amount');
+      const totalCollected = allInvoicesAmounts?.reduce((sum, i) => sum + Number(i.paid_amount || 0), 0) || 0;
+
       return {
         totalSales,
+        totalInvoices: totalInvoicesCount || 0,
+        totalCollected,
         newOrders: newOrdersCount || 0,
         overdueInvoices: overdueCount || 0,
         collectionRate,
