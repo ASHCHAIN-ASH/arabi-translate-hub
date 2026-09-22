@@ -164,6 +164,9 @@ export default function AdminInvoiceForm() {
         tax_rate: taxRate,
         tax_inclusive: taxInclusive,
         is_guest: guestMode,
+        ...(status === 'paid'
+          ? { paid_at: new Date().toISOString(), amount_paid: totals.total }
+          : {}),
       };
       if (isEdit && invoice) {
         await InvoiceService.update(invoice.id, payload as any);
@@ -318,6 +321,7 @@ export default function AdminInvoiceForm() {
                       <SelectItem value="draft">مسودة</SelectItem>
                       <SelectItem value="pending">غير مدفوعة</SelectItem>
                       <SelectItem value="sent">مرسلة</SelectItem>
+                      <SelectItem value="paid">مدفوعة</SelectItem>
                       <SelectItem value="cancelled">ملغاة</SelectItem>
                     </SelectContent>
                   </Select>
