@@ -83,8 +83,8 @@ serve(async (req) => {
       phone = phone || inv.customer_phone || undefined;
       storagePath = inv.pdf_storage_path;
 
-      // لو لا يوجد PDF فاتورة محفوظ — نولّده عبر Browserless
-      if (!storagePath) {
+      // نولّد PDF الفاتورة دائمًا بأحدث قالب (force) لضمان عدم إرسال نسخة قديمة مخزّنة
+      {
         const { data: gen, error: genErr } = await supabase.functions.invoke("generate-invoice-pdf", {
           body: { invoice_id, force: true },
         });
