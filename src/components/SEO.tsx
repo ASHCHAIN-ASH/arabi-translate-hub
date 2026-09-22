@@ -25,6 +25,11 @@ const SEO = ({
   schema,
   noIndex = false
 }: SEOProps) => {
+  // Only the official domain may be indexed; any preview/staging host is blocked
+  const host = typeof window !== "undefined" ? window.location.hostname : "";
+  const isOfficialHost = !host || /(^|\.)fekrahedu\.com$/i.test(host) || /^(localhost|127\.0\.0\.1|0\.0\.0\.0)$/i.test(host);
+  const blockIndex = noIndex || !isOfficialHost;
+
   const siteName = "FekrahEdu - وكالة الحلول التعليمية المتقدمة";
   const twitterHandle = "@FekrahEdu";
 
