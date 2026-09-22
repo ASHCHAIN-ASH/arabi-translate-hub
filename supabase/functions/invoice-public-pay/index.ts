@@ -46,6 +46,7 @@ Deno.serve(async (req) => {
     const remaining = Number(inv.remaining_amount ?? (total - paid));
 
     const publicInvoice = {
+      id: inv.id,
       invoice_number: inv.invoice_number,
       customer_name: inv.customer_name,
       currency: inv.currency || 'SAR',

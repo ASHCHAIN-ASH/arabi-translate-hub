@@ -18,6 +18,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const type = searchParams.get('type') || 'client';
+  const redirectTo = searchParams.get('redirect');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,9 +27,11 @@ const Login = () => {
 
     try {
       await signIn(email, password);
-      
+
       // Redirect based on user type
-      if (type === 'admin') {
+      if (redirectTo && redirectTo.startsWith('/')) {
+        navigate(redirectTo);
+      } else if (type === 'admin') {
         navigate('/adminfekrah');
       } else {
         navigate('/client/dashboard');
