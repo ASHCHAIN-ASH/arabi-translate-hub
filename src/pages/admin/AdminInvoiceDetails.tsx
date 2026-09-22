@@ -102,6 +102,34 @@ export default function AdminInvoiceDetails() {
     } finally { setSendingWa(false); }
   };
 
+  const payToken = (invoice as any)?.public_pay_token as string | undefined;
+  const payLink = payToken ? `${window.location.origin}/pay/${payToken}` : '';
+
+  const copyPayLink = async () => {
+    if (!payLink) return toast.error('رابط الدفع غير متاح لهذه الفاتورة');
+    await navigator.clipboard.writeText(payLink);
+    toast.success('تم نسخ رابط الدفع المباشر');
+  };
+
+  const [sendingLink, setSendingLink] = useState(false);
+  const sendPayLinkWhatsapp = async () => {
+    if (!invoice || !payLink) return;
+    if (!invoice.customer_phone) { toast.error('لا يوجد رقم جوال للعميل'); return; }
+    setSendingLink(true);
+    try {
+      const amount = Number(invoice.remaining_amount || 0).toLocaleString('en-US');
+      const text = `مرحباً ${invoice.customer_name || ''} 👋\n\nفاتورتك رقم ${invoice.invoice_number} من فِكرة (FekrahEdu)\nالمبلغ المستحق: ${amount} ر.س\n\nيمكنك السداد مباشرة بالبطاقة من هذا الرابط بدون إنشاء حساب:\n${payLink}\n\nشكراً لثقتك 🤍`;
+      const { data, error } = await supabase.functions.invoke('whatsapp-send', {
+        body: { to: invoice.customer_phone, message: text },
+      });
+      if (error) throw error;
+      if (data && data.success === false) throw new Error(data.error || 'فشل الإرسال');
+      toast.success('تم إرسال رابط الدفع للعميل عبر واتساب');
+    } catch (e: any) {
+      toast.error('تعذّر إرسال الرابط', { description: e?.message });
+    } finally { setSendingLink(false); }
+  };
+
   const handleDelete = async () => {
     if (!invoice) return;
     if (!confirm(`حذف الفاتورة ${invoice.invoice_number}؟`)) return;
