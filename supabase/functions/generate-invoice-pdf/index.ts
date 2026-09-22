@@ -16,7 +16,6 @@ const PLATFORM = {
   website: "https://fekrahedu.com",
   email: "info@fekrahedu.com",
   whatsapp1: "0593799355",
-  whatsapp2: "0555812567",
   address: "المملكة العربية السعودية — الرياض",
   cr: "7039030916",
   vatNumber: "312206352700003",
@@ -542,7 +541,7 @@ function buildInvoiceHTML(inv: any, lastPayment: any): string {
         <tr><td class="k">السجل التجاري:</td><td class="v mono">${esc(PLATFORM.cr)}</td></tr>
         <tr><td class="k">الموقع:</td><td class="v mono">${esc(PLATFORM.domain)}</td></tr>
         <tr><td class="k">البريد:</td><td class="v mono">${esc(PLATFORM.email)}</td></tr>
-        <tr><td class="k">واتساب:</td><td class="v mono">${esc(PLATFORM.whatsapp1)} • ${esc(PLATFORM.whatsapp2)}</td></tr>
+        <tr><td class="k">واتساب:</td><td class="v mono">${esc(PLATFORM.whatsapp1)}</td></tr>
         <tr><td class="k">العنوان:</td><td class="v">${esc(PLATFORM.address)}</td></tr>
       </table>
     </div>
