@@ -95,7 +95,34 @@ export default function AdminInvoices() {
     const [items, payments] = await Promise.all([InvoiceService.getItems(inv.id), InvoiceService.getPayments(inv.id)]);
     openInvoicePrintWindow(inv, items, payments);
   };
-  const handleSend = (inv: Invoice) => setSendFor(inv);
+  const handleSend = (inv: Invoice) => navigate(`/adminfekrah/invoices/${inv.id}/send`);
+  const handleMarkPaid = async (inv: Invoice) => {
+    try { await InvoiceService.markPaid(inv); toast.success('تم تعليم الفاتورة كمدفوعة'); load(); }
+    catch (e: any) { toast.error('تعذر التحديث', { description: e.message }); }
+  };
+  const handleMarkUnpaid = async (inv: Invoice) => {
+    try { await InvoiceService.markUnpaid(inv); toast.success('تم تعليم الفاتورة كغير مدفوعة'); load(); }
+    catch (e: any) { toast.error('تعذر التحديث', { description: e.message }); }
+  };
+  const exportCsv = () => {
+    const rows = [
+      ['رقم الفاتورة', 'العميل', 'البريد', 'الهاتف', 'عميل غير مسجل', 'التاريخ', 'المجموع', 'الخصم', 'الضريبة', 'الإجمالي', 'المدفوع', 'المتبقي', 'الحالة'],
+      ...filtered.map((i) => [
+        i.invoice_number, i.customer_name ?? '', i.customer_email ?? '', i.customer_phone ?? '',
+        i.is_guest || !i.user_id ? 'نعم' : 'لا',
+        i.issue_date, i.subtotal, i.discount_amount, i.tax_amount, i.total_amount, i.paid_amount, i.remaining_amount,
+        InvoiceService.statusLabel(i.status),
+      ]),
+    ];
+    const csv = '\uFEFF' + rows.map((r) => r.map((c) => `"${String(c ?? '').replace(/"/g, '""')}"`).join(',')).join('\n');
+    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `fekrahedu-invoices-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success('تم تصدير الفواتير');
+  };
 
   return (
     <AdminLayout>
