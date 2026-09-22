@@ -34,6 +34,10 @@ export interface Invoice {
   remaining_amount: number;
   currency: string;
   status: InvoiceStatus;
+  tax_enabled?: boolean;
+  tax_rate?: number;
+  tax_inclusive?: boolean;
+  is_guest?: boolean;
   notes: string | null;
   terms: string | null;
   paid_at: string | null;
@@ -82,7 +86,52 @@ export interface CreateInvoiceInput {
   terms?: string;
   currency?: string;
   status?: InvoiceStatus;
+  tax_enabled?: boolean;
+  tax_rate?: number;
+  tax_inclusive?: boolean;
+  is_guest?: boolean;
 }
+
+export const DEFAULT_VAT_RATE = 15;
+
+export interface TaxSettings {
+  taxEnabled: boolean;
+  taxRate: number;
+  taxInclusive: boolean;
+}
+
+export interface InvoiceTotals {
+  subtotal: number;
+  discount: number;
+  taxableBase: number;
+  tax: number;
+  total: number;
+}
+
+const round2 = (n: number) => Math.round((Number(n) || 0) * 100) / 100;
+
+/** يحسب الإجماليات مع/بدون ضريبة القيمة المضافة (شاملة أو مضافة). */
+export const computeInvoiceTotals = (
+  itemsTotal: number,
+  discount: number,
+  tax: TaxSettings,
+): InvoiceTotals => {
+  const subtotal = round2(itemsTotal);
+  const safeDiscount = Math.min(Math.max(round2(discount), 0), subtotal);
+  const base = round2(subtotal - safeDiscount);
+
+  if (!tax.taxEnabled || !tax.taxRate) {
+    return { subtotal, discount: safeDiscount, taxableBase: base, tax: 0, total: base };
+  }
+
+  const rate = Number(tax.taxRate) / 100;
+  if (tax.taxInclusive) {
+    const net = round2(base / (1 + rate));
+    return { subtotal, discount: safeDiscount, taxableBase: net, tax: round2(base - net), total: base };
+  }
+  const taxValue = round2(base * rate);
+  return { subtotal, discount: safeDiscount, taxableBase: base, tax: taxValue, total: round2(base + taxValue) };
+};
 
 const computeItemTotal = (item: { quantity: number; unit_price: number; discount_amount?: number; discount_percentage?: number }) => {
   const gross = item.quantity * item.unit_price;
