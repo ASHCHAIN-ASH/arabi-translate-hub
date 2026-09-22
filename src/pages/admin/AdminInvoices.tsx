@@ -24,11 +24,9 @@ export default function AdminInvoices() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [formOpen, setFormOpen] = useState(false);
-  const [editing, setEditing] = useState<Invoice | null>(null);
-  const [paymentFor, setPaymentFor] = useState<Invoice | null>(null);
-  const [sendFor, setSendFor] = useState<Invoice | null>(null);
+  const [payFilter, setPayFilter] = useState<'all' | 'paid' | 'unpaid'>('all');
   const [emailLogs, setEmailLogs] = useState<Record<string, EmailLogEntry>>({});
+  const navigate = useNavigate();
 
   const load = async () => {
     setLoading(true);
