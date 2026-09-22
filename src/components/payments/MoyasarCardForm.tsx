@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Loader2, ShieldCheck, CreditCard, Lock } from 'lucide-react';
 import { supabase } from '@/data/legacy/client';
 import { cn } from '@/lib/utils';
+import '@/styles/payment-form.css';
 
 const MOYASAR_CSS = 'https://cdn.moyasar.com/mpf/1.15.0/moyasar.css';
 const MOYASAR_JS = 'https://cdn.moyasar.com/mpf/1.15.0/moyasar.js';
@@ -118,7 +119,7 @@ const MoyasarCardForm: React.FC<MoyasarCardFormProps> = ({
       <div className="flex items-center justify-between rounded-xl border border-border/60 bg-muted/40 px-4 py-3">
         <div className="flex items-center gap-2 text-sm font-medium">
           <CreditCard className="h-4 w-4 text-primary" />
-          الدفع الفوري بالبطاقة
+          اختر طريقة الدفع
         </div>
         <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
           <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
