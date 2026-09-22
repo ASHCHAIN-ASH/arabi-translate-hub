@@ -279,17 +279,13 @@ export default function AdminInvoices() {
                     <Mail className="w-3 h-3 ml-1" />
                     إرسال
                   </Button>
-                  <RowActions inv={inv} onSend={() => handleSend(inv)} onEdit={() => { setEditing(inv); setFormOpen(true); }} onPay={() => setPaymentFor(inv)} onDelete={() => handleDelete(inv)} onPrint={() => handlePrint(inv)} onDownload={() => handleDownload(inv)} />
+                  <RowActions inv={inv} onSend={() => handleSend(inv)} onDelete={() => handleDelete(inv)} onPrint={() => handlePrint(inv)} onDownload={() => handleDownload(inv)} onMarkPaid={() => handleMarkPaid(inv)} onMarkUnpaid={() => handleMarkUnpaid(inv)} />
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
       </div>
-
-      <InvoiceFormDialog open={formOpen} onOpenChange={setFormOpen} invoice={editing} onSaved={load} />
-      {paymentFor && <PaymentDialog open={!!paymentFor} onOpenChange={(o) => !o && setPaymentFor(null)} invoice={paymentFor} onSaved={load} />}
-      <SendInvoiceDialog open={!!sendFor} onOpenChange={(o) => !o && setSendFor(null)} invoice={sendFor} onSent={load} />
     </AdminLayout>
   );
 }
