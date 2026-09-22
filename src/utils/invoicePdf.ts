@@ -9,14 +9,16 @@ import type { Invoice, InvoiceItem, InvoicePayment } from './invoiceService';
 import { InvoiceService } from './invoiceService';
 
 const COMPANY = {
-  name: 'FekrahEdu',
+  name: 'فِكرة (FekrahEdu)',
   nameEn: 'FekrahEdu',
   address: 'المملكة العربية السعودية — الرياض',
   email: 'info@fekrahedu.com',
-  phone: '+966 53 530 0148',
+  phone: '0593799355',
+  phoneIntl: '+966 59 379 9355',
   website: 'fekrahedu.com',
-  vatNumber: '300000000000003',
-  crNumber: '1010000000',
+  vatNumber: '312206352700003',
+  crNumber: '7039030916',
+  holding: 'ASH HOLDING',
   iban: 'SA00 8000 0000 0000 0000 0000',
 };
 
