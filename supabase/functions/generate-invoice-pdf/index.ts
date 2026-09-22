@@ -497,7 +497,7 @@ function buildInvoiceHTML(inv: any, lastPayment: any): string {
 
   <header class="brand">
     <div class="brand-left">
-      <div class="logo">MEP</div>
+      <img class="logo" src="${PLATFORM.logo}" alt="FekrahEdu" style="object-fit:cover;background:#fff" />
       <div class="brand-text">
         <h1>${esc(PLATFORM.nameAr)}</h1>
         <div class="en">${esc(PLATFORM.nameEn.toUpperCase())}</div>
@@ -534,7 +534,7 @@ function buildInvoiceHTML(inv: any, lastPayment: any): string {
 
   <div class="parties">
     <div class="party">
-      <div class="head"><div class="icon">M</div><div class="ttl">البائع / مُصدِر الفاتورة</div></div>
+      <div class="head"><div class="icon">ف</div><div class="ttl">البائع / مُصدِر الفاتورة</div></div>
       <table>
         <tr><td class="k">الجهة:</td><td class="v">${esc(PLATFORM.nameAr)}</td></tr>
         <tr><td class="k">الكيان:</td><td class="v" style="font-size:11px">${esc(PLATFORM.legal)}</td></tr>
@@ -611,6 +611,7 @@ function buildInvoiceHTML(inv: any, lastPayment: any): string {
       <div class="url">${esc(PLATFORM.domain)}</div>
       <div>${esc(PLATFORM.email)}</div>
       <div>${esc(PLATFORM.whatsapp1)}</div>
+      <div style="font-size:10px">س.ت ${esc(PLATFORM.cr)} • الرقم الضريبي ${esc(PLATFORM.vatNumber)}</div>
     </div>
   </footer>
 </div>
