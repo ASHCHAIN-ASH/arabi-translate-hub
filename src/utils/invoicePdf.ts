@@ -9,14 +9,16 @@ import type { Invoice, InvoiceItem, InvoicePayment } from './invoiceService';
 import { InvoiceService } from './invoiceService';
 
 const COMPANY = {
-  name: 'FekrahEdu',
+  name: 'فِكرة (FekrahEdu)',
   nameEn: 'FekrahEdu',
   address: 'المملكة العربية السعودية — الرياض',
   email: 'info@fekrahedu.com',
-  phone: '+966 53 530 0148',
+  phone: '0593799355',
+  phoneIntl: '+966 59 379 9355',
   website: 'fekrahedu.com',
-  vatNumber: '300000000000003',
-  crNumber: '1010000000',
+  vatNumber: '312206352700003',
+  crNumber: '7039030916',
+  holding: 'ASH HOLDING',
   iban: 'SA00 8000 0000 0000 0000 0000',
 };
 
@@ -79,11 +81,27 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
   const totalItems = items.length;
   const totalQty = items.reduce((s, it) => s + Number(it.quantity || 0), 0);
 
-  // VAT (15%) — احسبها لو ما كانت مخزّنة
+  // الضريبة حسب إعدادات الفاتورة نفسها (مفعّلة/نسبة/شاملة)
   const subtotal = Number(invoice.subtotal || 0);
   const discount = Number(invoice.discount_amount || 0);
+  const anyInvoice = invoice as any;
+  const taxEnabled = anyInvoice.tax_enabled !== false && (Number(invoice.tax_amount || 0) > 0 || anyInvoice.tax_enabled === true);
+  const taxRate = Number(anyInvoice.tax_rate ?? 15);
+  const taxInclusive = anyInvoice.tax_inclusive === true;
   const storedVat = Number(invoice.tax_amount || 0);
-  const computedVat = storedVat > 0 ? storedVat : Math.round((subtotal - discount) * 0.15 * 100) / 100;
+  const base = Math.max(subtotal - discount, 0);
+  const computedVat = !taxEnabled
+    ? 0
+    : storedVat > 0
+      ? storedVat
+      : taxInclusive
+        ? Math.round((base - base / (1 + taxRate / 100)) * 100) / 100
+        : Math.round(base * (taxRate / 100) * 100) / 100;
+  const docTitleAr = taxEnabled ? 'فاتورة ضريبية' : 'فاتورة';
+  const docTitleEn = taxEnabled ? 'Tax Invoice' : 'Invoice';
+  const taxLabel = taxEnabled
+    ? `ضريبة القيمة المضافة (${taxRate}%)${taxInclusive ? ' — شاملة' : ''}`
+    : 'بدون ضريبة';
 
   // طريقة الدفع الأساسية
   const primaryPayment = payments[0];
@@ -155,6 +173,13 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
   .brand-text .brand-en { font-size: 11px; color: var(--muted); margin-top: 2px; letter-spacing: 1px; text-transform: uppercase; }
   .brand-meta { font-size: 11px; color: var(--muted); margin-top: 8px; line-height: 1.8; }
   .brand-meta .dot { color: var(--line); margin: 0 6px; }
+  .legal-ids { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .lid { display: inline-flex; align-items: center; gap: 6px; padding: 4px 9px; border-radius: 8px; font-size: 10.5px; border: 1px solid transparent; }
+  .lid .lid-k { font-weight: 600; opacity: .85; }
+  .lid .lid-v { font-weight: 700; font-feature-settings: "tnum"; letter-spacing: .4px; }
+  .lid-tax { background: #eef2ff; border-color: #c7d2fe; color: #3730a3; }
+  .lid-cr { background: #fef3c7; border-color: #fde68a; color: #92400e; }
+  .lid-phone { background: #ecfdf5; border-color: #a7f3d0; color: #065f46; }
 
   .doc-title { text-align: left; min-width: 220px; }
   .doc-eyebrow { font-size: 10px; font-weight: 600; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
@@ -238,6 +263,9 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
   .footer .thanks { font-size: 14px; color: var(--primary-2); font-weight: 700; margin-bottom: 6px; }
   .footer .legal { font-size: 11px; color: var(--muted); line-height: 1.8; }
   .footer .stamp { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 6px 14px; background: #fff; border: 1px dashed var(--line); border-radius: 999px; font-size: 10px; color: var(--muted); letter-spacing: .5px; }
+  .footer .legal-strip { margin-top: 10px; padding: 9px 12px; background: #fff; border: 1px solid var(--line); border-radius: 10px; font-size: 10.5px; color: var(--ink-2); display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; line-height: 1.9; }
+  .footer .legal-strip b { font-feature-settings: "tnum"; letter-spacing: .4px; color: var(--ink); }
+  .footer .legal-strip .sep { color: var(--muted-2); }
 
   /* ACTIONS BAR */
   .actions { position: fixed; top: 14px; left: 14px; display: flex; gap: 8px; z-index: 1000; }
@@ -254,6 +282,10 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
     .body { padding: 14px 22px 4px; }
     .footer { padding: 12px 22px 16px; }
   }
+  @media print {
+    table.items tr, .section, .totals-wrap, .footer { page-break-inside: avoid; }
+    table.items thead { display: table-header-group; }
+  }
   @page { size: A4; margin: 10mm; }
 </style>
 </head>
@@ -268,22 +300,24 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
   <div class="header">
     <div class="header-row">
       <div class="brand">
-        <div class="brand-mark">M</div>
+        <div class="brand-mark">ف</div>
         <div class="brand-text">
           <div class="brand-name">${COMPANY.name}</div>
-          <div class="brand-en">${COMPANY.nameEn}</div>
+          <div class="brand-en">إحدى مشاريع ${COMPANY.holding}</div>
           <div class="brand-meta">
             ${COMPANY.address}<br/>
-            ${COMPANY.email}<span class="dot">•</span>${COMPANY.phone}<br/>
-            ${COMPANY.website}<br/>
-            <span style="display:inline-block;margin-top:6px;padding:3px 8px;background:#eef2ff;border:1px solid #c7d2fe;border-radius:6px;font-weight:600;color:#3730a3;font-feature-settings:'tnum'">الرقم الضريبي: ${COMPANY.vatNumber}</span>
-            <span style="display:inline-block;margin-top:6px;margin-right:4px;padding:3px 8px;background:#fef3c7;border:1px solid #fde68a;border-radius:6px;font-weight:600;color:#92400e;font-feature-settings:'tnum'">س.ت: ${COMPANY.crNumber}</span>
+            ${COMPANY.email}<span class="dot">•</span>${COMPANY.website}
+          </div>
+          <div class="legal-ids">
+            <span class="lid lid-tax"><span class="lid-k">الرقم الضريبي</span><span class="lid-v" dir="ltr">${COMPANY.vatNumber}</span></span>
+            <span class="lid lid-cr"><span class="lid-k">السجل التجاري</span><span class="lid-v" dir="ltr">${COMPANY.crNumber}</span></span>
+            <span class="lid lid-phone"><span class="lid-k">جوال / واتساب</span><span class="lid-v" dir="ltr">${COMPANY.phoneIntl}</span></span>
           </div>
         </div>
       </div>
       <div class="doc-title">
-        <div class="doc-eyebrow">Tax Invoice</div>
-        <h1>فاتورة ضريبية</h1>
+        <div class="doc-eyebrow">${docTitleEn}</div>
+        <h1>${docTitleAr}</h1>
         <div class="doc-num">رقم: ${escapeHtml(invoice.invoice_number)}</div>
         <div>
           <span class="badge ${badgeClass(invoice.status)}">${InvoiceService.statusLabel(invoice.status)}</span>
@@ -335,23 +369,24 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
 
     <div class="totals-wrap">
       <div class="totals-note">
-        <div class="nt-title">🛡️ فاتورة موثّقة إلكترونياً (متوافقة مع زاتكا)</div>
-        صادرة من منصة <strong>${COMPANY.name}</strong> ومحفوظة في سجلاتنا الرقمية. يمكنك التحقق من صحتها بمسح رمز QR أدناه أو من خلال لوحة عميلك.
+        <div class="nt-title">🛡️ ${taxEnabled ? 'فاتورة ضريبية موثّقة إلكترونياً (متوافقة مع زاتكا)' : 'فاتورة موثّقة إلكترونياً'}</div>
+        صادرة من منصة <strong>${COMPANY.name}</strong> — إحدى مشاريع ${COMPANY.holding}، ومحفوظة في سجلاتنا الرقمية.${taxEnabled ? ' يمكنك التحقق من صحتها بمسح رمز QR أدناه أو من خلال لوحة عميلك.' : ''}
         <div style="margin-top:12px;display:flex;align-items:center;gap:12px;padding:10px;background:#fff;border:1px dashed #c7d2fe;border-radius:10px">
-          <img src="${qrImg}" alt="QR" width="92" height="92" style="border-radius:6px;background:#fff" />
+          ${taxEnabled ? `<img src="${qrImg}" alt="QR" width="92" height="92" style="border-radius:6px;background:#fff" />` : ''}
           <div style="font-size:10.5px;color:var(--muted);line-height:1.7">
-            <div style="font-weight:700;color:var(--ink);margin-bottom:3px">رمز التحقق ZATCA</div>
+            <div style="font-weight:700;color:var(--ink);margin-bottom:3px">${taxEnabled ? 'رمز التحقق ZATCA' : 'بيانات المنشأة'}</div>
             البائع: ${COMPANY.name}<br/>
-            الرقم الضريبي: ${COMPANY.vatNumber}<br/>
-            الإجمالي: ${fmt(invoice.total_amount)}<br/>
-            ض.ق.م: ${fmt(computedVat)}
+            الرقم الضريبي: <span dir="ltr">${COMPANY.vatNumber}</span><br/>
+            السجل التجاري: <span dir="ltr">${COMPANY.crNumber}</span><br/>
+            الجوال: <span dir="ltr">${COMPANY.phoneIntl}</span><br/>
+            الإجمالي: ${fmt(invoice.total_amount)}${taxEnabled ? `<br/>ض.ق.م: ${fmt(computedVat)}` : ''}
           </div>
         </div>
       </div>
       <div class="totals">
         <div class="row"><span class="k">المجموع الفرعي</span><span class="v">${fmt(invoice.subtotal)}</span></div>
         ${invoice.discount_amount ? `<div class="row"><span class="k">الخصم</span><span class="v">- ${fmt(invoice.discount_amount)}</span></div>` : ''}
-        <div class="row"><span class="k">ضريبة القيمة المضافة (15%)</span><span class="v">${fmt(computedVat)}</span></div>
+        <div class="row"><span class="k">${taxLabel}</span><span class="v">${taxEnabled ? fmt(computedVat) : '—'}</span></div>
         <div class="row grand"><span class="k">الإجمالي المستحق</span><span class="v">${fmt(invoice.total_amount)}</span></div>
         <div class="row paid"><span class="k">المدفوع</span><span class="v">${fmt(invoice.paid_amount)}</span></div>
         ${Number(invoice.remaining_amount || 0) <= 0
@@ -371,7 +406,16 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
     <div class="thanks">شكراً لثقتكم بـ ${COMPANY.name} 🌟</div>
     <div class="legal">
       هذه الفاتورة صادرة إلكترونياً ولا تحتاج إلى توقيع أو ختم.<br/>
-      للاستفسارات: ${COMPANY.email} • ${COMPANY.phone}
+      للاستفسارات: ${COMPANY.email} • <span dir="ltr">${COMPANY.phoneIntl}</span>
+    </div>
+    <div class="legal-strip">
+      <span>السجل التجاري: <b dir="ltr">${COMPANY.crNumber}</b></span>
+      <span class="sep">•</span>
+      <span>الرقم الضريبي: <b dir="ltr">${COMPANY.vatNumber}</b></span>
+      <span class="sep">•</span>
+      <span>جوال / واتساب: <b dir="ltr">${COMPANY.phoneIntl}</b></span>
+      <span class="sep">•</span>
+      <span>${COMPANY.name} إحدى مشاريع <b>${COMPANY.holding}</b></span>
     </div>
     <div class="stamp">🔒 وثيقة رقمية موقّعة • ${COMPANY.website}</div>
   </div>
