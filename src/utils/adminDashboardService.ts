@@ -2,6 +2,8 @@ import { supabase } from '@/data/legacy/client';
 
 export interface DashboardStats {
   totalSales: number;
+  totalInvoices: number;
+  totalCollected: number;
   newOrders: number;
   overdueInvoices: number;
   collectionRate: number;
