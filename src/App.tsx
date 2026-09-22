@@ -573,6 +573,26 @@ const App = () => (
                 <AdminInvoices />
               </SimpleProtectedRoute>
             } />
+            <Route path="/adminfekrah/invoices/new" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminInvoiceForm />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminfekrah/invoices/:id/edit" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminInvoiceForm />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminfekrah/invoices/:id/payment" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminInvoicePayment />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminfekrah/invoices/:id/send" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminInvoiceSend />
+              </SimpleProtectedRoute>
+            } />
             <Route path="/adminfekrah/invoices/:id" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminInvoiceDetails />
