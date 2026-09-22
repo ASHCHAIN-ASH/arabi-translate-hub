@@ -97,6 +97,9 @@ const AdminServices = lazy(() => import("./pages/admin/AdminServices"));
 const AdminOrders = lazy(() => import("./pages/admin/AdminOrders"));
 const AdminInvoices = lazy(() => import("./pages/admin/AdminInvoices"));
 const AdminInvoiceDetails = lazy(() => import("./pages/admin/AdminInvoiceDetails"));
+const AdminInvoiceForm = lazy(() => import("./pages/admin/AdminInvoiceForm"));
+const AdminInvoicePayment = lazy(() => import("./pages/admin/AdminInvoicePayment"));
+const AdminInvoiceSend = lazy(() => import("./pages/admin/AdminInvoiceSend"));
 const AdminTransactions = lazy(() => import("./pages/admin/AdminTransactions"));
 const AdminFinancial = lazy(() => import("./pages/admin/AdminFinancial"));
 const AdminUsers = lazy(() => import("./pages/admin/AdminUsers"));
@@ -568,6 +571,26 @@ const App = () => (
             <Route path="/adminfekrah/invoices" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminInvoices />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminfekrah/invoices/new" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminInvoiceForm />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminfekrah/invoices/:id/edit" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminInvoiceForm />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminfekrah/invoices/:id/payment" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminInvoicePayment />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminfekrah/invoices/:id/send" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminInvoiceSend />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminfekrah/invoices/:id" element={

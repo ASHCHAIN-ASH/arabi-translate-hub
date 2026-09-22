@@ -7,16 +7,16 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
-import { FileText, Plus, Search, RefreshCw, Eye, Edit, Trash2, Download, Printer, CreditCard, MoreVertical, TrendingUp, Clock, CheckCircle2, Mail, Loader2 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { FileText, Plus, Search, RefreshCw, Eye, Edit, Trash2, Download, Printer, CreditCard, MoreVertical, TrendingUp, Clock, CheckCircle2, Mail, FileSpreadsheet, UserX, Undo2, Percent } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { supabase } from '@/data/legacy/client';
 import { InvoiceService, type Invoice } from '@/utils/invoiceService';
 import { openInvoicePrintWindow, downloadInvoiceAsPDF } from '@/utils/invoicePdf';
-import InvoiceFormDialog from '@/components/admin/invoices/InvoiceFormDialog';
-import PaymentDialog from '@/components/admin/invoices/PaymentDialog';
-import SendInvoiceDialog from '@/components/admin/invoices/SendInvoiceDialog';
 import { InvoiceEmailService, EMAIL_STATUS_AR, type EmailLogEntry } from '@/utils/invoiceEmailService';
+
+const PAID_STATES = ['paid'];
+const UNPAID_STATES = ['pending', 'sent', 'partially_paid', 'overdue'];
 
 export default function AdminInvoices() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -24,11 +24,9 @@ export default function AdminInvoices() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [formOpen, setFormOpen] = useState(false);
-  const [editing, setEditing] = useState<Invoice | null>(null);
-  const [paymentFor, setPaymentFor] = useState<Invoice | null>(null);
-  const [sendFor, setSendFor] = useState<Invoice | null>(null);
+  const [payFilter, setPayFilter] = useState<'all' | 'paid' | 'unpaid'>('all');
   const [emailLogs, setEmailLogs] = useState<Record<string, EmailLogEntry>>({});
+  const navigate = useNavigate();
 
   const load = async () => {
     setLoading(true);
@@ -64,12 +62,14 @@ export default function AdminInvoices() {
 
   const filtered = useMemo(() => invoices.filter((i) => {
     if (statusFilter !== 'all' && i.status !== statusFilter) return false;
+    if (payFilter === 'paid' && !PAID_STATES.includes(i.status)) return false;
+    if (payFilter === 'unpaid' && !UNPAID_STATES.includes(i.status)) return false;
     if (search) {
       const q = search.toLowerCase();
       return i.invoice_number.toLowerCase().includes(q) || (i.customer_name ?? '').toLowerCase().includes(q) || (i.customer_email ?? '').toLowerCase().includes(q);
     }
     return true;
-  }), [invoices, search, statusFilter]);
+  }), [invoices, search, statusFilter, payFilter]);
 
   const stats = useMemo(() => ({
     total: invoices.length,
@@ -95,7 +95,34 @@ export default function AdminInvoices() {
     const [items, payments] = await Promise.all([InvoiceService.getItems(inv.id), InvoiceService.getPayments(inv.id)]);
     openInvoicePrintWindow(inv, items, payments);
   };
-  const handleSend = (inv: Invoice) => setSendFor(inv);
+  const handleSend = (inv: Invoice) => navigate(`/adminfekrah/invoices/${inv.id}/send`);
+  const handleMarkPaid = async (inv: Invoice) => {
+    try { await InvoiceService.markPaid(inv); toast.success('تم تعليم الفاتورة كمدفوعة'); load(); }
+    catch (e: any) { toast.error('تعذر التحديث', { description: e.message }); }
+  };
+  const handleMarkUnpaid = async (inv: Invoice) => {
+    try { await InvoiceService.markUnpaid(inv); toast.success('تم تعليم الفاتورة كغير مدفوعة'); load(); }
+    catch (e: any) { toast.error('تعذر التحديث', { description: e.message }); }
+  };
+  const exportCsv = () => {
+    const rows = [
+      ['رقم الفاتورة', 'العميل', 'البريد', 'الهاتف', 'عميل غير مسجل', 'التاريخ', 'المجموع', 'الخصم', 'الضريبة', 'الإجمالي', 'المدفوع', 'المتبقي', 'الحالة'],
+      ...filtered.map((i) => [
+        i.invoice_number, i.customer_name ?? '', i.customer_email ?? '', i.customer_phone ?? '',
+        i.is_guest || !i.user_id ? 'نعم' : 'لا',
+        i.issue_date, i.subtotal, i.discount_amount, i.tax_amount, i.total_amount, i.paid_amount, i.remaining_amount,
+        InvoiceService.statusLabel(i.status),
+      ]),
+    ];
+    const csv = '\uFEFF' + rows.map((r) => r.map((c) => `"${String(c ?? '').replace(/"/g, '""')}"`).join(',')).join('\n');
+    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `fekrahedu-invoices-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success('تم تصدير الفواتير');
+  };
 
   return (
     <AdminLayout>
@@ -107,7 +134,8 @@ export default function AdminInvoices() {
           </div>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" onClick={load}><RefreshCw className="w-4 h-4 ml-1" />تحديث</Button>
-            <Button onClick={() => { setEditing(null); setFormOpen(true); }}><Plus className="w-4 h-4 ml-1" />فاتورة جديدة</Button>
+            <Button variant="outline" size="sm" onClick={exportCsv}><FileSpreadsheet className="w-4 h-4 ml-1" />تصدير Excel</Button>
+            <Button asChild><Link to="/adminfekrah/invoices/new"><Plus className="w-4 h-4 ml-1" />فاتورة جديدة</Link></Button>
           </div>
         </div>
 
@@ -142,8 +170,22 @@ export default function AdminInvoices() {
                 <SelectItem value="cancelled">ملغاة</SelectItem>
               </SelectContent>
             </Select>
+            <div className="flex gap-1 bg-muted/50 rounded-lg p-1">
+              {([['all', 'الكل'], ['paid', 'مدفوعة'], ['unpaid', 'غير مدفوعة']] as const).map(([k, label]) => (
+                <Button
+                  key={k}
+                  size="sm"
+                  variant={payFilter === k ? 'default' : 'ghost'}
+                  className="flex-1 md:flex-none"
+                  onClick={() => setPayFilter(k)}
+                >
+                  {label}
+                </Button>
+              ))}
+            </div>
           </CardContent>
         </Card>
+
 
         <Card className="border-0 shadow-md hidden lg:block">
           <CardContent className="p-0">
@@ -178,6 +220,7 @@ export default function AdminInvoices() {
                           )}
                         </div>
                         {inv.customer_email && <div className="text-xs text-muted-foreground">{inv.customer_email}</div>}
+                        <InvoiceTags inv={inv} />
                       </TableCell>
                       <TableCell className="text-sm">{inv.issue_date}</TableCell>
                       <TableCell className="font-bold">{InvoiceService.formatCurrency(inv.total_amount, inv.currency)}</TableCell>
@@ -191,7 +234,7 @@ export default function AdminInvoices() {
                             <Mail className="w-4 h-4" />
                             <span className="hidden xl:inline mr-1">إرسال</span>
                           </Button>
-                          <RowActions inv={inv} onSend={() => handleSend(inv)} onEdit={() => { setEditing(inv); setFormOpen(true); }} onPay={() => setPaymentFor(inv)} onDelete={() => handleDelete(inv)} onPrint={() => handlePrint(inv)} onDownload={() => handleDownload(inv)} />
+                          <RowActions inv={inv} onSend={() => handleSend(inv)} onDelete={() => handleDelete(inv)} onPrint={() => handlePrint(inv)} onDownload={() => handleDownload(inv)} onMarkPaid={() => handleMarkPaid(inv)} onMarkUnpaid={() => handleMarkUnpaid(inv)} />
                         </div>
                       </TableCell>
                     </TableRow>
@@ -222,6 +265,7 @@ export default function AdminInvoices() {
                     )}
                   </div>
                   <div className="text-xs text-muted-foreground">{inv.issue_date}</div>
+                  <InvoiceTags inv={inv} />
                   <div className="mt-1"><EmailCell log={emailLogs[inv.id]} /></div>
                 </div>
                 <div className="grid grid-cols-3 gap-2 text-xs bg-muted/40 rounded-md p-2">
@@ -235,17 +279,13 @@ export default function AdminInvoices() {
                     <Mail className="w-3 h-3 ml-1" />
                     إرسال
                   </Button>
-                  <RowActions inv={inv} onSend={() => handleSend(inv)} onEdit={() => { setEditing(inv); setFormOpen(true); }} onPay={() => setPaymentFor(inv)} onDelete={() => handleDelete(inv)} onPrint={() => handlePrint(inv)} onDownload={() => handleDownload(inv)} />
+                  <RowActions inv={inv} onSend={() => handleSend(inv)} onDelete={() => handleDelete(inv)} onPrint={() => handlePrint(inv)} onDownload={() => handleDownload(inv)} onMarkPaid={() => handleMarkPaid(inv)} onMarkUnpaid={() => handleMarkUnpaid(inv)} />
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
       </div>
-
-      <InvoiceFormDialog open={formOpen} onOpenChange={setFormOpen} invoice={editing} onSaved={load} />
-      {paymentFor && <PaymentDialog open={!!paymentFor} onOpenChange={(o) => !o && setPaymentFor(null)} invoice={paymentFor} onSaved={load} />}
-      <SendInvoiceDialog open={!!sendFor} onOpenChange={(o) => !o && setSendFor(null)} invoice={sendFor} onSent={load} />
     </AdminLayout>
   );
 }
@@ -301,14 +341,39 @@ function EmptyState() {
     </div>
   );
 }
-function RowActions({ inv, onEdit, onPay, onDelete, onPrint, onDownload, onSend }: any) {
+function InvoiceTags({ inv }: { inv: Invoice }) {
+  const guest = inv.is_guest || !inv.user_id;
+  const taxed = inv.tax_enabled || Number(inv.tax_amount ?? 0) > 0;
+  return (
+    <div className="flex flex-wrap items-center gap-1 mt-1">
+      {guest && (
+        <Badge variant="outline" className="text-[10px] gap-1 border-sky-500/30 text-sky-600 bg-sky-500/5">
+          <UserX className="w-3 h-3" />عميل غير مسجّل
+        </Badge>
+      )}
+      <Badge variant="outline" className="text-[10px] gap-1">
+        <Percent className="w-3 h-3" />
+        {taxed ? `ضريبية ${Number(inv.tax_rate ?? 15)}%${inv.tax_inclusive ? ' (شاملة)' : ''}` : 'بدون ضريبة'}
+      </Badge>
+    </div>
+  );
+}
+function RowActions({ inv, onDelete, onPrint, onDownload, onSend, onMarkPaid, onMarkUnpaid }: any) {
+  const isPaid = inv.status === 'paid';
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild><Button variant="ghost" size="icon"><MoreVertical className="w-4 h-4" /></Button></DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem asChild><Link to={`/adminfekrah/invoices/${inv.id}`}><Eye className="w-4 h-4 ml-2" />التفاصيل</Link></DropdownMenuItem>
-        <DropdownMenuItem onClick={onEdit}><Edit className="w-4 h-4 ml-2" />تعديل</DropdownMenuItem>
-        <DropdownMenuItem onClick={onPay}><CreditCard className="w-4 h-4 ml-2" />دفعة</DropdownMenuItem>
+        <DropdownMenuItem asChild><Link to={`/adminfekrah/invoices/${inv.id}/edit`}><Edit className="w-4 h-4 ml-2" />تعديل</Link></DropdownMenuItem>
+        <DropdownMenuItem asChild><Link to={`/adminfekrah/invoices/${inv.id}/payment`}><CreditCard className="w-4 h-4 ml-2" />دفعة</Link></DropdownMenuItem>
+        <DropdownMenuSeparator />
+        {isPaid ? (
+          <DropdownMenuItem onClick={onMarkUnpaid}><Undo2 className="w-4 h-4 ml-2" />تعليم كغير مدفوعة</DropdownMenuItem>
+        ) : (
+          <DropdownMenuItem onClick={onMarkPaid}><CheckCircle2 className="w-4 h-4 ml-2" />تعليم كمدفوعة</DropdownMenuItem>
+        )}
+        <DropdownMenuSeparator />
         <DropdownMenuItem onClick={onSend}>
           <Mail className="w-4 h-4 ml-2" />
           إرسال بالبريد

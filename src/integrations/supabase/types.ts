@@ -3025,6 +3025,7 @@ export type Database = {
           due_date: string | null
           id: string
           invoice_number: string
+          is_guest: boolean
           issue_date: string
           notes: string | null
           order_id: string | null
@@ -3038,6 +3039,9 @@ export type Database = {
           status: string | null
           subtotal: number | null
           tax_amount: number | null
+          tax_enabled: boolean
+          tax_inclusive: boolean
+          tax_rate: number
           terms: string | null
           total_amount: number | null
           updated_at: string
@@ -3054,6 +3058,7 @@ export type Database = {
           due_date?: string | null
           id?: string
           invoice_number?: string
+          is_guest?: boolean
           issue_date?: string
           notes?: string | null
           order_id?: string | null
@@ -3067,6 +3072,9 @@ export type Database = {
           status?: string | null
           subtotal?: number | null
           tax_amount?: number | null
+          tax_enabled?: boolean
+          tax_inclusive?: boolean
+          tax_rate?: number
           terms?: string | null
           total_amount?: number | null
           updated_at?: string
@@ -3083,6 +3091,7 @@ export type Database = {
           due_date?: string | null
           id?: string
           invoice_number?: string
+          is_guest?: boolean
           issue_date?: string
           notes?: string | null
           order_id?: string | null
@@ -3096,6 +3105,9 @@ export type Database = {
           status?: string | null
           subtotal?: number | null
           tax_amount?: number | null
+          tax_enabled?: boolean
+          tax_inclusive?: boolean
+          tax_rate?: number
           terms?: string | null
           total_amount?: number | null
           updated_at?: string

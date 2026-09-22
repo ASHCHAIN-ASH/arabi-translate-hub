@@ -34,6 +34,10 @@ export interface Invoice {
   remaining_amount: number;
   currency: string;
   status: InvoiceStatus;
+  tax_enabled?: boolean;
+  tax_rate?: number;
+  tax_inclusive?: boolean;
+  is_guest?: boolean;
   notes: string | null;
   terms: string | null;
   paid_at: string | null;
@@ -82,7 +86,52 @@ export interface CreateInvoiceInput {
   terms?: string;
   currency?: string;
   status?: InvoiceStatus;
+  tax_enabled?: boolean;
+  tax_rate?: number;
+  tax_inclusive?: boolean;
+  is_guest?: boolean;
 }
+
+export const DEFAULT_VAT_RATE = 15;
+
+export interface TaxSettings {
+  taxEnabled: boolean;
+  taxRate: number;
+  taxInclusive: boolean;
+}
+
+export interface InvoiceTotals {
+  subtotal: number;
+  discount: number;
+  taxableBase: number;
+  tax: number;
+  total: number;
+}
+
+const round2 = (n: number) => Math.round((Number(n) || 0) * 100) / 100;
+
+/** يحسب الإجماليات مع/بدون ضريبة القيمة المضافة (شاملة أو مضافة). */
+export const computeInvoiceTotals = (
+  itemsTotal: number,
+  discount: number,
+  tax: TaxSettings,
+): InvoiceTotals => {
+  const subtotal = round2(itemsTotal);
+  const safeDiscount = Math.min(Math.max(round2(discount), 0), subtotal);
+  const base = round2(subtotal - safeDiscount);
+
+  if (!tax.taxEnabled || !tax.taxRate) {
+    return { subtotal, discount: safeDiscount, taxableBase: base, tax: 0, total: base };
+  }
+
+  const rate = Number(tax.taxRate) / 100;
+  if (tax.taxInclusive) {
+    const net = round2(base / (1 + rate));
+    return { subtotal, discount: safeDiscount, taxableBase: net, tax: round2(base - net), total: base };
+  }
+  const taxValue = round2(base * rate);
+  return { subtotal, discount: safeDiscount, taxableBase: base, tax: taxValue, total: round2(base + taxValue) };
+};
 
 const computeItemTotal = (item: { quantity: number; unit_price: number; discount_amount?: number; discount_percentage?: number }) => {
   const gross = item.quantity * item.unit_price;
@@ -150,10 +199,18 @@ export const InvoiceService = {
 
   async create(input: CreateInvoiceInput): Promise<Invoice> {
     const items = input.items.map((it) => ({ ...it, total_price: computeItemTotal(it) }));
-    const subtotal = items.reduce((s, it) => s + it.total_price, 0);
-    const discount = input.discount_amount ?? 0;
-    const tax = input.tax_amount ?? 0;
-    const total = Math.max(0, subtotal - discount + tax);
+    const itemsTotal = items.reduce((s, it) => s + it.total_price, 0);
+    const taxSettings: TaxSettings = {
+      taxEnabled: input.tax_enabled ?? false,
+      taxRate: input.tax_rate ?? DEFAULT_VAT_RATE,
+      taxInclusive: input.tax_inclusive ?? false,
+    };
+    const totals = computeInvoiceTotals(itemsTotal, input.discount_amount ?? 0, taxSettings);
+    const subtotal = totals.subtotal;
+    const discount = totals.discount;
+    const tax = totals.tax;
+    const total = totals.total;
+
 
     const { data: inv, error } = await supabase
       .from('invoices')
@@ -174,6 +231,10 @@ export const InvoiceService = {
         terms: input.terms ?? null,
         currency: input.currency ?? 'SAR',
         status: input.status ?? 'pending',
+        tax_enabled: taxSettings.taxEnabled,
+        tax_rate: taxSettings.taxRate,
+        tax_inclusive: taxSettings.taxInclusive,
+        is_guest: input.is_guest ?? !input.user_id,
       } as any)
       .select()
       .single();
@@ -201,17 +262,51 @@ export const InvoiceService = {
 
     if (items) {
       const recomputed = items.map((it: any) => ({ ...it, total_price: computeItemTotal(it) }));
-      const subtotal = recomputed.reduce((s: number, it: any) => s + it.total_price, 0);
-      const discount = invoicePatch.discount_amount ?? 0;
-      const tax = invoicePatch.tax_amount ?? 0;
-      invoicePatch.subtotal = subtotal;
-      invoicePatch.total_amount = Math.max(0, subtotal - discount + tax);
+      const itemsTotal = recomputed.reduce((s: number, it: any) => s + it.total_price, 0);
+      const totals = computeInvoiceTotals(itemsTotal, invoicePatch.discount_amount ?? 0, {
+        taxEnabled: invoicePatch.tax_enabled ?? false,
+        taxRate: invoicePatch.tax_rate ?? DEFAULT_VAT_RATE,
+        taxInclusive: invoicePatch.tax_inclusive ?? false,
+      });
+      invoicePatch.subtotal = totals.subtotal;
+      invoicePatch.discount_amount = totals.discount;
+      invoicePatch.tax_amount = totals.tax;
+      invoicePatch.total_amount = totals.total;
+
 
       await supabase.from('invoice_items').delete().eq('invoice_id', id);
       await supabase.from('invoice_items').insert(recomputed.map((it: any) => ({ ...it, invoice_id: id })));
     }
 
     const { error } = await supabase.from('invoices').update(invoicePatch).eq('id', id);
+    if (error) throw error;
+  },
+
+  /** تعليم الفاتورة كمدفوعة بالكامل */
+  async markPaid(invoice: Invoice): Promise<void> {
+    const { error } = await supabase
+      .from('invoices')
+      .update({
+        paid_amount: invoice.total_amount,
+        remaining_amount: 0,
+        status: 'paid',
+        paid_at: new Date().toISOString(),
+      } as any)
+      .eq('id', invoice.id);
+    if (error) throw error;
+  },
+
+  /** إرجاع الفاتورة إلى حالة غير مدفوعة */
+  async markUnpaid(invoice: Invoice): Promise<void> {
+    const { error } = await supabase
+      .from('invoices')
+      .update({
+        paid_amount: 0,
+        remaining_amount: invoice.total_amount,
+        status: invoice.sent_at ? 'sent' : 'pending',
+        paid_at: null,
+      } as any)
+      .eq('id', invoice.id);
     if (error) throw error;
   },
 
