@@ -81,11 +81,27 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
   const totalItems = items.length;
   const totalQty = items.reduce((s, it) => s + Number(it.quantity || 0), 0);
 
-  // VAT (15%) — احسبها لو ما كانت مخزّنة
+  // الضريبة حسب إعدادات الفاتورة نفسها (مفعّلة/نسبة/شاملة)
   const subtotal = Number(invoice.subtotal || 0);
   const discount = Number(invoice.discount_amount || 0);
+  const anyInvoice = invoice as any;
+  const taxEnabled = anyInvoice.tax_enabled !== false && (Number(invoice.tax_amount || 0) > 0 || anyInvoice.tax_enabled === true);
+  const taxRate = Number(anyInvoice.tax_rate ?? 15);
+  const taxInclusive = anyInvoice.tax_inclusive === true;
   const storedVat = Number(invoice.tax_amount || 0);
-  const computedVat = storedVat > 0 ? storedVat : Math.round((subtotal - discount) * 0.15 * 100) / 100;
+  const base = Math.max(subtotal - discount, 0);
+  const computedVat = !taxEnabled
+    ? 0
+    : storedVat > 0
+      ? storedVat
+      : taxInclusive
+        ? Math.round((base - base / (1 + taxRate / 100)) * 100) / 100
+        : Math.round(base * (taxRate / 100) * 100) / 100;
+  const docTitleAr = taxEnabled ? 'فاتورة ضريبية' : 'فاتورة';
+  const docTitleEn = taxEnabled ? 'Tax Invoice' : 'Invoice';
+  const taxLabel = taxEnabled
+    ? `ضريبة القيمة المضافة (${taxRate}%)${taxInclusive ? ' — شاملة' : ''}`
+    : 'بدون ضريبة';
 
   // طريقة الدفع الأساسية
   const primaryPayment = payments[0];
