@@ -173,6 +173,13 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
   .brand-text .brand-en { font-size: 11px; color: var(--muted); margin-top: 2px; letter-spacing: 1px; text-transform: uppercase; }
   .brand-meta { font-size: 11px; color: var(--muted); margin-top: 8px; line-height: 1.8; }
   .brand-meta .dot { color: var(--line); margin: 0 6px; }
+  .legal-ids { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .lid { display: inline-flex; align-items: center; gap: 6px; padding: 4px 9px; border-radius: 8px; font-size: 10.5px; border: 1px solid transparent; }
+  .lid .lid-k { font-weight: 600; opacity: .85; }
+  .lid .lid-v { font-weight: 700; font-feature-settings: "tnum"; letter-spacing: .4px; }
+  .lid-tax { background: #eef2ff; border-color: #c7d2fe; color: #3730a3; }
+  .lid-cr { background: #fef3c7; border-color: #fde68a; color: #92400e; }
+  .lid-phone { background: #ecfdf5; border-color: #a7f3d0; color: #065f46; }
 
   .doc-title { text-align: left; min-width: 220px; }
   .doc-eyebrow { font-size: 10px; font-weight: 600; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
